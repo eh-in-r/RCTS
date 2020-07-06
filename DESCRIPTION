@@ -1,0 +1,22 @@
+Package: RobClustTimeSeries
+Title: The package RCTS (Robust Clustering of Time Series) contains function to cluster time series, and can handle outliers.
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Ewoud",
+           family = "Heyndels",
+           role = c("aut", "cre"),
+           email = "first.last@example.com",
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: What the package does (one paragraph).
+License: `use_mit_license()`, `use_gpl3_license()` or friends to
+    pick a license
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.0
+Imports: tidyverse,
+  gridExtra,
+  spatstat,
+  Hmisc
+Depends: 
+    R (>= 2.10)
