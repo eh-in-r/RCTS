@@ -12,7 +12,9 @@ calculate_lambda_group(
   comfactor,
   initialise = FALSE,
   UPDATE1 = update1,
-  UPDATE2 = update2
+  UPDATE2 = update2,
+  number_of_groups = aantalgroepen,
+  number_of_group_factors = aantalfactoren_groups
 )
 }
 \arguments{
@@ -31,6 +33,10 @@ calculate_lambda_group(
 \item{UPDATE1}{option to indicate the number of groupfactors is updated during the algorithm; defults to FALSE}
 
 \item{UPDATE2}{option to indicate the number of common factors is updated during the algorithm; defults to FALSE}
+
+\item{number_of_groups}{number of groups}
+
+\item{number_of_group_factors}{Vector with length the number of estimated groups. Each element is the number of estimated group factors for this group.}
 }
 \description{
 returns object which includes group and id of the individuals

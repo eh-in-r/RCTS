@@ -4,10 +4,17 @@
 \alias{restructure_X_to_order_slowN_fastT}
 \title{This function restructures X (which is an 3D-array of dimensions (N,T,p) to a 2D-matrix of dimension (NxT,p).}
 \usage{
-restructure_X_to_order_slowN_fastT(X, eclipz)
+restructure_X_to_order_slowN_fastT(
+  X,
+  eclipz,
+  number_of_Variables = aantalvars,
+  number_vars_estimated = SCHATTEN_MET_AANTALVARS
+)
 }
 \arguments{
 \item{X}{input}
+
+\item{eclipz}{parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
 }
 \description{
 This 2D-matrix is what Ando/Bai worked with.

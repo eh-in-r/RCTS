@@ -4,7 +4,7 @@
 \alias{calculate_XT_real}
 \title{Calculates matrix X*beta (the real value of this)}
 \usage{
-calculate_XT_real()
+calculate_XT_real(number_of_variables = aantalvars)
 }
 \description{
 Calculates matrix X*beta (the real value of this)

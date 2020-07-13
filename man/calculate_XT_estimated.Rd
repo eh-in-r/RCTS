@@ -4,7 +4,10 @@
 \alias{calculate_XT_estimated}
 \title{Calculates matrix X*beta (the estimated value of this)}
 \usage{
-calculate_XT_estimated(number_vars_estimated = SCHATTEN_MET_AANTALVARS)
+calculate_XT_estimated(
+  number_vars_estimated = SCHATTEN_MET_AANTALVARS,
+  number_of_variables = aantalvars
+)
 }
 \arguments{
 \item{number_vars_estimated}{number of observable variables for which a coeffcient will be estimated during the algorithm.

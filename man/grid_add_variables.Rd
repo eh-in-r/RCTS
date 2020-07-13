@@ -4,7 +4,14 @@
 \alias{grid_add_variables}
 \title{Function which is used to have a df ("grid") with data (individualindex, timeindex, XT and LF) available.}
 \usage{
-grid_add_variables(grid, theta, lambda, comfactor)
+grid_add_variables(
+  grid,
+  theta,
+  lambda,
+  comfactor,
+  number_of_variables = aantalvars,
+  number_of_groups = aantalgroepen
+)
 }
 \arguments{
 \item{theta}{beta}
@@ -12,6 +19,10 @@ grid_add_variables(grid, theta, lambda, comfactor)
 \item{lambda}{loadings of the common factors}
 
 \item{comfactor}{common factors}
+
+\item{number_of_variables}{number of observable variables (in X)}
+
+\item{number_of_groups}{number of groups that are being estimated}
 }
 \description{
 It is used in update_g().

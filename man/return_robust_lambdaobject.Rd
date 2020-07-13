@@ -9,9 +9,9 @@ return_robust_lambdaobject(
   group,
   type,
   FACTOR_GROUP = factor_group,
-  AANTALFACTOREN_GROUPS = aantalfactoren_groups,
+  number_of_group_factors = aantalfactoren_groups,
   FACTOR = comfactor,
-  AANTALFACTOREN_COMMON = aantalfactoren_common
+  number_of_common_factors = aantalfactoren_common
 )
 }
 \arguments{

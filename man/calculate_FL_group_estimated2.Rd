@@ -4,7 +4,16 @@
 \alias{calculate_FL_group_estimated2}
 \title{Returns the estimated groupfactorstructure.}
 \usage{
-calculate_FL_group_estimated2(f, l, j)
+calculate_FL_group_estimated2(
+  f,
+  l,
+  j,
+  number_of_groups = aantalgroepen,
+  number_of_common_factors = aantalfactoren_common,
+  num_factors_may_vary = aantalfactors_verschillend_per_group,
+  NN = aantal_N,
+  TT = aantal_T
+)
 }
 \arguments{
 \item{f}{groupfactors}
@@ -12,6 +21,8 @@ calculate_FL_group_estimated2(f, l, j)
 \item{l}{grouploadings}
 
 \item{j}{Number of groupfactors that are being used in the calculation.}
+
+\item{num_factors_may_vary}{whether or not the number of groupfactors is constant over all groups or not}
 }
 \description{
 This is the same function as calculate_FL_group_estimated(), but with adjustable parameters

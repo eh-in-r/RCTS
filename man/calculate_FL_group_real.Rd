@@ -6,8 +6,26 @@
 \usage{
 calculate_FL_group_real(
   LAMBDA_GROUP_REAL = lambda_group_real,
-  FACTOR_GROUP_REAL = factor_group_real
+  FACTOR_GROUP_REAL = factor_group_real,
+  number_of_groups_real = aantalgroepen_real,
+  number_of_group_factors_real = aantalfactoren_groups_real,
+  number_of_common_factors_real = aantalfactoren_common_real,
+  num_factors_may_vary = aantalfactors_verschillend_per_group,
+  abctypes = FALSE
 )
+}
+\arguments{
+\item{LAMBDA_GROUP_REAL}{real group factor loadings}
+
+\item{FACTOR_GROUP_REAL}{real group factors}
+
+\item{number_of_groups_real}{real number of groups}
+
+\item{number_of_group_factors_real}{real number of group factors for each group}
+
+\item{number_of_common_factors_real}{real number of common factors}
+
+\item{num_factors_may_vary}{whether or not the number of groupfactors is constant over all groups or not}
 }
 \value{
 list with NjxT matrices

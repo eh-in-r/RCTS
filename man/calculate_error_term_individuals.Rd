@@ -4,7 +4,11 @@
 \alias{calculate_error_term_individuals}
 \title{Calculates the error term Y - X*BETA - LF - LgFg.}
 \usage{
-calculate_error_term_individuals()
+calculate_error_term_individuals(
+  number_of_variables = aantalvars,
+  number_of_groups = aantalgroepen,
+  number_of_group_factors = aantalfactoren_groups
+)
 }
 \value{
 NxT matrix

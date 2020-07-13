@@ -4,7 +4,13 @@
 \alias{calculate_Z_common}
 \title{Calculates Z = Y - X*BETA - LgFg, to use in estimate of common factorstructure}
 \usage{
-calculate_Z_common(theta, g, lgfg_list, initialise = FALSE)
+calculate_Z_common(
+  theta,
+  g,
+  lgfg_list,
+  initialise = FALSE,
+  number_of_variables = aantalvars
+)
 }
 \arguments{
 \item{theta}{beta}

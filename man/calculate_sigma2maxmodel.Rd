@@ -7,7 +7,11 @@
 calculate_sigma2maxmodel(
   optimize_kappa = FALSE,
   UPDATE1 = update1,
-  UPDATE2 = update2
+  UPDATE2 = update2,
+  number_of_groups = aantalgroepen,
+  number_of_groups_candidates = aantalgroepen_candidates,
+  number_of_group_factors = aantalfactoren_groups,
+  number_of_common_factors = aantalfactoren_common
 )
 }
 \arguments{
@@ -16,6 +20,12 @@ calculate_sigma2maxmodel(
 \item{UPDATE1}{option to indicate the number of groupfactors is updated during the algorithm; defults to FALSE}
 
 \item{UPDATE2}{option to indicate the number of common factors is updated during the algorithm; defults to FALSE}
+
+\item{number_of_groups}{number of groups}
+
+\item{number_of_groups_candidates}{vector with candidate values for the number of groups}
+
+\item{number_of_group_factors}{Vector with length the number of estimated groups. Each element is the number of estimated group factors for this group.}
 }
 \description{
 we need the sigma2 of the maxmodel to use (in term 2,3,4 of the PIC) instead of the configuration-dependent sigma2. (based on text in AndoBai 2016).

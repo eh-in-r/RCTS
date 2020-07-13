@@ -4,14 +4,22 @@
 \alias{calculate_PIC}
 \title{Function to determine PIC (panel information criterium)}
 \usage{
-calculate_PIC(C, aantalfactoren_common, aantalfactoren_groups, e2, sigma2)
+calculate_PIC(
+  C,
+  number_of_common_factors,
+  number_of_group_factors,
+  e2,
+  sigma2,
+  number_of_variables = aantalvars,
+  number_of_groups = aantalgroepen
+)
 }
 \arguments{
 \item{C}{determines relative contribution of the penamlty terms}
 
-\item{aantalfactoren_common}{number of common factors}
+\item{number_of_common_factors}{number of common factors}
 
-\item{aantalfactoren_groups}{vector with number of groupfactors}
+\item{number_of_group_factors}{vector with number of groupfactors}
 
 \item{e2}{matrix with error terms}
 

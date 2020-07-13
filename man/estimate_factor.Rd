@@ -9,7 +9,7 @@ estimate_factor(
   g,
   lgfg_list,
   initialise = FALSE,
-  AANTALFACTOREN_COMMON = aantalfactoren_common
+  number_of_common_factors = aantalfactoren_common
 )
 }
 \arguments{
@@ -21,7 +21,7 @@ estimate_factor(
 
 \item{initialise}{boolean}
 
-\item{AANTALFACTOREN_COMMON}{number of common factors}
+\item{number_of_common_factors}{number of common factors}
 }
 \value{
 r x T matrix

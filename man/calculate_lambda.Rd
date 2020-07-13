@@ -10,7 +10,7 @@ calculate_lambda(
   g,
   lgfg_list,
   initialise = FALSE,
-  AANTALFACTOREN_COMMON = aantalfactoren_common
+  number_of_common_factors = aantalfactoren_common
 )
 }
 \arguments{
@@ -24,7 +24,7 @@ calculate_lambda(
 
 \item{initialise}{boolean}
 
-\item{AANTALFACTOREN_COMMON}{number of common factors}
+\item{number_of_common_factors}{number of common factors}
 }
 \description{
 calculates factor loadings of common factors

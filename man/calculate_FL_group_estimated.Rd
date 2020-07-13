@@ -6,8 +6,15 @@
 \usage{
 calculate_FL_group_estimated(
   LAMBDA_GROUP = lambda_group,
-  FACTOR_GROUP = factor_group
+  FACTOR_GROUP = factor_group,
+  number_of_groups = aantalgroepen,
+  number_of_group_factors = aantalfactoren_groups,
+  number_of_common_factors = aantalfactoren_common,
+  num_factors_may_vary = aantalfactors_verschillend_per_group
 )
+}
+\arguments{
+\item{num_factors_may_vary}{whether or not the number of groupfactors is constant over all groups or not}
 }
 \value{
 list with NjxT matrices

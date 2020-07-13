@@ -4,7 +4,15 @@
 \alias{calculate_Z_group}
 \title{Calculates Z = Y - X*BETA - LF), to use in estimate of groupfactorstructure.}
 \usage{
-calculate_Z_group(theta, g, lambda, comfactor, group, initialise)
+calculate_Z_group(
+  theta,
+  g,
+  lambda,
+  comfactor,
+  group,
+  initialise,
+  number_of_variables = aantalvars
+)
 }
 \arguments{
 \item{theta}{beta}

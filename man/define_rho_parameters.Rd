@@ -17,9 +17,9 @@ This function is used in update_g().
 lambda = ... #estimate common factor loadings
 comfactor = ... #estimate common factor
 LF = (t(lambda) \%*\% comfactor)
-aantalgroepen = 3
+number_of_groups = 3
 solve_FG_FG_times_FG = solveFG()
-virtual_grouped_factor_structure = lapply(1:aantalgroepen, function(y) calculate_virtual_factor_and_lambda_group(y, solve_FG_FG_times_FG))
-ERRORS_VIRTUAL = lapply(1:aantalgroepen, function(x) calculate_errors_virtual_groups(x,LF,virtual_grouped_factor_structure))
+virtual_grouped_factor_structure = lapply(1:number_of_groups, function(y) calculate_virtual_factor_and_lambda_group(y, solve_FG_FG_times_FG))
+ERRORS_VIRTUAL = lapply(1:number_of_groups, function(x) calculate_errors_virtual_groups(x,LF,virtual_grouped_factor_structure))
 define_rho_parameters(ERRORS_VIRTUAL[[x]]))
 }

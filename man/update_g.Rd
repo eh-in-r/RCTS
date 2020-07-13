@@ -4,7 +4,14 @@
 \alias{update_g}
 \title{Function that estimates group membership.}
 \usage{
-update_g()
+update_g(
+  NN = aantal_N,
+  number_of_groups = aantalgroepen,
+  number_of_group_factors = aantalfactoren_groups
+)
+}
+\arguments{
+\item{number_of_groups}{number of estimated groups}
 }
 \value{
 list: 1st element contains group membership and second element contains the values which are used to determine group membership
@@ -27,21 +34,14 @@ g = RobClustTimeSeries::g_real_dgp3
 use_robust = TRUE
 b = 1 #> 0 group factors
 a = 0 #0 common factors
-aantalgroepen = 3
-aantalfactoren_common = 0
-aantalfactoren_groups = c(3,3,3)
-aantal_N = 300
-aantal_T = 30
-grid = expand.grid(1:aantal_N,1:aantal_T)
-aantalvars = 3
-SCHATTEN_MET_AANTALVARS = 3
+grid = expand.grid(1:300,1:30)
 homogeneous_coefficients = FALSE
 heterogeneous_coefficients_groups = FALSE
 heterogeneous_coefficients_individuals = TRUE
 eclipz = FALSE
 ABDGP1 = FALSE
 ABintercept = TRUE
-theta = calculate_theta_alpha()[[1]]
+theta = estimate_beta(NN = 300, TT = 30, number_of_groups = 3, number_of_group_factors = c(3,3,3), number_of_common_factors = 0, number_of_variables = 3)[[1]]
 grid = grid_add_variables(grid,theta, lambda, comfactor)
-g_new = update_g()[[1]]
+g_new = update_g(number_of_groups = 3, number_of_group_factors = c(3,3,3))[[1]]
 }

@@ -5,8 +5,8 @@
 \title{Helpfunction in create_theta_real() for the option theta_real_heterogeen_groups. (This is the deault option)}
 \usage{
 theta_real_heterogroups(
-  aantalvars,
-  number_of_real_groups,
+  number_of_variables,
+  number_of_groups_real,
   EXTRA_THETA_FACTOR = 1
 )
 }

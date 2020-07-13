@@ -4,7 +4,14 @@
 \alias{calculate_VCsquared}
 \title{Calculates VC², to determine the stability of the found number of groups and factors over the subsamples.}
 \usage{
-calculate_VCsquared(rcj, rc, C_candidates, UPDATE1 = FALSE, UPDATE2 = FALSE)
+calculate_VCsquared(
+  rcj,
+  rc,
+  C_candidates,
+  UPDATE1 = FALSE,
+  UPDATE2 = FALSE,
+  number_of_group_factors = aantalfactoren_groups
+)
 }
 \arguments{
 \item{rcj}{dataframe containg the numer of groupfactors for all candidate C's and all subsamples}
@@ -16,6 +23,8 @@ calculate_VCsquared(rcj, rc, C_candidates, UPDATE1 = FALSE, UPDATE2 = FALSE)
 \item{UPDATE1}{option to indicate the number of groupfactors is updated during the algorithm; defults to FALSE}
 
 \item{UPDATE2}{option to indicate the number of common factors is updated during the algorithm; defults to FALSE}
+
+\item{number_of_group_factors}{Vector with length the number of estimated groups. Each element is the number of estimated group factors for this group.}
 }
 \description{
 VC² depends on C (this is the scale parameter in PIC). When VC² is equal to zero, the found number of groups and factors

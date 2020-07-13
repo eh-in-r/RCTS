@@ -4,12 +4,12 @@
 \alias{generate_grouped_factorstructure}
 \title{Generates the real groupfactorstructure, to use in simulations.}
 \usage{
-generate_grouped_factorstructure(S, aantalfactoren_groups_real)
+generate_grouped_factorstructure(S, number_of_group_factors_real)
 }
 \arguments{
 \item{S}{real number of groups}
 
-\item{aantalfactoren_groups_real}{vector with as length the number of groups, where each element is the number of real groupfactors of that group.}
+\item{number_of_group_factors_real}{vector with as length the number of groups, where each element is the number of real groupfactors of that group.}
 }
 \value{
 list: first element contains real groupfactors and second element contains real groupfactor loadings

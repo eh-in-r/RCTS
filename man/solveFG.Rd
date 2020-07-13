@@ -4,7 +4,10 @@
 \alias{solveFG}
 \title{helpfunction in update_g(), to calculate solve(FG x t(FG)) x FG}
 \usage{
-solveFG()
+solveFG(
+  number_of_groups = aantalgroepen,
+  number_of_group_factors = aantalfactoren_groups
+)
 }
 \description{
 helpfunction in update_g(), to calculate solve(FG x t(FG)) x FG

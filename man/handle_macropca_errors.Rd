@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{handle_macropca_errors}
 \alias{handle_macropca_errors}
-\title{Helpfunction in bepaal_robpca().}
+\title{Helpfunction in robustpca().}
 \usage{
 handle_macropca_errors(object, temp, KMAX, aantal_eigenvectoren)
 }

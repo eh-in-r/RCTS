@@ -11,7 +11,12 @@ OF_vectorized3(
   LAMBDA = lambda,
   FACTOR = comfactor,
   LAMBDA_GROUP = lambda_group,
-  FACTOR_GROUP = factor_group
+  FACTOR_GROUP = factor_group,
+  NN = aantal_N,
+  number_of_groups = aantalgroepen,
+  number_of_common_factors = aantalfactoren_common,
+  number_of_group_factors = aantalfactoren_groups,
+  num_factors_may_vary = aantalfactors_verschillend_per_group
 )
 }
 \arguments{

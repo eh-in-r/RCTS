@@ -5,10 +5,10 @@
 \title{Generate panel data Y for simulations.}
 \usage{
 generate_Y(
-  aantal_N_fulldata,
-  aantal_T_fulldata,
-  aantalfactoren_common_real,
-  aantalfactoren_groups_real,
+  NN,
+  TT,
+  number_of_common_factors_real,
+  number_of_group_factors_real,
   g_real,
   theta_real,
   lambda_group_real,
@@ -19,17 +19,18 @@ generate_Y(
   abctypes = FALSE,
   ando_bai = FALSE,
   ando_bai_2017 = FALSE,
-  eclipz = FALSE
+  eclipz = FALSE,
+  number_of_Variables = aantalvars
 )
 }
 \arguments{
-\item{aantal_N_fulldata}{N: number of elements}
+\item{NN}{N: number of elements}
 
-\item{aantal_T_fulldata}{T: length of timer series}
+\item{TT}{T: length of timer series}
 
-\item{aantalfactoren_common_real}{number of common factors included}
+\item{number_of_common_factors_real}{real number of common factors}
 
-\item{aantalfactoren_groups_real}{number of groupfactors included}
+\item{number_of_group_factors_real}{Vector of length the number of groups. Each element contains the real number of group factors for that group.}
 
 \item{g_real}{vector with real group memberships}
 
@@ -43,7 +44,7 @@ generate_Y(
 
 \item{factor_real}{common factors}
 
-\item{epsilon}{error term}
+\item{epsilon}{NN x TT-matrix containing the error term}
 
 \item{abctypes}{option to make a dataset containing specific incomepatterns based on incomelimits for Belgian independents. Only for testing purposes. Defaults to FALSE.}
 
@@ -52,6 +53,8 @@ generate_Y(
 \item{ando_bai_2017}{loads Ando/Bai-dataset; only for testing purposes. Defaults to FALSE.}
 
 \item{eclipz}{parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
+
+\item{number_of_Variables}{number of observable variables}
 }
 \value{
 N x T matrix

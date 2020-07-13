@@ -4,7 +4,12 @@
 \alias{calculate_W}
 \title{Calculates W = Y - X*BETA}
 \usage{
-calculate_W(theta, g)
+calculate_W(
+  theta,
+  g,
+  number_of_variables = aantalvars,
+  number_vars_estimated = SCHATTEN_MET_AANTALVARS
+)
 }
 \arguments{
 \item{theta}{beta}

@@ -10,7 +10,8 @@ estimate_factor_group(
   lambda,
   comfactor,
   initialise = FALSE,
-  AANTALFACTOREN_GROUPS = aantalfactoren_groups
+  number_of_groups = aantalgroepen,
+  number_of_group_factors = aantalfactoren_groups
 )
 }
 \arguments{
@@ -24,7 +25,7 @@ estimate_factor_group(
 
 \item{initialise}{boolean}
 
-\item{AANTALFACTOREN_GROUPS}{vector with number of group factors}
+\item{number_of_group_factors}{vector with number of group factors}
 }
 \description{
 estimates group factors

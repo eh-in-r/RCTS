@@ -4,7 +4,12 @@
 \alias{calculate_errors_virtual_groups}
 \title{Helpfunction for update_g(). Calculates the errors for every virtual group.}
 \usage{
-calculate_errors_virtual_groups(k, LF, virtual_grouped_factor_structure)
+calculate_errors_virtual_groups(
+  k,
+  LF,
+  virtual_grouped_factor_structure,
+  number_of_variables = aantalvars
+)
 }
 \arguments{
 \item{k}{group}

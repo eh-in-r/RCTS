@@ -4,7 +4,11 @@
 \alias{calculate_virtual_factor_and_lambda_group}
 \title{Helpfunction used in update_g()}
 \usage{
-calculate_virtual_factor_and_lambda_group(group, solve_FG_FG_times_FG)
+calculate_virtual_factor_and_lambda_group(
+  group,
+  solve_FG_FG_times_FG,
+  number_of_common_factors = aantalfactoren_common
+)
 }
 \arguments{
 \item{group}{number of group}

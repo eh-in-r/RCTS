@@ -5,18 +5,18 @@
 \title{Creates theta_real, which contains the real values of beta (= the coefficients of X)}
 \usage{
 create_theta_real(
-  aantalvars,
-  number_of_real_groups = aantalgroepen_real,
+  number_of_Variables,
+  number_of_groups_real = aantalgroepen_real,
   ECLIPZ = FALSE,
   extra_theta_factor = 1
 )
 }
 \arguments{
-\item{aantalvars}{number of observable variables}
-
-\item{number_of_real_groups}{number of groups}
+\item{number_of_groups_real}{number of groups}
 
 \item{extra_theta_factor}{multiplies coefficients in beta; default = 1}
+
+\item{number_of_variables}{number of observable variables}
 
 \item{eclipz}{parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
 }
@@ -28,5 +28,5 @@ equal to the real number of groups.
 theta_real_heterogeen_groups is the default case
 }
 \examples{
-create_theta_real(3,number_of_real_groups = 3)
+create_theta_real(3,number_of_groups_real = 3)
 }

@@ -8,10 +8,10 @@ Each element of the list with the assumption that all individuals are in the sam
 calculate_lgfg(
   lambda_group,
   factor_group,
-  ag,
-  afg,
-  afc,
-  number_factors_not_equal_per_group
+  number_of_groups,
+  number_of_group_factors,
+  number_of_common_factors,
+  num_factors_may_vary
 )
 }
 \arguments{
@@ -19,13 +19,13 @@ calculate_lgfg(
 
 \item{factor_group}{groupfactors}
 
-\item{ag}{number of groups}
+\item{number_of_groups}{number of groups}
 
-\item{afg}{Vector with length ag. Every element contains the number of groupfactors of that group.}
+\item{number_of_group_factors}{Vector with length number_of_groups. Every element contains the number of groupfactors of that group.}
 
-\item{afc}{number of common factors}
+\item{number_of_common_factors}{number of common factors}
 
-\item{number_factors_not_equal_per_group}{TRUE or FALSE, dependingon whether the number of group factors can differ between groups (when estimating this number)}
+\item{num_factors_may_vary}{TRUE or FALSE, dependingon whether the number of group factors can differ between groups (when estimating this number)}
 }
 \description{
 This function is used to speed up code.

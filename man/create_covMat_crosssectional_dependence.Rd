@@ -4,12 +4,12 @@
 \alias{create_covMat_crosssectional_dependence}
 \title{Function used in generating simulated data with non normal errors.}
 \usage{
-create_covMat_crosssectional_dependence(parameter, N)
+create_covMat_crosssectional_dependence(parameter, NN)
 }
 \arguments{
 \item{parameter}{amount of cross-sectional dependence}
 
-\item{N}{Number of individuals}
+\item{NN}{Number of individuals}
 }
 \value{
 NxN covariance matrix

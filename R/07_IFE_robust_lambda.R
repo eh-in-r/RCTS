@@ -1,5 +1,5 @@
 
-#Script contains functions to estimate robust lambda's
+#Script contains functions to estimate robust lambda's.
 
 
 #' calculates vector of which the mean is equal to classical lambda
@@ -41,16 +41,13 @@ determine_robust_lambda <- function(almost_classical_lambda) {
   sum_of_rho <- function(x) {
     sum( Mpsi((almost_classical_lambda - x) / MADCL , cc = 4.685, psi = "bisquare", deriv = -1) )
   }
-  # if(eclipz) {
-  #   print(almost_classical_lambda)
-  #   print(MADCL)
-  # }
+
 
   #check if rho-function = x^2 -> then this should be the same as the classical lambda (= mean(almost_classical_lambda))
   # testje <- function(x) {
   #   return((almost_classical_lambda-x)^2 %>% sum)
   # }
-  # optim(par = 0, fn = testje,method = "L-BFGS-B")$par -  mean(almost_classical_lambda) < 1e13 #moet TRUE zijn
+  # optim(par = 0, fn = testje,method = "L-BFGS-B")$par -  mean(almost_classical_lambda) < 1e13 #has to be TRUE
 
   robust_lambda = optim(par = 0, fn = sum_of_rho,method = "L-BFGS-B")$par
   return(robust_lambda)
@@ -81,20 +78,20 @@ determine_robust_lambda <- function(almost_classical_lambda) {
 #' @return Nxk dataframe
 #' @export
 return_robust_lambdaobject <- function(Y_like_object, group, type,
-                                       FACTOR_GROUP = factor_group, AANTALFACTOREN_GROUPS = aantalfactoren_groups,
-                                       FACTOR = comfactor, AANTALFACTOREN_COMMON = aantalfactoren_common) {
+                                       FACTOR_GROUP = factor_group, number_of_group_factors = aantalfactoren_groups,
+                                       FACTOR = comfactor, number_of_common_factors = aantalfactoren_common) {
   #print("return_robust_lambdaobject")
   #print(type)
   #used in calculate_virtual_factor_and_lambda_group
   if(type == 1) {
-    LG_local = data.frame(matrix(NA,nrow = aantal_N, ncol = AANTALFACTOREN_GROUPS[group]))
+    LG_local = data.frame(matrix(NA,nrow = aantal_N, ncol = number_of_group_factors[group]))
     #Deze MADCL diende om de sigma in the M-estimator onafhankelijk van i te maken
-    #MADCL = mad(all_almost_classical_lambda(Y_like_object, FACTOR_GROUP[[group]], AANTALFACTOREN_GROUPS[group], group, aantal_N))
+    #MADCL = mad(all_almost_classical_lambda(Y_like_object, FACTOR_GROUP[[group]], number_of_group_factors[group], group, aantal_N))
 
-    almost_classical_lambda = lapply(1:aantal_N, function(x) lapply(1:AANTALFACTOREN_GROUPS[group], function(y) (Y_like_object[x,] * t(FACTOR_GROUP[[group]])[,y])))
+    almost_classical_lambda = lapply(1:aantal_N, function(x) lapply(1:number_of_group_factors[group], function(y) (Y_like_object[x,] * t(FACTOR_GROUP[[group]])[,y])))
 
     for(ii in 1:aantal_N) {
-      for(rr in 1:AANTALFACTOREN_GROUPS[group]) {
+      for(rr in 1:number_of_group_factors[group]) {
 
         almost_classical_lambda = (Y_like_object[ii,] * t(FACTOR_GROUP[[group]])[,rr])  #the mean of this is equal to classical lambda
 
@@ -129,11 +126,11 @@ return_robust_lambdaobject <- function(Y_like_object, group, type,
 
   #used in calculate_lambda()
   if(type == 2) {
-    if(AANTALFACTOREN_COMMON > 0) {
-      lambda = matrix(NA, nrow = AANTALFACTOREN_COMMON, ncol = aantal_N)
+    if(number_of_common_factors > 0) {
+      lambda = matrix(NA, nrow = number_of_common_factors, ncol = aantal_N)
       #MADCL = mad(all_almost_classical_lambda(Y_like_object, FACTOR, AANTALFACTOREN_COMMON, NA, aantal_N))
       for(ii in 1:aantal_N) {
-        for(rr in 1:AANTALFACTOREN_COMMON) {
+        for(rr in 1:number_of_common_factors) {
 
           almost_classical_lambda = (Y_like_object[ii,] * t(FACTOR)[,rr]) #the mean of this is equal to the classical lambda
 
@@ -150,12 +147,12 @@ return_robust_lambdaobject <- function(Y_like_object, group, type,
 
   #used in calculate_lambda_group()
   if(type == 3) {
-    lambda_local = data.frame(matrix(NA,nrow = length(which(g == group)), ncol = AANTALFACTOREN_GROUPS[group]))
+    lambda_local = data.frame(matrix(NA,nrow = length(which(g == group)), ncol = number_of_group_factors[group]))
 
     #length(which(g == group)) == nrow(Y_like_object)
-    #MADCL = mad(all_almost_classical_lambda(Y_like_object, FACTOR_GROUP[[group]], AANTALFACTOREN_GROUPS[group], group, length(which(g == group))  ))
+    #MADCL = mad(all_almost_classical_lambda(Y_like_object, FACTOR_GROUP[[group]], number_of_group_factors[group], group, length(which(g == group))  ))
     for(ii in 1:length(which(g == group))) {
-      for(rr in 1:AANTALFACTOREN_GROUPS[group]) {
+      for(rr in 1:number_of_group_factors[group]) {
         almost_classical_lambda = (Y_like_object[ii,] * t(FACTOR_GROUP[[group]])[,rr])  #the mean of this is equal to classical lambda
         #print(mean(almost_classical_lambda))
 
