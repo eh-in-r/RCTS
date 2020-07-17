@@ -441,7 +441,7 @@ initialise_beta <- function(eclipz = FALSE,
         }
 
         #X needs to be in the form of (NN*TT x p matrix)
-        X_special = restructure_X_to_order_slowN_fastT(array(X[indices_group,,], dim = c(length(indices_group), TT, number_of_vars)), eclipz)
+        X_special = restructure_X_to_order_slowN_fastT(array(X[indices_group,,], dim = c(length(indices_group), TT, number_of_vars)), eclipz, number_of_variables = number_of_variables)
 
         Y_special = as.vector(t(Y[indices_group,])) #order: N1T1, N1T2,N1T3,...N2T1,...N_endT_end
 
@@ -455,7 +455,7 @@ initialise_beta <- function(eclipz = FALSE,
 
       #Initialisation: use of lm here instead of ncvreg (cf AndoBai-code)
       for(i in 1:NN) {
-        X_special = restructure_X_to_order_slowN_fastT(matrix(X[i,,], ncol = dim(X)[3]), eclipz)
+        X_special = restructure_X_to_order_slowN_fastT(matrix(X[i,,], ncol = dim(X)[3]), eclipz, number_of_variables = number_of_variables)
         Y_special = as.vector(t(Y[i,]))
 
         if(use_robust) {
