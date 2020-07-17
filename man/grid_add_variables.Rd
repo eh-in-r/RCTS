@@ -20,9 +20,9 @@ grid_add_variables(
 
 \item{comfactor}{common factors}
 
-\item{number_of_variables}{number of observable variables (in X)}
+\item{number_of_variables}{number of observable variables}
 
-\item{number_of_groups}{number of groups that are being estimated}
+\item{number_of_groups}{number of groups estimated}
 }
 \description{
 It is used in update_g().

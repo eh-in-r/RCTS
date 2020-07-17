@@ -7,9 +7,12 @@
 calculate_error_term(
   no_common_factorstructure = FALSE,
   no_group_factorstructure = FALSE,
+  NN = aantal_N,
+  TT = aantal_T,
   number_of_variables = aantalvars,
   number_of_groups = aantalgroepen,
-  number_of_group_factors = aantalfactoren_groups
+  number_of_group_factors = aantalfactoren_groups,
+  number_of_common_factors = aantalfactoren_common
 )
 }
 \arguments{
@@ -17,9 +20,9 @@ calculate_error_term(
 
 \item{no_group_factorstructure}{if there is a group factorstructure being estimated}
 
-\item{number_of_variables}{number of observable variables (in X)}
+\item{number_of_variables}{number of observable variables}
 
-\item{number_of_groups}{number of groups that are being estimated}
+\item{number_of_groups}{number of groups estimated}
 }
 \value{
 NxT matrix

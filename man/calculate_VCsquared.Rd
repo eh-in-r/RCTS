@@ -24,7 +24,7 @@ calculate_VCsquared(
 
 \item{UPDATE2}{option to indicate the number of common factors is updated during the algorithm; defults to FALSE}
 
-\item{number_of_group_factors}{Vector with length the number of estimated groups. Each element is the number of estimated group factors for this group.}
+\item{number_of_group_factors}{number of groupfactors estimated}
 }
 \description{
 VC² depends on C (this is the scale parameter in PIC). When VC² is equal to zero, the found number of groups and factors

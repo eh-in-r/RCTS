@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{estimate_beta}
 \alias{estimate_beta}
-\title{Update step of algorithm to obtain new theta (and alpha of Bonhomme/Manresa).}
+\title{Estimates beta.}
 \usage{
 estimate_beta(
   optimize_kappa = FALSE,
@@ -19,12 +19,30 @@ estimate_beta(
 }
 \arguments{
 \item{optimize_kappa}{indicates if kappa has to be optimized or not; defaults to FALSE}
+
+\item{eclipz}{parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
+
+\item{NN}{number of individuals}
+
+\item{TT}{length of time series}
+
+\item{number_of_groups}{number of groups estimated}
+
+\item{number_of_group_factors}{number of groupfactors estimated}
+
+\item{number_of_common_factors}{number of common factors estimated}
+
+\item{number_of_variables}{number of observable variables}
+
+\item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
+
+\item{num_factors_may_vary}{whether or not the number of groupfactors is constant over all groups or not}
 }
 \value{
 list: 1st element contains matrix (N columns: 1 for each element of the panel data) with estimated beta's.
 }
 \description{
-Update step of algorithm to obtain new theta (and alpha of Bonhomme/Manresa).
+Update step of algorithm to obtain new estimation for beta.
 }
 \examples{
 #This function needs several initial parameters to be initialized in order to work on itself.

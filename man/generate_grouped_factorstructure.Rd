@@ -4,12 +4,18 @@
 \alias{generate_grouped_factorstructure}
 \title{Generates the real groupfactorstructure, to use in simulations.}
 \usage{
-generate_grouped_factorstructure(S, number_of_group_factors_real)
+generate_grouped_factorstructure(
+  S,
+  number_of_group_factors_real,
+  TT = aantal_T_fulldata
+)
 }
 \arguments{
 \item{S}{real number of groups}
 
 \item{number_of_group_factors_real}{vector with as length the number of groups, where each element is the number of real groupfactors of that group.}
+
+\item{TT}{length of time series}
 }
 \value{
 list: first element contains real groupfactors and second element contains real groupfactor loadings
@@ -21,5 +27,10 @@ factors ~ N(j * FGR_FACTOR, FGR_FACTOR_sd) -> default case will be N(j,1)
 }
 \examples{
 #3 groups, each with 3 groupfactors:
-generate_grouped_factorstructure(3,c(3,3,3))
+g_real = ceiling(runif(300) * 3)
+LGR_FACTOR_mean = 0
+LGR_FACTOR = 1
+FGR_FACTOR_sd = 1
+FGR_FACTOR = 1
+generate_grouped_factorstructure(3,c(3,3,3), TT = 30)
 }

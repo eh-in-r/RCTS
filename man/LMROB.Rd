@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{LMROB}
 \alias{LMROB}
-\title{Wrapper around lmrob, to make sure this error does not happen anymore.}
+\title{Wrapper around lmrob.}
 \usage{
 LMROB(parameter_y, parameter_x, NOINTERCEPT = FALSE)
 }
@@ -15,4 +15,7 @@ LMROB(parameter_y, parameter_x, NOINTERCEPT = FALSE)
 }
 \description{
 
+}
+\details{
+KS2014 is the recommended setting, but leads to increased comp.time.
 }

@@ -14,6 +14,8 @@ calculate_virtual_factor_and_lambda_group(
 \item{group}{number of group}
 
 \item{solve_FG_FG_times_FG}{This is the same as groupfactor / T. It is only used in the Classical approach}
+
+\item{number_of_common_factors}{number of common factors estimated}
 }
 \value{
 NxT matrix containing the product of virtual groupfactors and virtual loadings

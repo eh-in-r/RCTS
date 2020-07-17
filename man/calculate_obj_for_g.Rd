@@ -4,7 +4,7 @@
 \alias{calculate_obj_for_g}
 \title{Calculates objective function for individual i and group k in order to estimate group membership.}
 \usage{
-calculate_obj_for_g(i, k, ERRORS_VIRTUAL, rho_parameters)
+calculate_obj_for_g(i, k, ERRORS_VIRTUAL, rho_parameters, TT = aantal_T)
 }
 \arguments{
 \item{i}{individual}

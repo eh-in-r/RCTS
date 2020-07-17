@@ -18,7 +18,7 @@ calculate_mse_theta(
 
 \item{without_intercept}{boolean to remove the intercept in the calculation}
 
-\item{ABintercept}{boolean to remove the de facto intercept in the calculation (this is only for DGP 1 & 2)}
+\item{ABintercept}{boolean to remove the de facto intercept in the calculation (this is only for DGP 1 & 2, due to how they were defined)}
 }
 \description{
 (calculated with formula of AndoBai2017: supplementary: p19).

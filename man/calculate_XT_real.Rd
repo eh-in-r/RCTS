@@ -2,10 +2,21 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{calculate_XT_real}
 \alias{calculate_XT_real}
-\title{Calculates matrix X*beta (the real value of this)}
+\title{Calculates the product of X*beta (the real value of this).}
 \usage{
-calculate_XT_real(number_of_variables = aantalvars)
+calculate_XT_real(
+  NN = aantal_N,
+  TT = aantal_T,
+  number_of_variables = aantalvars
+)
+}
+\arguments{
+\item{NN}{number of individuals}
+
+\item{TT}{length of time series}
+
+\item{number_of_variables}{number of observable variables}
 }
 \description{
-Calculates matrix X*beta (the real value of this)
+Calculates the product of X*beta (the real value of this).
 }

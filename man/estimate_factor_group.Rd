@@ -10,6 +10,8 @@ estimate_factor_group(
   lambda,
   comfactor,
   initialise = FALSE,
+  NN = aantal_N,
+  TT = aantal_T,
   number_of_groups = aantalgroepen,
   number_of_group_factors = aantalfactoren_groups
 )
@@ -19,13 +21,19 @@ estimate_factor_group(
 
 \item{g}{vector with group membership}
 
-\item{lambda}{loadings}
+\item{lambda}{common factor loadings}
 
 \item{comfactor}{common factors}
 
 \item{initialise}{boolean}
 
-\item{number_of_group_factors}{vector with number of group factors}
+\item{NN}{number of individuals}
+
+\item{TT}{length of time series}
+
+\item{number_of_groups}{number of groups estimated}
+
+\item{number_of_group_factors}{number of groupfactors estimated}
 }
 \description{
 estimates group factors

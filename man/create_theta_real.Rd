@@ -15,10 +15,6 @@ create_theta_real(
 \item{number_of_groups_real}{number of groups}
 
 \item{extra_theta_factor}{multiplies coefficients in beta; default = 1}
-
-\item{number_of_variables}{number of observable variables}
-
-\item{eclipz}{parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
 }
 \value{
 matrix with number of rows equal to number of observable variables + 1 (the first row contains the intercept) and number of culumns

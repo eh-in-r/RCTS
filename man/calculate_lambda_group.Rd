@@ -13,6 +13,7 @@ calculate_lambda_group(
   initialise = FALSE,
   UPDATE1 = update1,
   UPDATE2 = update2,
+  TT = aantal_T,
   number_of_groups = aantalgroepen,
   number_of_group_factors = aantalfactoren_groups
 )
@@ -34,9 +35,11 @@ calculate_lambda_group(
 
 \item{UPDATE2}{option to indicate the number of common factors is updated during the algorithm; defults to FALSE}
 
-\item{number_of_groups}{number of groups}
+\item{TT}{length of time series}
 
-\item{number_of_group_factors}{Vector with length the number of estimated groups. Each element is the number of estimated group factors for this group.}
+\item{number_of_groups}{number of groups estimated}
+
+\item{number_of_group_factors}{number of groupfactors estimated}
 }
 \description{
 returns object which includes group and id of the individuals

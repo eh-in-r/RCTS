@@ -10,6 +10,8 @@ calculate_PIC(
   number_of_group_factors,
   e2,
   sigma2,
+  NN = aantal_N,
+  TT = aantal_T,
   number_of_variables = aantalvars,
   number_of_groups = aantalgroepen
 )
@@ -17,13 +19,21 @@ calculate_PIC(
 \arguments{
 \item{C}{determines relative contribution of the penamlty terms}
 
-\item{number_of_common_factors}{number of common factors}
+\item{number_of_common_factors}{number of common factors estimated}
 
-\item{number_of_group_factors}{vector with number of groupfactors}
+\item{number_of_group_factors}{number of groupfactors estimated}
 
 \item{e2}{matrix with error terms}
 
 \item{sigma2}{scalar: sum of squared error terms, scaled by NT}
+
+\item{NN}{number of individuals}
+
+\item{TT}{length of time series}
+
+\item{number_of_variables}{number of observable variables}
+
+\item{number_of_groups}{number of groups estimated}
 }
 \description{
 This depends on kappa1 -> kappaN, through p (=number of nonzero elements of theta).

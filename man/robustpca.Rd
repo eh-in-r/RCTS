@@ -4,14 +4,12 @@
 \alias{robustpca}
 \title{Function that uses robust PCA and estimates robust factors and loadings.}
 \usage{
-robustpca(object, aantal_eigenvectoren, ALPHA = ALPHA_ROBPCA, KMAX = 20)
+robustpca(object, number_eigenvectors, KMAX = 20)
 }
 \arguments{
 \item{object}{input}
 
-\item{aantal_eigenvectoren}{number of eigenvectors to extract}
-
-\item{ALPHA}{parameter in robpca -obsolete-}
+\item{number_eigenvectors}{number of eigenvectors to extract}
 
 \item{KMAX}{-explain-}
 }

@@ -7,6 +7,8 @@
 calculate_FL_group_estimated(
   LAMBDA_GROUP = lambda_group,
   FACTOR_GROUP = factor_group,
+  NN = aantal_N,
+  TT = aantal_T,
   number_of_groups = aantalgroepen,
   number_of_group_factors = aantalfactoren_groups,
   number_of_common_factors = aantalfactoren_common,
@@ -14,6 +16,10 @@ calculate_FL_group_estimated(
 )
 }
 \arguments{
+\item{NN}{number of individuals}
+
+\item{TT}{length of time series}
+
 \item{num_factors_may_vary}{whether or not the number of groupfactors is constant over all groups or not}
 }
 \value{

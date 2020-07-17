@@ -5,13 +5,20 @@
 \title{Calculates matrix X*beta (the estimated value of this)}
 \usage{
 calculate_XT_estimated(
+  NN = aantal_N,
+  TT = aantal_T,
   number_vars_estimated = SCHATTEN_MET_AANTALVARS,
   number_of_variables = aantalvars
 )
 }
 \arguments{
-\item{number_vars_estimated}{number of observable variables for which a coeffcient will be estimated during the algorithm.
-Usual this is equal to the number of observable variables in X.}
+\item{NN}{number of individuals}
+
+\item{TT}{length of time series}
+
+\item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
+
+\item{number_of_variables}{number of observable variables}
 }
 \description{
 Calculates matrix X*beta (the estimated value of this)

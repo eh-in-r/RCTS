@@ -11,6 +11,7 @@ calculate_Z_group(
   comfactor,
   group,
   initialise,
+  TT = aantal_T,
   number_of_variables = aantalvars
 )
 }
@@ -19,7 +20,7 @@ calculate_Z_group(
 
 \item{g}{vector with group membership}
 
-\item{lambda}{loadings}
+\item{lambda}{common factor loadings}
 
 \item{comfactor}{common factors}
 

@@ -13,14 +13,12 @@ restructure_X_to_order_slowN_fastT(
 }
 \arguments{
 \item{X}{input}
-
-\item{eclipz}{parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
 }
 \description{
 This 2D-matrix is what Ando/Bai worked with.
 }
 \examples{
 X = initialise_X(300,30)
-restructure_X_to_order_slowN_fastT(X, FALSE)
+restructure_X_to_order_slowN_fastT(X, FALSE, number_of_Variables = 3, number_vars_estimated = 3)
 
 }

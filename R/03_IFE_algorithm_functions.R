@@ -871,7 +871,7 @@ OF_vectorized3 <- function(group_memberships, THETA = theta, ALPHA = alpha,
 #' @param lambda_group grouploadings
 #' @param factor_group groupfactors
 #' @inheritParams estimate_beta
-#' #' @examples
+#' @examples
 #' calculate_lgfg(lambda_group,factor_group,3,c(3,3,3),0,FALSE)
 #' @export
 calculate_lgfg <- function(lambda_group, factor_group, number_of_groups, number_of_group_factors, number_of_common_factors, num_factors_may_vary,
@@ -1012,7 +1012,9 @@ determine_beta <- function(string, X_special,Y_special, correct, initialisatie =
 
 
 
-#' Update step of algorithm to obtain new theta (and alpha of Bonhomme/Manresa).
+#' Estimates beta.
+#'
+#' Update step of algorithm to obtain new estimation for beta.
 #' @inheritParams determine_beta
 #' @param eclipz parameter to indicate using real world Eclipzdataset. Defaults to FALSE.
 #' @param NN number of individuals
@@ -2205,7 +2207,6 @@ adapt_X_estimating_less_variables <- function(eclipz = FALSE,
 
 #' Calculates matrix X*beta (the estimated value of this)
 #' @inheritParams estimate_beta
-#' Usual this is equal to the number of observable variables in X.
 #' @export
 calculate_XT_estimated <- function(NN = aantal_N, TT = aantal_T,
                                    number_vars_estimated = SCHATTEN_MET_AANTALVARS,

@@ -9,7 +9,10 @@ calculate_Z_common(
   g,
   lgfg_list,
   initialise = FALSE,
-  number_of_variables = aantalvars
+  NN = aantal_N,
+  TT = aantal_T,
+  number_of_variables = aantalvars,
+  number_of_group_factors = aantalfactoren_groups
 )
 }
 \arguments{
@@ -20,6 +23,14 @@ calculate_Z_common(
 \item{lgfg_list}{This is a list (length number of groups) containing FgLg for every group.}
 
 \item{initialise}{boolean}
+
+\item{NN}{number of individuals}
+
+\item{TT}{length of time series}
+
+\item{number_of_variables}{number of observable variables}
+
+\item{number_of_group_factors}{number of groupfactors estimated}
 }
 \description{
 Calculates Z = Y - X*BETA - LgFg, to use in estimate of common factorstructure

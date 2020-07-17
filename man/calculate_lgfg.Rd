@@ -11,7 +11,9 @@ calculate_lgfg(
   number_of_groups,
   number_of_group_factors,
   number_of_common_factors,
-  num_factors_may_vary
+  num_factors_may_vary,
+  NN = aantal_N,
+  TT = aantal_T
 )
 }
 \arguments{
@@ -19,13 +21,17 @@ calculate_lgfg(
 
 \item{factor_group}{groupfactors}
 
-\item{number_of_groups}{number of groups}
+\item{number_of_groups}{number of groups estimated}
 
-\item{number_of_group_factors}{Vector with length number_of_groups. Every element contains the number of groupfactors of that group.}
+\item{number_of_group_factors}{number of groupfactors estimated}
 
-\item{number_of_common_factors}{number of common factors}
+\item{number_of_common_factors}{number of common factors estimated}
 
-\item{num_factors_may_vary}{TRUE or FALSE, dependingon whether the number of group factors can differ between groups (when estimating this number)}
+\item{num_factors_may_vary}{whether or not the number of groupfactors is constant over all groups or not}
+
+\item{NN}{number of individuals}
+
+\item{TT}{length of time series}
 }
 \description{
 This function is used to speed up code.

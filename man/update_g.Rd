@@ -11,7 +11,11 @@ update_g(
 )
 }
 \arguments{
-\item{number_of_groups}{number of estimated groups}
+\item{NN}{number of individuals}
+
+\item{number_of_groups}{number of groups estimated}
+
+\item{number_of_group_factors}{number of groupfactors estimated}
 }
 \value{
 list: 1st element contains group membership and second element contains the values which are used to determine group membership
@@ -41,7 +45,7 @@ heterogeneous_coefficients_individuals = TRUE
 eclipz = FALSE
 ABDGP1 = FALSE
 ABintercept = TRUE
-theta = estimate_beta(NN = 300, TT = 30, number_of_groups = 3, number_of_group_factors = c(3,3,3), number_of_common_factors = 0, number_of_variables = 3)[[1]]
-grid = grid_add_variables(grid,theta, lambda, comfactor)
+beta = estimate_beta(NN = 300, TT = 30, number_of_groups = 3, number_of_group_factors = c(3,3,3), number_of_common_factors = 0, number_of_variables = 3,number_vars_estimated=3,num_factors_may_vary=FALSE)[[1]]
+grid = grid_add_variables(grid,beta, lambda, comfactor)
 g_new = update_g(number_of_groups = 3, number_of_group_factors = c(3,3,3))[[1]]
 }

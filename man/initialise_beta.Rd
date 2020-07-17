@@ -16,11 +16,9 @@ initialise_beta(
 \arguments{
 \item{eclipz}{parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
 
-\item{NN}{N: number of elements}
+\item{NN}{number of individuals}
 
-\item{TT}{T: length of timer series}
-
-\item{number_of_Variables}{number of observable variables}
+\item{TT}{length of time series}
 }
 \description{
 Note: this needs to be called before the definition of grid.
@@ -36,7 +34,6 @@ comfactor = matrix(0,nrow=1,ncol=30) #0 factors -> but needs placeholder
 X = RobClustTimeSeries::X_dgp3
 Y = RobClustTimeSeries::Y_dgp3
 g = RobClustTimeSeries::g_real_dgp3
-
 
 homogeneous_coefficients = FALSE
 heterogeneous_coefficients_groups = FALSE

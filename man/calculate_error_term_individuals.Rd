@@ -5,9 +5,12 @@
 \title{Calculates the error term Y - X*BETA - LF - LgFg.}
 \usage{
 calculate_error_term_individuals(
+  NN = aantal_N,
+  TT = aantal_T,
   number_of_variables = aantalvars,
   number_of_groups = aantalgroepen,
-  number_of_group_factors = aantalfactoren_groups
+  number_of_group_factors = aantalfactoren_groups,
+  number_of_common_factors = aantalfactoren_common
 )
 }
 \value{

@@ -12,6 +12,7 @@ determine_beta(
   initialisatie = FALSE,
   indices = NA,
   optimize_kappa = FALSE,
+  TT = aantal_T,
   number_of_variables = aantalvars
 )
 }

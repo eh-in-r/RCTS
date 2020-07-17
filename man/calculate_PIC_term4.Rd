@@ -4,7 +4,7 @@
 \alias{calculate_PIC_term4}
 \title{Function to calculate term4 of PIC for a group j; includes options for testing alternative PIC's.}
 \usage{
-calculate_PIC_term4(temp, term4, Nj)
+calculate_PIC_term4(temp, term4, Nj, NN = aantal_N)
 }
 \description{
 Used in calculate_PIC()

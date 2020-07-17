@@ -2,13 +2,14 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{solveFG}
 \alias{solveFG}
-\title{helpfunction in update_g(), to calculate solve(FG x t(FG)) x FG}
+\title{Helpfunction in update_g(), to calculate solve(FG x t(FG)) x FG}
 \usage{
 solveFG(
+  TT = aantal_T,
   number_of_groups = aantalgroepen,
   number_of_group_factors = aantalfactoren_groups
 )
 }
 \description{
-helpfunction in update_g(), to calculate solve(FG x t(FG)) x FG
+Helpfunction in update_g(), to calculate solve(FG x t(FG)) x FG
 }

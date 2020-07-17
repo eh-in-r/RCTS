@@ -24,9 +24,9 @@ generate_Y(
 )
 }
 \arguments{
-\item{NN}{N: number of elements}
+\item{NN}{number of individuals}
 
-\item{TT}{T: length of timer series}
+\item{TT}{length of time series}
 
 \item{number_of_common_factors_real}{real number of common factors}
 
@@ -53,8 +53,6 @@ generate_Y(
 \item{ando_bai_2017}{loads Ando/Bai-dataset; only for testing purposes. Defaults to FALSE.}
 
 \item{eclipz}{parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
-
-\item{number_of_Variables}{number of observable variables}
 }
 \value{
 N x T matrix

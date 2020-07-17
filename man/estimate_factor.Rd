@@ -9,6 +9,8 @@ estimate_factor(
   g,
   lgfg_list,
   initialise = FALSE,
+  NN = aantal_N,
+  TT = aantal_T,
   number_of_common_factors = aantalfactoren_common
 )
 }
@@ -21,13 +23,17 @@ estimate_factor(
 
 \item{initialise}{boolean}
 
-\item{number_of_common_factors}{number of common factors}
+\item{NN}{number of individuals}
+
+\item{TT}{length of time series}
+
+\item{number_of_common_factors}{number of common factors estimated}
 }
 \value{
 r x T matrix
 }
 \description{
-the estimator for F, see Anderson (1984), is equal to the first r eigenvectors (multiplied by sqrt(T) due to the restriction F'F/T = I)
+The estimator for F, see Anderson (1984), is equal to the first r eigenvectors (multiplied by sqrt(T) due to the restriction F'F/T = I)
 associated with first r largest eigenvalues of the matrix WW' (which is TxT)
-W is called Z in Ando / Bai (2017)
+W is called Z in Ando/Bai (2017)
 }

@@ -7,9 +7,7 @@
 initialise_X(N, TT, number_of_Variables = aantalvars)
 }
 \arguments{
-\item{TT}{Length of time series}
-
-\item{number_of_Variables}{Number of observable variables}
+\item{TT}{length of time series}
 }
 \value{
 array with dimensions N x T x number of observable variables

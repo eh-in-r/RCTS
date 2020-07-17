@@ -5,6 +5,8 @@
 \title{Calculate real groupfactorstructure.}
 \usage{
 calculate_FL_group_real(
+  NN = aantal_N,
+  TT = aantal_T,
   LAMBDA_GROUP_REAL = lambda_group_real,
   FACTOR_GROUP_REAL = factor_group_real,
   number_of_groups_real = aantalgroepen_real,
@@ -15,6 +17,10 @@ calculate_FL_group_real(
 )
 }
 \arguments{
+\item{NN}{number of individuals}
+
+\item{TT}{length of time series}
+
 \item{LAMBDA_GROUP_REAL}{real group factor loadings}
 
 \item{FACTOR_GROUP_REAL}{real group factors}

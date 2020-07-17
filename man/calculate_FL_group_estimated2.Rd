@@ -23,6 +23,10 @@ calculate_FL_group_estimated2(
 \item{j}{Number of groupfactors that are being used in the calculation.}
 
 \item{num_factors_may_vary}{whether or not the number of groupfactors is constant over all groups or not}
+
+\item{NN}{number of individuals}
+
+\item{TT}{length of time series}
 }
 \description{
 This is the same function as calculate_FL_group_estimated(), but with adjustable parameters

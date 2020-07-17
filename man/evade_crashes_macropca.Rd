@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{evade_crashes_macropca}
 \alias{evade_crashes_macropca}
-\title{MacroPCA crashes Rstudio with certain dimensions of the input. Solve this by doubling every row.}
+\title{Solves a very specific issue with MacroPCA.}
 \usage{
 evade_crashes_macropca(object)
 }

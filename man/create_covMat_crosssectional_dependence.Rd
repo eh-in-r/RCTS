@@ -9,7 +9,7 @@ create_covMat_crosssectional_dependence(parameter, NN)
 \arguments{
 \item{parameter}{amount of cross-sectional dependence}
 
-\item{NN}{Number of individuals}
+\item{NN}{number of individuals}
 }
 \value{
 NxN covariance matrix

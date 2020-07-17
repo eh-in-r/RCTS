@@ -8,6 +8,8 @@ calculate_errors_virtual_groups(
   k,
   LF,
   virtual_grouped_factor_structure,
+  NN = aantal_N,
+  TT = aantal_T,
   number_of_variables = aantalvars
 )
 }

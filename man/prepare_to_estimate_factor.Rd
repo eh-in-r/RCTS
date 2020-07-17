@@ -4,7 +4,7 @@
 \alias{prepare_to_estimate_factor}
 \title{Helpfunction in estimate_factor() for the robust approach.}
 \usage{
-prepare_to_estimate_factor(W)
+prepare_to_estimate_factor(W, NN = aantal_N, TT = aantal_T)
 }
 \description{
 It has some options used for testing.

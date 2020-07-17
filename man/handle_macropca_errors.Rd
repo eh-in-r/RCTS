@@ -4,7 +4,7 @@
 \alias{handle_macropca_errors}
 \title{Helpfunction in robustpca().}
 \usage{
-handle_macropca_errors(object, temp, KMAX, aantal_eigenvectoren)
+handle_macropca_errors(object, temp, KMAX, number_eigenvectors)
 }
 \description{
 It handles possible thrown errors in MacroPCA.

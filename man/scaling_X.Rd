@@ -9,8 +9,6 @@ scaling_X(X, firsttime, eclipz = FALSE, number_of_Variables = aantalvars)
 \arguments{
 \item{X}{input}
 
-\item{eclipz}{parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
-
 \item{firsttime:}{Scaling before generating Y and before adding outliers -> this is always with mean and sd. If this is FALSE, it indicates that
 we are using the function for a second time, after adding the outliers. In the robust case it uses median and MAD, otherwise again mean and sd.}
 }
@@ -19,5 +17,5 @@ Scaling of X.
 }
 \examples{
 X = initialise_X(300,30)
-scaling_X(X,TRUE)
+scaling_X(X,TRUE, number_of_Variables = 3)
 }

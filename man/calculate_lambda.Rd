@@ -10,6 +10,8 @@ calculate_lambda(
   g,
   lgfg_list,
   initialise = FALSE,
+  NN = aantal_N,
+  TT = aantal_T,
   number_of_common_factors = aantalfactoren_common
 )
 }
@@ -24,7 +26,11 @@ calculate_lambda(
 
 \item{initialise}{boolean}
 
-\item{number_of_common_factors}{number of common factors}
+\item{NN}{number of individuals}
+
+\item{TT}{length of time series}
+
+\item{number_of_common_factors}{number of common factors estimated}
 }
 \description{
 calculates factor loadings of common factors

@@ -4,7 +4,7 @@
 \alias{calculate_sigma2}
 \title{Calculates sum of squared errors, divided by NT}
 \usage{
-calculate_sigma2(e)
+calculate_sigma2(e, NN = aantal_N, TT = aantal_T)
 }
 \arguments{
 \item{e}{matrix with error terms}

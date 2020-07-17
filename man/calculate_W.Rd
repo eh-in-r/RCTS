@@ -7,6 +7,8 @@
 calculate_W(
   theta,
   g,
+  NN = aantal_N,
+  TT = aantal_T,
   number_of_variables = aantalvars,
   number_vars_estimated = SCHATTEN_MET_AANTALVARS
 )
