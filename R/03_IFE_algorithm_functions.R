@@ -19,7 +19,7 @@ create_covMat_crosssectional_dependence <- function(parameter,NN) {
   return(covMat)
 }
 
-#' Helpfunction in create_theta_real() for the option theta_real_heterogeen_groups. (This is the deault option)
+#' Helpfunction in create_theta_real() for the option theta_real_heterogeen_groups. (This is the deault option.)
 theta_real_heterogroups <- function(number_of_variables, number_of_groups_real, EXTRA_THETA_FACTOR = 1) {
   stopifnot(number_of_groups_real < 10) #Code allows up to 9 real groups at this point. IF higher limit needed, add more code in this function.
 
@@ -79,24 +79,24 @@ theta_real_heterogroups <- function(number_of_variables, number_of_groups_real, 
 #' @examples
 #' create_theta_real(3,number_of_groups_real = 3)
 #' @export
-create_theta_real <- function(number_of_Variables, number_of_groups_real = aantalgroepen_real, ECLIPZ = FALSE, extra_theta_factor = 1) {
+create_theta_real <- function(number_of_variables, number_of_groups_real = aantalgroepen_real, ECLIPZ = FALSE, extra_theta_factor = 1) {
   #real world eclipzdata: theta_real does not exist -> return NA
   if(ECLIPZ) return(NA)
 
 
-  if(number_of_Variables > 0) {
+  if(number_of_variables > 0) {
     #common theta_real:
     if(theta_real_homogeen) {
-      theta_real = c(0, c(1,2,3,28,33,38,43,48,53,58,63,68,73,78,83)[1:number_of_Variables]) #intercept 0 en then values for de real betas
-      theta_real = matrix(rep(theta_real, number_of_groups_real), nrow = (number_of_Variables + 1))
+      theta_real = c(0, c(1,2,3,28,33,38,43,48,53,58,63,68,73,78,83)[1:number_of_variables]) #intercept 0 en then values for de real betas
+      theta_real = matrix(rep(theta_real, number_of_groups_real), nrow = (number_of_variables + 1))
     }
     #groupsspecific theta_real: -> default case
     if(theta_real_heterogeen_groups) {
-      theta_real = theta_real_heterogroups(number_of_Variables, number_of_groups_real, EXTRA_THETA_FACTOR = extra_theta_factor)
+      theta_real = theta_real_heterogroups(number_of_variables, number_of_groups_real, EXTRA_THETA_FACTOR = extra_theta_factor)
     }
     #individualspecifiec theta_real:
     if(theta_real_heterogeen_individueel) {
-      theta_real = matrix(rnorm(aantal_N * (number_of_Variables + 1)), nrow = (number_of_Variables + 1), ncol = aantal_N)
+      theta_real = matrix(rnorm(aantal_N * (number_of_variables + 1)), nrow = (number_of_variables + 1), ncol = aantal_N)
     }
   } else {
     theta_real = rep(NA,number_of_groups_real)
@@ -116,12 +116,12 @@ create_theta_real <- function(number_of_Variables, number_of_groups_real = aanta
 #' @examples
 #' initialise_X(300,30)
 #' @export
-initialise_X <- function(N,TT, number_of_Variables = aantalvars) {
-  if(number_of_Variables > 0) {
-    X = array(0,dim=c(N, TT, number_of_Variables))
+initialise_X <- function(N,TT, number_of_variables = aantalvars) {
+  if(number_of_variables > 0) {
+    X = array(0,dim=c(N, TT, number_of_variables))
     for(i in 1:N) {
       for(t in 1:TT) {
-        for(k in 1:number_of_Variables) {
+        for(k in 1:number_of_variables) {
           X[i,t,k] = rnorm(1, mean = 0, sd = 1)
         }
       }
@@ -142,12 +142,12 @@ initialise_X <- function(N,TT, number_of_Variables = aantalvars) {
 #' @inheritParams create_theta_real
 #' @examples
 #' X = initialise_X(300,30)
-#' scaling_X(X,TRUE, number_of_Variables = 3)
+#' scaling_X(X,TRUE, number_of_variables = 3)
 #' @export
-scaling_X <- function(X, firsttime, eclipz = FALSE, number_of_Variables = aantalvars) {
+scaling_X <- function(X, firsttime, eclipz = FALSE, number_of_variables = aantalvars) {
 
-  if(number_of_Variables > 0) {
-    for(k in 1:number_of_Variables) {
+  if(number_of_variables > 0) {
+    for(k in 1:number_of_variables) {
       #print(paste("sd of variable",k,": Before:",sd(X[,,k])))
       if(mad(X[,,k]) != 0) {
         if(use_robust & !firsttime) {
@@ -181,18 +181,18 @@ scaling_X <- function(X, firsttime, eclipz = FALSE, number_of_Variables = aantal
 #' @inheritParams create_theta_real
 #' @examples
 #' X = initialise_X(300,30)
-#' restructure_X_to_order_slowN_fastT(X, FALSE, number_of_Variables = 3, number_vars_estimated = 3)
+#' restructure_X_to_order_slowN_fastT(X, FALSE, number_of_variables = 3, number_vars_estimated = 3)
 #'
 restructure_X_to_order_slowN_fastT <- function(X, eclipz,
-                                               number_of_Variables = aantalvars, number_vars_estimated = SCHATTEN_MET_AANTALVARS) {
+                                               number_of_variables = aantalvars, number_vars_estimated = SCHATTEN_MET_AANTALVARS) {
 
-  if(number_of_Variables > 0) {
+  if(number_of_variables > 0) {
     if( length(dim(X)) == 2) {
       #occurs when only one element in group
       X = array(X, dim=c(1,nrow(X),ncol(X)))
     }
     if(eclipz) {
-      number_of_vars = number_of_Variables
+      number_of_vars = number_of_variables
     } else {
       number_of_vars = number_vars_estimated
     }
@@ -308,7 +308,7 @@ generate_Y <- function(NN, TT, number_of_common_factors_real,number_of_group_fac
                        g_real, theta_real, lambda_group_real, factor_group_real,
                        lambda_real, factor_real,epsilon,
                        abctypes = FALSE, ando_bai = FALSE, ando_bai_2017 = FALSE, eclipz = FALSE,
-                       number_of_Variables = aantalvars) {
+                       number_of_variables = aantalvars) {
 
   #Define the size of the panel data:
 
@@ -334,7 +334,7 @@ generate_Y <- function(NN, TT, number_of_common_factors_real,number_of_group_fac
 
       for(t in 1:TT) {
 
-        if(number_of_Variables > 0) {
+        if(number_of_variables > 0) {
           XT = c(1, X[i,t,]) %*% theta_real[,g_real[i]] #add 1 to X[i,t,] to make room for the intercept (which is in theta)
 
         } else {
@@ -399,19 +399,19 @@ generate_Y <- function(NN, TT, number_of_common_factors_real,number_of_group_fac
 #' use_robust = TRUE
 #' ABDGP1 = FALSE
 #' ABintercept = TRUE
-#' beta_init = initialise_beta(NN = 300, TT = 30, number_of_Variables = 3, number_vars_estimated = 3, number_of_groups = 3)
+#' beta_init = initialise_beta(NN = 300, TT = 30, number_of_variables = 3, number_vars_estimated = 3, number_of_groups = 3)
 #' @export
 initialise_beta <- function(eclipz = FALSE,
                             NN = aantal_N,
                             TT = aantal_T,
-                            number_of_Variables = aantalvars,
+                            number_of_variables = aantalvars,
                             number_vars_estimated = SCHATTEN_MET_AANTALVARS,
                             number_of_groups = aantalgroepen) {
 
   stopifnot((homogeneous_coefficients + heterogeneous_coefficients_groups + heterogeneous_coefficients_individuals) == 1)
 
   if(eclipz) {
-    number_of_vars = number_of_Variables
+    number_of_vars = number_of_variables
   } else {
     number_of_vars = number_vars_estimated
   }
@@ -1473,22 +1473,7 @@ get_robust_covmatrix <- function(object, ALPHA = ALPHA_COVMRCD) {
 #' Helpfunction in estimate_factor() for the robust approach.
 #'
 #' It has some options used for testing.
-prepare_to_estimate_factor <- function(W,
-                                       NN = aantal_N, TT = aantal_T) {
-  #Robust case
-  if(exists("SCHRAP_MRCD")) { #-> use classical covmatrix instead of a robust covariance matrix
-    message("Do not use MRCD")
-    temp = t(W)%*%W / (NN * TT)
-    if(exists("GEEN_COVMATRIX")) { #-> do not use any covmatrix
-      #This is the default case.
-      temp = W
-    }
-  } else {
-    #define robust covariancematrix:
-    temp = get_robust_covmatrix(W)
-  }
-  return(temp)
-}
+
 
 #'Estimates common factor F
 #'
@@ -1516,7 +1501,7 @@ estimate_factor <- function(theta, g, lgfg_list, initialise = FALSE,
 
   #Define the object on which (robust or classical) PCA will be performed
   if(use_robust) {
-    temp = prepare_to_estimate_factor(W)
+    temp = prepare_for_robpca(W)
   } else {
     #Classical case
     #calculate 1/NT * W'W
@@ -1547,7 +1532,27 @@ estimate_factor <- function(theta, g, lgfg_list, initialise = FALSE,
   return(schatterF)
 }
 
-#'estimates group factors
+#' Helpfunction: prepares object to perform robust PCA on.
+#'
+#' It contains options to use the classical or robust covmatrix or no covariance matrix at all.
+#' Is currently dependent on global variables.
+#' @param object this is the object of which we may take the covariance matrix and then to perform robust PCA on
+prepare_for_robpca <- function(object, NN = aantal_N, TT = aantal_T) {
+  if(exists("SCHRAP_MRCD")) {
+    message("Do not use MRCD -> classical covmatrix")
+    temp = t(object)%*%object / (NN * TT)
+    if(exists("GEEN_COVMATRIX")) {
+      message("Do not use Covmatrix")
+      print(dim(object))
+      temp = object
+    }
+  } else {
+    #robust covariancematrix:
+    temp = get_robust_covmatrix(object)
+  }
+}
+
+#' Estimates group factors
 #'
 #' @inheritParams calculate_W
 #' @param lambda common factor loadings
@@ -1577,27 +1582,16 @@ estimate_factor_group <- function(theta, g, lambda, comfactor, initialise = FALS
 
 
 
-        #neem een limiet van 10 individuen per groep (bij kleine groepen werkt covMrcd niet)
+        #Take a limit of 10 individuals per group (since get_robust_covmatrix() does not work at small sizes)
         if(use_robust & nrow(Wj) > 10) {
 
-          if(exists("SCHRAP_MRCD")) {
-            message("Do not use MRCD -> classical covmatrix")
-            temp = t(Wj)%*%Wj / (NN * TT)
-            if(exists("GEEN_COVMATRIX")) {
-              message("Do not use Covmatrix")
-              print(dim(Wj))
-              temp = Wj
-            }
-          } else {
-            #robust covariancematrix:
-            temp = get_robust_covmatrix(Wj)
-          }
+
+          temp = prepare_for_robpca(Wj)
 
           temp2 = robustpca(temp, number_of_group_factors[group])
           schatterF[[group]] = t(sqrt(TT) * temp2[[1]]) #robust pca
           scores[[group]] = temp2[[2]]
-          # print(dim(schatterF[[group]]))
-          # print(dim(scores[[group]]))
+
           rm(temp2)
         } else {
           if(use_robust) print("Dit is een zeer kleine groep -> CovMrcd werkt niet; robpca werkt ook niet -> gebruik niet-robuuste versie")
