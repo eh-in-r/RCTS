@@ -564,7 +564,7 @@ evade_floating_point_errors <- function(A, LIMIT = 1e-13) {
 #' comfactor = ... #estimate common factor
 #' LF = (t(lambda) %*% comfactor)
 #' number_of_groups = 3
-#' solve_FG_FG_times_FG = solveFG()
+#' solve_FG_FG_times_FG = solveFG(30, number_of_groups, c(3,3,3))
 #' virtual_grouped_factor_structure = lapply(1:number_of_groups, function(y) calculate_virtual_factor_and_lambda_group(y, solve_FG_FG_times_FG))
 #' ERRORS_VIRTUAL = lapply(1:number_of_groups, function(x) calculate_errors_virtual_groups(x,LF,virtual_grouped_factor_structure))
 #' define_rho_parameters(ERRORS_VIRTUAL[[x]]))
@@ -689,7 +689,7 @@ calculate_obj_for_g <- function(i, k, ERRORS_VIRTUAL, rho_parameters, TT = aanta
 }
 
 #' Helpfunction in update_g(), to calculate solve(FG x t(FG)) x FG
-solveFG <- function(TT = aantal_T, number_of_groups = aantalgroepen, number_of_group_factors = aantalfactoren_groups){
+solveFG <- function(TT, number_of_groups, number_of_group_factors){
   solve_FG_FG_times_FG = list()
   for(group in 1:number_of_groups) {
     if(number_of_group_factors[group] > 0) {
@@ -736,11 +736,11 @@ solveFG <- function(TT = aantal_T, number_of_groups = aantalgroepen, number_of_g
 #' grid = grid_add_variables(grid,beta, lambda, comfactor)
 #' g_new = update_g(number_of_groups = 3, number_of_group_factors = c(3,3,3))[[1]]
 #' @export
-update_g <- function(NN = aantal_N, number_of_groups = aantalgroepen,
+update_g <- function(NN = aantal_N, TT = aantal_T, number_of_groups = aantalgroepen,
                      number_of_group_factors = aantalfactoren_groups) {
   if(mean(number_of_group_factors, na.rm = T) != 0) { #if there are groupfactors estimated
 
-    solve_FG_FG_times_FG = solveFG()
+    solve_FG_FG_times_FG = solveFG(TT, number_of_groups, number_of_group_factors)
 
     #we calculate FgLg (groupfactors times grouploadings) for all the possible groups to which individual i could end up:
     virtual_grouped_factor_structure = lapply(1:number_of_groups, function(y) calculate_virtual_factor_and_lambda_group(y, solve_FG_FG_times_FG))
