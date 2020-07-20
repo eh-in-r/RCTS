@@ -566,7 +566,7 @@ evade_floating_point_errors <- function(A, LIMIT = 1e-13) {
 #' LF = (t(lambda) %*% comfactor)
 #' number_of_groups = 3
 #' solve_FG_FG_times_FG = solveFG(30, number_of_groups, c(3,3,3))
-#' virtual_grouped_factor_structure = lapply(1:number_of_groups, function(y) calculate_virtual_factor_and_lambda_group(y, solve_FG_FG_times_FG))
+#' virtual_grouped_factor_structure = lapply(1:number_of_groups, function(y) calculate_virtual_factor_and_lambda_group(y, solve_FG_FG_times_FG, NN = 300))
 #' ERRORS_VIRTUAL = lapply(1:number_of_groups, function(x) calculate_errors_virtual_groups(x,LF,virtual_grouped_factor_structure))
 #' define_rho_parameters(ERRORS_VIRTUAL[[x]]))
 
@@ -744,7 +744,7 @@ update_g <- function(NN = aantal_N, TT = aantal_T, number_of_groups = aantalgroe
     solve_FG_FG_times_FG = solveFG(TT, number_of_groups, number_of_group_factors)
 
     #we calculate FgLg (groupfactors times grouploadings) for all the possible groups to which individual i could end up:
-    virtual_grouped_factor_structure = lapply(1:number_of_groups, function(y) calculate_virtual_factor_and_lambda_group(y, solve_FG_FG_times_FG))
+    virtual_grouped_factor_structure = lapply(1:number_of_groups, function(y) calculate_virtual_factor_and_lambda_group(y, solve_FG_FG_times_FG, NN = NN))
 
   } else {
     virtual_grouped_factor_structure = NA
