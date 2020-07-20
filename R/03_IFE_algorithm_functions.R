@@ -567,7 +567,7 @@ evade_floating_point_errors <- function(A, LIMIT = 1e-13) {
 #' number_of_groups = 3
 #' solve_FG_FG_times_FG = solveFG(30, number_of_groups, c(3,3,3))
 #' virtual_grouped_factor_structure = lapply(1:number_of_groups, function(y) calculate_virtual_factor_and_lambda_group(y, solve_FG_FG_times_FG, 300))
-#' ERRORS_VIRTUAL = lapply(1:number_of_groups, function(x) calculate_errors_virtual_groups(x,LF,virtual_grouped_factor_structure))
+#' ERRORS_VIRTUAL = lapply(1:number_of_groups, function(x) calculate_errors_virtual_groups(x,LF,virtual_grouped_factor_structure,NN,TT,aantalvars,aantalfactoren_Common))
 #' define_rho_parameters(ERRORS_VIRTUAL[[x]]))
 
 define_rho_parameters <- function(object = NULL) {
@@ -606,9 +606,10 @@ define_rho_parameters <- function(object = NULL) {
 #' @param virtual_grouped_factor_structure list with length the number of groups; every element of the list contains NxT-matrix
 #' @return NxT matrix with errors (=Y - XB - FgLg - FL)
 calculate_errors_virtual_groups <- function(k,LF,virtual_grouped_factor_structure,
-                                            NN = aantal_N,
-                                            TT = aantal_T,
-                                            number_of_variables = aantalvars) {
+                                            NN,
+                                            TT,
+                                            number_of_variables,
+                                            number_of_common_factors) {
   E_prep = matrix(NA, nrow = NN, ncol = TT)
   for(i in 1:NN) {
     #calculate lambda_group for one individual, based on an hypothetical groupmembership
@@ -740,8 +741,11 @@ solveFG <- function(TT, number_of_groups, number_of_group_factors){
 #' grid = grid_add_variables(grid,beta, lambda, comfactor)
 #' g_new = update_g(number_of_groups = 3, number_of_group_factors = c(3,3,3))[[1]]
 #' @export
-update_g <- function(NN = aantal_N, TT = aantal_T, number_of_groups = aantalgroepen,
-                     number_of_group_factors = aantalfactoren_groups) {
+update_g <- function(NN = aantal_N, TT = aantal_T,
+                     number_of_groups = aantalgroepen,
+                     number_of_variables = aantalvars,
+                     number_of_group_factors = aantalfactoren_groups,
+                     number_of_common_factors = aantalfactoren_common) {
   if(mean(number_of_group_factors, na.rm = T) != 0) { #if there are groupfactors estimated
 
     solve_FG_FG_times_FG = solveFG(TT, number_of_groups, number_of_group_factors)
@@ -760,7 +764,7 @@ update_g <- function(NN = aantal_N, TT = aantal_T, number_of_groups = aantalgroe
   matrix_obj_values = matrix(NA, nrow = NN, ncol = number_of_groups)
 
   #calculate errors for each (both virtual & real) group
-  ERRORS_VIRTUAL = lapply(1:number_of_groups, function(x) calculate_errors_virtual_groups(x,LF,virtual_grouped_factor_structure))
+  ERRORS_VIRTUAL = lapply(1:number_of_groups, function(x) calculate_errors_virtual_groups(x,LF,virtual_grouped_factor_structure, NN, TT, number_of_variables, number_of_common_factors))
 
   if(use_robust) {
     rho_parameters = lapply(1:number_of_groups,function(x) define_rho_parameters(ERRORS_VIRTUAL[[x]])) #(parameter object = NA -> returns median and madn of the calculated error term)
