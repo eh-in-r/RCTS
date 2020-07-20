@@ -62,8 +62,6 @@ theta_real_heterogroups <- function(number_of_variables, number_of_groups_real, 
   if(number_of_groups_real >= 9) theta_real = theta_real %>% cbind(theta_part9[1:(number_of_variables + 1)])
 
 
-
-
   return(theta_real)
 }
 
