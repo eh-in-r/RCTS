@@ -624,8 +624,11 @@ calculate_errors_virtual_groups <- function(k,LF,virtual_grouped_factor_structur
         XT = cbind(1, X[i,,]) %*% theta[,i]
       }
     }
-    for(t in 1:TT) {
 
+    a = do_we_estimate_common_factors(number_of_common_factors)
+    b = do_we_estimate_group_factors(number_of_group_factors)
+
+    for(t in 1:TT) {
       #calculate the objective function, while making sure that NA's do not have any effect in the sum
       #define the estimationerror:
       E_prep[i,t] = Y[i,t] - a * LF[i,t]
@@ -744,7 +747,7 @@ update_g <- function(NN = aantal_N, TT = aantal_T, number_of_groups = aantalgroe
     solve_FG_FG_times_FG = solveFG(TT, number_of_groups, number_of_group_factors)
 
     #we calculate FgLg (groupfactors times grouploadings) for all the possible groups to which individual i could end up:
-    virtual_grouped_factor_structure = lapply(1:number_of_groups, function(y) calculate_virtual_factor_and_lambda_group(y, solve_FG_FG_times_FG, NN))s
+    virtual_grouped_factor_structure = lapply(1:number_of_groups, function(y) calculate_virtual_factor_and_lambda_group(y, solve_FG_FG_times_FG, NN))
 
   } else {
     virtual_grouped_factor_structure = NA
@@ -1328,6 +1331,7 @@ calculate_Z_group <- function(theta, g, lambda, comfactor, group, initialise,
     if(initialise) {
       Z[i,] = y - XT
     } else {
+      a = do_we_estimate_common_factors(number_of_common_factors)
       Z[i,] = y - XT -
         a * t(lambda[,index]) %*% comfactor
     }
@@ -1868,7 +1872,23 @@ handleNA_LG <- function(df) {
 
 
 
-
+#' Function to shorten code: use a and b
+do_we_estimate_common_factors <- function(number_of_common_factors) {
+  if(number_of_common_factors == 0) {
+    a = 0
+  } else {
+    a = 1
+  }
+  return(a)
+}
+do_we_estimate_group_factors <- function(number_of_group_factors) {
+  if(mean(number_of_group_factors, na.rm = T) == 0) {
+    b = 0
+  } else {
+    b = 1
+  }
+  return(b)
+}
 
 
 #' Calculates the error term Y - X*BETA - LF - LgFg.
@@ -1918,16 +1938,9 @@ calculate_error_term <- function(no_common_factorstructure = FALSE, no_group_fac
     for(t in 1:TT) {
       u[i,t] = Y[i,t] - xt[t,i]
 
-      if(number_of_common_factors == 0) {
-        a = 0
-      } else {
-        a = 1
-      }
-      if(mean(number_of_group_factors, na.rm = T) == 0) {
-        b = 0
-      } else {
-        b = 1
-      }
+      a = do_we_estimate_common_factors(number_of_common_factors)
+      b = do_we_estimate_group_factors(number_of_group_factors)
+
       part2 = a * lf[i,t]
       part3 = b * lf_group_i[index,t]
       if(no_common_factorstructure) part2 = 0
@@ -1983,16 +1996,9 @@ calculate_error_term_individuals <- function(NN = aantal_N,
   }
 
 
-  if(number_of_common_factors == 0) {
-    a = 0
-  } else {
-    a = 1
-  }
-  if(mean(number_of_group_factors, na.rm = T) == 0) {
-    b = 0
-  } else {
-    b = 1
-  }
+
+  a = do_we_estimate_common_factors(number_of_common_factors)
+  b = do_we_estimate_group_factors(number_of_group_factors)
   for(i in 1:NN) {
     lf_group_i = lf_group[[g[i]]]
     index = which(group_membership[[g[i]]]$id == i)
