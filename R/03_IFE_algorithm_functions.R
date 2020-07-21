@@ -446,7 +446,7 @@ initialise_beta <- function(eclipz = FALSE,
       X_special = X_restructured
       Y_special = Y
       #this includes robuust estimation of theta:
-      theta = determine_beta("homogeen", X_special, Y_special, TRUE, initialisatie = TRUE, indices = 1:NN,  TT = TT, number_of_Variables = number_of_Variables)
+      theta = determine_beta("homogeen", X_special, Y_special, TRUE, initialisatie = TRUE, indices = 1:NN,  TT = TT, number_of_variables = number_of_variables)
 
     }
     if(heterogeneous_coefficients_groups) {
@@ -465,7 +465,7 @@ initialise_beta <- function(eclipz = FALSE,
 
         Y_special = as.vector(t(Y[indices_group,])) #order: N1T1, N1T2,N1T3,...N2T1,...N_endT_end
 
-        theta[,group] = determine_beta("heterogeen", X_special, Y_special, TRUE, initialisatie = TRUE, indices = indices_group,  TT = TT, number_of_Variables = number_of_Variables)
+        theta[,group] = determine_beta("heterogeen", X_special, Y_special, TRUE, initialisatie = TRUE, indices = indices_group,  TT = TT, number_of_variables = number_of_variables)
 
       }
 
@@ -1144,7 +1144,7 @@ estimate_beta <- function(optimize_kappa = FALSE, eclipz = FALSE,
 
       }
 
-      theta = determine_beta("homogeen",X_special, Y_special, TRUE, indices = 1:NN, TT = TT, number_of_Variables = number_of_Variables)
+      theta = determine_beta("homogeen",X_special, Y_special, TRUE, indices = 1:NN, TT = TT, number_of_variables = number_of_variables)
 
     }
     if(heterogeneous_coefficients_groups) {
@@ -1175,7 +1175,7 @@ estimate_beta <- function(optimize_kappa = FALSE, eclipz = FALSE,
         }
 
 
-        theta[,group] = determine_beta("heterogeen", X_special, Y_special, TRUE, indices = indices_group, TT = TT, number_of_Variables = number_of_Variables)
+        theta[,group] = determine_beta("heterogeen", X_special, Y_special, TRUE, indices = indices_group, TT = TT, number_of_variables = number_of_variables)
 
       }
     }
@@ -1219,11 +1219,11 @@ estimate_beta <- function(optimize_kappa = FALSE, eclipz = FALSE,
       Y_special_list = lapply(1:NN, function(x) make_Y_special(x) )
 
       if(optimize_kappa) {
-        theta = pmap(list(X_special_list, Y_special_list, 1:NN),  function(x,y,z) determine_beta("heterogeen",x, y, TRUE, indices = z,  TT = TT, number_of_Variables = number_of_Variables) )
+        theta = pmap(list(X_special_list, Y_special_list, 1:NN),  function(x,y,z) determine_beta("heterogeen",x, y, TRUE, indices = z,  TT = TT, number_of_variables = number_of_variables) )
       } else {
         #note that mapply would be about 10% faster
-        theta = map2(X_special_list, Y_special_list,  function(x,y) determine_beta("heterogeen",x, y, TRUE, indices = NA,  TT = TT, number_of_Variables = number_of_Variables) )
-        #theta_new = mapply( function(x,y) { determine_beta("heterogeen",x, y, TRUE, indices = NA,  TT = TT, number_of_Variables = number_of_Variables) }, x = X_special_list, y = y_special_list )
+        theta = map2(X_special_list, Y_special_list,  function(x,y) determine_beta("heterogeen",x, y, TRUE, indices = NA,  TT = TT, number_of_variables = number_of_variables) )
+        #theta_new = mapply( function(x,y) { determine_beta("heterogeen",x, y, TRUE, indices = NA,  TT = TT, number_of_variables = number_of_variables) }, x = X_special_list, y = y_special_list )
 
       }
       ########################################################
@@ -1231,7 +1231,7 @@ estimate_beta <- function(optimize_kappa = FALSE, eclipz = FALSE,
       #(is 2 to 3 times faster (microbenchmark) for (300,30)-system)
       #BUT:  ERRORS:
       #   Error: 'map2' is not an exported object from 'namespace:future'
-      #theta = future::map2(X_special_list, Y_special_list,  function(x,y) determine_beta("heterogeen",x, y, TRUE, indices = NA,  TT = TT, number_of_Variables = number_of_Variables) )
+      #theta = future::map2(X_special_list, Y_special_list,  function(x,y) determine_beta("heterogeen",x, y, TRUE, indices = NA,  TT = TT, number_of_variables = number_of_variables) )
       ########################################################
 
       theta = matrix(unlist(theta),ncol = NN)
