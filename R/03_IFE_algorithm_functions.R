@@ -966,7 +966,7 @@ calculate_lgfg <- function(lambda_group, factor_group, number_of_groups, number_
 }
 
 
-#' Helpfunction in estimate_beta() for estimating theta.
+#' Helpfunction in estimate_beta() for estimating beta.
 #'
 #' @param string can have values: "homogeen" or "heterogeen"
 #' @param X_special preprocessed X (observable variables)
@@ -991,7 +991,7 @@ determine_beta <- function(string, X_special,Y_special, correct, initialisatie =
     if(correct) My = My - My #set to zero
 
     if(initialisatie) {
-      #initialisation of theta, so no factorstructuur in Y_special
+      #initialisation of theta, so no factorstructure in Y_special
       Y_special = as.vector(t(Y)-My) #order: N1T1, N2T1,...N1T2,...N_endT_end
     } else {
       Y_special = as.vector(t(Y_special)-My) #order: N1T1, N2T1,...N1T2,...N_endT_end
@@ -1850,7 +1850,9 @@ calculate_lambda_group <- function(theta, factor_group, g, lambda, comfactor, in
 #' @inheritParams estimate_beta
 #' @export
 grid_add_variables <- function(grid,theta, lambda, comfactor,
-                               number_of_variables = aantalvars, number_of_groups = aantalgroepen) {
+                               number_of_variables = aantalvars,
+                               number_vars_estimated = SCHATTEN_MET_AANTALVARS,
+                               number_of_groups = aantalgroepen) {
   stopifnot(number_of_variables > 0 & number_of_variables < 9) #code exists up to 8 groups
   if(number_of_variables > 0) {
     #for homogeneous theta (1 -> 4 at this moment), we only need 1 column as all columns are the same
@@ -1875,7 +1877,7 @@ grid_add_variables <- function(grid,theta, lambda, comfactor,
         # }
       }
       if(heterogeneous_coefficients_individuals) {
-        grid$XTHETA = c(calculate_XT_estimated())
+        grid$XTHETA = c(calculate_XT_estimated(number_of_variables = number_of_variables, number_vars_estimated = number_vars_estimated))
       }
     }
   } else {
@@ -2308,8 +2310,8 @@ adapt_X_estimating_less_variables <- function(number_of_variables,
 #' @inheritParams estimate_beta
 #' @export
 calculate_XT_estimated <- function(NN = aantal_N, TT = aantal_T,
-                                   number_vars_estimated = SCHATTEN_MET_AANTALVARS,
                                    number_of_variables = aantalvars,
+                                   number_vars_estimated = SCHATTEN_MET_AANTALVARS,
                                    eclipz = FALSE) {
   #if number_vars_estimated < number_of_variables, then the obsolete rows in theta are already erased -> now do the same in X
   X = adapt_X_estimating_less_variables(number_of_variables, number_vars_estimated, eclipz)
