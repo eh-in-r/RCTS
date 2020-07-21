@@ -6,23 +6,32 @@
 \usage{
 grid_add_variables(
   grid,
-  theta,
+  beta,
   lambda,
   comfactor,
+  NN = aantal_N,
+  TT = aantal_T,
   number_of_variables = aantalvars,
+  number_vars_estimated = SCHATTEN_MET_AANTALVARS,
   number_of_groups = aantalgroepen
 )
 }
 \arguments{
 \item{grid}{dataframe containing values for X*beta and LF (product of common factor and its loadings)}
 
-\item{theta}{beta}
+\item{beta}{beta}
 
 \item{lambda}{loadings of the common factors}
 
 \item{comfactor}{common factors}
 
+\item{NN}{number of individuals}
+
+\item{TT}{length of time series}
+
 \item{number_of_variables}{number of observable variables}
+
+\item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
 
 \item{number_of_groups}{number of groups estimated}
 }

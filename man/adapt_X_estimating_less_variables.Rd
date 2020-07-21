@@ -5,17 +5,17 @@
 \title{When we run the algorithm with a different number of observable variables then the number we actually have, we need to reformat X.}
 \usage{
 adapt_X_estimating_less_variables(
-  eclipz = FALSE,
-  number_of_variables = aantalvars,
-  number_vars_estimated = SCHATTEN_MET_AANTALVARS
+  number_of_variables,
+  number_vars_estimated,
+  eclipz = FALSE
 )
 }
 \arguments{
-\item{eclipz}{boolean to indicate using eClipzdatabase; defaults to FALSE}
-
 \item{number_of_variables}{number of observable variables}
 
 \item{number_vars_estimated}{number of variables from which the coefficients are estimated}
+
+\item{eclipz}{boolean to indicate using eClipzdatabase; defaults to FALSE}
 }
 \description{
 When we run the algorithm with a different number of observable variables then the number we actually have, we need to reformat X.

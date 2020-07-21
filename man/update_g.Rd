@@ -39,8 +39,8 @@ library(tidyverse)
 library(robustbase)
 lambda_group = RobClustTimeSeries::lambda_group_real_dgp3
 factor_group = RobClustTimeSeries::factor_group_real_dgp3
-lambda = matrix(0,nrow=1,ncol=300) #0 factors -> but needs placeholder
-comfactor = matrix(0,nrow=1,ncol=30) #0 factors -> but needs placeholder
+lambda = matrix(0,nrow=1,ncol=300) #There are no common factors to be estimated  -> but needs placeholder
+comfactor = matrix(0,nrow=1,ncol=30) #There are no common factors to be estimated -> but needs placeholder
 X = RobClustTimeSeries::X_dgp3
 Y = RobClustTimeSeries::Y_dgp3
 g = RobClustTimeSeries::g_real_dgp3
@@ -55,7 +55,8 @@ eclipz = FALSE
 ABDGP1 = FALSE
 ABintercept = TRUE
 beta = estimate_beta(NN = 300, TT = 30,
-number_of_groups = 3, number_of_group_factors = c(3,3,3), number_of_common_factors = 0, number_of_variables = 3,number_vars_estimated=3,num_factors_may_vary=FALSE)[[1]]
+number_of_groups = 3, number_of_group_factors = c(3,3,3), number_of_common_factors = 0,
+number_of_variables = 3,number_vars_estimated=3,num_factors_may_vary=FALSE)[[1]]
 grid = grid_add_variables(grid,beta, lambda, comfactor)
 g_new = update_g(number_of_groups = 3, number_of_group_factors = c(3,3,3))[[1]]
 }

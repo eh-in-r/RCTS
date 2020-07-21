@@ -5,16 +5,17 @@
 \title{Calculates W = Y - X*BETA}
 \usage{
 calculate_W(
-  theta,
+  beta,
   g,
   NN = aantal_N,
   TT = aantal_T,
   number_of_variables = aantalvars,
-  number_vars_estimated = SCHATTEN_MET_AANTALVARS
+  number_vars_estimated = SCHATTEN_MET_AANTALVARS,
+  eclipz = FALSE
 )
 }
 \arguments{
-\item{theta}{beta}
+\item{beta}{beta}
 
 \item{g}{vector with group membership}
 
@@ -25,6 +26,8 @@ calculate_W(
 \item{number_of_variables}{number of observable variables}
 
 \item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
+
+\item{eclipz}{parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
 }
 \value{
 NxT matrix

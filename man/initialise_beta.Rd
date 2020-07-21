@@ -47,5 +47,6 @@ heterogeneous_coefficients_individuals = TRUE #estimating beta_i for every indiv
 use_robust = TRUE
 ABDGP1 = FALSE
 ABintercept = TRUE
-beta_init = initialise_beta(NN = 300, TT = 30, number_of_variables = 3, number_vars_estimated = 3, number_of_groups = 3)
+beta_init = initialise_beta(NN = 300, TT = 30,
+number_of_variables = 3, number_vars_estimated = 3, number_of_groups = 3)
 }

@@ -64,5 +64,7 @@ heterogeneous_coefficients_groups = FALSE
 heterogeneous_coefficients_individuals = TRUE
 ABDGP1 = FALSE
 ABintercept = TRUE
-beta = estimate_beta(NN = 300, TT = 30, number_of_groups = 3, number_of_group_factors = c(3,3,3), number_of_common_factors = 0, number_of_variables = 3,number_vars_estimated=3,num_factors_may_vary=FALSE)[[1]]
+beta = estimate_beta(NN = 300, TT = 30,
+number_of_groups = 3, number_of_group_factors = c(3,3,3), number_of_common_factors = 0,
+number_of_variables = 3,number_vars_estimated=3,num_factors_may_vary=FALSE)[[1]]
 }

@@ -5,18 +5,20 @@
 \title{Calculates Z = Y - X*BETA - LF), to use in estimate of groupfactorstructure.}
 \usage{
 calculate_Z_group(
-  theta,
+  beta,
   g,
   lambda,
   comfactor,
   group,
   initialise,
   TT = aantal_T,
-  number_of_variables = aantalvars
+  number_of_variables = aantalvars,
+  number_vars_estimated = SCHATTEN_MET_AANTALVARS,
+  eclipz = FALSE
 )
 }
 \arguments{
-\item{theta}{beta}
+\item{beta}{beta}
 
 \item{g}{vector with group membership}
 
@@ -31,6 +33,10 @@ calculate_Z_group(
 \item{TT}{length of time series}
 
 \item{number_of_variables}{number of observable variables}
+
+\item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
+
+\item{eclipz}{parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
 }
 \description{
 Calculates Z = Y - X*BETA - LF), to use in estimate of groupfactorstructure.

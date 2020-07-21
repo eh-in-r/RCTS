@@ -10,13 +10,12 @@ generate_Y(
   number_of_common_factors_real,
   number_of_group_factors_real,
   g_real,
-  theta_real,
+  beta_real,
   lambda_group_real,
   factor_group_real,
   lambda_real,
   factor_real,
   epsilon,
-  abctypes = FALSE,
   ando_bai = FALSE,
   ando_bai_2017 = FALSE,
   eclipz = FALSE,
@@ -34,7 +33,7 @@ generate_Y(
 
 \item{g_real}{vector with real group memberships}
 
-\item{theta_real}{real coefficients with the observable variables}
+\item{beta_real}{real coefficients with the observable variables}
 
 \item{lambda_group_real}{loadings of the group factors}
 
@@ -45,8 +44,6 @@ generate_Y(
 \item{factor_real}{common factors}
 
 \item{epsilon}{NN x TT-matrix containing the error term}
-
-\item{abctypes}{option to make a dataset containing specific incomepatterns based on incomelimits for Belgian independents. Only for testing purposes. Defaults to FALSE.}
 
 \item{ando_bai}{loads Ando/Bai-dataset; only for testing purposes. Defaults to FALSE.}
 

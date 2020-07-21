@@ -5,7 +5,7 @@
 \title{calculates factor loadings of groupfactors}
 \usage{
 calculate_lambda_group(
-  theta,
+  beta,
   factor_group,
   g,
   lambda,
@@ -19,7 +19,7 @@ calculate_lambda_group(
 )
 }
 \arguments{
-\item{theta}{beta}
+\item{beta}{beta}
 
 \item{factor_group}{group factors}
 

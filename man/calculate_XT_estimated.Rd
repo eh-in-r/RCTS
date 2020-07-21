@@ -2,13 +2,14 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{calculate_XT_estimated}
 \alias{calculate_XT_estimated}
-\title{Calculates (the estimated value of) the matrix X*beta}
+\title{Calculates (the estimated value of) the matrix X*beta.}
 \usage{
 calculate_XT_estimated(
   NN = aantal_N,
   TT = aantal_T,
+  number_of_variables = aantalvars,
   number_vars_estimated = SCHATTEN_MET_AANTALVARS,
-  number_of_variables = aantalvars
+  eclipz = FALSE
 )
 }
 \arguments{
@@ -16,10 +17,12 @@ calculate_XT_estimated(
 
 \item{TT}{length of time series}
 
+\item{number_of_variables}{number of observable variables}
+
 \item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
 
-\item{number_of_variables}{number of observable variables}
+\item{eclipz}{parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
 }
 \description{
-Calculates (the estimated value of) the matrix X*beta
+Calculates (the estimated value of) the matrix X*beta.
 }

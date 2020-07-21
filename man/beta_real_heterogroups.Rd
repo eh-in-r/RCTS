@@ -2,12 +2,12 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{beta_real_heterogroups}
 \alias{beta_real_heterogroups}
-\title{Helpfunction in create_theta_real() for the option theta_real_heterogeen_groups. (This is the deault option.)}
+\title{Helpfunction in create_beta_real() for the option beta_real_heterogeen_groups. (This is the deault option.)}
 \usage{
 beta_real_heterogroups(
   number_of_variables,
   number_of_groups_real,
-  EXTRA_THETA_FACTOR = 1
+  EXTRA_BETA_FACTOR = 1
 )
 }
 \arguments{
@@ -15,8 +15,8 @@ beta_real_heterogroups(
 
 \item{number_of_groups_real}{real numbr of groups}
 
-\item{EXTRA_THETA_FACTOR}{multiplies coefficients in beta; default = 1}
+\item{EXTRA_BETA_FACTOR}{multiplies coefficients in beta; default = 1}
 }
 \description{
-Helpfunction in create_theta_real() for the option theta_real_heterogeen_groups. (This is the deault option.)
+Helpfunction in create_beta_real() for the option beta_real_heterogeen_groups. (This is the deault option.)
 }

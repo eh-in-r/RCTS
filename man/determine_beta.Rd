@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{determine_beta}
 \alias{determine_beta}
-\title{Helpfunction in estimate_beta() for estimating theta.}
+\title{Helpfunction in estimate_beta() for estimating beta.}
 \usage{
 determine_beta(
   string,
@@ -36,5 +36,5 @@ determine_beta(
 \item{number_of_variables}{number of observable variables}
 }
 \description{
-Helpfunction in estimate_beta() for estimating theta.
+Helpfunction in estimate_beta() for estimating beta.
 }

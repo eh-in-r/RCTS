@@ -8,9 +8,11 @@ calculate_error_term_individuals(
   NN = aantal_N,
   TT = aantal_T,
   number_of_variables = aantalvars,
+  number_vars_estimated = SCHATTEN_MET_AANTALVARS,
   number_of_groups = aantalgroepen,
   number_of_group_factors = aantalfactoren_groups,
-  number_of_common_factors = aantalfactoren_common
+  number_of_common_factors = aantalfactoren_common,
+  eclipz = FALSE
 )
 }
 \arguments{
@@ -20,11 +22,15 @@ calculate_error_term_individuals(
 
 \item{number_of_variables}{number of observable variables}
 
+\item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
+
 \item{number_of_groups}{number of groups estimated}
 
 \item{number_of_group_factors}{number of groupfactors estimated}
 
 \item{number_of_common_factors}{number of common factors estimated}
+
+\item{eclipz}{parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
 }
 \value{
 NxT matrix

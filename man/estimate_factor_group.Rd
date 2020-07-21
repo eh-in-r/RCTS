@@ -5,7 +5,7 @@
 \title{Estimates group factors}
 \usage{
 estimate_factor_group(
-  theta,
+  beta,
   g,
   lambda,
   comfactor,
@@ -17,7 +17,7 @@ estimate_factor_group(
 )
 }
 \arguments{
-\item{theta}{beta}
+\item{beta}{beta}
 
 \item{g}{vector with group membership}
 
