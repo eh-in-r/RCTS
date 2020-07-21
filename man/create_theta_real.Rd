@@ -5,14 +5,18 @@
 \title{Creates theta_real, which contains the real values of beta (= the coefficients of X)}
 \usage{
 create_theta_real(
-  number_of_Variables,
+  number_of_variables,
   number_of_groups_real = aantalgroepen_real,
-  ECLIPZ = FALSE,
+  eclipz = FALSE,
   extra_theta_factor = 1
 )
 }
 \arguments{
+\item{number_of_variables}{number of observable variables}
+
 \item{number_of_groups_real}{number of groups}
+
+\item{eclipz}{boolean to indicate using eClipzdatabase; defaults to FALSE}
 
 \item{extra_theta_factor}{multiplies coefficients in beta; default = 1}
 }
@@ -24,5 +28,9 @@ equal to the real number of groups.
 theta_real_heterogeen_groups is the default case
 }
 \examples{
+#Decide if beta is common, or specific to groups or individuals: Choose 1 of the following 3.
+theta_real_homogeen = FALSE
+theta_real_heterogeen_groups = TRUE
+theta_real_heterogeen_individueel = FALSE
 create_theta_real(3,number_of_groups_real = 3)
 }

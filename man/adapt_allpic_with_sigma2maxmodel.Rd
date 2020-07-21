@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{adapt_allpic_with_sigma2maxmodel}
 \alias{adapt_allpic_with_sigma2maxmodel}
-\title{Adapts allpic (containing PIC for all candidate C's and all subsamples) with sigma2_max_model.}
+\title{Adapts allpic (object that contains PIC for all candidate C's and all subsamples) with sigma2_max_model.}
 \usage{
 adapt_allpic_with_sigma2maxmodel(
   all_pic,

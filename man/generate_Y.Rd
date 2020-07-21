@@ -20,7 +20,7 @@ generate_Y(
   ando_bai = FALSE,
   ando_bai_2017 = FALSE,
   eclipz = FALSE,
-  number_of_Variables = aantalvars
+  number_of_variables = aantalvars
 )
 }
 \arguments{
@@ -53,6 +53,8 @@ generate_Y(
 \item{ando_bai_2017}{loads Ando/Bai-dataset; only for testing purposes. Defaults to FALSE.}
 
 \item{eclipz}{parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
+
+\item{number_of_variables}{number of observable variables}
 }
 \value{
 N x T matrix

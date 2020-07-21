@@ -4,10 +4,14 @@
 \alias{initialise_X}
 \title{Creates X (the observable variables) to use in simulations.}
 \usage{
-initialise_X(N, TT, number_of_Variables = aantalvars)
+initialise_X(NN, TT, number_of_variables = aantalvars)
 }
 \arguments{
+\item{NN}{number of individuals}
+
 \item{TT}{length of time series}
+
+\item{number_of_variables}{number of observable variables}
 }
 \value{
 array with dimensions N x T x number of observable variables

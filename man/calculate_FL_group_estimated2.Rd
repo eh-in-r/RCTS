@@ -22,6 +22,10 @@ calculate_FL_group_estimated2(
 
 \item{j}{Number of groupfactors that are being used in the calculation.}
 
+\item{number_of_groups}{number of groups estimated}
+
+\item{number_of_common_factors}{number of common factors estimated}
+
 \item{num_factors_may_vary}{whether or not the number of groupfactors is constant over all groups or not}
 
 \item{NN}{number of individuals}

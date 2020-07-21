@@ -13,7 +13,9 @@ calculate_FL_group_real(
   number_of_group_factors_real = aantalfactoren_groups_real,
   number_of_common_factors_real = aantalfactoren_common_real,
   num_factors_may_vary = aantalfactors_verschillend_per_group,
-  abctypes = FALSE
+  abctypes = FALSE,
+  eclipz = FALSE,
+  ABDGP1_local = ABDGP1
 )
 }
 \arguments{
@@ -32,6 +34,12 @@ calculate_FL_group_real(
 \item{number_of_common_factors_real}{real number of common factors}
 
 \item{num_factors_may_vary}{whether or not the number of groupfactors is constant over all groups or not}
+
+\item{abctypes}{option to make a dataset containing specific incomepatterns based on incomelimits for Belgian independents. Only for testing purposes. Defaults to FALSE.}
+
+\item{eclipz}{parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
+
+\item{ABDGP1_local}{gives information about which DGP we use; TRUE of FALSE}
 }
 \value{
 list with NjxT matrices

@@ -14,6 +14,8 @@ grid_add_variables(
 )
 }
 \arguments{
+\item{grid}{dataframe containing values for X*beta and LF (product of common factor and its loadings)}
+
 \item{theta}{beta}
 
 \item{lambda}{loadings of the common factors}

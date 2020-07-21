@@ -16,9 +16,19 @@ calculate_FL_group_estimated(
 )
 }
 \arguments{
+\item{LAMBDA_GROUP}{loadings of group factors}
+
+\item{FACTOR_GROUP}{group factors}
+
 \item{NN}{number of individuals}
 
 \item{TT}{length of time series}
+
+\item{number_of_groups}{number of groups estimated}
+
+\item{number_of_group_factors}{number of groupfactors estimated}
+
+\item{number_of_common_factors}{number of common factors estimated}
 
 \item{num_factors_may_vary}{whether or not the number of groupfactors is constant over all groups or not}
 }

@@ -10,6 +10,13 @@ adapt_X_estimating_less_variables(
   number_vars_estimated = SCHATTEN_MET_AANTALVARS
 )
 }
+\arguments{
+\item{eclipz}{boolean to indicate using eClipzdatabase; defaults to FALSE}
+
+\item{number_of_variables}{number of observable variables}
+
+\item{number_vars_estimated}{number of variables from which the coefficients are estimated}
+}
 \description{
 When we run the algorithm with a different number of observable variables then the number we actually have, we need to reformat X.
 }

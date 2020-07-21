@@ -6,6 +6,15 @@
 \usage{
 calculate_PIC_term4(temp, term4, Nj, NN = aantal_N)
 }
+\arguments{
+\item{temp}{term4 of PIC for group n}
+
+\item{term4}{term 4 of PIC, updated until group n-1; this function updates this value with group n}
+
+\item{Nj}{number of individuals in group j}
+
+\item{NN}{N}
+}
 \description{
-Used in calculate_PIC()
+Used in calculate_PIC(), in a loop over all groups.
 }

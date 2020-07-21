@@ -7,18 +7,24 @@
 restructure_X_to_order_slowN_fastT(
   X,
   eclipz,
-  number_of_Variables = aantalvars,
+  number_of_variables = aantalvars,
   number_vars_estimated = SCHATTEN_MET_AANTALVARS
 )
 }
 \arguments{
 \item{X}{input}
+
+\item{eclipz}{boolean to indicate using eClipzdatabase; defaults to FALSE}
+
+\item{number_of_variables}{number of observable variables}
+
+\item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
 }
 \description{
 This 2D-matrix is what Ando/Bai worked with.
 }
 \examples{
 X = initialise_X(300,30)
-restructure_X_to_order_slowN_fastT(X, FALSE, number_of_Variables = 3, number_vars_estimated = 3)
+restructure_X_to_order_slowN_fastT(X, FALSE, number_of_variables = 3, number_vars_estimated = 3)
 
 }

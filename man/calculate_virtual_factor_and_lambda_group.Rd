@@ -7,6 +7,7 @@
 calculate_virtual_factor_and_lambda_group(
   group,
   solve_FG_FG_times_FG,
+  NN,
   number_of_common_factors = aantalfactoren_common
 )
 }
@@ -14,6 +15,8 @@ calculate_virtual_factor_and_lambda_group(
 \item{group}{number of group}
 
 \item{solve_FG_FG_times_FG}{This is the same as groupfactor / T. It is only used in the Classical approach}
+
+\item{NN}{number of individuals}
 
 \item{number_of_common_factors}{number of common factors estimated}
 }

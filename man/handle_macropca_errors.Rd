@@ -6,6 +6,15 @@
 \usage{
 handle_macropca_errors(object, temp, KMAX, number_eigenvectors)
 }
+\arguments{
+\item{object}{input}
+
+\item{temp}{this is the result of the trycatch block of using macropca on object}
+
+\item{KMAX}{parameter kmax in MacroPCA}
+
+\item{number_eigenvectors}{number of principal components that are needed}
+}
 \description{
 It handles possible thrown errors in MacroPCA.
 }

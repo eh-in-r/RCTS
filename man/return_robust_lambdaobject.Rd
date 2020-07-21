@@ -11,7 +11,8 @@ return_robust_lambdaobject(
   FACTOR_GROUP = factor_group,
   number_of_group_factors = aantalfactoren_groups,
   FACTOR = comfactor,
-  number_of_common_factors = aantalfactoren_common
+  number_of_common_factors = aantalfactoren_common,
+  NN = aantal_N
 )
 }
 \arguments{
@@ -20,10 +21,20 @@ return_robust_lambdaobject(
 \item{group}{group}
 
 \item{type}{scalar which shows in which setting this function is used}
+
+\item{FACTOR_GROUP}{groupfactors}
+
+\item{number_of_group_factors}{number of roup factors}
+
+\item{FACTOR}{common factors}
+
+\item{number_of_common_factors}{number of common factors}
+
+\item{NN}{N}
 }
 \value{
 Nxk dataframe
 }
 \description{
-Uses the almost classical lambda to create a robust lambda by using M estimation
+Uses the almost classical lambda (this is an object of which the mean equals to the classical lambda) to create a robust lambda by using M estimation
 }

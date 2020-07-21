@@ -8,6 +8,10 @@ calculate_sigma2(e, NN = aantal_N, TT = aantal_T)
 }
 \arguments{
 \item{e}{matrix with error terms}
+
+\item{NN}{N}
+
+\item{TT}{T}
 }
 \description{
 Calculates sum of squared errors, divided by NT

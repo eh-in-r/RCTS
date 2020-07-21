@@ -8,9 +8,11 @@ calculate_errors_virtual_groups(
   k,
   LF,
   virtual_grouped_factor_structure,
-  NN = aantal_N,
-  TT = aantal_T,
-  number_of_variables = aantalvars
+  NN,
+  TT,
+  number_of_variables,
+  number_of_common_factors,
+  number_of_group_factors
 )
 }
 \arguments{
@@ -19,6 +21,16 @@ calculate_errors_virtual_groups(
 \item{LF}{NxT-matrix of the commonfactorstructure}
 
 \item{virtual_grouped_factor_structure}{list with length the number of groups; every element of the list contains NxT-matrix}
+
+\item{NN}{number of individuals}
+
+\item{TT}{length of time series}
+
+\item{number_of_variables}{number of observable variables}
+
+\item{number_of_common_factors}{number of common factors estimated}
+
+\item{number_of_group_factors}{number of groupfactors estimated}
 }
 \value{
 NxT matrix with errors (=Y - XB - FgLg - FL)

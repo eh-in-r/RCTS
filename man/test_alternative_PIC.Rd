@@ -4,7 +4,14 @@
 \alias{test_alternative_PIC}
 \title{function to test alternative PIC's}
 \usage{
-test_alternative_PIC(term2, term3, term4)
+test_alternative_PIC(C, term2, term3, term4)
+}
+\arguments{
+\item{term2}{term2 of PIC}
+
+\item{term3}{term3 of PIC}
+
+\item{term4}{term4 of PIC}
 }
 \description{
 function to test alternative PIC's

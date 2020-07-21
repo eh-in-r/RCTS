@@ -27,9 +27,13 @@ determine_beta(
 
 \item{initialisatie}{boolean}
 
+\item{indices}{individuals for which beta is being estimated}
+
 \item{optimize_kappa}{indicates if kappa has to be optimized or not; defaults to FALSE}
 
-\item{indices:}{individuals for which beta is being estimated}
+\item{TT}{length of time series}
+
+\item{number_of_variables}{number of observable variables}
 }
 \description{
 Helpfunction in estimate_beta() for estimating theta.

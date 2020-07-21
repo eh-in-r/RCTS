@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{estimate_factor_group}
 \alias{estimate_factor_group}
-\title{estimates group factors}
+\title{Estimates group factors}
 \usage{
 estimate_factor_group(
   theta,
@@ -36,5 +36,5 @@ estimate_factor_group(
 \item{number_of_group_factors}{number of groupfactors estimated}
 }
 \description{
-estimates group factors
+Estimates group factors
 }

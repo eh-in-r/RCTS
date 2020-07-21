@@ -2,19 +2,28 @@
 % Please edit documentation in R/07_IFE_robust_lambda.R
 \name{all_almost_classical_lambda}
 \alias{all_almost_classical_lambda}
-\title{calculates vector of which the mean is equal to classical lambda}
+\title{Calculates vector of which the mean is equal to classical lambda -> function should be obsolete}
 \usage{
 all_almost_classical_lambda(
   Y_like_object,
   factor_like_object,
   NUMBER_FACTORS,
   group,
-  NUMBER_PERSONS
+  NN
 )
+}
+\arguments{
+\item{Y_like_object}{NxT matrix}
+
+\item{NUMBER_FACTORS}{number of factors (common or group, depending on context)}
+
+\item{group}{index of group}
+
+\item{NN}{N}
 }
 \value{
 matrix where the mean of each row is equal to the classical lambda.
 }
 \description{
-calculates vector of which the mean is equal to classical lambda
+Calculates vector of which the mean is equal to classical lambda -> function should be obsolete
 }
