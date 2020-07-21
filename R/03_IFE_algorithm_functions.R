@@ -526,13 +526,15 @@ initialise_theta <- function(eclipz = FALSE,
 #' @return NxT matrix containing the product of virtual groupfactors and virtual loadings
 
 calculate_virtual_factor_and_lambda_group <- function(group, solve_FG_FG_times_FG,
-                                                      NN,
+                                                      NN, TT,
+                                                      number_of_variables = aantalvars,
+                                                      number_vars_estimated = SCHATTEN_MET_AANTALVARS,
                                                       number_of_common_factors = aantalfactoren_common) {
   FG = factor_group[[group]]
   indices = 1:NN
   LF = t(lambda) %*% comfactor
 
-  xtheta = calculate_XT_estimated(NN = NN)
+  xtheta = calculate_XT_estimated(NN = NN, TT = TT, number_of_variables = number_of_variables, number_vars_estimated = number_vars_estimated)
 
 
   if(number_of_common_factors == 0) {
@@ -764,6 +766,7 @@ solveFG <- function(TT, number_of_groups, number_of_group_factors){
 update_g <- function(NN = aantal_N, TT = aantal_T,
                      number_of_groups = aantalgroepen,
                      number_of_variables = aantalvars,
+                     number_vars_estimated = SCHATTEN_MET_AANTALVARS,
                      number_of_group_factors = aantalfactoren_groups,
                      number_of_common_factors = aantalfactoren_common) {
 
@@ -774,7 +777,7 @@ update_g <- function(NN = aantal_N, TT = aantal_T,
     solve_FG_FG_times_FG = solveFG(TT, number_of_groups, number_of_group_factors)
 
     #we calculate FgLg (groupfactors times grouploadings) for all the possible groups to which individual i could end up:
-    virtual_grouped_factor_structure = lapply(1:number_of_groups, function(y) calculate_virtual_factor_and_lambda_group(y, solve_FG_FG_times_FG, NN))
+    virtual_grouped_factor_structure = lapply(1:number_of_groups, function(y) calculate_virtual_factor_and_lambda_group(y, solve_FG_FG_times_FG, NN, TT, number_of_variables = number_of_variables, number_vars_estimated = number_vars_estimated))
 
   } else {
     virtual_grouped_factor_structure = NA
