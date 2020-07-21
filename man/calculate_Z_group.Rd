@@ -2,10 +2,10 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{calculate_Z_group}
 \alias{calculate_Z_group}
-\title{Calculates Z = Y - X*BETA - LF), to use in estimate of groupfactorstructure.}
+\title{Calculates Z = Y - X*THETA - LF), to use in estimate of groupfactorstructure.}
 \usage{
 calculate_Z_group(
-  beta,
+  theta,
   g,
   lambda,
   comfactor,
@@ -18,7 +18,7 @@ calculate_Z_group(
 )
 }
 \arguments{
-\item{beta}{beta}
+\item{theta}{theta}
 
 \item{g}{vector with group membership}
 
@@ -39,5 +39,5 @@ calculate_Z_group(
 \item{eclipz}{parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
 }
 \description{
-Calculates Z = Y - X*BETA - LF), to use in estimate of groupfactorstructure.
+Calculates Z = Y - X*THETA - LF), to use in estimate of groupfactorstructure.
 }

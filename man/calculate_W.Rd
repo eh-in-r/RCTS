@@ -2,10 +2,10 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{calculate_W}
 \alias{calculate_W}
-\title{Calculates W = Y - X*BETA}
+\title{Calculates W = Y - X*THETA}
 \usage{
 calculate_W(
-  beta,
+  theta,
   g,
   NN = aantal_N,
   TT = aantal_T,
@@ -15,7 +15,7 @@ calculate_W(
 )
 }
 \arguments{
-\item{beta}{beta}
+\item{theta}{theta}
 
 \item{g}{vector with group membership}
 

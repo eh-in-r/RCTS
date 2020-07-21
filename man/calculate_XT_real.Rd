@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{calculate_XT_real}
 \alias{calculate_XT_real}
-\title{Calculates the product of X*beta (the real value of this).}
+\title{Calculates the product of X*theta (the real value of this).}
 \usage{
 calculate_XT_real(
   NN = aantal_N,
@@ -18,5 +18,5 @@ calculate_XT_real(
 \item{number_of_variables}{number of observable variables}
 }
 \description{
-Calculates the product of X*beta (the real value of this).
+Calculates the product of X*theta (the real value of this).
 }

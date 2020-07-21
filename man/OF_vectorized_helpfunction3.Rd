@@ -7,7 +7,7 @@
 OF_vectorized_helpfunction3(
   i,
   t,
-  XBETA,
+  XTHETA,
   LF,
   group_memberships,
   lgfg_list,
@@ -19,7 +19,7 @@ OF_vectorized_helpfunction3(
 
 \item{t}{index of time}
 
-\item{XBETA}{matrixproduct of X and beta}
+\item{XTHETA}{matrixproduct of X and theta}
 
 \item{LF}{matrixproduct of common factors and its loadings}
 

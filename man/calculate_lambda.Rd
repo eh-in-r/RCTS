@@ -5,7 +5,7 @@
 \title{calculates factor loadings of common factors}
 \usage{
 calculate_lambda(
-  beta,
+  theta,
   comfactor,
   g,
   lgfg_list,
@@ -16,7 +16,7 @@ calculate_lambda(
 )
 }
 \arguments{
-\item{beta}{beta}
+\item{theta}{theta}
 
 \item{comfactor}{common factors}
 

@@ -6,7 +6,7 @@
 \usage{
 OF_vectorized3(
   group_memberships,
-  BETA = beta,
+  THETA = theta,
   ALPHA = alpha,
   LAMBDA = lambda,
   FACTOR = comfactor,
@@ -22,7 +22,7 @@ OF_vectorized3(
 \arguments{
 \item{group_memberships}{Vector containing groupmembership for all individuals.}
 
-\item{BETA}{beta}
+\item{THETA}{theta}
 
 \item{ALPHA}{--obsolete--}
 

@@ -2,10 +2,10 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{calculate_Z_common}
 \alias{calculate_Z_common}
-\title{Calculates Z = Y - X*BETA - LgFg, to use in estimate of common factorstructure}
+\title{Calculates Z = Y - X*THETA - LgFg, to use in estimate of common factorstructure}
 \usage{
 calculate_Z_common(
-  beta,
+  theta,
   g,
   lgfg_list,
   initialise = FALSE,
@@ -18,7 +18,7 @@ calculate_Z_common(
 )
 }
 \arguments{
-\item{beta}{beta}
+\item{theta}{theta}
 
 \item{g}{vector with group membership}
 
@@ -39,5 +39,5 @@ calculate_Z_common(
 \item{eclipz}{parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
 }
 \description{
-Calculates Z = Y - X*BETA - LgFg, to use in estimate of common factorstructure
+Calculates Z = Y - X*THETA - LgFg, to use in estimate of common factorstructure
 }

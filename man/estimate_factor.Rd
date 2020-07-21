@@ -5,7 +5,7 @@
 \title{Helpfunction in estimate_factor() for the robust approach.}
 \usage{
 estimate_factor(
-  beta,
+  theta,
   g,
   lgfg_list,
   initialise = FALSE,
@@ -15,7 +15,7 @@ estimate_factor(
 )
 }
 \arguments{
-\item{beta}{beta}
+\item{theta}{theta}
 
 \item{g}{vector with group membership}
 

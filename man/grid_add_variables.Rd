@@ -6,7 +6,7 @@
 \usage{
 grid_add_variables(
   grid,
-  beta,
+  theta,
   lambda,
   comfactor,
   NN = aantal_N,
@@ -17,9 +17,9 @@ grid_add_variables(
 )
 }
 \arguments{
-\item{grid}{dataframe containing values for X*beta and LF (product of common factor and its loadings)}
+\item{grid}{dataframe containing values for X*theta and LF (product of common factor and its loadings)}
 
-\item{beta}{beta}
+\item{theta}{theta}
 
 \item{lambda}{loadings of the common factors}
 
