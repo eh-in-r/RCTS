@@ -771,9 +771,11 @@ update_g <- function(NN = aantal_N, TT = aantal_T,
                      number_of_common_factors = aantalfactoren_common) {
 
 
+  message("Start")
+  print("Start")
 
   if(do_we_estimate_group_factors(number_of_group_factors)) { #if there are groupfactors estimated
-
+    message("1")
     solve_FG_FG_times_FG = solveFG(TT, number_of_groups, number_of_group_factors)
 
     #we calculate FgLg (groupfactors times grouploadings) for all the possible groups to which individual i could end up:
@@ -782,6 +784,7 @@ update_g <- function(NN = aantal_N, TT = aantal_T,
                                                                                                                         number_of_variables = number_of_variables,
                                                                                                                         number_vars_estimated = number_vars_estimated,
                                                                                                                         number_of_common_factors = number_of_common_factors))
+    message("2")
 
   } else {
     virtual_grouped_factor_structure = NA
@@ -793,23 +796,27 @@ update_g <- function(NN = aantal_N, TT = aantal_T,
   #init matrix with objectivefunctionvalues for all groups
   matrix_obj_values = matrix(NA, nrow = NN, ncol = number_of_groups)
 
+  message("3")
   #calculate errors for each (both virtual & real) group
   ERRORS_VIRTUAL = lapply(1:number_of_groups, function(x) calculate_errors_virtual_groups(x,LF,virtual_grouped_factor_structure, NN, TT,
                                                                                           number_of_variables,
                                                                                           number_of_common_factors,
                                                                                           number_of_group_factors))
 
+  message("4")
   if(use_robust) {
     rho_parameters = lapply(1:number_of_groups,function(x) define_rho_parameters(ERRORS_VIRTUAL[[x]])) #(parameter object = NA -> returns median and madn of the calculated error term)
   } else {
     rho_parameters = NA
   }
 
+  message("5")
   for(i in 1:NN) {
     obj_values = map_dbl(1:number_of_groups, function(x) calculate_obj_for_g(i, x, ERRORS_VIRTUAL, rho_parameters))
     g[i] = which.min(obj_values)
     matrix_obj_values[i,] = obj_values
   }
+  message("6")
   #vectorizing is not faster: g = sapply(1:NN, function(z) which.min(map_dbl(1:number_of_groups, function(x) calculate_obj_for_g(z, x, ERRORS_VIRTUAL, rho_parameters))))
   return(list(g, matrix_obj_values))
 
