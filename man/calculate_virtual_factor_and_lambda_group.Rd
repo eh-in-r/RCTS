@@ -8,6 +8,9 @@ calculate_virtual_factor_and_lambda_group(
   group,
   solve_FG_FG_times_FG,
   NN,
+  TT,
+  number_of_variables = aantalvars,
+  number_vars_estimated = SCHATTEN_MET_AANTALVARS,
   number_of_common_factors = aantalfactoren_common
 )
 }
@@ -17,6 +20,12 @@ calculate_virtual_factor_and_lambda_group(
 \item{solve_FG_FG_times_FG}{This is the same as groupfactor / T. It is only used in the Classical approach}
 
 \item{NN}{number of individuals}
+
+\item{TT}{length of time series}
+
+\item{number_of_variables}{number of observable variables}
+
+\item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
 
 \item{number_of_common_factors}{number of common factors estimated}
 }
