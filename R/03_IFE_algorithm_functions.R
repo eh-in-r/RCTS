@@ -532,7 +532,7 @@ calculate_virtual_factor_and_lambda_group <- function(group, solve_FG_FG_times_F
   indices = 1:NN
   LF = t(lambda) %*% comfactor
 
-  xtheta = calculate_XT_estimated()
+  xtheta = calculate_XT_estimated(NN = NN)
 
 
   if(number_of_common_factors == 0) {
@@ -1849,7 +1849,9 @@ calculate_lambda_group <- function(theta, factor_group, g, lambda, comfactor, in
 #' @param comfactor common factors
 #' @inheritParams estimate_beta
 #' @export
-grid_add_variables <- function(grid,theta, lambda, comfactor,
+grid_add_variables <- function(grid, theta, lambda, comfactor,
+                               NN = aantal_N,
+                               TT = aantal_T,
                                number_of_variables = aantalvars,
                                number_vars_estimated = SCHATTEN_MET_AANTALVARS,
                                number_of_groups = aantalgroepen) {
@@ -1877,7 +1879,7 @@ grid_add_variables <- function(grid,theta, lambda, comfactor,
         # }
       }
       if(heterogeneous_coefficients_individuals) {
-        grid$XTHETA = c(calculate_XT_estimated(number_of_variables = number_of_variables, number_vars_estimated = number_vars_estimated))
+        grid$XTHETA = c(calculate_XT_estimated(NN = NN, TT = TT, number_of_variables = number_of_variables, number_vars_estimated = number_vars_estimated))
       }
     }
   } else {
@@ -1988,7 +1990,7 @@ calculate_error_term <- function(no_common_factorstructure = FALSE, no_group_fac
                   function(y) sapply(1:TT, function(x) c(1, X[y,x,]) %*% theta[,g[y]]))
     }
     if(heterogeneous_coefficients_individuals) {
-      xt = t(calculate_XT_estimated()) #TxN matrix
+      xt = t(calculate_XT_estimated(NN = NN, TT = TT, number_of_variables = number_of_variables)) #TxN matrix
     }
   } else {
     xt = matrix(0, nrow = TT, ncol = NN) #TxN
