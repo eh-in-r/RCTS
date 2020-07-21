@@ -778,7 +778,10 @@ update_g <- function(NN = aantal_N, TT = aantal_T,
 
     #we calculate FgLg (groupfactors times grouploadings) for all the possible groups to which individual i could end up:
 
-    virtual_grouped_factor_structure = lapply(1:number_of_groups, function(y) calculate_virtual_factor_and_lambda_group(y, solve_FG_FG_times_FG, NN, TT, number_of_variables = number_of_variables, number_vars_estimated = number_vars_estimated))
+    virtual_grouped_factor_structure = lapply(1:number_of_groups, function(y) calculate_virtual_factor_and_lambda_group(y, solve_FG_FG_times_FG, NN, TT,
+                                                                                                                        number_of_variables = number_of_variables,
+                                                                                                                        number_vars_estimated = number_vars_estimated,
+                                                                                                                        number_of_common_factors = number_of_common_factors))
 
   } else {
     virtual_grouped_factor_structure = NA
@@ -791,7 +794,10 @@ update_g <- function(NN = aantal_N, TT = aantal_T,
   matrix_obj_values = matrix(NA, nrow = NN, ncol = number_of_groups)
 
   #calculate errors for each (both virtual & real) group
-  ERRORS_VIRTUAL = lapply(1:number_of_groups, function(x) calculate_errors_virtual_groups(x,LF,virtual_grouped_factor_structure, NN, TT, number_of_variables, number_of_common_factors, number_of_group_factors))
+  ERRORS_VIRTUAL = lapply(1:number_of_groups, function(x) calculate_errors_virtual_groups(x,LF,virtual_grouped_factor_structure, NN, TT,
+                                                                                          number_of_variables,
+                                                                                          number_of_common_factors,
+                                                                                          number_of_group_factors))
 
   if(use_robust) {
     rho_parameters = lapply(1:number_of_groups,function(x) define_rho_parameters(ERRORS_VIRTUAL[[x]])) #(parameter object = NA -> returns median and madn of the calculated error term)
