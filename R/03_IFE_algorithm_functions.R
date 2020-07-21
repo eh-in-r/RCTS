@@ -4,7 +4,7 @@
 #'
 #' Used to include cross-sectional dependence or serial dependence into the simulated panel data. It is based on Ando/Bai-code.
 #' @param parameter amount of cross-sectional dependence
-#' @inheritParams estimate_beta
+#' @inheritParams estimate_theta
 #' @return NxN covariance matrix
 #' @examples
 #' create_covMat_crosssectional_dependence(0.3,300)
@@ -19,100 +19,100 @@ create_covMat_crosssectional_dependence <- function(parameter,NN) {
   return(covMat)
 }
 
-#' Helpfunction in create_beta_real() for the option beta_real_heterogeen_groups. (This is the deault option.)
+#' Helpfunction in create_theta_real() for the option theta_real_heterogeen_groups. (This is the deault option.)
 #'
 #' @param number_of_variables number of variables
 #' @param number_of_groups_real real numbr of groups
-#' @param EXTRA_BETA_FACTOR multiplies coefficients in beta; default = 1
-beta_real_heterogroups <- function(number_of_variables, number_of_groups_real, EXTRA_BETA_FACTOR = 1) {
+#' @param EXTRA_THETA_FACTOR multiplies coefficients in theta; default = 1
+theta_real_heterogroups <- function(number_of_variables, number_of_groups_real, EXTRA_THETA_FACTOR = 1) {
   stopifnot(number_of_groups_real < 10) #Code allows up to 9 real groups at this point. IF higher limit needed, add more code in this function.
 
-  #These are the values for DGP 3 & 4 (For DGP 1 & 2 beta_real is defined in 08_IFE_make_AB_DGP1.R)
+  #These are the values for DGP 3 & 4 (For DGP 1 & 2 theta_real is defined in 08_IFE_make_AB_DGP1.R)
 
   #1e element is the intercept.
-  beta_part1 = c(0, 4,  3.5,  3,  2.5)  * EXTRA_BETA_FACTOR
-  beta_part2 = c(0,-2.5, -2, -2.5, -2)  * EXTRA_BETA_FACTOR
-  beta_part3 = c(0, 1,  0.5,  1.5,  1)  * EXTRA_BETA_FACTOR
-  beta_part4 = c(0,(round(runif(4),1) - 0.5) * 4) * EXTRA_BETA_FACTOR#between -2 and 2
-  beta_part5 = c(0,(round(runif(4),1) - 0.5) * 4) * EXTRA_BETA_FACTOR#between -2 and 2
-  beta_part6 = c(0,(round(runif(4),1) - 0.5) * 4) * EXTRA_BETA_FACTOR#between -2 and 2
-  beta_part7 = c(0,(round(runif(4),1) - 0.5) * 4) * EXTRA_BETA_FACTOR#between -2 and 2
-  beta_part8 = c(0,(round(runif(4),1) - 0.5) * 4) * EXTRA_BETA_FACTOR#between -2 and 2
-  beta_part9 = c(0,(round(runif(4),1) - 0.5) * 4) * EXTRA_BETA_FACTOR#between -2 and 2
+  theta_part1 = c(0, 4,  3.5,  3,  2.5)  * EXTRA_THETA_FACTOR
+  theta_part2 = c(0,-2.5, -2, -2.5, -2)  * EXTRA_THETA_FACTOR
+  theta_part3 = c(0, 1,  0.5,  1.5,  1)  * EXTRA_THETA_FACTOR
+  theta_part4 = c(0,(round(runif(4),1) - 0.5) * 4) * EXTRA_THETA_FACTOR#between -2 and 2
+  theta_part5 = c(0,(round(runif(4),1) - 0.5) * 4) * EXTRA_THETA_FACTOR#between -2 and 2
+  theta_part6 = c(0,(round(runif(4),1) - 0.5) * 4) * EXTRA_THETA_FACTOR#between -2 and 2
+  theta_part7 = c(0,(round(runif(4),1) - 0.5) * 4) * EXTRA_THETA_FACTOR#between -2 and 2
+  theta_part8 = c(0,(round(runif(4),1) - 0.5) * 4) * EXTRA_THETA_FACTOR#between -2 and 2
+  theta_part9 = c(0,(round(runif(4),1) - 0.5) * 4) * EXTRA_THETA_FACTOR#between -2 and 2
 
   if(number_of_variables > 3) { #add when there are more than 3 observable variables:
-    beta_part1 = c(beta_part1, (round(runif(number_of_variables - 3),1) - 0.5) * 4)
-    beta_part2 = c(beta_part2, (round(runif(number_of_variables - 3),1) - 0.5) * 4)
-    beta_part3 = c(beta_part3, (round(runif(number_of_variables - 3),1) - 0.5) * 4)
-    beta_part4 = c(beta_part4, (round(runif(number_of_variables - 3),1) - 0.5) * 4)
-    beta_part5 = c(beta_part5, (round(runif(number_of_variables - 3),1) - 0.5) * 4)
-    beta_part6 = c(beta_part6, (round(runif(number_of_variables - 3),1) - 0.5) * 4)
-    beta_part7 = c(beta_part7, (round(runif(number_of_variables - 3),1) - 0.5) * 4)
-    beta_part8 = c(beta_part8, (round(runif(number_of_variables - 3),1) - 0.5) * 4)
-    beta_part9 = c(beta_part9, (round(runif(number_of_variables - 3),1) - 0.5) * 4)
+    theta_part1 = c(theta_part1, (round(runif(number_of_variables - 3),1) - 0.5) * 4)
+    theta_part2 = c(theta_part2, (round(runif(number_of_variables - 3),1) - 0.5) * 4)
+    theta_part3 = c(theta_part3, (round(runif(number_of_variables - 3),1) - 0.5) * 4)
+    theta_part4 = c(theta_part4, (round(runif(number_of_variables - 3),1) - 0.5) * 4)
+    theta_part5 = c(theta_part5, (round(runif(number_of_variables - 3),1) - 0.5) * 4)
+    theta_part6 = c(theta_part6, (round(runif(number_of_variables - 3),1) - 0.5) * 4)
+    theta_part7 = c(theta_part7, (round(runif(number_of_variables - 3),1) - 0.5) * 4)
+    theta_part8 = c(theta_part8, (round(runif(number_of_variables - 3),1) - 0.5) * 4)
+    theta_part9 = c(theta_part9, (round(runif(number_of_variables - 3),1) - 0.5) * 4)
   }
 
   #Add the values of the different groups together in one object.
   if(number_of_groups_real >= 1) {
-    beta_real = matrix(beta_part1[1:(number_of_variables + 1)])
+    theta_real = matrix(theta_part1[1:(number_of_variables + 1)])
   }
-  if(number_of_groups_real >= 2) beta_real = beta_real %>% cbind(beta_part2[1:(number_of_variables + 1)])
-  if(number_of_groups_real >= 3) beta_real = beta_real %>% cbind(beta_part3[1:(number_of_variables + 1)])
-  if(number_of_groups_real >= 4) beta_real = beta_real %>% cbind(beta_part4[1:(number_of_variables + 1)])
-  if(number_of_groups_real >= 5) beta_real = beta_real %>% cbind(beta_part5[1:(number_of_variables + 1)])
-  if(number_of_groups_real >= 6) beta_real = beta_real %>% cbind(beta_part6[1:(number_of_variables + 1)])
-  if(number_of_groups_real >= 7) beta_real = beta_real %>% cbind(beta_part7[1:(number_of_variables + 1)])
-  if(number_of_groups_real >= 8) beta_real = beta_real %>% cbind(beta_part8[1:(number_of_variables + 1)])
-  if(number_of_groups_real >= 9) beta_real = beta_real %>% cbind(beta_part9[1:(number_of_variables + 1)])
+  if(number_of_groups_real >= 2) theta_real = theta_real %>% cbind(theta_part2[1:(number_of_variables + 1)])
+  if(number_of_groups_real >= 3) theta_real = theta_real %>% cbind(theta_part3[1:(number_of_variables + 1)])
+  if(number_of_groups_real >= 4) theta_real = theta_real %>% cbind(theta_part4[1:(number_of_variables + 1)])
+  if(number_of_groups_real >= 5) theta_real = theta_real %>% cbind(theta_part5[1:(number_of_variables + 1)])
+  if(number_of_groups_real >= 6) theta_real = theta_real %>% cbind(theta_part6[1:(number_of_variables + 1)])
+  if(number_of_groups_real >= 7) theta_real = theta_real %>% cbind(theta_part7[1:(number_of_variables + 1)])
+  if(number_of_groups_real >= 8) theta_real = theta_real %>% cbind(theta_part8[1:(number_of_variables + 1)])
+  if(number_of_groups_real >= 9) theta_real = theta_real %>% cbind(theta_part9[1:(number_of_variables + 1)])
 
 
-  return(beta_real)
+  return(theta_real)
 }
 
-#' Creates beta_real, which contains the real values of beta (= the coefficients of X)
+#' Creates theta_real, which contains the real values of theta (= the coefficients of X)
 #'
-#' beta_real_heterogeen_groups is the default case
-#' @inheritParams estimate_beta
+#' theta_real_heterogeen_groups is the default case
+#' @inheritParams estimate_theta
 #' @param number_of_groups_real number of groups
 #' @param eclipz boolean to indicate using eClipzdatabase; defaults to FALSE
-#' @param extra_beta_factor multiplies coefficients in beta; default = 1
+#' @param extra_theta_factor multiplies coefficients in theta; default = 1
 #' @return matrix with number of rows equal to number of observable variables + 1 (the first row contains the intercept) and number of culumns
 #' equal to the real number of groups.
 #' @examples
-#' #Decide if beta is common, or specific to groups or individuals: Choose 1 of the following 3.
-#' beta_real_homogeen = FALSE
-#' beta_real_heterogeen_groups = TRUE
-#' beta_real_heterogeen_individueel = FALSE
-#' create_beta_real(3,number_of_groups_real = 3)
+#' #Decide if theta is common, or specific to groups or individuals: Choose 1 of the following 3.
+#' theta_real_homogeen = FALSE
+#' theta_real_heterogeen_groups = TRUE
+#' theta_real_heterogeen_individueel = FALSE
+#' create_theta_real(3,number_of_groups_real = 3)
 #' @export
-create_beta_real <- function(number_of_variables,
+create_theta_real <- function(number_of_variables,
                               NN = aantal_N,
                               number_of_groups_real = aantalgroepen_real,
                               eclipz = FALSE,
-                              extra_beta_factor = 1) {
-  #real world eclipzdata: beta_real does not exist -> return NA
+                              extra_theta_factor = 1) {
+  #real world eclipzdata: theta_real does not exist -> return NA
   if(eclipz) return(NA)
 
 
   if(number_of_variables > 0) {
-    #common beta_real:
-    if(beta_real_homogeen) {
-      beta_real = c(0, c(1,2,3,28,33,38,43,48,53,58,63,68,73,78,83)[1:number_of_variables]) #intercept 0, and after that values for the real beta's
-      beta_real = matrix(rep(beta_real, number_of_groups_real), nrow = (number_of_variables + 1))
+    #common theta_real:
+    if(theta_real_homogeen) {
+      theta_real = c(0, c(1,2,3,28,33,38,43,48,53,58,63,68,73,78,83)[1:number_of_variables]) #intercept 0, and after that values for the real theta's
+      theta_real = matrix(rep(theta_real, number_of_groups_real), nrow = (number_of_variables + 1))
     }
-    #groupsspecific beta_real: -> default case
-    if(beta_real_heterogeen_groups) {
-      beta_real = beta_real_heterogroups(number_of_variables, number_of_groups_real, EXTRA_BETA_FACTOR = extra_beta_factor)
+    #groupsspecific theta_real: -> default case
+    if(theta_real_heterogeen_groups) {
+      theta_real = theta_real_heterogroups(number_of_variables, number_of_groups_real, EXTRA_THETA_FACTOR = extra_theta_factor)
     }
-    #individualspecifiec beta_real:
-    if(beta_real_heterogeen_individueel) {
-      beta_real = matrix(rnorm(NN * (number_of_variables + 1)), nrow = (number_of_variables + 1), ncol = NN)
+    #individualspecifiec theta_real:
+    if(theta_real_heterogeen_individueel) {
+      theta_real = matrix(rnorm(NN * (number_of_variables + 1)), nrow = (number_of_variables + 1), ncol = NN)
     }
   } else {
-    beta_real = rep(NA,number_of_groups_real)
+    theta_real = rep(NA,number_of_groups_real)
   }
 
-  return(beta_real)
+  return(theta_real)
 }
 
 
@@ -121,7 +121,7 @@ create_beta_real <- function(number_of_variables,
 #' X is an array with dimensions N, T and number of observable variables.
 #' The variables are randomly generated with mean 0 and sd 1.
 #' @inheritParams create_covMat_crosssectional_dependence
-#' @inheritParams estimate_beta
+#' @inheritParams estimate_theta
 #' @return array with dimensions N x T x number of observable variables
 #' @examples
 #' initialise_X(300,30)
@@ -150,7 +150,7 @@ initialise_X <- function(NN,TT, number_of_variables = aantalvars) {
 #' @param firsttime Scaling before generating Y and before adding outliers -> this is always with mean and sd. If this is FALSE, it indicates that
 #' @param eclipz parameter to indicate using real world Eclipzdataset. Defaults to FALSE.
 #' we are using the function for a second time, after adding the outliers. In the robust case it uses median and MAD, otherwise again mean and sd.
-#' @inheritParams create_beta_real
+#' @inheritParams create_theta_real
 #' @examples
 #' X = initialise_X(300,30)
 #' scaling_X(X,TRUE, number_of_variables = 3)
@@ -189,8 +189,8 @@ scaling_X <- function(X, firsttime, eclipz = FALSE, number_of_variables = aantal
 #'
 #' This 2D-matrix is what Ando/Bai worked with.
 #' @param X input
-#' @inheritParams create_beta_real
-#' @inheritParams estimate_beta
+#' @inheritParams create_theta_real
+#' @inheritParams estimate_theta
 #' @examples
 #' X = initialise_X(300,30)
 #' restructure_X_to_order_slowN_fastT(X, FALSE, number_of_variables = 3, number_vars_estimated = 3)
@@ -235,7 +235,7 @@ restructure_X_to_order_slowN_fastT <- function(X, eclipz,
 #' factors ~ N(j * FGR_FACTOR, FGR_FACTOR_sd) -> default case will be N(j,1)
 #' @param S real number of groups
 #' @param number_of_group_factors_real vector with as length the number of groups, where each element is the number of real groupfactors of that group.
-#' @inheritParams estimate_beta
+#' @inheritParams estimate_theta
 #' @return list: first element contains real groupfactors and second element contains real groupfactor loadings
 #' @examples
 #' #3 groups, each with 3 groupfactors:
@@ -301,11 +301,11 @@ generate_grouped_factorstructure <- function(S, number_of_group_factors_real, TT
 
 
 #' Generate panel data Y for simulations.
-#' @inheritParams estimate_beta
+#' @inheritParams estimate_theta
 #' @param number_of_common_factors_real real number of common factors
 #' @param number_of_group_factors_real Vector of length the number of groups. Each element contains the real number of group factors for that group.
 #' @param g_real vector with real group memberships
-#' @param beta_real real coefficients with the observable variables
+#' @param theta_real real coefficients with the observable variables
 #' @param lambda_group_real loadings of the group factors
 #' @param factor_group_real groupfactors
 #' @param lambda_real loadings of the common factors
@@ -313,11 +313,11 @@ generate_grouped_factorstructure <- function(S, number_of_group_factors_real, TT
 #' @param epsilon NN x TT-matrix containing the error term
 #' @param ando_bai loads Ando/Bai-dataset; only for testing purposes. Defaults to FALSE.
 #' @param ando_bai_2017 loads Ando/Bai-dataset; only for testing purposes. Defaults to FALSE.
-#' @inheritParams create_beta_real
+#' @inheritParams create_theta_real
 #' @return N x T matrix
 #' @export
 generate_Y <- function(NN, TT, number_of_common_factors_real,number_of_group_factors_real,
-                       g_real, beta_real, lambda_group_real, factor_group_real,
+                       g_real, theta_real, lambda_group_real, factor_group_real,
                        lambda_real, factor_real, epsilon,
                        ando_bai = FALSE,
                        ando_bai_2017 = FALSE,
@@ -349,7 +349,7 @@ generate_Y <- function(NN, TT, number_of_common_factors_real,number_of_group_fac
       for(t in 1:TT) {
 
         if(number_of_variables > 0) {
-          XT = c(1, X[i,t,]) %*% beta_real[,g_real[i]] #add 1 to X[i,t,] to make room for the intercept (which is in beta)
+          XT = c(1, X[i,t,]) %*% theta_real[,g_real[i]] #add 1 to X[i,t,] to make room for the intercept (which is in theta)
 
         } else {
           XT = 0
@@ -390,7 +390,7 @@ generate_Y <- function(NN, TT, number_of_common_factors_real,number_of_group_fac
 }
 
 
-#' Initialisation of estimation of beta.
+#' Initialisation of estimation of beta (the coefficients with the observable variables)
 #'
 #' Note: this needs to be called before the definition of grid.
 #' @inheritParams generate_Y
@@ -411,14 +411,14 @@ generate_Y <- function(NN, TT, number_of_common_factors_real,number_of_group_fac
 #'
 #' homogeneous_coefficients = FALSE
 #' heterogeneous_coefficients_groups = FALSE
-#' heterogeneous_coefficients_individuals = TRUE #estimating beta_i for every individual
+#' heterogeneous_coefficients_individuals = TRUE #estimating theta_i for every individual
 #' use_robust = TRUE
 #' ABDGP1 = FALSE
 #' ABintercept = TRUE
-#' beta_init = initialise_beta(NN = 300, TT = 30,
+#' theta_init = initialise_theta(NN = 300, TT = 30,
 #' number_of_variables = 3, number_vars_estimated = 3, number_of_groups = 3)
 #' @export
-initialise_beta <- function(eclipz = FALSE,
+initialise_theta <- function(eclipz = FALSE,
                             NN = aantal_N,
                             TT = aantal_T,
                             number_of_variables = aantalvars,
@@ -434,9 +434,9 @@ initialise_beta <- function(eclipz = FALSE,
   }
 
   if(number_of_vars > 0) {
-    beta = matrix(NA, nrow = (number_of_vars + 1), ncol = number_of_groups)
+    theta = matrix(NA, nrow = (number_of_vars + 1), ncol = number_of_groups)
     if(heterogeneous_coefficients_individuals) {
-      beta = matrix(NA, nrow = (number_of_vars + 1), ncol = NN)
+      theta = matrix(NA, nrow = (number_of_vars + 1), ncol = NN)
     }
 
 
@@ -445,12 +445,12 @@ initialise_beta <- function(eclipz = FALSE,
     if(homogeneous_coefficients) { #also used in DGP05: BramatiCroux
       X_special = X_restructured
       Y_special = Y
-      #this includes robuust estimation of beta:
-      beta = determine_beta("homogeen", X_special, Y_special, TRUE, initialisatie = TRUE, indices = 1:NN,  TT = TT, number_of_variables = number_of_variables)
+      #this includes robuust estimation of theta:
+      theta = determine_theta("homogeen", X_special, Y_special, TRUE, initialisatie = TRUE, indices = 1:NN,  TT = TT, number_of_variables = number_of_variables)
 
     }
     if(heterogeneous_coefficients_groups) {
-      for(group in 1:number_of_groups) { #for each  real group there must be a column in beta.
+      for(group in 1:number_of_groups) { #for each  real group there must be a column in theta.
         #select parts of X and Y of this group
         indices_group = which(g == group)
         if(length(indices_group) == 0) {
@@ -465,7 +465,7 @@ initialise_beta <- function(eclipz = FALSE,
 
         Y_special = as.vector(t(Y[indices_group,])) #order: N1T1, N1T2,N1T3,...N2T1,...N_endT_end
 
-        beta[,group] = determine_beta("heterogeen", X_special, Y_special, TRUE, initialisatie = TRUE, indices = indices_group,  TT = TT, number_of_variables = number_of_variables)
+        theta[,group] = determine_theta("heterogeen", X_special, Y_special, TRUE, initialisatie = TRUE, indices = indices_group,  TT = TT, number_of_variables = number_of_variables)
 
       }
 
@@ -498,18 +498,18 @@ initialise_beta <- function(eclipz = FALSE,
         }
         if(ABDGP1 & ABintercept) {
           values = c(0,model$coefficients)
-          beta[,i] = values
+          theta[,i] = values
         } else {
-          beta[,i] = model$coefficients
+          theta[,i] = model$coefficients
         }
       }
     }
     rm(X_special, Y_special)
 
 
-    return(beta)
+    return(theta)
   } else {
-    #when number_of_vars == 0, we do not need beta
+    #when number_of_vars == 0, we do not need theta
     return(rep(NA,number_of_groups))
   }
 }
@@ -522,7 +522,7 @@ initialise_beta <- function(eclipz = FALSE,
 #' these are robust.
 #' @param group number of group
 #' @param solve_FG_FG_times_FG This is the same as groupfactor / T. It is only used in the Classical approach
-#' @inheritParams estimate_beta
+#' @inheritParams estimate_theta
 #' @return NxT matrix containing the product of virtual groupfactors and virtual loadings
 
 calculate_virtual_factor_and_lambda_group <- function(group, solve_FG_FG_times_FG,
@@ -532,13 +532,13 @@ calculate_virtual_factor_and_lambda_group <- function(group, solve_FG_FG_times_F
   indices = 1:NN
   LF = t(lambda) %*% comfactor
 
-  xbeta = calculate_XT_estimated(NN = NN)
+  xtheta = calculate_XT_estimated(NN = NN)
 
 
   if(number_of_common_factors == 0) {
-    Y_ster = Y[indices,] - xbeta
+    Y_ster = Y[indices,] - xtheta
   } else {
-    Y_ster = Y[indices,] - xbeta - LF
+    Y_ster = Y[indices,] - xtheta - LF
   }
 
 
@@ -635,11 +635,11 @@ calculate_errors_virtual_groups <- function(k,LF,virtual_grouped_factor_structur
     }
     if(number_of_variables > 0) {
       if(homogeneous_coefficients | heterogeneous_coefficients_groups) {
-        XT = cbind(1, X[i,,]) %*% beta[,g[i]]
-        #-> this should not be beta[,k] as only the grouped factorstructure should vary with k (similar to calculate_virtual_factor_and_lambda_group)
+        XT = cbind(1, X[i,,]) %*% theta[,g[i]]
+        #-> this should not be theta[,k] as only the grouped factorstructure should vary with k (similar to calculate_virtual_factor_and_lambda_group)
       }
       if(heterogeneous_coefficients_individuals) {
-        XT = cbind(1, X[i,,]) %*% beta[,i]
+        XT = cbind(1, X[i,,]) %*% theta[,i]
       }
     }
 
@@ -730,7 +730,7 @@ solveFG <- function(TT, number_of_groups, number_of_group_factors){
 #' Function that estimates group membership.
 #'
 #' @return list: 1st element contains group membership and second element contains the values which are used to determine group membership
-#' @inheritParams estimate_beta
+#' @inheritParams estimate_theta
 #' @examples
 #' #This function needs several initial parameters to be initialized in order to work on itself.
 #' library(RobClustTimeSeries)
@@ -755,10 +755,10 @@ solveFG <- function(TT, number_of_groups, number_of_group_factors){
 #' eclipz = FALSE
 #' ABDGP1 = FALSE
 #' ABintercept = TRUE
-#' beta = estimate_beta(NN = 300, TT = 30,
+#' theta = estimate_theta(NN = 300, TT = 30,
 #' number_of_groups = 3, number_of_group_factors = c(3,3,3), number_of_common_factors = 0,
 #' number_of_variables = 3,number_vars_estimated=3,num_factors_may_vary=FALSE)[[1]]
-#' grid = grid_add_variables(grid,beta, lambda, comfactor)
+#' grid = grid_add_variables(grid,theta, lambda, comfactor)
 #' g_new = update_g(number_of_groups = 3, number_of_group_factors = c(3,3,3))[[1]]
 #' @export
 update_g <- function(NN = aantal_N, TT = aantal_T,
@@ -844,25 +844,25 @@ calculate_FL_group_estimated2 <- function(f,l,j,
 #'
 #' @param i index of individual
 #' @param t index of time
-#' @param XBETA matrixproduct of X and beta
+#' @param XTHETA matrixproduct of X and theta
 #' @param LF matrixproduct of common factors and its loadings
 #' @param group_memberships vector with group memberships
 #' @param lgfg_list product of groupfactors and their loadings; list with length the number of groups
 #' @param number_of_group_factors vector containing the number of group factors for all groups
-OF_vectorized_helpfunction3 <- function(i,t,XBETA,LF,
+OF_vectorized_helpfunction3 <- function(i,t,XTHETA,LF,
                                         group_memberships,
                                         lgfg_list,
                                         number_of_group_factors) {
 
 
   if(do_we_estimate_group_factors(number_of_group_factors) != 0) {
-    result = as.numeric(Y[i,t] - XBETA -
+    result = as.numeric(Y[i,t] - XTHETA -
                           LF -
                           lgfg_list[[group_memberships[i]]][i,t]
     )^2
 
   } else {
-    result = as.numeric(Y[i,t] - XBETA -
+    result = as.numeric(Y[i,t] - XTHETA -
                           LF
     )^2
   }
@@ -873,15 +873,15 @@ OF_vectorized_helpfunction3 <- function(i,t,XBETA,LF,
 #' Calculates objective function: used in local_search + to determine "best_result".
 #'
 #' @param group_memberships Vector containing groupmembership for all individuals.
-#' @param BETA beta
+#' @param THETA theta
 #' @param ALPHA --obsolete--
 #' @param LAMBDA loadings
 #' @param FACTOR common factors
 #' @param LAMBDA_GROUP grouploadings
 #' @param FACTOR_GROUP groupfactors
-#' @inheritParams estimate_beta
+#' @inheritParams estimate_theta
 #' @export
-OF_vectorized3 <- function(group_memberships, BETA = beta, ALPHA = alpha,
+OF_vectorized3 <- function(group_memberships, THETA = theta, ALPHA = alpha,
                            LAMBDA = lambda, FACTOR = comfactor,
                            LAMBDA_GROUP = lambda_group, FACTOR_GROUP = factor_group,
                            NN = aantal_N,
@@ -896,14 +896,14 @@ OF_vectorized3 <- function(group_memberships, BETA = beta, ALPHA = alpha,
     return(sum(apply(grid,1,function(x) OF_vectorized_helpfunction3(x[1],x[2],x[3],x[4],group_memberships, lgfg_list, number_of_group_factors))))
   }
   if(heterogeneous_coefficients_groups) {
-    #construct a vector with XBETA-values depending on the group of the individuals:
-    temp = grid %>% dplyr::select(starts_with("XBETA"))
-    XBETA_parameter = sapply(1:NN, function(x) temp[x,g[x]])
+    #construct a vector with XTHETA-values depending on the group of the individuals:
+    temp = grid %>% dplyr::select(starts_with("XTHETA"))
+    XTHETA_parameter = sapply(1:NN, function(x) temp[x,g[x]])
 
     prep = grid %>%
-      dplyr::select(-starts_with("XBETA"))
+      dplyr::select(-starts_with("XTHETA"))
     #used to put LF into the 3rd column -> x[3] in next line
-    return(sum(apply(prep,1,function(x) OF_vectorized_helpfunction3(x[1],x[2],XBETA_parameter,x[3],group_memberships, lgfg_list, number_of_group_factors))))
+    return(sum(apply(prep,1,function(x) OF_vectorized_helpfunction3(x[1],x[2],XTHETA_parameter,x[3],group_memberships, lgfg_list, number_of_group_factors))))
   }
 
 
@@ -920,7 +920,7 @@ OF_vectorized3 <- function(group_memberships, BETA = beta, ALPHA = alpha,
 #' This function is used to speed up code.
 #' @param lambda_group grouploadings
 #' @param factor_group groupfactors
-#' @inheritParams estimate_beta
+#' @inheritParams estimate_theta
 #' @examples
 #' library(tidyverse)
 #' lambda_group = RobClustTimeSeries::lambda_group_real_dgp3
@@ -966,17 +966,17 @@ calculate_lgfg <- function(lambda_group, factor_group, number_of_groups, number_
 }
 
 
-#' Helpfunction in estimate_beta() for estimating beta.
+#' Helpfunction in estimate_theta() for estimating theta.
 #'
 #' @param string can have values: "homogeen" or "heterogeen"
 #' @param X_special preprocessed X (observable variables)
 #' @param Y_special preprocessed Y
 #' @param correct Defaults to TRUE. If TRUE, then My is not being used. My is an scaling thing that came out of Ando/Bai.
 #' @param initialisatie boolean
-#' @param indices individuals for which beta is being estimated
+#' @param indices individuals for which theta is being estimated
 #' @param optimize_kappa indicates if kappa has to be optimized or not; defaults to FALSE
 #' @inheritParams generate_Y
-determine_beta <- function(string, X_special,Y_special, correct, initialisatie = FALSE, indices = NA, optimize_kappa = FALSE,
+determine_theta <- function(string, X_special,Y_special, correct, initialisatie = FALSE, indices = NA, optimize_kappa = FALSE,
                            TT = aantal_T,
                            number_of_variables = aantalvars) {
   if(!(heterogeneous_coefficients_groups & initialisatie == TRUE)) {
@@ -991,7 +991,7 @@ determine_beta <- function(string, X_special,Y_special, correct, initialisatie =
     if(correct) My = My - My #set to zero
 
     if(initialisatie) {
-      #initialisation of beta, so no factorstructure in Y_special
+      #initialisation of theta, so no factorstructure in Y_special
       Y_special = as.vector(t(Y)-My) #order: N1T1, N2T1,...N1T2,...N_endT_end
     } else {
       Y_special = as.vector(t(Y_special)-My) #order: N1T1, N2T1,...N1T2,...N_endT_end
@@ -1024,18 +1024,18 @@ determine_beta <- function(string, X_special,Y_special, correct, initialisatie =
         #print("indices")
         #print(indices)
         for(LAMi in 1:length(kappa_candidates)){
-          beta_temp <- model$beta[,LAMi] #c(0,model$beta)[-2,LAMi]
-          BIC <- sum( (Y[indices,]-cbind(1,X[indices,,]) %*% beta_temp )^2 )/(TT) + C * sigma2_max_model * log(TT)*sum(beta_temp!=0)/(TT)
+          theta_temp <- model$theta[,LAMi] #c(0,model$theta)[-2,LAMi]
+          BIC <- sum( (Y[indices,]-cbind(1,X[indices,,]) %*% theta_temp )^2 )/(TT) + C * sigma2_max_model * log(TT)*sum(theta_temp!=0)/(TT)
 
           if(BIC<=minBIC){
             best_lami = LAMi
             minBIC <- BIC
-            beta_temp <- model$beta[,LAMi] #c(0,model$beta)[-2,LAMi]
+            theta_temp <- model$theta[,LAMi] #c(0,model$theta)[-2,LAMi]
           }
         }
         #print(kappa_candidates[best_lami]) #-> so this is kappa[i]
         #Sys.sleep(0.1)
-        return(beta_temp)
+        return(theta_temp)
       }
     }
   }
@@ -1043,7 +1043,7 @@ determine_beta <- function(string, X_special,Y_special, correct, initialisatie =
 
   if(string == "homogeen") {
     if(class(model) == "lm" | class(model) == "lmrob") return(matrix(rep(model$coefficients, aantalgroepen), nrow = (number_of_variables + 1)))
-    else return(matrix(rep(model$beta[,1], aantalgroepen), nrow = (number_of_variables + 1)))
+    else return(matrix(rep(model$theta[,1], aantalgroepen), nrow = (number_of_variables + 1)))
   }
   if(string == "heterogeen") {
     if(class(model) == "lm" | class(model) == "lmrob") {
@@ -1054,9 +1054,9 @@ determine_beta <- function(string, X_special,Y_special, correct, initialisatie =
       }
     } else {
       if(ABDGP1 & ABintercept) { #=DGP1
-        return(c(0,model$beta[-2,1]))
+        return(c(0,model$theta[-2,1]))
       } else {
-        return(model$beta[,1])
+        return(model$theta[,1])
       }
     }
   }
@@ -1067,8 +1067,8 @@ determine_beta <- function(string, X_special,Y_special, correct, initialisatie =
 
 #' Estimates beta.
 #'
-#' Update step of algorithm to obtain new estimation for beta.
-#' @inheritParams determine_beta
+#' Update step of algorithm to obtain new estimation for beta. Note that we call it theta because beta() exists in base R.
+#' @inheritParams determine_theta
 #' @param eclipz parameter to indicate using real world Eclipzdataset. Defaults to FALSE.
 #' @param NN number of individuals
 #' @param TT length of time series
@@ -1078,7 +1078,7 @@ determine_beta <- function(string, X_special,Y_special, correct, initialisatie =
 #' @param number_of_variables number of observable variables
 #' @param number_vars_estimated number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.
 #' @param num_factors_may_vary whether or not the number of groupfactors is constant over all groups or not
-#' @return list: 1st element contains matrix (N columns: 1 for each element of the panel data) with estimated beta's.
+#' @return list: 1st element contains matrix (N columns: 1 for each element of the panel data) with estimated theta's.
 #' @examples
 #' #This function needs several initial parameters to be initialized in order to work on itself.
 #' library(RobClustTimeSeries)
@@ -1101,11 +1101,11 @@ determine_beta <- function(string, X_special,Y_special, correct, initialisatie =
 #' heterogeneous_coefficients_individuals = TRUE
 #' ABDGP1 = FALSE
 #' ABintercept = TRUE
-#' beta = estimate_beta(NN = 300, TT = 30,
+#' theta = estimate_theta(NN = 300, TT = 30,
 #' number_of_groups = 3, number_of_group_factors = c(3,3,3), number_of_common_factors = 0,
 #' number_of_variables = 3,number_vars_estimated=3,num_factors_may_vary=FALSE)[[1]]
 #' @export
-estimate_beta <- function(optimize_kappa = FALSE, eclipz = FALSE,
+estimate_theta <- function(optimize_kappa = FALSE, eclipz = FALSE,
                                   NN = aantal_N,
                                   TT = aantal_T,
                                   number_of_groups = aantalgroepen,
@@ -1143,11 +1143,11 @@ estimate_beta <- function(optimize_kappa = FALSE, eclipz = FALSE,
 
       }
 
-      beta = determine_beta("homogeen",X_special, Y_special, TRUE, indices = 1:NN, TT = TT, number_of_variables = number_of_variables)
+      theta = determine_theta("homogeen",X_special, Y_special, TRUE, indices = 1:NN, TT = TT, number_of_variables = number_of_variables)
 
     }
     if(heterogeneous_coefficients_groups) {
-      beta = matrix(NA, nrow = (number_of_variables + 1), ncol = number_of_groups)
+      theta = matrix(NA, nrow = (number_of_variables + 1), ncol = number_of_groups)
       for(group in 1:number_of_groups) {
         #select parts of X and Y of this group
         indices_group = which(g == group)
@@ -1174,7 +1174,7 @@ estimate_beta <- function(optimize_kappa = FALSE, eclipz = FALSE,
         }
 
 
-        beta[,group] = determine_beta("heterogeen", X_special, Y_special, TRUE, indices = indices_group, TT = TT, number_of_variables = number_of_variables)
+        theta[,group] = determine_theta("heterogeen", X_special, Y_special, TRUE, indices = indices_group, TT = TT, number_of_variables = number_of_variables)
 
       }
     }
@@ -1218,11 +1218,11 @@ estimate_beta <- function(optimize_kappa = FALSE, eclipz = FALSE,
       Y_special_list = lapply(1:NN, function(x) make_Y_special(x) )
 
       if(optimize_kappa) {
-        beta = pmap(list(X_special_list, Y_special_list, 1:NN),  function(x,y,z) determine_beta("heterogeen",x, y, TRUE, indices = z,  TT = TT, number_of_variables = number_of_variables) )
+        theta = pmap(list(X_special_list, Y_special_list, 1:NN),  function(x,y,z) determine_theta("heterogeen",x, y, TRUE, indices = z,  TT = TT, number_of_variables = number_of_variables) )
       } else {
         #note that mapply would be about 10% faster
-        beta = map2(X_special_list, Y_special_list,  function(x,y) determine_beta("heterogeen",x, y, TRUE, indices = NA,  TT = TT, number_of_variables = number_of_variables) )
-        #beta_new = mapply( function(x,y) { determine_beta("heterogeen",x, y, TRUE, indices = NA,  TT = TT, number_of_variables = number_of_variables) }, x = X_special_list, y = y_special_list )
+        theta = map2(X_special_list, Y_special_list,  function(x,y) determine_theta("heterogeen",x, y, TRUE, indices = NA,  TT = TT, number_of_variables = number_of_variables) )
+        #theta_new = mapply( function(x,y) { determine_theta("heterogeen",x, y, TRUE, indices = NA,  TT = TT, number_of_variables = number_of_variables) }, x = X_special_list, y = y_special_list )
 
       }
       ########################################################
@@ -1230,15 +1230,15 @@ estimate_beta <- function(optimize_kappa = FALSE, eclipz = FALSE,
       #(is 2 to 3 times faster (microbenchmark) for (300,30)-system)
       #BUT:  ERRORS:
       #   Error: 'map2' is not an exported object from 'namespace:future'
-      #beta = future::map2(X_special_list, Y_special_list,  function(x,y) determine_beta("heterogeen",x, y, TRUE, indices = NA,  TT = TT, number_of_variables = number_of_variables) )
+      #theta = future::map2(X_special_list, Y_special_list,  function(x,y) determine_theta("heterogeen",x, y, TRUE, indices = NA,  TT = TT, number_of_variables = number_of_variables) )
       ########################################################
 
-      beta = matrix(unlist(beta),ncol = NN)
+      theta = matrix(unlist(theta),ncol = NN)
 
     }
 
 
-    return(list(beta))
+    return(list(theta))
   } else {
     return(list(NA))
   }
@@ -1246,38 +1246,38 @@ estimate_beta <- function(optimize_kappa = FALSE, eclipz = FALSE,
 
 
 
-#'Calculates W = Y - X*BETA
+#'Calculates W = Y - X*THETA
 #'
 #'The equivalent matrix is called z in Ando/Bai 2017
-#' @param beta beta
+#' @param theta theta
 #' @param g vector with group membership
-#' @inheritParams estimate_beta
+#' @inheritParams estimate_theta
 #' @return NxT matrix
 #' @export
-calculate_W <- function(beta, g ,
+calculate_W <- function(theta, g ,
                         NN = aantal_N,
                         TT = aantal_T,
                         number_of_variables = aantalvars,
                         number_vars_estimated = SCHATTEN_MET_AANTALVARS, eclipz = FALSE) {
   W = matrix(0, nrow = NN, ncol = TT) #T x N-matrix in original paper , but I rather define as NxT
 
-  #if number_vars_estimated < number_of_variables the obsoleterows in beta were already erased -> do the same in X
+  #if number_vars_estimated < number_of_variables the obsoleterows in theta were already erased -> do the same in X
   X = adapt_X_estimating_less_variables(number_of_variables, number_vars_estimated, eclipz)
 
   if(number_of_variables > 0) {
     if(homogeneous_coefficients) {
       #non-dependence on g -> take first column
-      for(i in 1:NN) W[i,] = Y[i,] - t(cbind(1,X[i,,]) %*% as.matrix(beta[,1]))
+      for(i in 1:NN) W[i,] = Y[i,] - t(cbind(1,X[i,,]) %*% as.matrix(theta[,1]))
     }
     if(heterogeneous_coefficients_groups) {
-      for(i in 1:NN) W[i,] = Y[i,] - t(cbind(1,X[i,,]) %*% as.matrix(beta[,g[i]]))
+      for(i in 1:NN) W[i,] = Y[i,] - t(cbind(1,X[i,,]) %*% as.matrix(theta[,g[i]]))
     }
     if(heterogeneous_coefficients_individuals) {
       for(i in 1:NN) {
         if(aantal_N_fulldata == 3112 & eclipz) { #this combination has issues with format of Y; not clear why
-          W[i,] = matrix(unlist(Y[i,]), nrow = 1) - t(cbind(1,X[i,,]) %*% as.matrix(beta[,i]))
+          W[i,] = matrix(unlist(Y[i,]), nrow = 1) - t(cbind(1,X[i,,]) %*% as.matrix(theta[,i]))
         } else {
-          W[i,] = Y[i,] - t(cbind(1,X[i,,]) %*% as.matrix(beta[,i]))
+          W[i,] = Y[i,] - t(cbind(1,X[i,,]) %*% as.matrix(theta[,i]))
         }
       }
     }
@@ -1296,13 +1296,13 @@ calculate_W <- function(beta, g ,
   return(W)
 }
 
-#' Calculates Z = Y - X*BETA - LgFg, to use in estimate of common factorstructure
+#' Calculates Z = Y - X*THETA - LgFg, to use in estimate of common factorstructure
 #' @inheritParams calculate_W
 #' @param lgfg_list This is a list (length number of groups) containing FgLg for every group.
 #' @param initialise boolean
-#' @inheritParams estimate_beta
+#' @inheritParams estimate_theta
 #' @export
-calculate_Z_common <- function(beta, g, lgfg_list, initialise = FALSE,
+calculate_Z_common <- function(theta, g, lgfg_list, initialise = FALSE,
                                NN = aantal_N,
                                TT = aantal_T,
                                number_of_variables = aantalvars,
@@ -1310,7 +1310,7 @@ calculate_Z_common <- function(beta, g, lgfg_list, initialise = FALSE,
                                number_of_group_factors = aantalfactoren_groups, eclipz = FALSE) {
   Z = matrix(0, nrow = NN, ncol = TT) #T x N-matrix in paper , maar ik definieer liever als NxT
 
-  #if number_vars_estimated < number_of_variables the obsoleterows in beta were already erased -> do the same in X
+  #if number_vars_estimated < number_of_variables the obsoleterows in theta were already erased -> do the same in X
   X = adapt_X_estimating_less_variables(number_of_variables, number_vars_estimated, eclipz)
 
   for(i in 1:NN) {
@@ -1326,9 +1326,9 @@ calculate_Z_common <- function(beta, g, lgfg_list, initialise = FALSE,
       LF_GROUP = 0
     }
     if(number_of_variables > 0) {
-      if(homogeneous_coefficients | heterogeneous_coefficients_groups) BETA = as.matrix(beta[,g[i]])
-      if(heterogeneous_coefficients_individuals) BETA = as.matrix(beta[,i])
-      Z[i,] = y - t(cbind(1,X[i,,]) %*% BETA) -
+      if(homogeneous_coefficients | heterogeneous_coefficients_groups) THETA = as.matrix(theta[,g[i]])
+      if(heterogeneous_coefficients_individuals) THETA = as.matrix(theta[,i])
+      Z[i,] = y - t(cbind(1,X[i,,]) %*% THETA) -
         LF_GROUP
     } else {
       Z[i,] = y -
@@ -1346,15 +1346,15 @@ calculate_Z_common <- function(beta, g, lgfg_list, initialise = FALSE,
   return(Z)
 }
 
-#' Calculates Z = Y - X*BETA - LF), to use in estimate of groupfactorstructure.
+#' Calculates Z = Y - X*THETA - LF), to use in estimate of groupfactorstructure.
 #' @inheritParams calculate_W
-#' @inheritParams estimate_beta
+#' @inheritParams estimate_theta
 #' @param lambda common factor loadings
 #' @param comfactor common factors
 #' @param group the number of the group
 #' @param initialise boolean
 #' @export
-calculate_Z_group <- function(beta, g, lambda, comfactor, group, initialise,
+calculate_Z_group <- function(theta, g, lambda, comfactor, group, initialise,
                               TT = aantal_T,
                               number_of_variables = aantalvars,
                               number_vars_estimated = SCHATTEN_MET_AANTALVARS,
@@ -1367,7 +1367,7 @@ calculate_Z_group <- function(beta, g, lambda, comfactor, group, initialise,
   }
 
   Z = matrix(0, nrow = length(indices_group), ncol = TT) #Nj x T matrix
-  #if number_vars_estimated < number_of_variables the obsoleterows in beta were already erased -> do the same in X
+  #if number_vars_estimated < number_of_variables the obsoleterows in theta were already erased -> do the same in X
   X = adapt_X_estimating_less_variables(number_of_variables, number_vars_estimated, eclipz)
 
   for(i in 1:length(indices_group)) { #loop over aantal elementen in groep
@@ -1375,10 +1375,10 @@ calculate_Z_group <- function(beta, g, lambda, comfactor, group, initialise,
 
     #define XT
     if(number_of_variables > 0) {
-      if(homogeneous_coefficients | heterogeneous_coefficients_groups)  BETA = as.matrix(beta[,g[index]])
-      if(heterogeneous_coefficients_individuals) BETA = as.matrix(beta[,index])
+      if(homogeneous_coefficients | heterogeneous_coefficients_groups)  THETA = as.matrix(theta[,g[index]])
+      if(heterogeneous_coefficients_individuals) THETA = as.matrix(theta[,index])
 
-      XT = t(cbind(1,X[index,,]) %*% BETA)
+      XT = t(cbind(1,X[index,,]) %*% THETA)
     } else {
       XT = rep(0,TT)
     }
@@ -1555,10 +1555,10 @@ get_robust_covmatrix <- function(object, ALPHA = ALPHA_COVMRCD) {
 #' @inheritParams calculate_W
 #' @param lgfg_list This is a list (length number of groups) containing FgLg for every group.
 #' @param initialise boolean
-#' @inheritParams estimate_beta
+#' @inheritParams estimate_theta
 #' @return r x T matrix
 #' @export
-estimate_factor <- function(beta, g, lgfg_list, initialise = FALSE,
+estimate_factor <- function(theta, g, lgfg_list, initialise = FALSE,
                             NN = aantal_N,
                             TT = aantal_T,
                             number_of_common_factors = aantalfactoren_common) {
@@ -1566,9 +1566,9 @@ estimate_factor <- function(beta, g, lgfg_list, initialise = FALSE,
 
   #initialisation: grouped structure NA
   if(initialise) {
-    W = calculate_W(beta, g)
+    W = calculate_W(theta, g)
   } else {
-    W = calculate_Z_common(beta, g, lgfg_list) #this is a "rows_without_NA x T - matrix"
+    W = calculate_Z_common(theta, g, lgfg_list) #this is a "rows_without_NA x T - matrix"
   }
 
   #Define the object on which (robust or classical) PCA will be performed
@@ -1632,9 +1632,9 @@ prepare_for_robpca <- function(object, NN = aantal_N, TT = aantal_T) {
 #' @param lambda common factor loadings
 #' @param comfactor common factors
 #' @param initialise boolean
-#' @inheritParams estimate_beta
+#' @inheritParams estimate_theta
 #' @export
-estimate_factor_group <- function(beta, g, lambda, comfactor, initialise = FALSE,
+estimate_factor_group <- function(theta, g, lambda, comfactor, initialise = FALSE,
                                   NN = aantal_N,
                                   TT = aantal_T,
                                   number_of_groups = aantalgroepen,
@@ -1652,7 +1652,7 @@ estimate_factor_group <- function(beta, g, lambda, comfactor, initialise = FALSE
           message("-> too many factor compared to TT")
         }
 
-        Wj = calculate_Z_group(beta, g, lambda, comfactor, group, initialise)
+        Wj = calculate_Z_group(theta, g, lambda, comfactor, group, initialise)
 
 
 
@@ -1691,17 +1691,17 @@ estimate_factor_group <- function(beta, g, lambda, comfactor, initialise = FALSE
 #' @param comfactor common factors
 #' @param lgfg_list This is a list (length number of groups) containing FgLg for every group.
 #' @param initialise boolean
-#' @inheritParams estimate_beta
+#' @inheritParams estimate_theta
 #' @export
-calculate_lambda <- function(beta, comfactor, g, lgfg_list, initialise = FALSE,
+calculate_lambda <- function(theta, comfactor, g, lgfg_list, initialise = FALSE,
                              NN = aantal_N, TT = aantal_T,
                              number_of_common_factors = aantalfactoren_common) {
 
 
   if(initialise) {
-    W = calculate_W(beta, g)
+    W = calculate_W(theta, g)
   }  else {
-    W = calculate_Z_common(beta, g, lgfg_list)
+    W = calculate_Z_common(theta, g, lgfg_list)
   }
 
 
@@ -1729,7 +1729,7 @@ calculate_lambda <- function(beta, comfactor, g, lgfg_list, initialise = FALSE,
 #'calculates factor loadings of groupfactors
 #'
 #'returns object which includes group and id of the individuals
-#' @param beta beta
+#' @param theta theta
 #' @param factor_group group factors
 #' @param g vector with group membership
 #' @param lambda loadings
@@ -1737,9 +1737,9 @@ calculate_lambda <- function(beta, comfactor, g, lgfg_list, initialise = FALSE,
 #' @param initialise boolean
 #' @param UPDATE1 option to indicate the number of groupfactors is updated during the algorithm; defults to FALSE
 #' @param UPDATE2 option to indicate the number of common factors is updated during the algorithm; defults to FALSE
-#' @inheritParams estimate_beta
+#' @inheritParams estimate_theta
 #' @export
-calculate_lambda_group <- function(beta, factor_group, g, lambda, comfactor, initialise = FALSE, UPDATE1 = update1, UPDATE2 = update2,
+calculate_lambda_group <- function(theta, factor_group, g, lambda, comfactor, initialise = FALSE, UPDATE1 = update1, UPDATE2 = update2,
                                    TT = aantal_T,
                                    number_of_groups = aantalgroepen,
                                    number_of_group_factors = aantalfactoren_groups) {
@@ -1749,7 +1749,7 @@ calculate_lambda_group <- function(beta, factor_group, g, lambda, comfactor, ini
 
   for(group in 1:number_of_groups) {
     if(number_of_group_factors[group] > 0) {
-      Wj = calculate_Z_group(beta, g, lambda, comfactor, group, initialise)
+      Wj = calculate_Z_group(theta, g, lambda, comfactor, group, initialise)
       #robust things:
       if(use_robust) {
 
@@ -1842,13 +1842,13 @@ calculate_lambda_group <- function(beta, factor_group, g, lambda, comfactor, ini
 #' Function which is used to have a df ("grid") with data (individualindex, timeindex, XT and LF) available.
 #'
 #' It is used in update_g().
-#' @param grid dataframe containing values for X*beta and LF (product of common factor and its loadings)
-#' @param beta beta
+#' @param grid dataframe containing values for X*theta and LF (product of common factor and its loadings)
+#' @param theta theta
 #' @param lambda loadings of the common factors
 #' @param comfactor common factors
-#' @inheritParams estimate_beta
+#' @inheritParams estimate_theta
 #' @export
-grid_add_variables <- function(grid, beta, lambda, comfactor,
+grid_add_variables <- function(grid, theta, lambda, comfactor,
                                NN = aantal_N,
                                TT = aantal_T,
                                number_of_variables = aantalvars,
@@ -1856,44 +1856,44 @@ grid_add_variables <- function(grid, beta, lambda, comfactor,
                                number_of_groups = aantalgroepen) {
   stopifnot(number_of_variables > 0 & number_of_variables < 9) #code exists up to 8 groups
   if(number_of_variables > 0) {
-    #for homogeneous beta (1 -> 4 at this moment), we only need 1 column as all columns are the same
+    #for homogeneous theta (1 -> 4 at this moment), we only need 1 column as all columns are the same
     if(homogeneous_coefficients) {
-      beta_used = as.matrix(beta[,1])
+      theta_used = as.matrix(theta[,1])
       #calculate matrix multiplications outside the OF-functions to speed up:
-      grid$XBETA =  (apply(grid, 1, function(x) c(1, X[x[1],x[2],]) %*% beta_used))
+      grid$XTHETA =  (apply(grid, 1, function(x) c(1, X[x[1],x[2],]) %*% theta_used))
     } else {
       if(heterogeneous_coefficients_groups) {
         #for each group: define XT
-        if(number_of_groups > 0) grid$XBETA1 = (apply(grid, 1, function(x) c(1, X[x[1],x[2],]) %*% beta[,1]))
-        if(number_of_groups > 1) grid$XBETA2 = (apply(grid, 1, function(x) c(1, X[x[1],x[2],]) %*% beta[,2]))
-        if(number_of_groups > 2) grid$XBETA3 = (apply(grid, 1, function(x) c(1, X[x[1],x[2],]) %*% beta[,3]))
-        if(number_of_groups > 3) grid$XBETA4 = (apply(grid, 1, function(x) c(1, X[x[1],x[2],]) %*% beta[,4]))
-        if(number_of_groups > 4) grid$XBETA5 = (apply(grid, 1, function(x) c(1, X[x[1],x[2],]) %*% beta[,5]))
-        if(number_of_groups > 5) grid$XBETA6 = (apply(grid, 1, function(x) c(1, X[x[1],x[2],]) %*% beta[,6]))
-        if(number_of_groups > 6) grid$XBETA7 = (apply(grid, 1, function(x) c(1, X[x[1],x[2],]) %*% beta[,7]))
-        if(number_of_groups > 7) grid$XBETA8 = (apply(grid, 1, function(x) c(1, X[x[1],x[2],]) %*% beta[,8]))
+        if(number_of_groups > 0) grid$XTHETA1 = (apply(grid, 1, function(x) c(1, X[x[1],x[2],]) %*% theta[,1]))
+        if(number_of_groups > 1) grid$XTHETA2 = (apply(grid, 1, function(x) c(1, X[x[1],x[2],]) %*% theta[,2]))
+        if(number_of_groups > 2) grid$XTHETA3 = (apply(grid, 1, function(x) c(1, X[x[1],x[2],]) %*% theta[,3]))
+        if(number_of_groups > 3) grid$XTHETA4 = (apply(grid, 1, function(x) c(1, X[x[1],x[2],]) %*% theta[,4]))
+        if(number_of_groups > 4) grid$XTHETA5 = (apply(grid, 1, function(x) c(1, X[x[1],x[2],]) %*% theta[,5]))
+        if(number_of_groups > 5) grid$XTHETA6 = (apply(grid, 1, function(x) c(1, X[x[1],x[2],]) %*% theta[,6]))
+        if(number_of_groups > 6) grid$XTHETA7 = (apply(grid, 1, function(x) c(1, X[x[1],x[2],]) %*% theta[,7]))
+        if(number_of_groups > 7) grid$XTHETA8 = (apply(grid, 1, function(x) c(1, X[x[1],x[2],]) %*% theta[,8]))
         # if(number_of_groups > 8) {
         #   message("add code (grid_add_variables")
         #   Sys.sleep(900)
         # }
       }
       if(heterogeneous_coefficients_individuals) {
-        grid$XBETA = c(calculate_XT_estimated(NN = NN, TT = TT, number_of_variables = number_of_variables, number_vars_estimated = number_vars_estimated))
+        grid$XTHETA = c(calculate_XT_estimated(NN = NN, TT = TT, number_of_variables = number_of_variables, number_vars_estimated = number_vars_estimated))
       }
     }
   } else {
     if(homogeneous_coefficients | heterogeneous_coefficients_individuals) {
-      grid$XBETA = 0
+      grid$XTHETA = 0
     }
     if(heterogeneous_coefficients_groups) {
-      if(number_of_groups > 0) grid$XBETA1 = 0
-      if(number_of_groups > 1) grid$XBETA2 = 0
-      if(number_of_groups > 2) grid$XBETA3 = 0
-      if(number_of_groups > 3) grid$XBETA4 = 0
-      if(number_of_groups > 4) grid$XBETA5 = 0
-      if(number_of_groups > 5) grid$XBETA6 = 0
-      if(number_of_groups > 6) grid$XBETA7 = 0
-      if(number_of_groups > 7) grid$XBETA8 = 0
+      if(number_of_groups > 0) grid$XTHETA1 = 0
+      if(number_of_groups > 1) grid$XTHETA2 = 0
+      if(number_of_groups > 2) grid$XTHETA3 = 0
+      if(number_of_groups > 3) grid$XTHETA4 = 0
+      if(number_of_groups > 4) grid$XTHETA5 = 0
+      if(number_of_groups > 5) grid$XTHETA6 = 0
+      if(number_of_groups > 6) grid$XTHETA7 = 0
+      if(number_of_groups > 7) grid$XTHETA8 = 0
       # if(number_of_groups > 8) {
       #   print("add code-")
       #   Sys.sleep(900)
@@ -1964,12 +1964,12 @@ do_we_estimate_group_factors <- function(number_of_group_factors) {
 }
 
 
-#' Calculates the error term Y - X*BETA - LF - LgFg.
+#' Calculates the error term Y - X*THETA - LF - LgFg.
 #' @return NxT matrix
 #' @param no_common_factorstructure if there is a common factorstructure being estimated
 #' @param no_group_factorstructure if there is a group factorstructure being estimated
 #' @inheritParams grid_add_variables
-#' @inheritParams estimate_beta
+#' @inheritParams estimate_theta
 #' @export
 calculate_error_term <- function(no_common_factorstructure = FALSE, no_group_factorstructure = FALSE,
                                  NN = aantal_N,
@@ -1986,7 +1986,7 @@ calculate_error_term <- function(no_common_factorstructure = FALSE, no_group_fac
   if(number_of_variables > 0) {
     if(homogeneous_coefficients | heterogeneous_coefficients_groups) {
       xt = sapply(1:NN,
-                  function(y) sapply(1:TT, function(x) c(1, X[y,x,]) %*% beta[,g[y]]))
+                  function(y) sapply(1:TT, function(x) c(1, X[y,x,]) %*% theta[,g[y]]))
     }
     if(heterogeneous_coefficients_individuals) {
       xt = t(calculate_XT_estimated(NN = NN, TT = TT, number_of_variables = number_of_variables)) #TxN matrix
@@ -2026,10 +2026,10 @@ calculate_error_term <- function(no_common_factorstructure = FALSE, no_group_fac
 }
 
 
-#' Calculates the error term Y - X*BETA - LF - LgFg.
+#' Calculates the error term Y - X*THETA - LF - LgFg.
 #'
 #' Gives same value as calculate_error_term().
-#' @inheritParams estimate_beta
+#' @inheritParams estimate_theta
 #' @return NxT matrix
 #' @export
 calculate_error_term_individuals <- function(NN = aantal_N,
@@ -2048,11 +2048,11 @@ calculate_error_term_individuals <- function(NN = aantal_N,
   if(number_of_variables > 0) {
     if(homogeneous_coefficients | heterogeneous_coefficients_groups) {
       xt = sapply(1:NN,
-                  function(y) sapply(1:TT, function(x) c(1, X[y,x,]) %*% beta[,g[y]]))
+                  function(y) sapply(1:TT, function(x) c(1, X[y,x,]) %*% theta[,g[y]]))
     }
     if(heterogeneous_coefficients_individuals) {
       xt = sapply(1:NN,
-                  function(y) sapply(1:TT, function(x) c(1, X[y,x,]) %*% beta[,y]))
+                  function(y) sapply(1:TT, function(x) c(1, X[y,x,]) %*% theta[,y]))
     }
 
   } else {
@@ -2193,11 +2193,11 @@ test_alternative_PIC <- function(C, term2, term3, term4) {
 
 #' Function to determine PIC (panel information criterium)
 #'
-#' This depends on kappa1 -> kappaN, through p (=number of nonzero elements of beta).
+#' This depends on kappa1 -> kappaN, through p (=number of nonzero elements of theta).
 #' The parameter 'sigma2' is the non-robust sigma2. As it is only used in term 2 to 4, it does not actually matter what its value is (needs to be > 0).
 #' Could be set to 1 as well.
 #' @param C determines relative contribution of the penamlty terms
-#' @inheritParams estimate_beta
+#' @inheritParams estimate_theta
 #' @param e2 matrix with error terms
 #' @param sigma2 scalar: sum of squared error terms, scaled by NT
 #' @export
@@ -2212,10 +2212,10 @@ calculate_PIC <- function(C, number_of_common_factors, number_of_group_factors, 
 
   if(number_of_variables > 0) {
     if(homogeneous_coefficients | heterogeneous_coefficients_groups) {
-      #p is number of nonzero elements of beta; we need the sum of all p's (inclusief intercept)
-      p_sum = sum(sapply(1:NN, function(x) sum(beta[,g[x]] != 0)))
+      #p is number of nonzero elements of theta; we need the sum of all p's (inclusief intercept)
+      p_sum = sum(sapply(1:NN, function(x) sum(theta[,g[x]] != 0)))
     } else{
-      p_sum = sum(sapply(1:NN, function(x) sum(beta[,x] != 0)))
+      p_sum = sum(sapply(1:NN, function(x) sum(theta[,x] != 0)))
     }
   } else {
     p_sum = 0
@@ -2264,12 +2264,12 @@ calculate_PIC <- function(C, number_of_common_factors, number_of_group_factors, 
 
 
 
-#' Calculates the product of X*beta (the real value of this).
-#' @inheritParams estimate_beta
+#' Calculates the product of X*theta (the real value of this).
+#' @inheritParams estimate_theta
 #' @export
 calculate_XT_real <- function(NN = aantal_N, TT = aantal_T, number_of_variables = aantalvars) {
   if(homogeneous_coefficients) { #relevant for DGP5 (BRamatiCroux)
-    XT_real = beta_real[1,] + X[,,1] * beta_real[1,]
+    XT_real = theta_real[1,] + X[,,1] * theta_real[1,]
     stopifnot(number_of_variables == 1)
   }
   if(heterogeneous_coefficients_groups) {
@@ -2282,7 +2282,7 @@ calculate_XT_real <- function(NN = aantal_N, TT = aantal_T, number_of_variables 
   if(heterogeneous_coefficients_individuals) {
     if(number_of_variables > 0 & !eclipz & !ABDGP1) {
       XT_real = (t(sapply(1:NN,
-                          function(y) sapply(1:TT, function(x) c(1, X[y,x,]) %*% beta_real[,g_real][,y]))))
+                          function(y) sapply(1:TT, function(x) c(1, X[y,x,]) %*% theta_real[,g_real][,y]))))
     } else {
       XT_real = NA
     }
@@ -2293,39 +2293,39 @@ calculate_XT_real <- function(NN = aantal_N, TT = aantal_T, number_of_variables 
 
 #' When we run the algorithm with a different number of observable variables then the number we actually have, we need to reformat X.
 #'
-#' @inheritParams create_beta_real
+#' @inheritParams create_theta_real
 #' @inheritParams generate_Y
-#' @inheritParams initialise_beta
+#' @inheritParams initialise_theta
 adapt_X_estimating_less_variables <- function(number_of_variables,
                                               number_vars_estimated,
                                               eclipz = FALSE) {
-  #if number_vars_estimated < number_of_variables, then the obsolete rows in beta are already erased -> do the same in X
+  #if number_vars_estimated < number_of_variables, then the obsolete rows in theta are already erased -> do the same in X
   if(!eclipz & number_vars_estimated < number_of_variables) {
     X = X[,,1:number_vars_estimated]
   }
   return(X)
 }
 
-#' Calculates (the estimated value of) the matrix X*beta.
+#' Calculates (the estimated value of) the matrix X*theta.
 #'
-#' @inheritParams estimate_beta
+#' @inheritParams estimate_theta
 #' @export
 calculate_XT_estimated <- function(NN = aantal_N, TT = aantal_T,
                                    number_of_variables = aantalvars,
                                    number_vars_estimated = SCHATTEN_MET_AANTALVARS,
                                    eclipz = FALSE) {
-  #if number_vars_estimated < number_of_variables, then the obsolete rows in beta are already erased -> now do the same in X
+  #if number_vars_estimated < number_of_variables, then the obsolete rows in theta are already erased -> now do the same in X
   X = adapt_X_estimating_less_variables(number_of_variables, number_vars_estimated, eclipz)
 
   if(number_of_variables > 0) {
     if(homogeneous_coefficients) { #only designed for DGP 5 at the moment
-      XT_geschat = beta[1] + X[,,1] * beta[1]
+      XT_geschat = theta[1] + X[,,1] * theta[1]
       stopifnot(number_of_variables == 1)
     }
     if(heterogeneous_coefficients_groups) {
       if(number_vars_estimated > 0) {
         XT_geschat = t(sapply(1:NN,
-                 function(x) matrix(cbind(1, X[x,,]) %*% beta[,g[x]], nrow = 1)))
+                 function(x) matrix(cbind(1, X[x,,]) %*% theta[,g[x]], nrow = 1)))
       } else {
         XT_geschat = NA
       }
@@ -2333,7 +2333,7 @@ calculate_XT_estimated <- function(NN = aantal_N, TT = aantal_T,
     if(heterogeneous_coefficients_individuals) {
       if(number_vars_estimated > 0) {
         XT_geschat = t(sapply(1:NN,
-                 function(x) matrix(cbind(1, X[x,,]) %*% beta[,x], nrow = 1)))
+                 function(x) matrix(cbind(1, X[x,,]) %*% theta[,x], nrow = 1)))
 
       } else {
         XT_geschat = NA
@@ -2353,7 +2353,7 @@ calculate_XT_estimated <- function(NN = aantal_N, TT = aantal_T,
 #' @param number_of_groups_real real number of groups
 #' @param number_of_group_factors_real real number of group factors for each group
 #' @param number_of_common_factors_real real number of common factors
-#' @inheritParams estimate_beta
+#' @inheritParams estimate_theta
 #' @inheritParams generate_Y
 #' @param ABDGP1_local gives information about which DGP we use; TRUE of FALSE
 #' @export
@@ -2408,27 +2408,27 @@ calculate_FL_group_estimated <- function(LAMBDA_GROUP = lambda_group, FACTOR_GRO
   return(FL_group_est)
 }
 
-#' Function to calculate MSE of beta.
+#' Function to calculate MSE of theta.
 #'
 #' (calculated with formula of AndoBai2017: supplementary: p19).
 #' Notes:
 #' Heterogeneous_coefficients_individuals is the default case.
 #' For DGP 1 & 2: When the number of variables in X is not equal to the standard of 3 it returns NA.
-#' @param beta estimated values of beta
-#' @param beta_real real values of beta
+#' @param theta estimated values of theta
+#' @param theta_real real values of theta
 #' @param without_intercept boolean to remove the intercept in the calculation
 #' @param ABintercept boolean to remove the de facto intercept in the calculation (this is only for DGP 1 & 2, due to how they are defined)
-#' @inheritParams estimate_beta
+#' @inheritParams estimate_theta
 #' @inheritParams calculate_FL_group_real
 #' @export
-calculate_mse_beta <- function(beta, beta_real, without_intercept = FALSE, ABintercept = FALSE,
+calculate_mse_theta <- function(theta, theta_real, without_intercept = FALSE, ABintercept = FALSE,
                                 NN = aantal_N,
                                 number_of_variables = aantalvars,
                                 ABDGP1_local = ABDGP1) {
 
   if(homogeneous_coefficients) { #relevant for DGP05 (Bramati-Croux)
-    mse = mean( (beta - beta_real)^2 )
-    if(without_intercept) mse = mean( (beta[-1,] - beta_real[-1,])^2 )
+    mse = mean( (theta - theta_real)^2 )
+    if(without_intercept) mse = mean( (theta[-1,] - theta_real[-1,])^2 )
     return(mse)
   }
 
@@ -2443,11 +2443,11 @@ calculate_mse_beta <- function(beta, beta_real, without_intercept = FALSE, ABint
   if(heterogeneous_coefficients_individuals) { #Default case; In case of DGP 1 & 2 it returns NA when number of variables is not equal to 3.
     if(without_intercept) {
       if(ABintercept) { #->calculate MSE without real and without de facto intercept
-        beta = matrix(beta[c(-1,-2),],ncol=NN)
-        beta_real = beta_real[c(-1,-2),]
+        theta = matrix(theta[c(-1,-2),],ncol=NN)
+        theta_real = theta_real[c(-1,-2),]
       } else { #calculate MSE without real intercept
-        beta = beta[-1,]
-        beta_real = beta_real[-1,]
+        theta = theta[-1,]
+        theta_real = theta_real[-1,]
       }
     }
 
@@ -2459,13 +2459,13 @@ calculate_mse_beta <- function(beta, beta_real, without_intercept = FALSE, ABint
         if(number_of_variables == 3) { #if not TRUE, bvb if > 3, then v4,v5,... should be added
           if(without_intercept) {
             if(ABintercept) {
-              #stopifnot(length(beta[,i]) == 2)
-              afw = beta[,i] - (beta_real[,g_real[i]] + c(v2[i], v3[i])) #v1 not necessary (it belongs to the de facto intercept)
+              #stopifnot(length(theta[,i]) == 2)
+              afw = theta[,i] - (theta_real[,g_real[i]] + c(v2[i], v3[i])) #v1 not necessary (it belongs to the de facto intercept)
             } else {
-              afw = beta[,i] - (beta_real[,g_real[i]] + c(v1[i], v2[i], v3[i])) #beta_real[,...] has number_of_variables elements
+              afw = theta[,i] - (theta_real[,g_real[i]] + c(v1[i], v2[i], v3[i])) #theta_real[,...] has number_of_variables elements
             }
           } else {
-            afw = beta[,i] - (beta_real[,g_real[i]] + c(0, v1[i], v2[i], v3[i])) #beta_real[,...] has (number_of_variables + 1) elements
+            afw = theta[,i] - (theta_real[,g_real[i]] + c(0, v1[i], v2[i], v3[i])) #theta_real[,...] has (number_of_variables + 1) elements
           }
         } else { #when number_of_variables != 3
 
@@ -2474,14 +2474,14 @@ calculate_mse_beta <- function(beta, beta_real, without_intercept = FALSE, ABint
 
         }
       } else { #Case of DGP03 and DGP04:
-        afw = beta[,i] - beta_real[,g_real[i]]
+        afw = theta[,i] - theta_real[,g_real[i]]
       }
-      pre_mse[i] = mean(afw^2) #this is (beta_hat - beta)^2 (mean() goes over the number of variables)
+      pre_mse[i] = mean(afw^2) #this is (theta_hat - theta)^2 (mean() goes over the number of variables)
     }
   }
 
 
-  return(mean(pre_mse)) #this is E[(beta_hat - beta_real)^2]
+  return(mean(pre_mse)) #this is E[(theta_hat - theta_real)^2]
 }
 
 
@@ -2625,7 +2625,7 @@ LMROB <- function(parameter_y, parameter_x, NOINTERCEPT = FALSE) {
 #'
 #' Sigma2 is a measure for the size of the estimationerror. We need the sigma2 of the maxmodel to use (in term 2,3,4 of the PIC) instead of the configuration-dependent sigma2. (based on text in AndoBai 2016).
 #' sigma2_max_model could actually be set to 1 as well, as it can be absorbed in parameter C.
-#' @inheritParams determine_beta
+#' @inheritParams determine_theta
 #' @inheritParams calculate_lambda_group
 #' @param number_of_groups_candidates vector with candidate values for the number of groups
 #' @param number_of_common_factors number of common factors
