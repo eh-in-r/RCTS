@@ -196,7 +196,8 @@ scaling_X <- function(X, firsttime, eclipz = FALSE, number_of_variables = aantal
 #' restructure_X_to_order_slowN_fastT(X, FALSE, number_of_variables = 3, number_vars_estimated = 3)
 #'
 restructure_X_to_order_slowN_fastT <- function(X, eclipz,
-                                               number_of_variables = aantalvars, number_vars_estimated = SCHATTEN_MET_AANTALVARS) {
+                                               number_of_variables = aantalvars,
+                                               number_vars_estimated = SCHATTEN_MET_AANTALVARS) {
 
   if(number_of_variables > 0) {
     if( length(dim(X)) == 2) {
@@ -1157,7 +1158,10 @@ estimate_beta <- function(optimize_kappa = FALSE, eclipz = FALSE,
         }
 
         #X needs to be in the form of (NN*TT x p matrix)
-        X_special = restructure_X_to_order_slowN_fastT(array(X[indices_group,,], dim = c(length(indices_group), TT, number_of_variables)), eclipz)
+        X_special = restructure_X_to_order_slowN_fastT(array(X[indices_group,,], dim = c(length(indices_group), TT, number_of_variables)),
+                                                       eclipz,
+                                                       number_of_variables = number_of_variables,
+                                                       number_vars_estimated = number_vars_estimated)
         #define Y* as Y - FcLc - FgLg:
         Y_special = matrix(Y[indices_group,], nrow = length(indices_group)) %>% unlist
 
@@ -1185,7 +1189,10 @@ estimate_beta <- function(optimize_kappa = FALSE, eclipz = FALSE,
       } else {
         number_of_vars = number_vars_estimated
       }
-      X_special_list = lapply(1:NN, function(x) restructure_X_to_order_slowN_fastT(matrix(X_local[x,,], ncol = number_of_vars), eclipz))
+      X_special_list = lapply(1:NN, function(x) restructure_X_to_order_slowN_fastT(matrix(X_local[x,,], ncol = number_of_vars),
+                                                                                   eclipz,
+                                                                                   number_of_variables = number_of_variables,
+                                                                                   number_vars_estimated = number_vars_estimated))
 
       make_Y_special <- function(i) {
         Y_special = unlist(matrix(Y[i,], nrow = 1))
@@ -2296,7 +2303,7 @@ adapt_X_estimating_less_variables <- function(number_of_variables,
   return(X)
 }
 
-#' Calculates (the estimated value of) the matrix X*beta
+#' Calculates (the estimated value of) the matrix X*beta.
 #'
 #' @inheritParams estimate_beta
 #' @export
