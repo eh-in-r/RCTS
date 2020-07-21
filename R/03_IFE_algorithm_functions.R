@@ -734,7 +734,7 @@ solveFG <- function(TT, number_of_groups, number_of_group_factors){
 #' @return list: 1st element contains group membership and second element contains the values which are used to determine group membership
 #' @inheritParams estimate_theta
 #' @examples
-#' #This function needs several initial parameters to be initialized in order to work on itself.
+#' #This function needs several initial parameters to be initialized in order to work on itself
 #' library(RobClustTimeSeries)
 #' library(tidyverse)
 #' library(robustbase)
