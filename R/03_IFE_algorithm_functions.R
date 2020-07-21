@@ -1061,7 +1061,6 @@ determine_beta <- function(string, X_special,Y_special, correct, initialisatie =
     }
   }
 
-
 }
 
 
