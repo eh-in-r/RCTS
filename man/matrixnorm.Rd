@@ -6,6 +6,9 @@
 \usage{
 matrixnorm(A)
 }
+\arguments{
+\item{A}{input matrix}
+}
 \description{
 Function to calculate the norm of a matrix.
 }

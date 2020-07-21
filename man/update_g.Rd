@@ -6,16 +6,25 @@
 \usage{
 update_g(
   NN = aantal_N,
+  TT = aantal_T,
   number_of_groups = aantalgroepen,
-  number_of_group_factors = aantalfactoren_groups
+  number_of_variables = aantalvars,
+  number_of_group_factors = aantalfactoren_groups,
+  number_of_common_factors = aantalfactoren_common
 )
 }
 \arguments{
 \item{NN}{number of individuals}
 
+\item{TT}{length of time series}
+
 \item{number_of_groups}{number of groups estimated}
 
+\item{number_of_variables}{number of observable variables}
+
 \item{number_of_group_factors}{number of groupfactors estimated}
+
+\item{number_of_common_factors}{number of common factors estimated}
 }
 \value{
 list: 1st element contains group membership and second element contains the values which are used to determine group membership
@@ -45,7 +54,8 @@ heterogeneous_coefficients_individuals = TRUE
 eclipz = FALSE
 ABDGP1 = FALSE
 ABintercept = TRUE
-beta = estimate_beta(NN = 300, TT = 30, number_of_groups = 3, number_of_group_factors = c(3,3,3), number_of_common_factors = 0, number_of_variables = 3,number_vars_estimated=3,num_factors_may_vary=FALSE)[[1]]
+beta = estimate_beta(NN = 300, TT = 30,
+number_of_groups = 3, number_of_group_factors = c(3,3,3), number_of_common_factors = 0, number_of_variables = 3,number_vars_estimated=3,num_factors_may_vary=FALSE)[[1]]
 grid = grid_add_variables(grid,beta, lambda, comfactor)
 g_new = update_g(number_of_groups = 3, number_of_group_factors = c(3,3,3))[[1]]
 }

@@ -4,11 +4,14 @@
 \alias{solveFG}
 \title{Helpfunction in update_g(), to calculate solve(FG x t(FG)) x FG}
 \usage{
-solveFG(
-  TT = aantal_T,
-  number_of_groups = aantalgroepen,
-  number_of_group_factors = aantalfactoren_groups
-)
+solveFG(TT, number_of_groups, number_of_group_factors)
+}
+\arguments{
+\item{TT}{length of time series}
+
+\item{number_of_groups}{number of groups}
+
+\item{number_of_group_factors}{number of group factors}
 }
 \description{
 Helpfunction in update_g(), to calculate solve(FG x t(FG)) x FG

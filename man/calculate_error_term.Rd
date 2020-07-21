@@ -20,9 +20,17 @@ calculate_error_term(
 
 \item{no_group_factorstructure}{if there is a group factorstructure being estimated}
 
+\item{NN}{number of individuals}
+
+\item{TT}{length of time series}
+
 \item{number_of_variables}{number of observable variables}
 
 \item{number_of_groups}{number of groups estimated}
+
+\item{number_of_group_factors}{number of groupfactors estimated}
+
+\item{number_of_common_factors}{number of common factors estimated}
 }
 \value{
 NxT matrix

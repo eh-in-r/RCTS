@@ -6,6 +6,9 @@
 \usage{
 determine_robust_lambda(almost_classical_lambda)
 }
+\arguments{
+\item{almost_classical_lambda}{matrix where the mean of each row is equal to the classical lambda}
+}
 \value{
 M-estimator of location of the parameter, by minimizing sum of rho()
 }

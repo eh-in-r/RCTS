@@ -7,15 +7,12 @@
 LMROB(parameter_y, parameter_x, NOINTERCEPT = FALSE)
 }
 \arguments{
-\item{parameter_y}{dependent variable}
+\item{parameter_y}{dependent variable in regression}
 
-\item{parameter_x}{independent variables}
+\item{parameter_x}{independent variables in regression}
 
 \item{NOINTERCEPT}{if TRUE it performs regression without an intercept}
 }
 \description{
 
-}
-\details{
-KS2014 is the recommended setting, but leads to increased comp.time.
 }

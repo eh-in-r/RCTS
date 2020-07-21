@@ -14,6 +14,8 @@ calculate_obj_for_g(i, k, ERRORS_VIRTUAL, rho_parameters, TT = aantal_T)
 \item{ERRORS_VIRTUAL}{...}
 
 \item{rho_parameters}{...}
+
+\item{TT}{T}
 }
 \description{
 Helpfunction in update_g().

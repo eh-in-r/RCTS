@@ -24,7 +24,13 @@ calculate_Z_group(
 
 \item{comfactor}{common factors}
 
+\item{group}{the number of the group}
+
 \item{initialise}{boolean}
+
+\item{TT}{length of time series}
+
+\item{number_of_variables}{number of observable variables}
 }
 \description{
 Calculates Z = Y - X*BETA - LF), to use in estimate of groupfactorstructure.

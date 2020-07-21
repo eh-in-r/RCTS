@@ -4,7 +4,30 @@
 \alias{OF_vectorized_helpfunction3}
 \title{Helpfunction in OF_vectorized3()}
 \usage{
-OF_vectorized_helpfunction3(i, t, XTHETA, LF, group_memberships, lgfg_list)
+OF_vectorized_helpfunction3(
+  i,
+  t,
+  XTHETA,
+  LF,
+  group_memberships,
+  lgfg_list,
+  number_of_group_factors
+)
+}
+\arguments{
+\item{i}{index of individual}
+
+\item{t}{index of time}
+
+\item{XTHETA}{matrixproduct of X and beta}
+
+\item{LF}{matrixproduct of common factors and its loadings}
+
+\item{group_memberships}{vector with group memberships}
+
+\item{lgfg_list}{product of groupfactors and their loadings; list with length the number of groups}
+
+\item{number_of_group_factors}{vector containing the number of group factors for all groups}
 }
 \description{
 Helpfunction in OF_vectorized3()

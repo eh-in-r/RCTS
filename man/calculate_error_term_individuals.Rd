@@ -13,6 +13,19 @@ calculate_error_term_individuals(
   number_of_common_factors = aantalfactoren_common
 )
 }
+\arguments{
+\item{NN}{number of individuals}
+
+\item{TT}{length of time series}
+
+\item{number_of_variables}{number of observable variables}
+
+\item{number_of_groups}{number of groups estimated}
+
+\item{number_of_group_factors}{number of groupfactors estimated}
+
+\item{number_of_common_factors}{number of common factors estimated}
+}
 \value{
 NxT matrix
 }

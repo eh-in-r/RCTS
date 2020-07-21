@@ -8,7 +8,7 @@ initialise_beta(
   eclipz = FALSE,
   NN = aantal_N,
   TT = aantal_T,
-  number_of_Variables = aantalvars,
+  number_of_variables = aantalvars,
   number_vars_estimated = SCHATTEN_MET_AANTALVARS,
   number_of_groups = aantalgroepen
 )
@@ -19,6 +19,12 @@ initialise_beta(
 \item{NN}{number of individuals}
 
 \item{TT}{length of time series}
+
+\item{number_of_variables}{number of observable variables}
+
+\item{number_vars_estimated}{number of variables from which the coefficients are estimated}
+
+\item{number_of_groups}{number of groups}
 }
 \description{
 Note: this needs to be called before the definition of grid.
@@ -41,5 +47,5 @@ heterogeneous_coefficients_individuals = TRUE #estimating beta_i for every indiv
 use_robust = TRUE
 ABDGP1 = FALSE
 ABintercept = TRUE
-beta_init = initialise_beta(NN = 300, TT = 30, number_of_Variables = 3, number_vars_estimated = 3, number_of_groups = 3)
+beta_init = initialise_beta(NN = 300, TT = 30, number_of_variables = 3, number_vars_estimated = 3, number_of_groups = 3)
 }

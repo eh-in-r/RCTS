@@ -1,22 +1,30 @@
 Package: RobClustTimeSeries
-Title: The package RCTS (Robust Clustering of Time Series) contains function to cluster time series, and can handle outliers.
+Title: The package RCTS (Robust Clustering of Time Series) contains functions to cluster time series, and can handle outliers
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Ewoud",
            family = "Heyndels",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
+           email = "ewoud.heyndels@vub.be",
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to
-    pick a license
+Description: We developed a method to cluster time series, in a robust way. The method is based on Interactive Fixed Effects from Ando and Bai.
+  It iteratively updates beta (coefficients of the observable variables), group membership, and the latent factors (which can be common and group-specific) 
+  with their loadings. This package contains the core functions to be able to do this.
+License: `use_gpl3_license()` 
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.0
 Imports: tidyverse,
+  ggplot2,
   gridExtra,
-  spatstat,
-  Hmisc
+  Matrix,
+  ncvreg,
+  tclust,
+  rrcov,
+  Hmisc,
+  robustbase,
+  cellWise,
+  stats
 Depends: 
-    R (>= 2.10)
+    R (>= 3.6.0)

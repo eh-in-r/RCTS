@@ -6,6 +6,9 @@
 \usage{
 define_rho_parameters(object = NULL)
 }
+\arguments{
+\item{object}{input}
+}
 \description{
 In robust updating of group membership we use a rho function (instead of the non-robust quadratic function) on the norm of the errors.
 For this we need parameters of location and scale.
@@ -18,8 +21,8 @@ lambda = ... #estimate common factor loadings
 comfactor = ... #estimate common factor
 LF = (t(lambda) \%*\% comfactor)
 number_of_groups = 3
-solve_FG_FG_times_FG = solveFG()
-virtual_grouped_factor_structure = lapply(1:number_of_groups, function(y) calculate_virtual_factor_and_lambda_group(y, solve_FG_FG_times_FG))
-ERRORS_VIRTUAL = lapply(1:number_of_groups, function(x) calculate_errors_virtual_groups(x,LF,virtual_grouped_factor_structure))
-define_rho_parameters(ERRORS_VIRTUAL[[x]]))
+solve_FG_FG_times_FG = solveFG(30, number_of_groups, c(3,3,3))
+virtual_grouped_factor_structure = lapply(1:number_of_groups, function(y) calculate_virtual_factor_and_lambda_group(y, solve_FG_FG_times_FG, 300))
+ERRORS_VIRTUAL = lapply(1:number_of_groups, function(x) calculate_errors_virtual_groups(x,LF,virtual_grouped_factor_structure,NN,TT,aantalvars,aantalfactoren_common, aantalfactoren_groups))
+define_rho_parameters(ERRORS_VIRTUAL[[x]])
 }

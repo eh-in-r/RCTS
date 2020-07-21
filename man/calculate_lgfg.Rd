@@ -37,5 +37,8 @@ calculate_lgfg(
 This function is used to speed up code.
 }
 \examples{
+library(tidyverse)
+lambda_group = RobClustTimeSeries::lambda_group_real_dgp3
+factor_group = RobClustTimeSeries::factor_group_real_dgp3
 calculate_lgfg(lambda_group,factor_group,3,c(3,3,3),0,FALSE)
 }

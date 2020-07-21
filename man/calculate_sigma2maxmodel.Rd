@@ -26,8 +26,10 @@ calculate_sigma2maxmodel(
 \item{number_of_groups_candidates}{vector with candidate values for the number of groups}
 
 \item{number_of_group_factors}{number of groupfactors estimated}
+
+\item{number_of_common_factors}{number of common factors}
 }
 \description{
-we need the sigma2 of the maxmodel to use (in term 2,3,4 of the PIC) instead of the configuration-dependent sigma2. (based on text in AndoBai 2016).
+Sigma2 is a measure for the size of the estimationerror. We need the sigma2 of the maxmodel to use (in term 2,3,4 of the PIC) instead of the configuration-dependent sigma2. (based on text in AndoBai 2016).
 sigma2_max_model could actually be set to 1 as well, as it can be absorbed in parameter C.
 }

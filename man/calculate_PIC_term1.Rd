@@ -6,6 +6,9 @@
 \usage{
 calculate_PIC_term1(e2)
 }
+\arguments{
+\item{e2}{NxT matrix with the error terms}
+}
 \description{
 This is used in calculate_PIC()
 }

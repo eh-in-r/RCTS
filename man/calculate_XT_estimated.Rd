@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{calculate_XT_estimated}
 \alias{calculate_XT_estimated}
-\title{Calculates matrix X*beta (the estimated value of this)}
+\title{Calculates (the estimated value of) the matrix X*beta}
 \usage{
 calculate_XT_estimated(
   NN = aantal_N,
@@ -21,5 +21,5 @@ calculate_XT_estimated(
 \item{number_of_variables}{number of observable variables}
 }
 \description{
-Calculates matrix X*beta (the estimated value of this)
+Calculates (the estimated value of) the matrix X*beta
 }

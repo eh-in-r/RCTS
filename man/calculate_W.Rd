@@ -17,6 +17,14 @@ calculate_W(
 \item{theta}{beta}
 
 \item{g}{vector with group membership}
+
+\item{NN}{number of individuals}
+
+\item{TT}{length of time series}
+
+\item{number_of_variables}{number of observable variables}
+
+\item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
 }
 \value{
 NxT matrix
