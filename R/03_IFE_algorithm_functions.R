@@ -777,7 +777,11 @@ update_g <- function(NN = aantal_N, TT = aantal_T,
     solve_FG_FG_times_FG = solveFG(TT, number_of_groups, number_of_group_factors)
 
     #we calculate FgLg (groupfactors times grouploadings) for all the possible groups to which individual i could end up:
+<<<<<<< HEAD
     virtual_grouped_factor_structure = lapply(1:number_of_groups, function(y) calculate_virtual_factor_and_lambda_group(y, solve_FG_FG_times_FG, NN, TT, number_of_variables = number_of_variables, number_vars_estimated = number_vars_estimated, number_of_common_factors = number_of_common_factors))
+=======
+    virtual_grouped_factor_structure = lapply(1:number_of_groups, function(y) calculate_virtual_factor_and_lambda_group(y, solve_FG_FG_times_FG, NN, TT, number_of_variables = number_of_variables, number_vars_estimated = number_vars_estimated))
+>>>>>>> a9850d1be577b44d115073e9caec448618d31f26
 
   } else {
     virtual_grouped_factor_structure = NA

@@ -25,7 +25,7 @@ all_almost_classical_lambda <- function(Y_like_object, factor_like_object, NUMBE
 
 #' Help-function for return_robust_lambdaobject().
 #'
-#' Uses the almost classical lambda to create a robust lambda by using M estimation
+#' Uses the almost classical lambda to create a robust lambda by using M estimation.
 #' @param almost_classical_lambda matrix where the mean of each row is equal to the classical lambda
 #' @return M-estimator of location of the parameter, by minimizing sum of rho()
 determine_robust_lambda <- function(almost_classical_lambda) {
