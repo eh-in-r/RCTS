@@ -36,7 +36,7 @@ list: 1st element contains group membership and second element contains the valu
 Function that estimates group membership.
 }
 \examples{
-#This function needs several initial parameters to be initialized in order to work on itself.
+#This function needs several initial parameters to be initialized in order to work on itself
 library(RobClustTimeSeries)
 library(tidyverse)
 library(robustbase)
