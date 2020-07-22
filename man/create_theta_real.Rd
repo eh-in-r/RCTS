@@ -31,9 +31,10 @@ equal to the real number of groups.
 theta_real_heterogeen_groups is the default case
 }
 \examples{
+library(tidyverse)
 #Decide if theta is common, or specific to groups or individuals: Choose 1 of the following 3.
 theta_real_homogeen = FALSE
 theta_real_heterogeen_groups = TRUE
 theta_real_heterogeen_individueel = FALSE
-create_theta_real(3,number_of_groups_real = 3)
+create_theta_real(3,NN=300,number_of_groups_real = 3)
 }

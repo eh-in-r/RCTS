@@ -4,15 +4,24 @@
 \alias{LMROB}
 \title{Wrapper around lmrob.}
 \usage{
-LMROB(parameter_y, parameter_x, NOINTERCEPT = FALSE)
+LMROB(
+  parameter_y,
+  parameter_x,
+  nointercept = FALSE,
+  nosetting = exists("run_lmrob_without_setting")
+)
 }
 \arguments{
 \item{parameter_y}{dependent variable in regression}
 
 \item{parameter_x}{independent variables in regression}
 
-\item{NOINTERCEPT}{if TRUE it performs regression without an intercept}
+\item{nointercept}{if TRUE it performs regression without an intercept}
+
+\item{nosetting}{option to remove the recommended setting in lmrob(). It is faster. Defaults to FALSE.}
 }
 \description{
-
+Desgined to make sure the following error does not happen anymore:
+Error in if (init$scale == 0)  : missing value where TRUE/FALSE needed.
+KS2014 is the recommended setting. It however does lead to increased computational time.
 }

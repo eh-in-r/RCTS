@@ -52,11 +52,11 @@ determine_robust_lambda <- function(almost_classical_lambda) {
 #'
 #' Uses the almost classical lambda (this is an object of which the mean equals to the classical lambda) to create a robust lambda by using M estimation
 #' @param Y_like_object this is Y_ster or W or W_j
-#' @param group group
+#' @param group index of group
 #' @param type scalar which shows in which setting this function is used
-#' @param FACTOR_GROUP groupfactors
-#' @param number_of_group_factors number of roup factors
-#' @param FACTOR common factors
+#' @param FACTOR_GROUP estimation of groupfactors
+#' @param number_of_group_factors number of group factors
+#' @param FACTOR estimation of common factors
 #' @param number_of_common_factors number of common factors
 #' @param NN N
 #' @return Nxk dataframe

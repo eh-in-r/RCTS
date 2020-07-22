@@ -7,7 +7,6 @@
 OF_vectorized3(
   group_memberships,
   THETA = theta,
-  ALPHA = alpha,
   LAMBDA = lambda,
   FACTOR = comfactor,
   LAMBDA_GROUP = lambda_group,
@@ -24,9 +23,7 @@ OF_vectorized3(
 
 \item{THETA}{theta}
 
-\item{ALPHA}{--obsolete--}
-
-\item{LAMBDA}{loadings}
+\item{LAMBDA}{loadings of common factors}
 
 \item{FACTOR}{common factors}
 

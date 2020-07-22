@@ -20,6 +20,7 @@ we are using the function for a second time, after adding the outliers. In the r
 Scaling of X.
 }
 \examples{
-X = initialise_X(300,30)
+X = initialise_X(300,30, number_of_variables = 3)
+use_robust = TRUE
 scaling_X(X,TRUE, number_of_variables = 3)
 }

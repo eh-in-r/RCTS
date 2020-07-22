@@ -40,26 +40,31 @@ Function that estimates group membership.
 library(RobClustTimeSeries)
 library(tidyverse)
 library(robustbase)
-lambda_group = RobClustTimeSeries::lambda_group_real_dgp3
-factor_group = RobClustTimeSeries::factor_group_real_dgp3
-lambda = matrix(0,nrow=1,ncol=300) #There are no common factors to be estimated  -> but needs placeholder
-comfactor = matrix(0,nrow=1,ncol=30) #There are no common factors to be estimated -> but needs placeholder
+
 X = RobClustTimeSeries::X_dgp3
 Y = RobClustTimeSeries::Y_dgp3
+#Set estimations for group factors and its loadings, and group membership to the real value
+lambda_group = RobClustTimeSeries::lambda_group_real_dgp3
+factor_group = RobClustTimeSeries::factor_group_real_dgp3
 g = RobClustTimeSeries::g_real_dgp3
+#There are no common factors to be estimated  -> but needs placeholder
+lambda = matrix(0,nrow=1,ncol=300)
+comfactor = matrix(0,nrow=1,ncol=30)
 use_robust = TRUE
-b = 1 #> 0 group factors
-a = 0 #0 common factors
 grid = expand.grid(1:300,1:30)
+#Choose how coefficients of the observable are estimated
 homogeneous_coefficients = FALSE
 heterogeneous_coefficients_groups = FALSE
 heterogeneous_coefficients_individuals = TRUE
-eclipz = FALSE
 ABDGP1 = FALSE
 ABintercept = TRUE
 theta = estimate_theta(NN = 300, TT = 30,
-number_of_groups = 3, number_of_group_factors = c(3,3,3), number_of_common_factors = 0,
-number_of_variables = 3,number_vars_estimated=3,num_factors_may_vary=FALSE)[[1]]
-grid = grid_add_variables(grid,theta, lambda, comfactor)
-g_new = update_g(number_of_groups = 3, number_of_group_factors = c(3,3,3))[[1]]
+  number_of_groups = 3, number_of_group_factors = c(3,3,3), number_of_common_factors = 0,
+  number_of_variables = 3,number_vars_estimated=3,num_factors_may_vary=FALSE)[[1]]
+grid = grid_add_variables(grid,theta, lambda, comfactor, NN = 300, TT = 30,
+  number_of_variables = 3, number_vars_estimated = 3, number_of_groups = 3)
+g_new = update_g(NN = 300, TT = 30, number_of_groups = 3, number_of_variables = 3,
+  number_vars_estimated = 3,
+  number_of_group_factors = c(3,3,3),
+  number_of_common_factors = 0)[[1]]
 }

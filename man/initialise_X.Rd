@@ -21,5 +21,5 @@ X is an array with dimensions N, T and number of observable variables.
 The variables are randomly generated with mean 0 and sd 1.
 }
 \examples{
-initialise_X(300,30)
+initialise_X(300,30, number_of_variables = 3)
 }

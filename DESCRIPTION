@@ -10,12 +10,13 @@ Authors@R:
 Description: We developed a method to cluster time series, in a robust way. The method is based on Interactive Fixed Effects from Ando and Bai.
   It iteratively updates beta (coefficients of the observable variables), group membership, and the latent factors (which can be common and group-specific) 
   with their loadings. This package contains the core functions to be able to do this.
-License: `use_gpl3_license()` 
+License: GPL-2
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.0
 Imports: tidyverse,
+  dplyr,
   ggplot2,
   gridExtra,
   Matrix,
@@ -24,7 +25,6 @@ Imports: tidyverse,
   rrcov,
   Hmisc,
   robustbase,
-  cellWise,
-  stats
+  cellWise
 Depends: 
     R (>= 3.6.0)

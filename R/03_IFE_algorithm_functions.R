@@ -79,11 +79,12 @@ theta_real_heterogroups <- function(number_of_variables, number_of_groups_real, 
 #' @return matrix with number of rows equal to number of observable variables + 1 (the first row contains the intercept) and number of culumns
 #' equal to the real number of groups.
 #' @examples
+#' library(tidyverse)
 #' #Decide if theta is common, or specific to groups or individuals: Choose 1 of the following 3.
 #' theta_real_homogeen = FALSE
 #' theta_real_heterogeen_groups = TRUE
 #' theta_real_heterogeen_individueel = FALSE
-#' create_theta_real(3,number_of_groups_real = 3)
+#' create_theta_real(3,NN=300,number_of_groups_real = 3)
 #' @export
 create_theta_real <- function(number_of_variables,
                               NN = aantal_N,
@@ -124,7 +125,7 @@ create_theta_real <- function(number_of_variables,
 #' @inheritParams estimate_theta
 #' @return array with dimensions N x T x number of observable variables
 #' @examples
-#' initialise_X(300,30)
+#' initialise_X(300,30, number_of_variables = 3)
 #' @export
 initialise_X <- function(NN,TT, number_of_variables = aantalvars) {
   if(number_of_variables > 0) {
@@ -152,7 +153,8 @@ initialise_X <- function(NN,TT, number_of_variables = aantalvars) {
 #' we are using the function for a second time, after adding the outliers. In the robust case it uses median and MAD, otherwise again mean and sd.
 #' @inheritParams create_theta_real
 #' @examples
-#' X = initialise_X(300,30)
+#' X = initialise_X(300,30, number_of_variables = 3)
+#' use_robust = TRUE
 #' scaling_X(X,TRUE, number_of_variables = 3)
 #' @export
 scaling_X <- function(X, firsttime, eclipz = FALSE, number_of_variables = aantalvars) {
@@ -192,9 +194,10 @@ scaling_X <- function(X, firsttime, eclipz = FALSE, number_of_variables = aantal
 #' @inheritParams create_theta_real
 #' @inheritParams estimate_theta
 #' @examples
-#' X = initialise_X(300,30)
-#' restructure_X_to_order_slowN_fastT(X, FALSE, number_of_variables = 3, number_vars_estimated = 3)
-#'
+#' X = initialise_X(300,30, number_of_variables = 3)
+#' X_restructured = restructure_X_to_order_slowN_fastT(X, FALSE,
+#'   number_of_variables = 3, number_vars_estimated = 3)
+#' @export
 restructure_X_to_order_slowN_fastT <- function(X, eclipz,
                                                number_of_variables = aantalvars,
                                                number_vars_estimated = SCHATTEN_MET_AANTALVARS) {
@@ -213,11 +216,6 @@ restructure_X_to_order_slowN_fastT <- function(X, eclipz,
     for(k in 1:number_of_vars) {
       X_local[,k] = c(t(X[,,k]))
     }
-
-    #check whether structure is ok:
-    #print(X[1,2,1])
-    #stopifnot(X_local[2,1] == X[1,2,1])
-
 
 
     return(X_local)
@@ -238,6 +236,7 @@ restructure_X_to_order_slowN_fastT <- function(X, eclipz,
 #' @inheritParams estimate_theta
 #' @return list: first element contains real groupfactors and second element contains real groupfactor loadings
 #' @examples
+#' library(tidyverse)
 #' #3 groups, each with 3 groupfactors:
 #' g_real = ceiling(runif(300) * 3)
 #' LGR_FACTOR_mean = 0
@@ -400,23 +399,26 @@ generate_Y <- function(NN, TT, number_of_common_factors_real,number_of_group_fac
 #' library(RobClustTimeSeries)
 #' library(tidyverse)
 #' library(robustbase)
-#
-#' lambda_group = RobClustTimeSeries::lambda_group_real_dgp3
-#' factor_group = RobClustTimeSeries::factor_group_real_dgp3
-#' lambda = matrix(0,nrow=1,ncol=300) #0 factors -> but needs placeholder
-#' comfactor = matrix(0,nrow=1,ncol=30) #0 factors -> but needs placeholder
+#'
 #' X = RobClustTimeSeries::X_dgp3
 #' Y = RobClustTimeSeries::Y_dgp3
+#' #Set estimations for group factors and its loadings, and group membership to the real value
+#' lambda_group = RobClustTimeSeries::lambda_group_real_dgp3
+#' factor_group = RobClustTimeSeries::factor_group_real_dgp3
 #' g = RobClustTimeSeries::g_real_dgp3
+#' #There are no common factors to be estimated  -> but needs placeholder
+#' lambda = matrix(0,nrow=1,ncol=300)
+#' comfactor = matrix(0,nrow=1,ncol=30)
 #'
+#' use_robust = TRUE
+#' #Choose how coefficients of the observable are estimated
 #' homogeneous_coefficients = FALSE
 #' heterogeneous_coefficients_groups = FALSE
 #' heterogeneous_coefficients_individuals = TRUE #estimating theta_i for every individual
-#' use_robust = TRUE
 #' ABDGP1 = FALSE
 #' ABintercept = TRUE
 #' theta_init = initialise_theta(NN = 300, TT = 30,
-#' number_of_variables = 3, number_vars_estimated = 3, number_of_groups = 3)
+#'   number_of_variables = 3, number_vars_estimated = 3, number_of_groups = 3)
 #' @export
 initialise_theta <- function(eclipz = FALSE,
                             NN = aantal_N,
@@ -484,7 +486,7 @@ initialise_theta <- function(eclipz = FALSE,
         if(use_robust) {
           if(ABDGP1 & ABintercept) { #This is DGP 1
             #no intercept, because ABDGP1 defines the first variable in X as an intercept
-            model <- LMROB(Y_special,X_special, NOINTERCEPT = TRUE)  #-> lmrob(Y_special ~ X_special + 0,setting="KS2014)
+            model <- LMROB(Y_special,X_special, nointercept = TRUE)  #-> lmrob(Y_special ~ X_special + 0,setting="KS2014)
           } else {
             model <- LMROB(Y_special,X_special)
           }
@@ -529,11 +531,11 @@ calculate_virtual_factor_and_lambda_group <- function(group, solve_FG_FG_times_F
                                                       NN, TT,
                                                       number_of_variables = aantalvars,
                                                       number_vars_estimated = SCHATTEN_MET_AANTALVARS,
+                                                      number_of_group_factors = aantalfactoren_groups,
                                                       number_of_common_factors = aantalfactoren_common) {
   FG = factor_group[[group]]
   indices = 1:NN
   LF = t(lambda) %*% comfactor
-
   xtheta = calculate_XT_estimated(NN = NN, TT = TT, number_of_variables = number_of_variables, number_vars_estimated = number_vars_estimated)
 
 
@@ -547,11 +549,15 @@ calculate_virtual_factor_and_lambda_group <- function(group, solve_FG_FG_times_F
   #robust grouplambda:
   if(use_robust) {
     #we need a robust version of the virtual factorstructure:
-    LG_local = return_robust_lambdaobject(Y_ster, group, type = 1)
+    LG_local = return_robust_lambdaobject(Y_ster, group, type = 1,
+                                          NN = NN,
+                                          number_of_group_factors = number_of_group_factors,
+                                          number_of_common_factors = number_of_common_factors)
   } else {
     LG_local = t(solve_FG_FG_times_FG[[group]] %*% t(Y_ster)) #This equal to Fg*Y/T
   }
 
+  message("_3")
 
   LG_local = handleNA_LG(LG_local)
   return(LG_local %*% FG)
@@ -738,30 +744,34 @@ solveFG <- function(TT, number_of_groups, number_of_group_factors){
 #' library(RobClustTimeSeries)
 #' library(tidyverse)
 #' library(robustbase)
-#
-#' lambda_group = RobClustTimeSeries::lambda_group_real_dgp3
-#' factor_group = RobClustTimeSeries::factor_group_real_dgp3
-#' lambda = matrix(0,nrow=1,ncol=300) #There are no common factors to be estimated  -> but needs placeholder
-#' comfactor = matrix(0,nrow=1,ncol=30) #There are no common factors to be estimated -> but needs placeholder
+#'
 #' X = RobClustTimeSeries::X_dgp3
 #' Y = RobClustTimeSeries::Y_dgp3
+#' #Set estimations for group factors and its loadings, and group membership to the real value
+#' lambda_group = RobClustTimeSeries::lambda_group_real_dgp3
+#' factor_group = RobClustTimeSeries::factor_group_real_dgp3
 #' g = RobClustTimeSeries::g_real_dgp3
+#' #There are no common factors to be estimated  -> but needs placeholder
+#' lambda = matrix(0,nrow=1,ncol=300)
+#' comfactor = matrix(0,nrow=1,ncol=30)
 #
 #' use_robust = TRUE
-#' b = 1 #> 0 group factors
-#' a = 0 #0 common factors
 #' grid = expand.grid(1:300,1:30)
+#' #Choose how coefficients of the observable are estimated
 #' homogeneous_coefficients = FALSE
 #' heterogeneous_coefficients_groups = FALSE
 #' heterogeneous_coefficients_individuals = TRUE
-#' eclipz = FALSE
 #' ABDGP1 = FALSE
 #' ABintercept = TRUE
 #' theta = estimate_theta(NN = 300, TT = 30,
-#' number_of_groups = 3, number_of_group_factors = c(3,3,3), number_of_common_factors = 0,
-#' number_of_variables = 3,number_vars_estimated=3,num_factors_may_vary=FALSE)[[1]]
-#' grid = grid_add_variables(grid,theta, lambda, comfactor)
-#' g_new = update_g(number_of_groups = 3, number_of_group_factors = c(3,3,3))[[1]]
+#'   number_of_groups = 3, number_of_group_factors = c(3,3,3), number_of_common_factors = 0,
+#'   number_of_variables = 3,number_vars_estimated=3,num_factors_may_vary=FALSE)[[1]]
+#' grid = grid_add_variables(grid,theta, lambda, comfactor, NN = 300, TT = 30,
+#'   number_of_variables = 3, number_vars_estimated = 3, number_of_groups = 3)
+#' g_new = update_g(NN = 300, TT = 30, number_of_groups = 3, number_of_variables = 3,
+#'   number_vars_estimated = 3,
+#'   number_of_group_factors = c(3,3,3),
+#'   number_of_common_factors = 0)[[1]]
 #' @export
 update_g <- function(NN = aantal_N, TT = aantal_T,
                      number_of_groups = aantalgroepen,
@@ -783,6 +793,7 @@ update_g <- function(NN = aantal_N, TT = aantal_T,
     virtual_grouped_factor_structure = lapply(1:number_of_groups, function(y) calculate_virtual_factor_and_lambda_group(y, solve_FG_FG_times_FG, NN, TT,
                                                                                                                         number_of_variables = number_of_variables,
                                                                                                                         number_vars_estimated = number_vars_estimated,
+                                                                                                                        number_of_group_factors = number_of_group_factors,
                                                                                                                         number_of_common_factors = number_of_common_factors))
     message("2")
 
@@ -812,7 +823,7 @@ update_g <- function(NN = aantal_N, TT = aantal_T,
 
   message("5")
   for(i in 1:NN) {
-    obj_values = map_dbl(1:number_of_groups, function(x) calculate_obj_for_g(i, x, ERRORS_VIRTUAL, rho_parameters))
+    obj_values = map_dbl(1:number_of_groups, function(x) calculate_obj_for_g(i, x, ERRORS_VIRTUAL, rho_parameters, TT = TT))
     g[i] = which.min(obj_values)
     matrix_obj_values[i,] = obj_values
   }
@@ -891,14 +902,13 @@ OF_vectorized_helpfunction3 <- function(i,t,XTHETA,LF,
 #'
 #' @param group_memberships Vector containing groupmembership for all individuals.
 #' @param THETA theta
-#' @param ALPHA --obsolete--
-#' @param LAMBDA loadings
+#' @param LAMBDA loadings of common factors
 #' @param FACTOR common factors
 #' @param LAMBDA_GROUP grouploadings
 #' @param FACTOR_GROUP groupfactors
 #' @inheritParams estimate_theta
 #' @export
-OF_vectorized3 <- function(group_memberships, THETA = theta, ALPHA = alpha,
+OF_vectorized3 <- function(group_memberships, THETA = theta,
                            LAMBDA = lambda, FACTOR = comfactor,
                            LAMBDA_GROUP = lambda_group, FACTOR_GROUP = factor_group,
                            NN = aantal_N,
@@ -1101,26 +1111,27 @@ determine_theta <- function(string, X_special,Y_special, correct, initialisatie 
 #' library(RobClustTimeSeries)
 #' library(tidyverse)
 #' library(robustbase)
-#
-#' lambda_group = RobClustTimeSeries::lambda_group_real_dgp3
-#' factor_group = RobClustTimeSeries::factor_group_real_dgp3
-#' lambda = matrix(0,nrow=1,ncol=300) #0 factors -> but needs placeholder
-#' comfactor = matrix(0,nrow=1,ncol=30) #0 factors -> but needs placeholder
+#'
 #' X = RobClustTimeSeries::X_dgp3
 #' Y = RobClustTimeSeries::Y_dgp3
+#' #Set estimations for group factors and its loadings, and group membership to the real value
+#' lambda_group = RobClustTimeSeries::lambda_group_real_dgp3
+#' factor_group = RobClustTimeSeries::factor_group_real_dgp3
 #' g = RobClustTimeSeries::g_real_dgp3
+#' #There are no common factors to be estimated  -> but needs placeholder
+#' lambda = matrix(0,nrow=1,ncol=300)
+#' comfactor = matrix(0,nrow=1,ncol=30)
 #
 #' use_robust = TRUE
-#' b = 1 #> 0 group factors
-#' a = 0 #0 common factors
+#' #Choose how coefficients of the observable are estimated
 #' homogeneous_coefficients = FALSE
 #' heterogeneous_coefficients_groups = FALSE
 #' heterogeneous_coefficients_individuals = TRUE
 #' ABDGP1 = FALSE
 #' ABintercept = TRUE
 #' theta = estimate_theta(NN = 300, TT = 30,
-#' number_of_groups = 3, number_of_group_factors = c(3,3,3), number_of_common_factors = 0,
-#' number_of_variables = 3,number_vars_estimated=3,num_factors_may_vary=FALSE)[[1]]
+#'   number_of_groups = 3, number_of_group_factors = c(3,3,3), number_of_common_factors = 0,
+#'  number_of_variables = 3,number_vars_estimated=3,num_factors_may_vary=FALSE)[[1]]
 #' @export
 estimate_theta <- function(optimize_kappa = FALSE, eclipz = FALSE,
                                   NN = aantal_N,
@@ -2193,6 +2204,7 @@ calculate_PIC_term4 <- function(temp, term4, Nj, NN = aantal_N) {
 
 #' function to test alternative PIC's
 #'
+#' @inheritParams calculate_PIC
 #' @param term2 term2 of PIC
 #' @param term3 term3 of PIC
 #' @param term4 term4 of PIC
@@ -2571,19 +2583,20 @@ calculate_VCsquared <- function(rcj,rc,C_candidates, UPDATE1 = FALSE, UPDATE2 = 
 
 #' Wrapper around lmrob.
 #'
-#' Desgined to make sure the following error does not happen anymore.
-#' Error in if (init$scale == 0) { : missing value where TRUE/FALSE needed.
-#' KS2014 is the recommended setting, but leads to increased comp.time.
+#' Desgined to make sure the following error does not happen anymore:
+#' Error in if (init$scale == 0)  : missing value where TRUE/FALSE needed.
+#' KS2014 is the recommended setting. It however does lead to increased computational time.
 #' @param parameter_y dependent variable in regression
 #' @param parameter_x independent variables in regression
-#' @param NOINTERCEPT if TRUE it performs regression without an intercept
+#' @param nointercept if TRUE it performs regression without an intercept
+#' @param nosetting option to remove the recommended setting in lmrob(). It is faster. Defaults to FALSE.
 #' @export
-LMROB <- function(parameter_y, parameter_x, NOINTERCEPT = FALSE) {
+LMROB <- function(parameter_y, parameter_x, nointercept = FALSE, nosetting = exists("run_lmrob_without_setting")) {
 
   if(is.na(parameter_x)) { #when there are no independent variables
     result2 = tryCatch(
       {
-        if(exists("run_lmrob_without_setting")) {
+        if(nosetting) {
           result = lmrob(parameter_y ~ 1)
         } else {
           result = lmrob(parameter_y ~ 1, setting="KS2014")
@@ -2600,14 +2613,14 @@ LMROB <- function(parameter_y, parameter_x, NOINTERCEPT = FALSE) {
 
 
   } else {
-    if(exists("run_lmrob_without_setting")) {
-      if(NOINTERCEPT) {
+    if(nosetting) {
+      if(nointercept) {
         result2 = lmrob(parameter_y ~ parameter_x + 0)
       } else {
         result2 = lmrob(parameter_y ~ parameter_x)
       }
     } else {
-      if(NOINTERCEPT) {
+      if(nointercept) {
 
           result2 = lmrob(parameter_y ~ parameter_x + 0, setting="KS2014")
 

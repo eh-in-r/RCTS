@@ -24,7 +24,7 @@ restructure_X_to_order_slowN_fastT(
 This 2D-matrix is what Ando/Bai worked with.
 }
 \examples{
-X = initialise_X(300,30)
-restructure_X_to_order_slowN_fastT(X, FALSE, number_of_variables = 3, number_vars_estimated = 3)
-
+X = initialise_X(300,30, number_of_variables = 3)
+X_restructured = restructure_X_to_order_slowN_fastT(X, FALSE,
+  number_of_variables = 3, number_vars_estimated = 3)
 }

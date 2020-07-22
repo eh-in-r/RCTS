@@ -18,15 +18,15 @@ return_robust_lambdaobject(
 \arguments{
 \item{Y_like_object}{this is Y_ster or W or W_j}
 
-\item{group}{group}
+\item{group}{index of group}
 
 \item{type}{scalar which shows in which setting this function is used}
 
-\item{FACTOR_GROUP}{groupfactors}
+\item{FACTOR_GROUP}{estimation of groupfactors}
 
-\item{number_of_group_factors}{number of roup factors}
+\item{number_of_group_factors}{number of group factors}
 
-\item{FACTOR}{common factors}
+\item{FACTOR}{estimation of common factors}
 
 \item{number_of_common_factors}{number of common factors}
 

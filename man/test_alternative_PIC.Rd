@@ -7,6 +7,8 @@
 test_alternative_PIC(C, term2, term3, term4)
 }
 \arguments{
+\item{C}{determines relative contribution of the penamlty terms}
+
 \item{term2}{term2 of PIC}
 
 \item{term3}{term3 of PIC}
