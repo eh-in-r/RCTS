@@ -63,6 +63,7 @@ theta = estimate_theta(NN = 300, TT = 30,
   number_of_variables = 3,number_vars_estimated=3,num_factors_may_vary=FALSE)[[1]]
 grid = grid_add_variables(grid,theta, lambda, comfactor, NN = 300, TT = 30,
   number_of_variables = 3, number_vars_estimated = 3, number_of_groups = 3)
+eclipz = FALSE
 g_new = update_g(NN = 300, TT = 30, number_of_groups = 3, number_of_variables = 3,
   number_vars_estimated = 3,
   number_of_group_factors = c(3,3,3),

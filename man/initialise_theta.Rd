@@ -50,6 +50,7 @@ homogeneous_coefficients = FALSE
 heterogeneous_coefficients_groups = FALSE
 heterogeneous_coefficients_individuals = TRUE #estimating theta_i for every individual
 ABDGP1 = FALSE
+ABintercept = TRUE
 theta_init = initialise_theta(NN = 300, TT = 30,
   number_of_variables = 3, number_vars_estimated = 3, number_of_groups = 3)
 }

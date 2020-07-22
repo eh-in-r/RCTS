@@ -768,6 +768,7 @@ solveFG <- function(TT, number_of_groups, number_of_group_factors){
 #'   number_of_variables = 3,number_vars_estimated=3,num_factors_may_vary=FALSE)[[1]]
 #' grid = grid_add_variables(grid,theta, lambda, comfactor, NN = 300, TT = 30,
 #'   number_of_variables = 3, number_vars_estimated = 3, number_of_groups = 3)
+#' eclipz = FALSE
 #' g_new = update_g(NN = 300, TT = 30, number_of_groups = 3, number_of_variables = 3,
 #'   number_vars_estimated = 3,
 #'   number_of_group_factors = c(3,3,3),
@@ -1274,9 +1275,8 @@ estimate_theta <- function(optimize_kappa = FALSE, eclipz = FALSE,
 
 
 
-#'Calculates W = Y - X*THETA
+#' Calculates W = Y - X*THETA
 #'
-#'The equivalent matrix is called z in Ando/Bai 2017
 #' @param theta theta
 #' @param g vector with group membership
 #' @inheritParams estimate_theta
@@ -1386,7 +1386,8 @@ calculate_Z_group <- function(theta, g, lambda, comfactor, group, initialise,
                               TT = aantal_T,
                               number_of_variables = aantalvars,
                               number_vars_estimated = SCHATTEN_MET_AANTALVARS,
-                              eclipz = FALSE) {
+                              eclipz = FALSE,
+                              number_of_common_factors = aantalfactoren_common) {
   #print("calc Z_group")
   indices_group = which(g == group)
   if(length(indices_group) == 0) {
@@ -1518,7 +1519,7 @@ handle_macropca_errors <- function(object,temp,KMAX,number_eigenvectors) {
 #'   Actually it crashes with specific values of dim(object). For example when dim(object) = c(193,27)
 #' @param object input
 #' @param number_eigenvectors number of eigenvectors to extract
-#' @param KMAX -explain-
+#' @param KMAX The maximal number of principal components to compute. This is a paramater in cellWise::MacroPCA()
 #' @export
 robustpca <- function(object, number_eigenvectors, KMAX = 20) {
 
@@ -1535,7 +1536,7 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20) {
     print(number_eigenvectors)
     if(number_eigenvectors > KMAX) {
       #Note that when k > kmax, k gets the value of kmax.
-      message("MacroPCA is (via kmax) limited to 20 factors.")
+      message("MacroPCA is (through kmax) limited to 20 factors.")
       Sys.sleep(15)
     }
 
@@ -1759,13 +1760,13 @@ calculate_lambda <- function(theta, comfactor, g, lgfg_list, initialise = FALSE,
 #'returns object which includes group and id of the individuals
 #' @param theta theta
 #' @param factor_group group factors
-#' @param g vector with group membership
 #' @param lambda loadings
 #' @param comfactor common factors
 #' @param initialise boolean
 #' @param UPDATE1 option to indicate the number of groupfactors is updated during the algorithm; defults to FALSE
 #' @param UPDATE2 option to indicate the number of common factors is updated during the algorithm; defults to FALSE
 #' @inheritParams estimate_theta
+#' @inheritParams calculate_W
 #' @export
 calculate_lambda_group <- function(theta, factor_group, g, lambda, comfactor, initialise = FALSE, UPDATE1 = update1, UPDATE2 = update2,
                                    TT = aantal_T,
@@ -2653,8 +2654,8 @@ LMROB <- function(parameter_y, parameter_x, nointercept = FALSE, nosetting = exi
 
 #' Calculates sigma2maxmodel
 #'
-#' Sigma2 is a measure for the size of the estimationerror. We need the sigma2 of the maxmodel to use (in term 2,3,4 of the PIC) instead of the configuration-dependent sigma2. (based on text in AndoBai 2016).
-#' sigma2_max_model could actually be set to 1 as well, as it can be absorbed in parameter C.
+#' Sigma2 is the sum of the squared errors, divided by NT. We need the sigma2 of the maxmodel to use (in term 2,3,4 of the PIC) instead of the configuration-dependent sigma2. (based on text in AndoBai 2016).
+#' sigma2_max_model could actually be set to 1 as well, as it can be absorbed in parameter C of the PIC.
 #' @inheritParams determine_theta
 #' @inheritParams calculate_lambda_group
 #' @param number_of_groups_candidates vector with candidate values for the number of groups

@@ -33,5 +33,5 @@ calculate_W(
 NxT matrix
 }
 \description{
-The equivalent matrix is called z in Ando/Bai 2017
+Calculates W = Y - X*THETA
 }

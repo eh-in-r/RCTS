@@ -11,7 +11,7 @@ robustpca(object, number_eigenvectors, KMAX = 20)
 
 \item{number_eigenvectors}{number of eigenvectors to extract}
 
-\item{KMAX}{-explain-}
+\item{KMAX}{The maximal number of principal components to compute. This is a paramater in cellWise::MacroPCA()}
 }
 \description{
 Contains Robpca (obsolete) and MacroPCA
