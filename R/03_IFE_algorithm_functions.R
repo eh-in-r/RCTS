@@ -1052,13 +1052,13 @@ determine_theta <- function(string, X_special,Y_special, correct, initialisatie 
         #print("indices")
         #print(indices)
         for(LAMi in 1:length(kappa_candidates)){
-          theta_temp <- model$theta[,LAMi] #c(0,model$theta)[-2,LAMi]
+          theta_temp <- model$beta[,LAMi] #c(0,model$beta)[-2,LAMi]
           BIC <- sum( (Y[indices,]-cbind(1,X[indices,,]) %*% theta_temp )^2 )/(TT) + C * sigma2_max_model * log(TT)*sum(theta_temp!=0)/(TT)
 
           if(BIC<=minBIC){
             best_lami = LAMi
             minBIC <- BIC
-            theta_temp <- model$theta[,LAMi] #c(0,model$theta)[-2,LAMi]
+            theta_temp <- model$beta[,LAMi] #c(0,model$beta)[-2,LAMi]
           }
         }
         #print(kappa_candidates[best_lami]) #-> so this is kappa[i]
@@ -1071,7 +1071,7 @@ determine_theta <- function(string, X_special,Y_special, correct, initialisatie 
 
   if(string == "homogeen") {
     if(class(model) == "lm" | class(model) == "lmrob") return(matrix(rep(model$coefficients, aantalgroepen), nrow = (number_of_variables + 1)))
-    else return(matrix(rep(model$theta[,1], aantalgroepen), nrow = (number_of_variables + 1)))
+    else return(matrix(rep(model$beta[,1], aantalgroepen), nrow = (number_of_variables + 1)))
   }
   if(string == "heterogeen") {
     if(class(model) == "lm" | class(model) == "lmrob") {
@@ -1082,9 +1082,9 @@ determine_theta <- function(string, X_special,Y_special, correct, initialisatie 
       }
     } else {
       if(ABDGP1 & ABintercept) { #=DGP1
-        return(c(0,model$theta[-2,1]))
+        return(c(0,model$beta[-2,1]))
       } else {
-        return(model$theta[,1])
+        return(model$beta[,1])
       }
     }
   }
