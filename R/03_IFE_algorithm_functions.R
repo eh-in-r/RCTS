@@ -19,7 +19,7 @@ create_covMat_crosssectional_dependence <- function(parameter,NN) {
   return(covMat)
 }
 
-#' Helpfunction in create_theta_real() for the option theta_real_heterogeen_groups. (This is the deault option.)
+#' Helpfunction in create_theta_real() for the option theta_real_heterogeen_groups. (This is the default option.)
 #'
 #' @param number_of_variables number of variables
 #' @param number_of_groups_real real numbr of groups
@@ -29,7 +29,7 @@ theta_real_heterogroups <- function(number_of_variables, number_of_groups_real, 
 
   #These are the values for DGP 3 & 4 (For DGP 1 & 2 theta_real is defined in 08_IFE_make_AB_DGP1.R)
 
-  #1e element is the intercept.
+  #1st element is the intercept.
   theta_part1 = c(0, 4,  3.5,  3,  2.5)  * EXTRA_THETA_FACTOR
   theta_part2 = c(0,-2.5, -2, -2.5, -2)  * EXTRA_THETA_FACTOR
   theta_part3 = c(0, 1,  0.5,  1.5,  1)  * EXTRA_THETA_FACTOR
@@ -557,7 +557,6 @@ calculate_virtual_factor_and_lambda_group <- function(group, solve_FG_FG_times_F
     LG_local = t(solve_FG_FG_times_FG[[group]] %*% t(Y_ster)) #This equal to Fg*Y/T
   }
 
-  message("_3")
 
   LG_local = handleNA_LG(LG_local)
   return(LG_local %*% FG)
@@ -782,11 +781,8 @@ update_g <- function(NN = aantal_N, TT = aantal_T,
                      number_of_common_factors = aantalfactoren_common) {
 
 
-  message("Start")
-  print("Start")
 
   if(do_we_estimate_group_factors(number_of_group_factors)) { #if there are groupfactors estimated
-    message("1")
     solve_FG_FG_times_FG = solveFG(TT, number_of_groups, number_of_group_factors)
 
     #we calculate FgLg (groupfactors times grouploadings) for all the possible groups to which individual i could end up:
@@ -796,7 +792,7 @@ update_g <- function(NN = aantal_N, TT = aantal_T,
                                                                                                                         number_vars_estimated = number_vars_estimated,
                                                                                                                         number_of_group_factors = number_of_group_factors,
                                                                                                                         number_of_common_factors = number_of_common_factors))
-    message("2")
+
 
   } else {
     virtual_grouped_factor_structure = NA
@@ -808,27 +804,26 @@ update_g <- function(NN = aantal_N, TT = aantal_T,
   #init matrix with objectivefunctionvalues for all groups
   matrix_obj_values = matrix(NA, nrow = NN, ncol = number_of_groups)
 
-  message("3")
+
   #calculate errors for each (both virtual & real) group
   ERRORS_VIRTUAL = lapply(1:number_of_groups, function(x) calculate_errors_virtual_groups(x,LF,virtual_grouped_factor_structure, NN, TT,
                                                                                           number_of_variables,
                                                                                           number_of_common_factors,
                                                                                           number_of_group_factors))
 
-  message("4")
+
   if(use_robust) {
     rho_parameters = lapply(1:number_of_groups,function(x) define_rho_parameters(ERRORS_VIRTUAL[[x]])) #(parameter object = NA -> returns median and madn of the calculated error term)
   } else {
     rho_parameters = NA
   }
 
-  message("5")
   for(i in 1:NN) {
     obj_values = map_dbl(1:number_of_groups, function(x) calculate_obj_for_g(i, x, ERRORS_VIRTUAL, rho_parameters, TT = TT))
     g[i] = which.min(obj_values)
     matrix_obj_values[i,] = obj_values
   }
-  message("6")
+
   #vectorizing is not faster: g = sapply(1:NN, function(z) which.min(map_dbl(1:number_of_groups, function(x) calculate_obj_for_g(z, x, ERRORS_VIRTUAL, rho_parameters))))
   return(list(g, matrix_obj_values))
 
@@ -1040,7 +1035,6 @@ determine_theta <- function(string, X_special,Y_special, correct, initialisatie 
   } else {
     #when "lmrob_and_classpca" exists, we use lmrob and classical pca
     if(exists("lmrob_and_classpca")) {
-      #message("use LMROB")
       model <- LMROB(Y_special, X_special)
     } else {
 
@@ -1437,7 +1431,8 @@ calculate_Z_group <- function(theta, g, lambda, comfactor, group, initialise,
 
 #' Solves a very specific issue with MacroPCA.
 #'
-#' MacroPCA crashes Rstudio with certain dimensions of the input. Solve this by doubling every row.
+#' MacroPCA crashes Rstudio with certain dimensions of the input. Solve this by doubling every row. No information is added by this, so no influence on end result,
+#' but crashes are evaded.
 #' @param object input
 evade_crashes_macropca <- function(object) {
   #--------------------MacroPCA seems to make Rstudio crash when the dimension of object = (27,193) -----------------
@@ -1483,23 +1478,11 @@ handle_macropca_errors <- function(object,temp,KMAX,number_eigenvectors) {
       )
 
       if(teller >= 10) {
-        message("-------------infinite loop (MacroPCA does not work with any k) -> use eigen(): has to be squared matrix -> take covariance matrix of object-------------")
+        message("-------------infinite loop (MacroPCA does not work with any k) -> use (classical) eigen(): has to be squared matrix -> take covariance matrix of object-------------")
         #(reason: Error in svd::propack.svd(Y, neig = min(n, d)) : BLAS/LAPACK routine 'DLASCL' gave error code -4)
+        #eigen() needs always square matrix -> take covmatrix
+        temp = eigen(t(object)%*%object)$vectors[,1:number_eigenvectors]
 
-        #Sets global variable; used for testing. #macropca_fails <<- TRUE
-
-
-
-        if(exists("GEEN_COVMATRIX")) {
-          #eigen() needs square matrix -> take covmatrix
-          print("_A")
-          print(dim(object))
-          temp = eigen(t(object)%*%object)$vectors[,1:number_eigenvectors]
-        } else {
-          print("_B")
-          print(dim(object))
-          temp = eigen(t(object)%*%object)$vectors[,1:number_eigenvectors]
-        }
       }
     }
   }
@@ -1508,7 +1491,7 @@ handle_macropca_errors <- function(object,temp,KMAX,number_eigenvectors) {
 
 #' Function that uses robust PCA and estimates robust factors and loadings.
 #'
-#' Contains Robpca (obsolete) and MacroPCA
+#' Contains MacroPCA
 #'
 #' Notes for MACROPCA:
 #' KMAX: Different values for kmax give different factors, but the  product lambda*factor stays constant. Note that
@@ -1516,7 +1499,8 @@ handle_macropca_errors <- function(object,temp,KMAX,number_eigenvectors) {
 #' Variation in k does give different results for lambda*factor
 #'
 #' NOTE: this function may (not certain) crash (in case of MACROPCA) when ncol(object) >> nrow(object)
-#'   Actually it crashes with specific values of dim(object). For example when dim(object) = c(193,27)
+#'   Actually it crashes with specific values of dim(object). For example when dim(object) = c(193,27).
+#'   This is solved with evade_crashes_macropca()
 #' @param object input
 #' @param number_eigenvectors number of eigenvectors to extract
 #' @param KMAX The maximal number of principal components to compute. This is a paramater in cellWise::MacroPCA()
@@ -1532,7 +1516,6 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20) {
 
   object = evade_crashes_macropca(object)
 
-  if(exists("use_macropca")) {
     print(number_eigenvectors)
     if(number_eigenvectors > KMAX) {
       #Note that when k > kmax, k gets the value of kmax.
@@ -1557,7 +1540,7 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20) {
 
     temp = handle_macropca_errors(object, temp, KMAX,number_eigenvectors)
     return(list(temp,NA))
-  }
+
 
 }
 
@@ -1640,19 +1623,15 @@ estimate_factor <- function(theta, g, lgfg_list, initialise = FALSE,
 #' @param object this is the object of which we may take the covariance matrix and then to perform robust PCA on
 #' @param NN N
 #' @param TT T
-prepare_for_robpca <- function(object, NN = aantal_N, TT = aantal_T) {
-  if(exists("SCHRAP_MRCD")) {
-    message("Do not use MRCD -> classical covmatrix")
-    temp = t(object)%*%object / (NN * TT)
-    if(exists("GEEN_COVMATRIX")) {
-      message("Do not use Covmatrix")
-      print(dim(object))
-      temp = object
-    }
-  } else {
-    #robust covariancematrix:
-    temp = get_robust_covmatrix(object)
-  }
+#' @param option 1 (robust covmatrix), 2 (classical covmatrix), 3 (no covmatrix)
+prepare_for_robpca <- function(object, NN = aantal_N, TT = aantal_T, option = 3) {
+  if(option == 1) temp = get_robust_covmatrix(object)
+
+  if(option == 2) temp = temp = t(object)%*%object / (NN * TT)
+
+  if(option == 3) temp = object
+
+  return(temp)
 }
 
 #' Estimates group factors
