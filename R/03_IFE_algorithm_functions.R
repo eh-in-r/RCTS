@@ -660,8 +660,8 @@ calculate_errors_virtual_groups <- function(k,LF,virtual_grouped_factor_structur
       print(paste(i,t))
       E_prep[i,t] = Y[i,t] - a * LF[i,t]
       if(b != 0) E_prep[i,t] = (E_prep[i,t] - b * virtual_structure[t])
-      print(E_prep[i,t])
-      print(XT[t,])
+      #print(E_prep[i,t])
+      #print(XT[t,])
       if(number_vars_estimated > 0) E_prep[i,t] = E_prep[i,t] - XT[t,] #note: XT is an TTx1 matrix
     }
   }
