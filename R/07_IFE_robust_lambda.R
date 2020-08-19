@@ -80,7 +80,7 @@ return_robust_lambdaobject <- function(Y_like_object, group, type,
         almost_classical_lambda = (Y_like_object[ii,] * t(FACTOR_GROUP[[group]])[,rr])  #the mean of this is equal to classical lambda
 
         if(eclipz) almost_classical_lambda = unlist(almost_classical_lambda) #to evade errors
-
+        print(almost_classical_lambda)
         robust_lambda = determine_robust_lambda(almost_classical_lambda)
         LG_local[ii,rr] = robust_lambda
       }
