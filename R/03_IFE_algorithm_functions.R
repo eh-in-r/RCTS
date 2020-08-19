@@ -627,7 +627,8 @@ calculate_errors_virtual_groups <- function(k,LF,virtual_grouped_factor_structur
                                             TT,
                                             number_of_variables,
                                             number_of_common_factors,
-                                            number_of_group_factors) {
+                                            number_of_group_factors,
+                                            number_vars_estimated = SCHATTEN_MET_AANTALVARS) {
   E_prep = matrix(NA, nrow = NN, ncol = TT)
 
   a = do_we_estimate_common_factors(number_of_common_factors)
@@ -640,7 +641,7 @@ calculate_errors_virtual_groups <- function(k,LF,virtual_grouped_factor_structur
     } else {
       message("Option to not estimate any group factor in any group -> this option is not implemented")
     }
-    if(number_of_variables > 0) {
+    if(number_vars_estimated > 0) {
       if(homogeneous_coefficients | heterogeneous_coefficients_groups) {
         XT = cbind(1, X[i,,]) %*% theta[,g[i]]
         #-> this should not be theta[,k] as only the grouped factorstructure should vary with k (similar to calculate_virtual_factor_and_lambda_group)
