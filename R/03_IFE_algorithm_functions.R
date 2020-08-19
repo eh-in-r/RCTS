@@ -2313,7 +2313,11 @@ adapt_X_estimating_less_variables <- function(number_of_variables,
                                               eclipz = FALSE) {
   #if number_vars_estimated < number_of_variables, then the obsolete rows in theta are already erased -> do the same in X
   if(!eclipz & number_vars_estimated < number_of_variables) {
-    X = X[,,1:number_vars_estimated]
+    if(number_vars_estimated > 0) {
+      X = X[,,1:number_vars_estimated]
+    } else {
+      X = NA
+    }
   }
   return(X)
 }
