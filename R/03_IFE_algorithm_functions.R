@@ -1397,7 +1397,7 @@ calculate_Z_group <- function(theta, g, lambda, comfactor, group, initialise,
     index = indices_group[i]
 
     #define XT
-    if(number_of_variables > 0) {
+    if(number_vars_estimated > 0) {
       if(homogeneous_coefficients | heterogeneous_coefficients_groups)  THETA = as.matrix(theta[,g[index]])
       if(heterogeneous_coefficients_individuals) THETA = as.matrix(theta[,index])
 
