@@ -1548,7 +1548,7 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20) {
       error = function(e) { message(e); return(e) }
     )
 
-    if(ncol(temp) != ncol(object)) {
+    if(nrow(temp) != ncol(object)) {
       print(dim(object))
       print(dim(temp))
       message("--MacroPCA has dropped a column--")
