@@ -1547,7 +1547,7 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20) {
       cellWise::MacroPCA(object, k = max(macropca_kmax, number_eigenvectors), MacroPCApars = list(kmax=KMAX))$loadings[,1:number_eigenvectors],
       error = function(e) { message(e); return(e) }
     )
-
+    print(class(temp))
     if(nrow(temp) != ncol(object)) {
       print(dim(object))
       print(dim(temp))
