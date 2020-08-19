@@ -1862,7 +1862,7 @@ grid_add_variables <- function(grid, theta, lambda, comfactor,
                                number_of_variables = aantalvars,
                                number_vars_estimated = SCHATTEN_MET_AANTALVARS,
                                number_of_groups = aantalgroepen) {
-  stopifnot(number_of_variables > 0 & number_of_variables < 9) #code exists up to 8 groups
+  stopifnot(number_of_variables >= 0 & number_of_variables < 9) #code exists up to 8 groups
   if(number_of_variables > 0) {
     #for homogeneous theta (1 -> 4 at this moment), we only need 1 column as all columns are the same
     if(homogeneous_coefficients) {
