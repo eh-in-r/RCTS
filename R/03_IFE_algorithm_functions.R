@@ -1983,6 +1983,7 @@ calculate_error_term <- function(no_common_factorstructure = FALSE, no_group_fac
                                  NN = aantal_N,
                                  TT = aantal_T,
                                  number_of_variables = aantalvars,
+                                 number_vars_estimated = SCHATTEN_MET_AANTALVARS,
                                  number_of_groups = aantalgroepen,
                                  number_of_group_factors = aantalfactoren_groups,
                                  number_of_common_factors = aantalfactoren_common) {
@@ -1991,7 +1992,7 @@ calculate_error_term <- function(no_common_factorstructure = FALSE, no_group_fac
   u = matrix(NA,nrow = NN, ncol = TT)
   e = matrix(NA,nrow = NN, ncol = TT)
   lf = t(lambda) %*% comfactor
-  if(number_of_variables > 0) {
+  if(number_vars_estimated > 0) {
     if(homogeneous_coefficients | heterogeneous_coefficients_groups) {
       xt = sapply(1:NN,
                   function(y) sapply(1:TT, function(x) c(1, X[y,x,]) %*% theta[,g[y]]))
