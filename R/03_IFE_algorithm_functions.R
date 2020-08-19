@@ -2333,7 +2333,7 @@ calculate_XT_estimated <- function(NN = aantal_N, TT = aantal_T,
   #if number_vars_estimated < number_of_variables, then the obsolete rows in theta are already erased -> now do the same in X
   X = adapt_X_estimating_less_variables(number_of_variables, number_vars_estimated, eclipz)
 
-  if(number_of_variables > 0) {
+  if(number_of_variables > 0 & !is.na(X)) {
     if(homogeneous_coefficients) { #only designed for DGP 5 at the moment
       XT_geschat = theta[1] + X[,,1] * theta[1]
       stopifnot(number_of_variables == 1)
