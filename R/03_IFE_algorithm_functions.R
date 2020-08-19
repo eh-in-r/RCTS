@@ -1286,7 +1286,7 @@ calculate_W <- function(theta, g ,
   #if number_vars_estimated < number_of_variables the obsoleterows in theta were already erased -> do the same in X
   X = adapt_X_estimating_less_variables(number_of_variables, number_vars_estimated, eclipz)
 
-  if(number_of_variables > 0) {
+  if(number_vars_estimated > 0) {
     if(homogeneous_coefficients) {
       #non-dependence on g -> take first column
       for(i in 1:NN) W[i,] = Y[i,] - t(cbind(1,X[i,,]) %*% as.matrix(theta[,1]))
@@ -1397,7 +1397,7 @@ calculate_Z_group <- function(theta, g, lambda, comfactor, group, initialise,
     index = indices_group[i]
 
     #define XT
-    if(number_of_variables > 0) {
+    if(number_vars_estimated > 0) {
       if(homogeneous_coefficients | heterogeneous_coefficients_groups)  THETA = as.matrix(theta[,g[index]])
       if(heterogeneous_coefficients_individuals) THETA = as.matrix(theta[,index])
 
