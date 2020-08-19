@@ -659,8 +659,11 @@ calculate_errors_virtual_groups <- function(k,LF,virtual_grouped_factor_structur
       #define the estimationerror:
       #print(paste(i,t))
       E_prep[i,t] = Y[i,t] - a * LF[i,t]
+      # print("--")
+      # print(E_prep[i,t])
+      # print( virtual_structure[t])
       if(b != 0) E_prep[i,t] = (E_prep[i,t] - b * virtual_structure[t])
-      #print(E_prep[i,t])
+      # print(E_prep[i,t])
       #print(XT[t,])
       if(number_vars_estimated > 0) E_prep[i,t] = E_prep[i,t] - XT[t,] #note: XT is an TTx1 matrix
     }
@@ -1539,11 +1542,16 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20) {
     # MacroPCA(M,1)$loadings
     # -> 1st and 3rd give the same result
     # -> The actual default for scale seems to be TRUE
+
     temp =  tryCatch(
       cellWise::MacroPCA(object, k = max(macropca_kmax, number_eigenvectors), MacroPCApars = list(kmax=KMAX))$loadings[,1:number_eigenvectors],
       error = function(e) { message(e); return(e) }
     )
 
+    if(ncol(temp) != ncol(object)) {
+      message("--MacroPCA has dropped a column--")
+      Sys.sleep(5)
+    }
     temp = handle_macropca_errors(object, temp, KMAX,number_eigenvectors)
     return(list(temp,NA))
 
