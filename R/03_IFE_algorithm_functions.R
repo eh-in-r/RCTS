@@ -2054,7 +2054,7 @@ calculate_error_term_individuals <- function(NN = aantal_N,
   lf = t(lambda) %*% comfactor
 
   X = adapt_X_estimating_less_variables(number_of_variables, number_vars_estimated, eclipz)
-  if(number_of_variables > 0) {
+  if(number_vars_estimated > 0) {
     if(homogeneous_coefficients | heterogeneous_coefficients_groups) {
       xt = sapply(1:NN,
                   function(y) sapply(1:TT, function(x) c(1, X[y,x,]) %*% theta[,g[y]]))
