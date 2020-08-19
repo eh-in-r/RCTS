@@ -656,6 +656,7 @@ calculate_errors_virtual_groups <- function(k,LF,virtual_grouped_factor_structur
       #calculate the objective function, while making sure that NA's do not have any effect in the sum
       #define the estimationerror:
       print(paste(i,t))
+      print(E_prep)
       E_prep[i,t] = Y[i,t] - a * LF[i,t]
       if(b != 0) E_prep[i,t] = (E_prep[i,t] - b * virtual_structure[t])
       if(number_of_variables > 0) E_prep[i,t] = E_prep[i,t] - XT[t,]
