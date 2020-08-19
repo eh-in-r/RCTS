@@ -1347,7 +1347,7 @@ calculate_Z_common <- function(theta, g, lgfg_list, initialise = FALSE,
     } else {
       LF_GROUP = 0
     }
-    if(number_of_variables > 0) {
+    if(number_vars_estimated > 0) {
       if(homogeneous_coefficients | heterogeneous_coefficients_groups) THETA = as.matrix(theta[,g[i]])
       if(heterogeneous_coefficients_individuals) THETA = as.matrix(theta[,i])
       Z[i,] = y - t(cbind(1,X[i,,]) %*% THETA) -
