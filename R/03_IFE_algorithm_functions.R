@@ -1137,7 +1137,7 @@ estimate_theta <- function(optimize_kappa = FALSE, eclipz = FALSE,
                                   number_of_variables = aantalvars,
                                   number_vars_estimated = SCHATTEN_MET_AANTALVARS,
                                   num_factors_may_vary = aantalfactors_verschillend_per_group) {
-  if(number_of_variables > 0) {
+  if(number_vars_estimated > 0) {
 
 
     if(homogeneous_coefficients) {
