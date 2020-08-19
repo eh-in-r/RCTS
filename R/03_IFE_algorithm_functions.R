@@ -2215,12 +2215,13 @@ calculate_PIC <- function(C, number_of_common_factors, number_of_group_factors, 
                           NN = aantal_N,
                           TT = aantal_T,
                           number_of_variables = aantalvars,
+                          number_vars_estimated = SCHATTEN_MET_AANTALVARS,
                           number_of_groups = aantalgroepen) {
 
 
   term1 = calculate_PIC_term1(e2)
 
-  if(number_of_variables > 0) {
+  if(number_vars_estimated > 0) {
     if(homogeneous_coefficients | heterogeneous_coefficients_groups) {
       #p is number of nonzero elements of theta; we need the sum of all p's (inclusief intercept)
       p_sum = sum(sapply(1:NN, function(x) sum(theta[,g[x]] != 0)))
