@@ -643,14 +643,14 @@ calculate_errors_virtual_groups <- function(k,LF,virtual_grouped_factor_structur
     }
     if(number_vars_estimated > 0) {
       if(homogeneous_coefficients | heterogeneous_coefficients_groups) {
-        XT = cbind(1, X[i,,]) %*% theta[,g[i]]
+        XT = cbind(1, X[i,,]) %*% theta[,g[i]] #matrix with TT rows and 1 column
         #-> this should not be theta[,k] as only the grouped factorstructure should vary with k (similar to calculate_virtual_factor_and_lambda_group)
       }
       if(heterogeneous_coefficients_individuals) {
-        XT = cbind(1, X[i,,]) %*% theta[,i]
+        XT = cbind(1, X[i,,]) %*% theta[,i] #matrix with TT rows and 1 column
       }
     } else {
-      XT = matrix(0, nrow = nrow(Y), ncol = ncol(Y))
+      XT = matrix(0, nrow = TT, ncol = 1)
     }
 
 
@@ -660,7 +660,9 @@ calculate_errors_virtual_groups <- function(k,LF,virtual_grouped_factor_structur
       print(paste(i,t))
       E_prep[i,t] = Y[i,t] - a * LF[i,t]
       if(b != 0) E_prep[i,t] = (E_prep[i,t] - b * virtual_structure[t])
-      if(number_of_variables > 0) E_prep[i,t] = E_prep[i,t] - XT[t,]
+      print(E_prep[i,t])
+      print(XT[t,])
+      if(number_vars_estimated > 0) E_prep[i,t] = E_prep[i,t] - XT[t,] #note: XT is an TTx1 matrix
     }
   }
   return(E_prep)
