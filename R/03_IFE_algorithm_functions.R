@@ -715,7 +715,10 @@ calculate_obj_for_g <- function(i, k, ERRORS_VIRTUAL, rho_parameters, TT = aanta
     } else { #non-robuste version:
       E = E_prep^2
     }
-
+    # print("***")
+    # print(E)
+    # print(class(E))
+    # print(dim(E))
     E = evade_floating_point_errors(E) #evading floating point errors -> set to zero when values are really small
 
     totalsum = totalsum + as.numeric(E)
@@ -1552,7 +1555,7 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20) {
       if(nrow(temp) != ncol(object)) {
         print(dim(object))
         print(dim(temp))
-        message("--MacroPCA has dropped a column--")
+        message("--MacroPCA has dropped a column--") #This leads to wrong dimensions in the factors, and gives error in rstudio.
         Sys.sleep(3)
       }
     }
