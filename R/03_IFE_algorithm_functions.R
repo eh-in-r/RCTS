@@ -1551,13 +1551,18 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20) {
       error = function(e) { message(e); return(e) }
     )
     print(class(temp))
+    if(class(temp) != "matrix") { #case of estimating 1 factor -> numeric -> make matrix
+      temp = matrix(temp)
+    }
     if(!("error" %in% class(temp))) {
-      if(nrow(temp) != ncol(object)) {
-        print(dim(object))
-        print(dim(temp))
-        message("--MacroPCA has dropped a column--") #This leads to wrong dimensions in the factors, and gives error in rstudio.
-        Sys.sleep(3)
-      }
+        if(nrow(temp) != ncol(object)) {
+          print(dim(object))
+          print(dim(temp))
+          message("--MacroPCA has dropped a column--") #This leads to wrong dimensions in the factors, and gives error in rstudio.
+          Sys.sleep(3)
+        }
+
+
     }
     temp = handle_macropca_errors(object, temp, KMAX,number_eigenvectors)
     return(list(temp,NA))
