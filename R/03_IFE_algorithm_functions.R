@@ -1546,6 +1546,11 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20) {
     # -> 1st and 3rd give the same result
     # -> The actual default for scale seems to be TRUE
 
+    if(exists("macropca_screeplot")) { #plots the screeplot
+      cellWise::MacroPCA(object)
+      message("***")
+
+    }
     temp =  tryCatch(
       cellWise::MacroPCA(object, k = max(macropca_kmax, number_eigenvectors), MacroPCApars = list(kmax=KMAX))$loadings[,1:number_eigenvectors],
       error = function(e) { message(e); return(e) }
