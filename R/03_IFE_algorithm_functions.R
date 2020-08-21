@@ -1558,7 +1558,7 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20) {
         if(nrow(temp) != ncol(object)) {
           print(dim(object))
           print(dim(temp))
-          message("--MacroPCA has dropped a column--") #This leads to wrong dimensions in the factors, and gives error in rstudio.
+          message("--MacroPCA has dropped a column---") #This leads to wrong dimensions in the factors, and gives error in rstudio.
           Sys.sleep(3)
         }
 
