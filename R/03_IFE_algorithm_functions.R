@@ -633,6 +633,7 @@ calculate_errors_virtual_groups <- function(k,LF,virtual_grouped_factor_structur
 
   a = do_we_estimate_common_factors(number_of_common_factors)
   b = do_we_estimate_group_factors(number_of_group_factors)
+  X = adapt_X_estimating_less_variables(number_of_variables, number_vars_estimated, eclipz)
 
   for(i in 1:NN) {
     #calculate lambda_group for one individual, based on an hypothetical groupmembership
@@ -1547,8 +1548,9 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20) {
     # -> The actual default for scale seems to be TRUE
 
     if(exists("macropca_screeplot")) { #plots the screeplot
-      cellWise::MacroPCA(object)
+      cumul_var = cellWise::MacroPCA(object)$cumulativeVar
       message("***")
+      Sys.sleep(5)
 
     }
     temp =  tryCatch(
@@ -1893,7 +1895,7 @@ grid_add_variables <- function(grid, theta, lambda, comfactor,
                                number_of_variables = aantalvars,
                                number_vars_estimated = SCHATTEN_MET_AANTALVARS,
                                number_of_groups = aantalgroepen) {
-  stopifnot(number_of_variables >= 0 & number_of_variables < 9) #code exists up to 8 groups
+  stopifnot(number_of_groups >= 0 & number_of_groups < 9) #code exists up to 8 groups
   if(number_of_variables > 0) {
     #for homogeneous theta (1 -> 4 at this moment), we only need 1 column as all columns are the same
     if(homogeneous_coefficients) {
@@ -2315,14 +2317,14 @@ calculate_XT_real <- function(NN = aantal_N, TT = aantal_T, number_of_variables 
     stopifnot(number_of_variables == 1)
   }
   if(heterogeneous_coefficients_groups) {
-    if(number_of_variables > 0 & !eclipz & !ABDGP1) {
+    if(number_of_variables > 0 & !eclipz ) {
       message("Note that this is not the default option. Extend code (calculate_XT_real()) if needed.")
     } else {
       XT_real = NA
     }
   }
   if(heterogeneous_coefficients_individuals) {
-    if(number_of_variables > 0 & !eclipz & !ABDGP1) {
+    if(number_of_variables > 0 & !eclipz ) {
       XT_real = (t(sapply(1:NN,
                           function(y) sapply(1:TT, function(x) c(1, X[y,x,]) %*% theta_real[,g_real][,y]))))
     } else {
@@ -2412,17 +2414,17 @@ calculate_FL_group_real <- function(NN = aantal_N, TT = aantal_T,
                                     eclipz = FALSE,
                                     ABDGP1_local = ABDGP1) {
 
-  if(exists("DGP_Bramati_Croux")) { #when using DGP5 theer are no factors -> return NA
+  if(exists("DGP_Bramati_Croux")) { #when using DGP5 there are no factors -> return NA
     return(NA)
   }
 
-  if(!eclipz & !ABDGP1_local) {
+  if(!eclipz & !ABDGP1_local) { #not using for DGP 1, because real values are not available given current coding (they do exist however)
     temp = calculate_lgfg(LAMBDA_GROUP_REAL, FACTOR_GROUP_REAL,
                           number_of_groups_real,
                           number_of_group_factors_real,
                           number_of_common_factors_real,
                           num_factors_may_vary)
-    FL_GROUP_real = lapply(1:NN, function(x) temp[[g_real[x]]][x,]) %>% unlist %>% matrix(nrow = TT) %>% t
+    FL_GROUP_real = t(lapply(1:NN, function(x) temp[[g_real[x]]][x,]) %>% unlist %>% matrix(nrow = TT))
   } else {
     FL_GROUP_real = NA
   }
