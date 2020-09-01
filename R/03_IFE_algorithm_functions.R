@@ -2326,7 +2326,7 @@ calculate_XT_real <- function(NN = aantal_N, TT = aantal_T, number_of_variables 
   if(heterogeneous_coefficients_individuals) {
     if(number_of_variables > 0 & !eclipz ) {
       XT_real = (t(sapply(1:NN,
-                          function(y) sapply(1:TT, function(x) c(1, X[y,x,]) %*% theta_real[,g_real][,y]))))
+                          function(y) sapply(1:TT, function(x) c(1, X[y,x,1:aantalvars]) %*% theta_real[,g_real][,y]))))
     } else {
       XT_real = NA
     }
