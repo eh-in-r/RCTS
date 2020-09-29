@@ -10,15 +10,15 @@
 #' @param NN N
 #' @return matrix where the mean of each row is equal to the classical lambda.
 all_almost_classical_lambda <- function(Y_like_object, factor_like_object, NUMBER_FACTORS, group, NN) {
-  ding = matrix(NA, nrow = NN, ncol = aantal_T)
+  temp = matrix(NA, nrow = NN, ncol = aantal_T)
   for(ii in 1:NN) {
     for(rr in 1:NUMBER_FACTORS) {
 
       almost_classical_lambda = (Y_like_object[ii,] * t(factor_like_object)[,rr])  #the mean of this is equal to classical lambda
-      ding[ii,] = almost_classical_lambda
+      temp[ii,] = almost_classical_lambda
     }
   }
-  return(ding)
+  return(temp)
 }
 
 
@@ -77,22 +77,26 @@ return_robust_lambdaobject <- function(Y_like_object, group, type,
 
 
   if(type == 1) {  #used in calculate_virtual_factor_and_lambda_group()
-    LG_local = data.frame(matrix(NA,nrow = NN, ncol = number_of_group_factors[group]))
+    if(number_of_group_factors[group] > 0) { #this can be zero when updating the number of factors
+      LG_local = data.frame(matrix(NA,nrow = NN, ncol = number_of_group_factors[group]))
 
-    almost_classical_lambda = lapply(1:NN, function(x) lapply(1:number_of_group_factors[group], function(y) (Y_like_object[x,] * t(FACTOR_GROUP[[group]])[,y])))
+      almost_classical_lambda = lapply(1:NN, function(x) lapply(1:number_of_group_factors[group], function(y) (Y_like_object[x,] * t(FACTOR_GROUP[[group]])[,y])))
 
-    for(ii in 1:NN) {
-      for(rr in 1:number_of_group_factors[group]) {
+      for(ii in 1:NN) {
+        for(rr in 1:number_of_group_factors[group]) {
 
-        almost_classical_lambda = (Y_like_object[ii,] * t(FACTOR_GROUP[[group]])[,rr])  #the mean of this is equal to classical lambda
+          almost_classical_lambda = (Y_like_object[ii,] * t(FACTOR_GROUP[[group]])[,rr])  #the mean of this is equal to classical lambda
 
-        if(eclipz) almost_classical_lambda = unlist(almost_classical_lambda) #to evade errors
-        #print(almost_classical_lambda)
-        robust_lambda = determine_robust_lambda(almost_classical_lambda)
-        LG_local[ii,rr] = robust_lambda
+          if(eclipz) almost_classical_lambda = unlist(almost_classical_lambda) #to evade errors
+          #print(almost_classical_lambda)
+
+          robust_lambda = determine_robust_lambda(almost_classical_lambda)
+          LG_local[ii,rr] = robust_lambda
+        }
       }
+    } else { #otherwise set all to zero
+      LG_local = data.frame(matrix(0,nrow = NN, ncol = 1))
     }
-
 
 
     return(LG_local)
