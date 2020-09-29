@@ -33,6 +33,13 @@ determine_robust_lambda <- function(almost_classical_lambda) {
   almost_classical_lambda = unlist(almost_classical_lambda) #because sometimes is not a vector (bvb with eclipz with N=3112)
   MADCL =  mad(almost_classical_lambda) #this is a value for one person and one factor (depends on i & r)
 
+  #special case where number of factors are updated during algorithm.
+  #Then sometimes groups are empty leading to no estimation of groupfactors
+  #and to 0/0 errors in this optimisation.
+  #Solve this by setting the denominator > 0
+  if(min(almost_classical_lambda) == 0 & max(almost_classical_lambda) == 0) {
+    MADCL = 0.001
+  }
   #m-estimate: minimize sum of rho's in scaled observations
   sum_of_rho <- function(x) {
     sum( Mpsi((almost_classical_lambda - x) / MADCL , cc = 4.685, psi = "bisquare", deriv = -1) )
