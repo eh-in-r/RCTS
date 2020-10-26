@@ -40,6 +40,10 @@ determine_robust_lambda <- function(almost_classical_lambda) {
   if(min(almost_classical_lambda) == 0 & max(almost_classical_lambda) == 0) {
     MADCL = 0.001
   }
+  #do the same when almost_classical_lambda has too many zero's
+  if(MADCL == 0) {
+    MADCL = 0.001
+  }
   #m-estimate: minimize sum of rho's in scaled observations
   sum_of_rho <- function(x) {
     sum( Mpsi((almost_classical_lambda - x) / MADCL , cc = 4.685, psi = "bisquare", deriv = -1) )
