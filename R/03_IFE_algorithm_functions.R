@@ -2085,7 +2085,7 @@ calculate_error_term_individuals <- function(NN = aantal_N,
   e = matrix(NA,nrow = NN, ncol = TT)
   lf = t(lambda) %*% comfactor
 
-  X = _estimating_less_variables(number_of_variables, number_vars_estimated, eclipz)
+  X = adapt_X_estimating_less_variables(number_of_variables, number_vars_estimated, eclipz)
   if(number_vars_estimated > 0) {
     if(homogeneous_coefficients | heterogeneous_coefficients_groups) {
       xt = sapply(1:NN,
