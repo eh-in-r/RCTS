@@ -554,7 +554,7 @@ calculate_virtual_factor_and_lambda_group <- function(group, solve_FG_FG_times_F
                                           number_of_group_factors = number_of_group_factors,
                                           number_of_common_factors = number_of_common_factors)
   } else {
-    LG_local = t(solve_FG_FG_times_FG[[group]] %*% t(Y_ster)) #This equal to Fg*Y/T
+    LG_local = t(solve_FG_FG_times_FG[[group]] %*% t(Y_ster)) #This equalS to Fg*Y/T
   }
 
 
@@ -692,14 +692,14 @@ calculate_obj_for_g <- function(i, k, ERRORS_VIRTUAL, rho_parameters, TT = aanta
     #     (because: use of #rho_parameters[[k]][[2]][i] leads tot random grouping)
     #"location" is then defined the same way
     #rho_parameters is a list of 'number_of_groups' elements. Every element has 2 elements with 'NN' values.
-    # DO NOT USE FUTURE_MAP() HERE: this is way slower for some reason!
+    # DO NOT USE FUTURE_MAP() HERE: this is way slower.
     location = (unlist(lapply(rho_parameters,function(x) x[[1]][i]))) #map over virtual groups; take 1st element (=median) and take individual i
     scaling = (unlist(lapply(rho_parameters,function(x) x[[2]][i]))) #map over virtual groups; take 2nd element (=mad) and take individual i
 
 
     location = median(location) #median over groups
     scaling = median(scaling) #median over groups
-
+    if(scaling == 0) scaling = 0.000001 #make sure no 0/0 will occur
   }
 
   for(t in 1:TT) {
@@ -719,7 +719,6 @@ calculate_obj_for_g <- function(i, k, ERRORS_VIRTUAL, rho_parameters, TT = aanta
     # print("***")
     # print(E)
     # print(class(E))
-    # print(dim(E))
     E = evade_floating_point_errors(E) #evading floating point errors -> set to zero when values are really small
 
     totalsum = totalsum + as.numeric(E)
@@ -2086,7 +2085,7 @@ calculate_error_term_individuals <- function(NN = aantal_N,
   e = matrix(NA,nrow = NN, ncol = TT)
   lf = t(lambda) %*% comfactor
 
-  X = adapt_X_estimating_less_variables(number_of_variables, number_vars_estimated, eclipz)
+  X = _estimating_less_variables(number_of_variables, number_vars_estimated, eclipz)
   if(number_vars_estimated > 0) {
     if(homogeneous_coefficients | heterogeneous_coefficients_groups) {
       xt = sapply(1:NN,
