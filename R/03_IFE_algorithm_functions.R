@@ -498,6 +498,7 @@ initialise_theta <- function(eclipz = FALSE,
 
           }
         }
+
         if(ABDGP1 & ABintercept) {
           values = c(0,model$coefficients)
           theta[,i] = values
@@ -2316,8 +2317,14 @@ calculate_XT_real <- function(NN = aantal_N, TT = aantal_T, number_of_variables 
     stopifnot(number_of_variables == 1)
   }
   if(heterogeneous_coefficients_groups) {
-    if(number_of_variables > 0 & !eclipz ) {
+    if(number_of_variables > 0 & !eclipz & exists("g")) {
       message("Note that this is not the default option. Extend code (calculate_XT_real()) if needed.")
+      if(!is.na(g)) {
+        XT_real = t(sapply(1:NN,
+                              function(x) matrix(cbind(1, X[x,,]) %*% theta_real[,g[x]], nrow = 1)))
+      } else {
+        XT_real = NA
+      }
     } else {
       XT_real = NA
     }
@@ -2482,9 +2489,9 @@ calculate_mse_theta <- function(theta, theta_real, without_intercept = FALSE, AB
   #Heterogeneous_coefficients_groups is not the default case.
   #As mse_heterogeneous_groups() does not encompass every single option anymore we return NA.
   if(heterogeneous_coefficients_groups) {
-    #pre_mse = mse_heterogeneous_groups()
-    message("Heterogeneous_coefficients_groups is not the default case. Return NA.")
-    return(NA)
+    pre_mse = mse_heterogeneous_groups(without_intercept, ABintercept)
+    #message("Heterogeneous_coefficients_groups is not the default case. Return NA.")
+    #return(NA)
   }
 
   if(heterogeneous_coefficients_individuals) { #Default case; In case of DGP 1 & 2 it returns NA when number of variables is not equal to 3.
