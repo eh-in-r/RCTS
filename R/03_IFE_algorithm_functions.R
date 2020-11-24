@@ -751,6 +751,7 @@ solveFG <- function(TT, number_of_groups, number_of_group_factors){
 #'
 #' @return list: 1st element contains group membership and second element contains the values which are used to determine group membership
 #' @inheritParams estimate_theta
+#' @param use_class_zero boolean: if set to TRUE, then individuals with high distance to all possible groups are put in a separate class zero
 #' @examples
 #' #This function needs several initial parameters to be initialized in order to work on itself
 #' library(RobClustTimeSeries)
@@ -791,7 +792,8 @@ update_g <- function(NN = aantal_N, TT = aantal_T,
                      number_of_variables = aantalvars,
                      number_vars_estimated = SCHATTEN_MET_AANTALVARS,
                      number_of_group_factors = aantalfactoren_groups,
-                     number_of_common_factors = aantalfactoren_common) {
+                     number_of_common_factors = aantalfactoren_common,
+                     use_class_zero = FALSE) {
 
 
 
@@ -818,7 +820,7 @@ update_g <- function(NN = aantal_N, TT = aantal_T,
   matrix_obj_values = matrix(NA, nrow = NN, ncol = number_of_groups)
 
 
-  #calculate errors for each (both virtual & real) group
+  #calculate errors for each possible group
   ERRORS_VIRTUAL = lapply(1:number_of_groups, function(x) calculate_errors_virtual_groups(x,LF,virtual_grouped_factor_structure, NN, TT,
                                                                                           number_of_variables,
                                                                                           number_of_common_factors,
@@ -835,9 +837,39 @@ update_g <- function(NN = aantal_N, TT = aantal_T,
     obj_values = map_dbl(1:number_of_groups, function(x) calculate_obj_for_g(i, x, ERRORS_VIRTUAL, rho_parameters, TT = TT))
     g[i] = which.min(obj_values)
     matrix_obj_values[i,] = obj_values
+  } #vectorizing is not faster: g = sapply(1:NN, function(z) which.min(map_dbl(1:number_of_groups, function(x) calculate_obj_for_g(z, x, ERRORS_VIRTUAL, rho_parameters))))
+  print("current g-table is:")
+  print(table(g,g_real))
+  if(use_class_zero) {
+    #We define a robust location and scatter per group.
+    #Then we measure the distance between an individual and each group.
+    #If the distance to each group is bigger than a threshold, individual i is put into class zero
+
+    RD = matrix(NA, nrow = number_of_groups, ncol = NN)
+    for(group in 1:number_of_groups) {
+      temp = CovMrcd(Y[g==group,], alpha = 0.99) #returns robust location and scatter
+      mu = temp$center #robust location
+      sig = temp$cov   #robust scatter
+      sig_inv = solve(sig)
+
+      #calculate robust distance
+      for(i in 1:NN) {
+        RD[group,i] = sqrt(t(Y[i,] - mu) %*% sig_inv %*% (Y[i,] - mu))
+      }
+    }
+
+    #define limit as 99%-quantile of chi-squared distribution:
+    limit = sqrt(qchisq(0.99, TT, ncp = 0, log = FALSE))
+    cases = which(apply(RD,2,min) > limit) #those cases go to class zero
+    plot(apply(RD,2,min),main = "minimal distance of i to any group")
+    abline(h=limit,col="red")
+    message(paste("Change ",length(cases),"cases to class zero"))
+    g[cases] = 0
+    print(table(g))
+
+
   }
 
-  #vectorizing is not faster: g = sapply(1:NN, function(z) which.min(map_dbl(1:number_of_groups, function(x) calculate_obj_for_g(z, x, ERRORS_VIRTUAL, rho_parameters))))
   return(list(g, matrix_obj_values))
 
 }
@@ -892,11 +924,12 @@ OF_vectorized_helpfunction3 <- function(i,t,XTHETA,LF,
                                         number_of_group_factors) {
 
 
-  if(do_we_estimate_group_factors(number_of_group_factors) != 0) {
-    result = as.numeric(Y[i,t] - XTHETA -
-                          LF -
+  if(do_we_estimate_group_factors(number_of_group_factors) != 0 & group_memberships[i] != 0) {
+
+    result = as.numeric(Y[i,t] - XTHETA - LF -
                           lgfg_list[[group_memberships[i]]][i,t]
     )^2
+
 
   } else {
     result = as.numeric(Y[i,t] - XTHETA -
@@ -988,6 +1021,7 @@ calculate_lgfg <- function(lambda_group, factor_group, number_of_groups, number_
       lgfg_list[[k]] = NA
     }
   }
+
 
   #replace parts of lgfg_list which are NA (because of no groupfactors in that particular group) by 0-matrices
   emptyFL = sapply(lgfg_list,function(x) is.null(dim(x)))
@@ -1240,13 +1274,16 @@ estimate_theta <- function(optimize_kappa = FALSE, eclipz = FALSE,
           which(names(lambda_group) == "id")
         )
         LAMBDAGROUP = as.matrix(lambda_group[which(lambda_group$id %in% i),][,-to_remove])
-        LAMBDAGROUP = LAMBDAGROUP[1:number_of_group_factors[g[i]]]
-
-
-        Y_special = Y_special -
-          t(lambda[,i]) %*% comfactor[,] -
-          LAMBDAGROUP %*% factor_group[[g[i]]]
-
+        if(g[i] != 0) {
+          LAMBDAGROUP = LAMBDAGROUP[1:number_of_group_factors[g[i]]]
+          Y_special = Y_special -
+            t(lambda[,i]) %*% comfactor[,] -
+            LAMBDAGROUP %*% factor_group[[g[i]]]
+        } else { #class zero -> no groupfactorstructure
+          LAMBDAGROUP = NA
+          Y_special = Y_special -
+            t(lambda[,i]) %*% comfactor[,]
+        }
 
         return(Y_special)
       }
@@ -1355,7 +1392,11 @@ calculate_Z_common <- function(theta, g, lgfg_list, initialise = FALSE,
         #then lgfg_list is not a list, but a df of dimension NxT
         LF_GROUP = lgfg_list[i,]
       } else {
-        LF_GROUP = lgfg_list[[g[i]]][i,]
+        if(g[i] == 0) { #class zero
+          LF_GROUP = 0
+        } else {
+          LF_GROUP = lgfg_list[[g[i]]][i,]
+        }
       }
     } else {
       LF_GROUP = 0
@@ -1780,7 +1821,9 @@ calculate_lambda <- function(theta, comfactor, g, lgfg_list, initialise = FALSE,
 #' @inheritParams estimate_theta
 #' @inheritParams calculate_W
 #' @export
-calculate_lambda_group <- function(theta, factor_group, g, lambda, comfactor, initialise = FALSE, UPDATE1 = update1, UPDATE2 = update2,
+calculate_lambda_group <- function(theta, factor_group, g, lambda, comfactor, initialise = FALSE,
+                                   UPDATE1 = update1, UPDATE2 = update2,
+                                   NN = aantal_N,
                                    TT = aantal_T,
                                    number_of_groups = aantalgroepen,
                                    number_of_group_factors = aantalfactoren_groups) {
@@ -1875,6 +1918,20 @@ calculate_lambda_group <- function(theta, factor_group, g, lambda, comfactor, in
       lambda_local2[is.na(lambda_local2)] <- 0
     }
   }
+
+  #add rows to lambda_local2 for individuals of class zero (=individuals that are too far from all groups)
+  #put those values to zero
+  if(sum(g==0) > 0) {
+    indices_class_zero = which(g==0)
+    for(ind in indices_class_zero) {
+      extrarow = c(rep(0, max(number_of_group_factors, na.rm = TRUE)),
+                 0, #this is group membership
+                 ind #this is id
+                 )
+      lambda_local2 = rbind(lambda_local2, extrarow)
+    }
+  }
+  stopifnot(nrow(lambda_local2) == NN)
 
   return(lambda_local2)
 }
@@ -2049,8 +2106,13 @@ calculate_error_term <- function(no_common_factorstructure = FALSE, no_group_fac
   }
 
   for(i in 1:NN) {
-    lf_group_i = lf_group[[g[i]]]
-    index = which(group_membership[[g[i]]]$id == i)
+    if(g[i] != 0) {
+      lf_group_i = lf_group[[g[i]]]
+      index = which(group_membership[[g[i]]]$id == i)
+    } else {
+      lf_group_i = NA
+      index = NA
+    }
     for(t in 1:TT) {
       u[i,t] = Y[i,t] - xt[t,i]
 
@@ -2058,7 +2120,9 @@ calculate_error_term <- function(no_common_factorstructure = FALSE, no_group_fac
       b = do_we_estimate_group_factors(number_of_group_factors)
 
       part2 = a * lf[i,t]
-      part3 = b * lf_group_i[index,t]
+      part3 = ifelse(g[i] != 0,
+                     b * lf_group_i[index, t],
+                     0)
       if(no_common_factorstructure) part2 = 0
       if(no_group_factorstructure) part3 = 0
       e[i,t] = u[i,t] - part2 - part3
@@ -2119,10 +2183,19 @@ calculate_error_term_individuals <- function(NN = aantal_N,
   a = do_we_estimate_common_factors(number_of_common_factors)
   b = do_we_estimate_group_factors(number_of_group_factors)
   for(i in 1:NN) {
-    lf_group_i = lf_group[[g[i]]]
-    index = which(group_membership[[g[i]]]$id == i)
+    if(g[i] != 0) {
+      lf_group_i = lf_group[[g[i]]]
+      index = which(group_membership[[g[i]]]$id == i)
+    } else {
+      lf_group_i = NA
+      index = NA
+    }
     u[i,] = (Y[i,] - xt[,i]) %>% as.numeric
-    e[i,] = u[i,] - a * lf[i,] - b * lf_group_i[index,]
+    if(g[i] != 0) {
+      e[i,] = u[i,] - a * lf[i,] - b * lf_group_i[index,]
+    } else {
+      e[i,] = u[i,] - a * lf[i,]
+    }
 
 
   }
@@ -2454,11 +2527,21 @@ calculate_FL_group_estimated <- function(LAMBDA_GROUP = lambda_group, FACTOR_GRO
                                          number_of_common_factors = aantalfactoren_common,
                                          num_factors_may_vary = aantalfactors_verschillend_per_group) {
   temp = calculate_lgfg(LAMBDA_GROUP, FACTOR_GROUP, number_of_groups, number_of_group_factors, number_of_common_factors, num_factors_may_vary)
-  if(!is.na(temp)) {
-    FL_group_est = lapply(1:NN, function(x) temp[[g[x]]][x,]) %>% unlist %>% matrix(nrow = TT) %>% t
-  } else {
-    FL_group_est = NA
+  FL_helpf <- function(x) {
+    if(g[x] != 0) {
+      return(temp[[g[x]]][x,])
+    } else {
+      return(rep(0, TT))
+    }
   }
+  suppressWarnings( #the condition has length > 1 and only the first element will be used
+    if(!is.na(temp)) {
+      FL_group_est = lapply(1:NN, function(x) FL_helpf(x))
+      FL_group_est = t(matrix(unlist(FL_group_est), nrow = TT))
+    } else {
+      FL_group_est = NA
+    }
+  )
   return(FL_group_est)
 }
 
