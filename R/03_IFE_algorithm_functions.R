@@ -841,38 +841,68 @@ update_g <- function(NN = aantal_N, TT = aantal_T,
   print("current g-table is:")
   print(table(g,g_real))
   if(use_class_zero) {
-    #We define a robust location and scatter per group.
-    #Then we measure the distance between an individual and each group.
-    #If the distance to each group is bigger than a threshold, individual i is put into class zero
-
-    RD = matrix(NA, nrow = number_of_groups, ncol = NN)
-    for(group in 1:number_of_groups) {
-      temp = CovMrcd(Y[g==group,], alpha = 0.99) #returns robust location and scatter
-      mu = temp$center #robust location
-      sig = temp$cov   #robust scatter
-      sig_inv = solve(sig)
-
-      #calculate robust distance
-      for(i in 1:NN) {
-        RD[group,i] = sqrt(t(Y[i,] - mu) %*% sig_inv %*% (Y[i,] - mu))
-      }
-    }
-
-    #define limit as 99%-quantile of chi-squared distribution:
-    limit = sqrt(qchisq(0.99, TT, ncp = 0, log = FALSE))
-    cases = which(apply(RD,2,min) > limit) #those cases go to class zero
-    plot(apply(RD,2,min),main = "minimal distance of i to any group")
-    abline(h=limit,col="red")
-    message(paste("Change ",length(cases),"cases to class zero"))
-    g[cases] = 0
-    print(table(g))
-
+    # dimensions = dim(Y[g==group,])
+    # if(dimensions[2] >= dimensions[1]) {
+    #   message("--when T is too large -> class zero issues--")
+    # }
+    g = clustering_with_robust_distances(g, number_of_groups)
 
   }
 
   return(list(g, matrix_obj_values))
 
 }
+
+
+
+
+#' Function that puts individuals in a separate "class zero", when their distance to all possible groups is bigger then a threshold.
+#'
+#' @return new clustering, including class zero
+clustering_with_robust_distances <- function(g, number_of_groups) {
+  RD = matrix(NA, nrow = number_of_groups, ncol = nrow(Y)) #every row contains the distances to a certain group, and every column is 1 individual
+  for(group in 1:number_of_groups) { #loop over all groups
+    mu = apply(Y[g==group,], 2, "median")
+    s = apply(Y[g==group,], 2, "Qn")
+    x = Y[g==group, 2:ncol(Y)]
+    laggedx = Y[g==group,1:(ncol(Y)-1)]
+    r = corQn( as.vector(x), as.vector(laggedx))
+    print(r)
+
+    ar1_cor <- function(n, rho) {
+      exponent <- abs(matrix(1:n - 1, nrow = n, ncol = n, byrow = TRUE) -
+                        (1:n - 1))
+      rho^exponent
+    }
+
+    R = ar1_cor(n=ncol(Y),rho=r)
+    sig = diag(s)%*%R%*%diag(s)
+    sig_inv = solve(sig)
+    #calculate robust distances for all individuals
+    for(i in 1:nrow(Y)) {
+      RD[group,i] = sqrt(t(Y[i,] - mu) %*% sig_inv %*% (Y[i,] - mu))
+    }
+  }
+
+  #define limit as 99%-quantile of chi-squared distribution:
+  #if for an individual the robust distance for every group is larger then the limit, the individual is put to class zero
+  limit = sqrt(qchisq(0.99, ncol(Y), ncp = 0, log = FALSE))
+  cases = which(apply(RD, 2, min) > limit) #those cases go to class zero
+  if(add_outliers_eclipzstyle_fractie > 0) {
+    #plot with colored outlierindividuals;
+    indices_of_outliers = which(apply(Y,1,function(x) abs(max(x))) > 900) #indices of individuals with at least 1 generated outlier in it
+    plot(log(apply(RD,2,min)), col = ((1:nrow(Y)) %in% indices_of_outliers) + 1, main = "minimal distance of i to any group")
+    abline(h=log(limit), col="red")
+  } else {
+    #plot without coloring
+    plot(apply(RD,2,min),main = "minimal distance of i to any group")
+    abline(h=limit,col="red")
+  }
+  g[cases] = 0
+  print(table(g))
+  return(g)
+}
+
 
 
 
@@ -1731,15 +1761,13 @@ estimate_factor_group <- function(theta, g, lambda, comfactor, initialise = FALS
       print(group)
       if(number_of_group_factors[group] > 0) {
         if(TT < number_of_group_factors[group]) {
-          message("-> too many factor compared to TT")
+          message("-> There are too many factors to be estimated, compared to TT.")
         }
 
         Wj = calculate_Z_group(theta, g, lambda, comfactor, group, initialise)
 
 
-
-        #Take a limit of 10 individuals per group (since get_robust_covmatrix() does not work at small sizes)
-        if(use_robust & nrow(Wj) > 10) {
+        if(use_robust) & nrow(Wj) > 3) { #use limit on nrow(Wj) due to error in otherwise ("The input data must have at least 3 rows (cases)")
 
 
           temp = prepare_for_robpca(Wj)
@@ -1750,8 +1778,9 @@ estimate_factor_group <- function(theta, g, lambda, comfactor, initialise = FALS
 
           rm(temp2)
         } else {
-          if(use_robust) print("Dit is een zeer kleine groep -> CovMrcd werkt niet; robpca werkt ook niet -> gebruik niet-robuuste versie")
-          temp = t(Wj)%*%Wj #delen door NT maakt geen verschil voor de eigenvectors
+          if(nrow(Wj) < 3) message("This group contains a very small number of elements. -> macropca can not work -> use non-robust estimation of factors")
+
+          temp = t(Wj)%*%Wj #dividing by NT does not make any difference for the eigenvectors
           scores[[group]] = NA
           schatterF[[group]] = t(sqrt(TT) * eigen(temp)$vectors[,1:number_of_group_factors[group]])
         }
