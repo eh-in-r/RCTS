@@ -79,7 +79,8 @@ return_robust_lambdaobject <- function(Y_like_object, group, type,
                                        number_of_common_factors = aantalfactoren_common,
                                        NN = aantal_N) {
 
-
+  message("do not see this anymore")
+  Sys.sleep(1800)
   if(type == 1) {  #used in calculate_virtual_factor_and_lambda_group()
     if(number_of_group_factors[group] > 0) { #this can be zero when updating the number of factors
       LG_local = data.frame(matrix(NA,nrow = NN, ncol = number_of_group_factors[group]))
