@@ -1490,7 +1490,7 @@ calculate_Z_group <- function(theta, g, lambda, comfactor, group, initialise,
       XT = rep(0,TT)
     }
 
-    #calculate Z
+    #calculate Z = Y - X*THETA - LF)
     y = Y[index,] %>% as.numeric
     if(initialise) {
       Z[i,] = y - XT
@@ -1593,6 +1593,8 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20) {
 
   print(paste("*************************************************robust PCA with:",number_eigenvectors))
   print(dim(object))
+  message("i should not see this anymore")
+  Sys.sleep(1800)
 
   ######################
   # MacroPCA
@@ -1680,12 +1682,20 @@ estimate_factor <- function(theta, g, lgfg_list, initialise = FALSE,
                             number_of_common_factors = aantalfactoren_common) {
 
 
-  #initialisation: grouped structure NA
+  #initialisation: has no grouped factorstructure yet
   if(initialise) {
-    W = calculate_W(theta, g)
+    W = calculate_W(theta, g) #Y - XT
   } else {
     W = calculate_Z_common(theta, g, lgfg_list) #this is a "rows_without_NA x T - matrix"
   }
+
+  #if there are individuals in "class zero", then they are considered outliers
+  #  and need to be excluded in the estimation of the common factors as well
+  message("remove class zero individuals from estimation of common factors")
+  print(dim(W))
+  W = W[g != 0, ]
+  print(dim(W))
+
 
   #Define the object on which (robust or classical) PCA will be performed
   if(use_robust) {
@@ -1704,10 +1714,12 @@ estimate_factor <- function(theta, g, lgfg_list, initialise = FALSE,
   #take number_of_common_factors eigenvectors
   if(use_robust) {
     message(str_c("Estimate ",number_of_common_factors," common factors"))
-    temp2 = robustpca(temp, number_of_common_factors) #robust pca
-    schatterF = t(sqrt(TT) * temp2[[1]])
-    scores = temp2[[2]]
-    rm(temp2)
+    #CHANGE LOCATION 1
+    # temp2 = robustpca(temp, number_of_common_factors) #robust pca
+    # schatterF = t(sqrt(TT) * temp2[[1]])
+    # scores = temp2[[2]]
+    # rm(temp2)
+    schatterF = t(sqrt(TT) * eigen(temp)$vectors[,1:number_of_common_factors])
   } else {
     schatterF = t(sqrt(TT) * eigen(temp)$vectors[,1:number_of_common_factors])
   }
@@ -1766,17 +1778,20 @@ estimate_factor_group <- function(theta, g, lambda, comfactor, initialise = FALS
 
         Wj = calculate_Z_group(theta, g, lambda, comfactor, group, initialise)
 
-
-        if(use_robust) & nrow(Wj) > 3) { #use limit on nrow(Wj) due to error in otherwise ("The input data must have at least 3 rows (cases)")
-
+        #use limit on nrow(Wj) due to error in otherwise ("The input data must have at least 3 rows (cases)")
+        if(use_robust) & nrow(Wj) > 3) {
 
           temp = prepare_for_robpca(Wj)
 
-          temp2 = robustpca(temp, number_of_group_factors[group])
-          schatterF[[group]] = t(sqrt(TT) * temp2[[1]]) #robust pca
-          scores[[group]] = temp2[[2]]
+          #CHANGE LOCATION 2
+          #temp2 = robustpca(temp, number_of_group_factors[group])
+          #schatterF[[group]] = t(sqrt(TT) * temp2[[1]]) #robust pca
+          #scores[[group]] = temp2[[2]]
+          #rm(temp2)
+          temp = t(Wj)%*%Wj #dividing by NT does not make any difference for the eigenvectors
+          scores[[group]] = NA
+          schatterF[[group]] = t(sqrt(TT) * eigen(temp)$vectors[,1:number_of_group_factors[group]])
 
-          rm(temp2)
         } else {
           if(nrow(Wj) < 3) message("This group contains a very small number of elements. -> macropca can not work -> use non-robust estimation of factors")
 

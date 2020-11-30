@@ -9,17 +9,17 @@
 #' @param group index of group
 #' @param NN N
 #' @return matrix where the mean of each row is equal to the classical lambda.
-all_almost_classical_lambda <- function(Y_like_object, factor_like_object, NUMBER_FACTORS, group, NN) {
-  temp = matrix(NA, nrow = NN, ncol = aantal_T)
-  for(ii in 1:NN) {
-    for(rr in 1:NUMBER_FACTORS) {
-
-      almost_classical_lambda = (Y_like_object[ii,] * t(factor_like_object)[,rr])  #the mean of this is equal to classical lambda
-      temp[ii,] = almost_classical_lambda
-    }
-  }
-  return(temp)
-}
+# all_almost_classical_lambda <- function(Y_like_object, factor_like_object, NUMBER_FACTORS, group, NN) {
+#   temp = matrix(NA, nrow = NN, ncol = aantal_T)
+#   for(ii in 1:NN) {
+#     for(rr in 1:NUMBER_FACTORS) {
+#
+#       almost_classical_lambda = (Y_like_object[ii,] * t(factor_like_object)[,rr])  #the mean of this is equal to classical lambda
+#       temp[ii,] = almost_classical_lambda
+#     }
+#   }
+#   return(temp)
+# }
 
 
 
@@ -38,11 +38,11 @@ determine_robust_lambda <- function(almost_classical_lambda) {
   #and to 0/0 errors in this optimisation.
   #Solve this by setting the denominator > 0
   if(min(almost_classical_lambda) == 0 & max(almost_classical_lambda) == 0) {
-    MADCL = 0.001
+    MADCL = 0.000001
   }
   #do the same when almost_classical_lambda has too many zero's
   if(MADCL == 0) {
-    MADCL = 0.001
+    MADCL = 0.000001
   }
   #m-estimate: minimize sum of rho's in scaled observations
   sum_of_rho <- function(x) {
