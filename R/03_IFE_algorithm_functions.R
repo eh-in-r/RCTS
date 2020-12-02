@@ -506,6 +506,11 @@ initialise_theta <- function(eclipz = FALSE,
           theta[,i] = model$coefficients
         }
       }
+
+      #Note: in case of using USE_MEDIAN_OF_INDIVIDUAL_THETA:
+      #this is not possible in this initialisation step, because g has not been initialized yet.
+      #-> estimation of theta starts with the individual values
+
     }
     rm(X_special, Y_special)
 
@@ -842,6 +847,8 @@ update_g <- function(NN = aantal_N, TT = aantal_T,
   } #vectorizing is not faster: g = sapply(1:NN, function(z) which.min(map_dbl(1:number_of_groups, function(x) calculate_obj_for_g(z, x, ERRORS_VIRTUAL, rho_parameters))))
   print("current g-table is:")
   print(table(g,g_real))
+
+  g_before_class_zero = g
   if(use_class_zero) {
     # dimensions = dim(Y[g==group,])
     # if(dimensions[2] >= dimensions[1]) {
@@ -851,7 +858,7 @@ update_g <- function(NN = aantal_N, TT = aantal_T,
 
   }
 
-  return(list(g, matrix_obj_values))
+  return(list(g, matrix_obj_values, g_before_class_zero))
 
 }
 
@@ -1340,6 +1347,10 @@ estimate_theta <- function(optimize_kappa = FALSE, eclipz = FALSE,
 
       theta = matrix(unlist(theta),ncol = NN)
 
+      if(exists("USE_MEDIAN_OF_INDIVIDUAL_THETA")) {
+        theta = use_median_values_theta(theta, g, number_of_groups)
+      }
+
     }
 
 
@@ -1349,7 +1360,20 @@ estimate_theta <- function(optimize_kappa = FALSE, eclipz = FALSE,
   }
 }
 
-
+#' Replace individually estimated values for theta by the median value within the estimated group
+#' @param theta theta
+#' @param g vector with group membership
+#' @inheritParams estimate_theta
+#' @return Updated estimation of theta. The format is 1 column for each individual.
+#' @export
+use_median_values_theta <- function(theta, g, number_of_groups) {
+  for(group in 1:number_of_groups) {
+    #replace values by the median value within the estimated group
+    medianvalues = apply(theta[,g==group], 1, median)
+    theta[,g==group] = medianvalues
+  }
+  return(theta)
+}
 
 #' Calculates W = Y - X*THETA
 #'
@@ -1595,8 +1619,7 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20) {
 
   print(paste("*************************************************robust PCA with:",number_eigenvectors))
   print(dim(object))
-  message("i should not see this anymore")
-  Sys.sleep(1800)
+
 
   ######################
   # MacroPCA
