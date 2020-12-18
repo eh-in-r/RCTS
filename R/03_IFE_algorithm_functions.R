@@ -846,7 +846,11 @@ update_g <- function(NN = aantal_N, TT = aantal_T,
     matrix_obj_values[i,] = obj_values
   } #vectorizing is not faster: g = sapply(1:NN, function(z) which.min(map_dbl(1:number_of_groups, function(x) calculate_obj_for_g(z, x, ERRORS_VIRTUAL, rho_parameters))))
   print("current g-table is:")
-  print(table(g,g_real))
+  if(!is.na(g_real)) {
+    print(table(g,g_real))
+  } else {
+    print(table(g))
+  }
 
   g_before_class_zero = g
   if(use_class_zero) {
@@ -884,6 +888,11 @@ clustering_with_robust_distances <- function(g, number_of_groups) {
       rho^exponent
     }
 
+    if(rankMatrix(diag(s))[[1]] < ncol(Y)) {
+      message("rank of diag(s) is too small (reason: because Qn(.) equals zero for 1 year)")  #-> solve(sig) would generate error
+      s[s==0] <- 1e-6
+    }
+
     R = ar1_cor(n=ncol(Y),rho=r)
     sig = diag(s)%*%R%*%diag(s)
     sig_inv = solve(sig)
@@ -896,16 +905,29 @@ clustering_with_robust_distances <- function(g, number_of_groups) {
   #define limit as 99%-quantile of chi-squared distribution:
   #if for an individual the robust distance for every group is larger then the limit, the individual is put to class zero
   limit = sqrt(qchisq(0.99, ncol(Y), ncp = 0, log = FALSE))
-  cases = which(apply(RD, 2, min) > limit) #those cases go to class zero
+  if(exists("USE_999")) {
+    limit = sqrt(qchisq(0.999, ncol(Y), ncp = 0, log = FALSE))
+  }
+  minimum_distance = apply(RD, 2, min)
+  limit_empirical = quantile(minimum_distance, 0.75) #
+  cases = which(minimum_distance > limit) #those cases go to class zero
+  if(exists("USE_MAX_OF_TWO_LIMITS")) {
+    cases = which(minimum_distance > max(limit,limit_empirical)) #those cases go to class zero
+  }
+  message("limits are:")
+  print(limit)
+  print(limit_empirical)
   if(add_outliers_eclipzstyle_fractie > 0) {
     #plot with colored outlierindividuals;
     indices_of_outliers = which(apply(Y,1,function(x) abs(max(x))) > 900) #indices of individuals with at least 1 generated outlier in it
-    plot(log(apply(RD,2,min)), col = ((1:nrow(Y)) %in% indices_of_outliers) + 1, main = "minimal distance of i to any group")
+    plot(log(apply(RD,2,min)), col = ((1:nrow(Y)) %in% indices_of_outliers) + 1, main = "minimal log(distance) of i to any group")
     abline(h=log(limit), col="red")
+    abline(h=log(limit_empirical),col="orange")
   } else {
     #plot without coloring
-    plot(apply(RD,2,min),main = "minimal distance of i to any group")
+    plot(apply(RD,2,min),main = "minimal distance of i to any group", ylim = c(0, limit*1.05))
     abline(h=limit,col="red")
+    abline(h=limit_empirical,col="orange")
   }
   g[cases] = 0
   print(table(g))
