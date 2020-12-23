@@ -2049,7 +2049,7 @@ grid_add_variables <- function(grid, theta, lambda, comfactor,
                                number_of_variables = aantalvars,
                                number_vars_estimated = SCHATTEN_MET_AANTALVARS,
                                number_of_groups = aantalgroepen) {
-  stopifnot(number_of_groups >= 0 & number_of_groups < 9) #code exists up to 8 groups
+  stopifnot(!heterogeneous_coefficients_groups | (number_of_groups >= 0 & number_of_groups < LIMIET_AANTAL_GROEPEN_heterogroups)) #code exists up to 11 groups
   if(number_of_variables > 0) {
     #for homogeneous theta (1 -> 4 at this moment), we only need 1 column as all columns are the same
     if(homogeneous_coefficients) {
@@ -2067,7 +2067,10 @@ grid_add_variables <- function(grid, theta, lambda, comfactor,
         if(number_of_groups > 5) grid$XTHETA6 = (apply(grid, 1, function(x) c(1, X[x[1],x[2],]) %*% theta[,6]))
         if(number_of_groups > 6) grid$XTHETA7 = (apply(grid, 1, function(x) c(1, X[x[1],x[2],]) %*% theta[,7]))
         if(number_of_groups > 7) grid$XTHETA8 = (apply(grid, 1, function(x) c(1, X[x[1],x[2],]) %*% theta[,8]))
-        # if(number_of_groups > 8) {
+        if(number_of_groups > 8) grid$XTHETA9 = (apply(grid, 1, function(x) c(1, X[x[1],x[2],]) %*% theta[,9]))
+        if(number_of_groups > 9) grid$XTHETA10 = (apply(grid, 1, function(x) c(1, X[x[1],x[2],]) %*% theta[,10]))
+        if(number_of_groups > 10) grid$XTHETA11 = (apply(grid, 1, function(x) c(1, X[x[1],x[2],]) %*% theta[,11]))
+        # if(number_of_groups > LIMIET_AANTAL_GROEPEN_heterogroups) {
         #   message("add code (grid_add_variables")
         #   Sys.sleep(900)
         # }
@@ -2089,7 +2092,10 @@ grid_add_variables <- function(grid, theta, lambda, comfactor,
       if(number_of_groups > 5) grid$XTHETA6 = 0
       if(number_of_groups > 6) grid$XTHETA7 = 0
       if(number_of_groups > 7) grid$XTHETA8 = 0
-      # if(number_of_groups > 8) {
+      if(number_of_groups > 8) grid$XTHETA9 = 0
+      if(number_of_groups > 9) grid$XTHETA10 = 0
+      if(number_of_groups > 10) grid$XTHETA11 = 0
+      # if(number_of_groups > 11) {
       #   print("add code-")
       #   Sys.sleep(900)
       # }
