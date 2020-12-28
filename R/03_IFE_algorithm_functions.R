@@ -555,12 +555,15 @@ calculate_virtual_factor_and_lambda_group <- function(group, solve_FG_FG_times_F
   #robust grouplambda:
   if(use_robust) {
     #CHANGE LOCATION 5/7
-    # #we need a robust version of the virtual factorstructure:
-    # LG_local = return_robust_lambdaobject(Y_ster, group, type = 1,
-    #                                       NN = NN,
-    #                                       number_of_group_factors = number_of_group_factors,
-    #                                       number_of_common_factors = number_of_common_factors)
-    LG_local = t(solve_FG_FG_times_FG[[group]] %*% t(Y_ster)) #This equalS to Fg*Y/T
+    if(exists("NO_CZ_YES_MACRO")) {
+      #we need a robust version of the virtual factorstructure:
+      LG_local = return_robust_lambdaobject(Y_ster, group, type = 1,
+                                             NN = NN,
+                                             number_of_group_factors = number_of_group_factors,
+                                             number_of_common_factors = number_of_common_factors)
+    } else {
+      LG_local = t(solve_FG_FG_times_FG[[group]] %*% t(Y_ster)) #This equalS to Fg*Y/T
+    }
   } else {
     LG_local = t(solve_FG_FG_times_FG[[group]] %*% t(Y_ster)) #This equalS to Fg*Y/T
   }
@@ -914,9 +917,9 @@ clustering_with_robust_distances <- function(g, number_of_groups) {
   if(exists("USE_MAX_OF_TWO_LIMITS")) {
     cases = which(minimum_distance > max(limit,limit_empirical)) #those cases go to class zero
   }
-  message("limits are:")
-  print(limit)
-  print(limit_empirical)
+  # message("limits are:")
+  # print(limit)
+  # print(limit_empirical)
   if(add_outliers_eclipzstyle_fractie > 0) {
     #plot with colored outlierindividuals;
     indices_of_outliers = which(apply(Y,1,function(x) abs(max(x))) > 900) #indices of individuals with at least 1 generated outlier in it
@@ -1746,9 +1749,12 @@ estimate_factor <- function(theta, g, lgfg_list, initialise = FALSE,
 
   #Define the object on which (robust or classical) PCA will be performed
   if(use_robust) {
-    #CHANGE LOCATION 4/7
-    #temp = prepare_for_robpca(W)
-    temp = t(W)%*%W / (NN * TT)
+    if(exists("NO_CZ_YES_MACRO")) {
+      temp = prepare_for_robpca(W)
+    } else {
+      #CHANGE LOCATION 4/7
+      temp = t(W)%*%W / (NN * TT)
+    }
   } else {
     #Classical case
     #calculate 1/NT * W'W
@@ -1762,12 +1768,15 @@ estimate_factor <- function(theta, g, lgfg_list, initialise = FALSE,
   #take number_of_common_factors eigenvectors
   if(use_robust) {
     message(str_c("Estimate ",number_of_common_factors," common factors"))
-    #CHANGE LOCATION 1/7
-    # temp2 = robustpca(temp, number_of_common_factors) #robust pca
-    # schatterF = t(sqrt(TT) * temp2[[1]])
-    # scores = temp2[[2]]
-    # rm(temp2)
-    schatterF = t(sqrt(TT) * eigen(temp)$vectors[,1:number_of_common_factors])
+    if(exists("NO_CZ_YES_MACRO")) {
+      temp2 = robustpca(temp, number_of_common_factors) #robust pca
+      schatterF = t(sqrt(TT) * temp2[[1]])
+      scores = temp2[[2]]
+      rm(temp2)
+    } else {
+      #CHANGE LOCATION 1/7
+      schatterF = t(sqrt(TT) * eigen(temp)$vectors[,1:number_of_common_factors])
+    }
   } else {
     schatterF = t(sqrt(TT) * eigen(temp)$vectors[,1:number_of_common_factors])
   }
@@ -1831,14 +1840,17 @@ estimate_factor_group <- function(theta, g, lambda, comfactor, initialise = FALS
 
 
           #CHANGE LOCATION 2/7
-          #temp = prepare_for_robpca(Wj)
-          #temp2 = robustpca(temp, number_of_group_factors[group])
-          #schatterF[[group]] = t(sqrt(TT) * temp2[[1]]) #robust pca
-          #scores[[group]] = temp2[[2]]
-          #rm(temp2)
-          temp = t(Wj)%*%Wj #dividing by NT does not make any difference for the eigenvectors
-          scores[[group]] = NA
-          schatterF[[group]] = t(sqrt(TT) * eigen(temp)$vectors[,1:number_of_group_factors[group]])
+          if(exists("NO_CZ_YES_MACRO")) {
+            temp = prepare_for_robpca(Wj)
+            temp2 = robustpca(temp, number_of_group_factors[group])
+            schatterF[[group]] = t(sqrt(TT) * temp2[[1]]) #robust pca
+            scores[[group]] = temp2[[2]]
+            rm(temp2)
+          } else {
+            temp = t(Wj)%*%Wj #dividing by NT does not make any difference for the eigenvectors
+            scores[[group]] = NA
+            schatterF[[group]] = t(sqrt(TT) * eigen(temp)$vectors[,1:number_of_group_factors[group]])
+          }
 
         } else {
           if(nrow(Wj) < 3) message("This group contains a very small number of elements. -> macropca can not work -> use non-robust estimation of factors")
@@ -1881,8 +1893,11 @@ calculate_lambda <- function(theta, comfactor, g, lgfg_list, initialise = FALSE,
 
   if(use_robust) {
     #CHANGE LOCATION 6/7
-    # lambda = return_robust_lambdaobject(W, NA, type = 2, FACTOR = comfactor, number_of_common_factors = nrow(comfactor))
-    lambda = t(W %*% t(comfactor) / TT)
+    if(exists("NO_CZ_YES_MACRO")) {
+      lambda = return_robust_lambdaobject(W, NA, type = 2, FACTOR = comfactor, number_of_common_factors = nrow(comfactor))
+    } else {
+      lambda = t(W %*% t(comfactor) / TT)
+    }
   } else {
     lambda = t(W %*% t(comfactor) / TT)
   }
@@ -1932,19 +1947,22 @@ calculate_lambda_group <- function(theta, factor_group, g, lambda, comfactor, in
       if(use_robust) {
 
         #CHANGE LOCATION 7/7
-        # #Since in the classical approach each lambda is the mean of a set of products of F and Y (Z),
-        # #   (lambda_N1 = (F_T1 * Y_N1T1 + F_T2 * Y_N1T2 + ...) / TT)
-        # #   we can replace this mean by an M-estimator in the robust approach
-        # if(UPDATE1) {
-        #   lambda_local[[group]] = return_robust_lambdaobject(Wj, group, type = 3, FACTOR_GROUP = factor_group, number_of_group_factors = unlist(lapply(factor_group, nrow)))
-        # } else {
-        #   lambda_local[[group]] = return_robust_lambdaobject(Wj, group, type = 3)
-        # }
-        FGG = factor_group[[group]]
-        if(dim(t(FGG))[1] == 1) {
-          FGG = matrix(FGG, nrow = 1)
+        if(exists("NO_CZ_YES_MACRO")) {
+          #Since in the classical approach each lambda is the mean of a set of products of F and Y (Z),
+          #   (lambda_N1 = (F_T1 * Y_N1T1 + F_T2 * Y_N1T2 + ...) / TT)
+          #   we can replace this mean by an M-estimator in the robust approach
+          if(UPDATE1) {
+            lambda_local[[group]] = return_robust_lambdaobject(Wj, group, type = 3, FACTOR_GROUP = factor_group, number_of_group_factors = unlist(lapply(factor_group, nrow)))
+          } else {
+            lambda_local[[group]] = return_robust_lambdaobject(Wj, group, type = 3)
+          }
+        } else {
+          FGG = factor_group[[group]]
+          if(dim(t(FGG))[1] == 1) {
+            FGG = matrix(FGG, nrow = 1)
+          }
+          lambda_local[[group]] = Wj %*% t(FGG) / TT
         }
-        lambda_local[[group]] = Wj %*% t(FGG) / TT
 
 
       } else {
