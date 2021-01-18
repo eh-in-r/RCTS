@@ -530,6 +530,7 @@ initialise_theta <- function(eclipz = FALSE,
 #' these are robust.
 #' @param group number of group
 #' @param solve_FG_FG_times_FG This is the same as groupfactor / T. It is only used in the Classical approach
+#' @param use_macropca_instead_of_cz If TRUE, then factors are estimated with macropca, else with class-zero-method.
 #' @inheritParams estimate_theta
 #' @return NxT matrix containing the product of virtual groupfactors and virtual loadings
 
@@ -538,7 +539,8 @@ calculate_virtual_factor_and_lambda_group <- function(group, solve_FG_FG_times_F
                                                       number_of_variables = aantalvars,
                                                       number_vars_estimated = SCHATTEN_MET_AANTALVARS,
                                                       number_of_group_factors = aantalfactoren_groups,
-                                                      number_of_common_factors = aantalfactoren_common) {
+                                                      number_of_common_factors = aantalfactoren_common,
+                                                      use_macropca_instead_of_cz ) {
   FG = factor_group[[group]]
   indices = 1:NN
   LF = t(lambda) %*% comfactor
@@ -555,7 +557,7 @@ calculate_virtual_factor_and_lambda_group <- function(group, solve_FG_FG_times_F
   #robust grouplambda:
   if(use_robust) {
     #CHANGE LOCATION 5/7
-    if(exists("NO_CZ_YES_MACRO")) {
+    if(use_macropca_instead_of_cz) {
       #we need a robust version of the virtual factorstructure:
       LG_local = return_robust_lambdaobject(Y_ster, group, type = 1,
                                              NN = NN,
@@ -816,7 +818,8 @@ update_g <- function(NN = aantal_N, TT = aantal_T,
                                                                                                                         number_of_variables = number_of_variables,
                                                                                                                         number_vars_estimated = number_vars_estimated,
                                                                                                                         number_of_group_factors = number_of_group_factors,
-                                                                                                                        number_of_common_factors = number_of_common_factors))
+                                                                                                                        number_of_common_factors = number_of_common_factors,
+                                                                                                                        use_macropca_instead_of_cz = use_macropca_instead_of_cz))
 
 
   } else {
@@ -874,6 +877,7 @@ update_g <- function(NN = aantal_N, TT = aantal_T,
 
 #' Function that puts individuals in a separate "class zero", when their distance to all possible groups is bigger then a threshold.
 #'
+#' It starts with defining a robust location and scatter (based on Ma & Genton (2000): Highly robust estimation of the autocovariance function)
 #' @return new clustering, including class zero
 clustering_with_robust_distances <- function(g, number_of_groups) {
   RD = matrix(NA, nrow = number_of_groups, ncol = nrow(Y)) #every row contains the distances to a certain group, and every column is 1 individual
@@ -882,8 +886,7 @@ clustering_with_robust_distances <- function(g, number_of_groups) {
     s = apply(Y[g==group,], 2, "Qn")
     x = Y[g==group, 2:ncol(Y)]
     laggedx = Y[g==group,1:(ncol(Y)-1)]
-    r = corQn( as.vector(x), as.vector(laggedx))
-    print(r)
+    r = corQn( as.vector(x), as.vector(laggedx)) #Computes the robust correlation of x and y
 
     ar1_cor <- function(n, rho) {
       exponent <- abs(matrix(1:n - 1, nrow = n, ncol = n, byrow = TRUE) -
@@ -908,15 +911,11 @@ clustering_with_robust_distances <- function(g, number_of_groups) {
   #define limit as 99%-quantile of chi-squared distribution:
   #if for an individual the robust distance for every group is larger then the limit, the individual is put to class zero
   limit = sqrt(qchisq(0.99, ncol(Y), ncp = 0, log = FALSE))
-  if(exists("USE_999")) {
-    limit = sqrt(qchisq(0.999, ncol(Y), ncp = 0, log = FALSE))
-  }
+
   minimum_distance = apply(RD, 2, min)
   limit_empirical = quantile(minimum_distance, 0.75) #
-  cases = which(minimum_distance > limit) #those cases go to class zero
-  if(exists("USE_MAX_OF_TWO_LIMITS")) {
-    cases = which(minimum_distance > max(limit,limit_empirical)) #those cases go to class zero
-  }
+  cases = which(minimum_distance > max(limit,limit_empirical)) #those cases go to class zero
+
   # message("limits are:")
   # print(limit)
   # print(limit_empirical)
@@ -1144,33 +1143,30 @@ determine_theta <- function(string, X_special,Y_special, correct, initialisatie 
   if(use_robust) {
     model <- LMROB(Y_special, X_special) #-> lmrob(Y_special ~ X_special, setting="KS2014")
   } else {
-    #when "lmrob_and_classpca" exists, we use lmrob and classical pca
-    if(exists("lmrob_and_classpca")) {
-      model <- LMROB(Y_special, X_special)
-    } else {
 
-      #ncvreg, without weights
-      model <- ncvreg(X_special, Y_special, family="gaussian", penalty="SCAD",lambda=(kappa_candidates))
-      if(optimize_kappa) {
-        minBIC <- 10^10
-        best_lami = 0
-        #print("indices")
-        #print(indices)
-        for(LAMi in 1:length(kappa_candidates)){
+
+    #ncvreg, without weights
+    model <- ncvreg(X_special, Y_special, family="gaussian", penalty="SCAD",lambda=(kappa_candidates))
+    if(optimize_kappa) {
+      minBIC <- 10^10
+      best_lami = 0
+      #print("indices")
+      #print(indices)
+      for(LAMi in 1:length(kappa_candidates)){
+        theta_temp <- model$beta[,LAMi] #c(0,model$beta)[-2,LAMi]
+        BIC <- sum( (Y[indices,]-cbind(1,X[indices,,]) %*% theta_temp )^2 )/(TT) + C * sigma2_max_model * log(TT)*sum(theta_temp!=0)/(TT)
+
+        if(BIC<=minBIC){
+          best_lami = LAMi
+          minBIC <- BIC
           theta_temp <- model$beta[,LAMi] #c(0,model$beta)[-2,LAMi]
-          BIC <- sum( (Y[indices,]-cbind(1,X[indices,,]) %*% theta_temp )^2 )/(TT) + C * sigma2_max_model * log(TT)*sum(theta_temp!=0)/(TT)
-
-          if(BIC<=minBIC){
-            best_lami = LAMi
-            minBIC <- BIC
-            theta_temp <- model$beta[,LAMi] #c(0,model$beta)[-2,LAMi]
-          }
         }
-        #print(kappa_candidates[best_lami]) #-> so this is kappa[i]
-        #Sys.sleep(0.1)
-        return(theta_temp)
       }
+      #print(kappa_candidates[best_lami]) #-> so this is kappa[i]
+      #Sys.sleep(0.1)
+      return(theta_temp)
     }
+
   }
 
 
@@ -1211,6 +1207,7 @@ determine_theta <- function(string, X_special,Y_special, correct, initialisatie 
 #' @param number_of_variables number of observable variables
 #' @param number_vars_estimated number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.
 #' @param num_factors_may_vary whether or not the number of groupfactors is constant over all groups or not
+#' @param use_median_of_individual_theta for testing purposes
 #' @return list: 1st element contains matrix (N columns: 1 for each element of the panel data) with estimated theta's.
 #' @examples
 #' #This function needs several initial parameters to be initialized in order to work on itself.
@@ -1240,14 +1237,15 @@ determine_theta <- function(string, X_special,Y_special, correct, initialisatie 
 #'  number_of_variables = 3,number_vars_estimated=3,num_factors_may_vary=FALSE)[[1]]
 #' @export
 estimate_theta <- function(optimize_kappa = FALSE, eclipz = FALSE,
-                                  NN = aantal_N,
-                                  TT = aantal_T,
-                                  number_of_groups = aantalgroepen,
-                                  number_of_group_factors = aantalfactoren_groups,
-                                  number_of_common_factors = aantalfactoren_common,
-                                  number_of_variables = aantalvars,
-                                  number_vars_estimated = SCHATTEN_MET_AANTALVARS,
-                                  num_factors_may_vary = aantalfactors_verschillend_per_group) {
+                           NN = aantal_N,
+                           TT = aantal_T,
+                           number_of_groups = aantalgroepen,
+                           number_of_group_factors = aantalfactoren_groups,
+                           number_of_common_factors = aantalfactoren_common,
+                           number_of_variables = aantalvars,
+                           number_vars_estimated = SCHATTEN_MET_AANTALVARS,
+                           num_factors_may_vary = aantalfactors_verschillend_per_group,
+                           use_median_of_individual_theta = exists("USE_MEDIAN_OF_INDIVIDUAL_THETA")) {
   if(number_vars_estimated > 0) {
 
 
@@ -1359,7 +1357,10 @@ estimate_theta <- function(optimize_kappa = FALSE, eclipz = FALSE,
       } else {
         #note that mapply would be about 10% faster
         theta = map2(X_special_list, Y_special_list,  function(x,y) determine_theta("heterogeen",x, y, TRUE, indices = NA,  TT = TT, number_of_variables = number_of_variables) )
-        #theta_new = mapply( function(x,y) { determine_theta("heterogeen",x, y, TRUE, indices = NA,  TT = TT, number_of_variables = number_of_variables) }, x = X_special_list, y = y_special_list )
+        theta_new = mapply( function(x,y) { determine_theta("heterogeen",x, y, TRUE, indices = NA,  TT = TT, number_of_variables = number_of_variables) }, x = X_special_list, y = y_special_list )
+        message("check map2 and mapply ")
+        print(summary(c(theta - theta_new)))
+        Sys.sleep(3)
 
       }
       ########################################################
@@ -1372,7 +1373,7 @@ estimate_theta <- function(optimize_kappa = FALSE, eclipz = FALSE,
 
       theta = matrix(unlist(theta),ncol = NN)
 
-      if(exists("USE_MEDIAN_OF_INDIVIDUAL_THETA")) {
+      if(use_median_of_individual_theta) {
         theta = use_median_values_theta(theta, g, number_of_groups)
       }
 
@@ -1452,25 +1453,29 @@ calculate_W <- function(theta, g ,
 #' Calculates Z = Y - X*THETA - LgFg, to use in estimate of common factorstructure
 #' @inheritParams calculate_W
 #' @param lgfg_list This is a list (length number of groups) containing FgLg for every group.
+#' @param use_pertmm indicates that factors are estimated with pertMM
 #' @param initialise boolean
 #' @inheritParams estimate_theta
 #' @export
-calculate_Z_common <- function(theta, g, lgfg_list, initialise = FALSE,
+calculate_Z_common <- function(theta, g, lgfg_list,
+                               use_pertmm,
+                               initialise = FALSE,
                                NN = aantal_N,
                                TT = aantal_T,
                                number_of_variables = aantalvars,
                                number_vars_estimated = SCHATTEN_MET_AANTALVARS,
-                               number_of_group_factors = aantalfactoren_groups, eclipz = FALSE) {
+                               number_of_group_factors = aantalfactoren_groups, eclipz = FALSE
+                               ) {
   Z = matrix(0, nrow = NN, ncol = TT) #T x N-matrix in paper , maar ik definieer liever als NxT
 
-  #if number_vars_estimated < number_of_variables the obsoleterows in theta were already erased -> do the same in X
+  #if number_vars_estimated < number_of_variables the obsolete rows in theta were already erased -> do the same in X
   X = adapt_X_estimating_less_variables(number_of_variables, number_vars_estimated, eclipz)
 
   for(i in 1:NN) {
     y = Y[i,] %>% as.numeric
     if(do_we_estimate_group_factors(number_of_group_factors)) { #when there are group factors to be estimated
-      if(exists("TESTPERTMM") & class(lgfg_list) != "list") {
-        #then lgfg_list is not a list, but a df of dimension NxT
+      if(use_pertmm & class(lgfg_list) != "list") {
+        #then lgfg_list is not a list, but a data frame of dimension NxT
         LF_GROUP = lgfg_list[i,]
       } else {
         if(g[i] == 0) { #class zero
@@ -1595,7 +1600,7 @@ evade_crashes_macropca <- function(object) {
 #' @param temp this is the result of the trycatch block of using macropca on object
 #' @param KMAX parameter kmax in MacroPCA
 #' @param number_eigenvectors number of principal components that are needed
-handle_macropca_errors <- function(object,temp,KMAX,number_eigenvectors) {
+handle_macropca_errors <- function(object, temp, KMAX, number_eigenvectors) {
 
   if("error" %in% class(temp)) {
     message("*******************************")
@@ -1608,9 +1613,10 @@ handle_macropca_errors <- function(object,temp,KMAX,number_eigenvectors) {
 
 
       temp =  tryCatch(
-          cellWise::MacroPCA(object, k = max(12, number_eigenvectors) - teller, MacroPCApars = list(kmax=KMAX))$loadings[,1:number_eigenvectors],
+          cellWise::MacroPCA(object, k = max(12, number_eigenvectors) - teller, MacroPCApars = list(kmax=KMAX)),
           error = function(e) { message(e); return(e) }
       )
+      temp = temp$loadings[,1:number_eigenvectors]
 
       if(teller >= 10) {
         message("-------------infinite loop (MacroPCA does not work with any k) -> use (classical) eigen(): has to be squared matrix -> take covariance matrix of object-------------")
@@ -1649,7 +1655,7 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20) {
   ######################
   # MacroPCA
   ######################
-
+  error_macropca = FALSE
   object = evade_crashes_macropca(object)
 
     print(number_eigenvectors)
@@ -1677,25 +1683,33 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20) {
 
     }
     temp =  tryCatch(
-      cellWise::MacroPCA(object, k = max(macropca_kmax, number_eigenvectors), MacroPCApars = list(kmax=KMAX))$loadings[,1:number_eigenvectors],
+      cellWise::MacroPCA(object, k = max(macropca_kmax, number_eigenvectors), MacroPCApars = list(kmax=KMAX)),
       error = function(e) { message(e); return(e) }
     )
-    print(class(temp))
-    if(class(temp) == "numeric") { #case of estimating 1 factor -> numeric -> make matrix
-      temp = matrix(temp)
+    if("error" %in% class(temp)) {
+      error_macropca = TRUE
     }
-    if(!("error" %in% class(temp))) {
-        if(nrow(temp) != ncol(object)) {
+    scores = temp$scores[,1:number_eigenvectors] #these are the factor loadings
+    factors_macropca = temp$loadings[,1:number_eigenvectors] #these are the factors
+    message(class(factors_macropca)) #should be matrix
+    if(class(factors_macropca) == "numeric") { #case of estimating 1 factor -> numeric -> make matrix
+      factors_macropca = matrix(factors_macropca)
+    }
+    if(!error_macropca) {
+        #rare issue with macropca
+        if(nrow(factors_macropca) != ncol(object)) {
           print(dim(object))
-          print(dim(temp))
+          print(dim(factors_macropca))
           message("--MacroPCA has dropped a column---") #This leads to wrong dimensions in the factors, and gives error in rstudio.
           Sys.sleep(3)
         }
-
-
     }
-    temp = handle_macropca_errors(object, temp, KMAX,number_eigenvectors)
-    return(list(temp,NA))
+    if(error_macropca) {
+      temp = handle_macropca_errors(object, temp, KMAX,number_eigenvectors)
+      message("do scores exist now?")
+      message(scores)
+    }
+    return(list(factors_macropca,scores))
 
 
 }
@@ -1724,9 +1738,12 @@ get_robust_covmatrix <- function(object, ALPHA = ALPHA_COVMRCD) {
 #' @param lgfg_list This is a list (length number of groups) containing FgLg for every group.
 #' @param initialise boolean
 #' @inheritParams estimate_theta
+#' @inheritParams calculate_virtual_factor_and_lambda_group
 #' @return r x T matrix
 #' @export
-estimate_factor <- function(theta, g, lgfg_list, initialise = FALSE,
+estimate_factor <- function(theta, g, lgfg_list,
+                            use_macropca_instead_of_cz,
+                            initialise = FALSE,
                             NN = aantal_N,
                             TT = aantal_T,
                             number_of_common_factors = aantalfactoren_common) {
@@ -1749,10 +1766,10 @@ estimate_factor <- function(theta, g, lgfg_list, initialise = FALSE,
 
   #Define the object on which (robust or classical) PCA will be performed
   if(use_robust) {
-    if(exists("NO_CZ_YES_MACRO")) {
+    #CHANGE LOCATION 4/7
+    if(use_macropca_instead_of_cz) {
       temp = prepare_for_robpca(W)
     } else {
-      #CHANGE LOCATION 4/7
       temp = t(W)%*%W / (NN * TT)
     }
   } else {
@@ -1768,17 +1785,19 @@ estimate_factor <- function(theta, g, lgfg_list, initialise = FALSE,
   #take number_of_common_factors eigenvectors
   if(use_robust) {
     message(str_c("Estimate ",number_of_common_factors," common factors"))
-    if(exists("NO_CZ_YES_MACRO")) {
-      temp2 = robustpca(temp, number_of_common_factors) #robust pca
+    #CHANGE LOCATION 1/7
+    if(use_macropca_instead_of_cz) {
+      temp2 = robustpca(temp, number_of_common_factors)
       schatterF = t(sqrt(TT) * temp2[[1]])
-      scores = temp2[[2]]
+      scores = temp2[[2]] #=factor loadings coming out of macropca
       rm(temp2)
     } else {
-      #CHANGE LOCATION 1/7
       schatterF = t(sqrt(TT) * eigen(temp)$vectors[,1:number_of_common_factors])
+      scores = NA #because loadings will be calculated later
     }
   } else {
     schatterF = t(sqrt(TT) * eigen(temp)$vectors[,1:number_of_common_factors])
+    scores = NA #because loadings will be calculated later
   }
   if(number_of_common_factors == 0) {
     #then schatterF is TT, which is still an apropriate size to use in this case -> just set to zero
@@ -1786,7 +1805,7 @@ estimate_factor <- function(theta, g, lgfg_list, initialise = FALSE,
   }
 
 
-  return(schatterF)
+  return(list(schatterF, scores))
 }
 
 #' Helpfunction: prepares object to perform robust PCA on.
@@ -1814,12 +1833,17 @@ prepare_for_robpca <- function(object, NN = aantal_N, TT = aantal_T, option = 3)
 #' @param comfactor common factors
 #' @param initialise boolean
 #' @inheritParams estimate_theta
+#' @inheritParams calculate_virtual_factor_and_lambda_group
 #' @export
-estimate_factor_group <- function(theta, g, lambda, comfactor, initialise = FALSE,
+estimate_factor_group <- function(theta, g, lambda, comfactor,
+                                  use_macropca_instead_of_cz,
+                                  initialise = FALSE,
                                   NN = aantal_N,
                                   TT = aantal_T,
                                   number_of_groups = aantalgroepen,
-                                  number_of_group_factors = aantalfactoren_groups) {
+                                  number_of_group_factors = aantalfactoren_groups
+                                  #returnscores = FALSE
+                                  ) {
   schatterF = list()
   scores = list()
 
@@ -1840,7 +1864,7 @@ estimate_factor_group <- function(theta, g, lambda, comfactor, initialise = FALS
 
 
           #CHANGE LOCATION 2/7
-          if(exists("NO_CZ_YES_MACRO")) {
+          if(use_macropca_instead_of_cz) {
             temp = prepare_for_robpca(Wj)
             temp2 = robustpca(temp, number_of_group_factors[group])
             schatterF[[group]] = t(sqrt(TT) * temp2[[1]]) #robust pca
@@ -1848,7 +1872,7 @@ estimate_factor_group <- function(theta, g, lambda, comfactor, initialise = FALS
             rm(temp2)
           } else {
             temp = t(Wj)%*%Wj #dividing by NT does not make any difference for the eigenvectors
-            scores[[group]] = NA
+            scores[[group]] = NA #because loadings will be calculated later
             schatterF[[group]] = t(sqrt(TT) * eigen(temp)$vectors[,1:number_of_group_factors[group]])
           }
 
@@ -1856,7 +1880,7 @@ estimate_factor_group <- function(theta, g, lambda, comfactor, initialise = FALS
           if(nrow(Wj) < 3) message("This group contains a very small number of elements. -> macropca can not work -> use non-robust estimation of factors")
 
           temp = t(Wj)%*%Wj #dividing by NT does not make any difference for the eigenvectors
-          scores[[group]] = NA
+          scores[[group]] = NA #because loadings will be calculated later
           schatterF[[group]] = t(sqrt(TT) * eigen(temp)$vectors[,1:number_of_group_factors[group]])
         }
 
@@ -1864,11 +1888,18 @@ estimate_factor_group <- function(theta, g, lambda, comfactor, initialise = FALS
 
       } else {
         schatterF[[group]] = matrix(0, 1, TT)
+        scores[[group]] = NA #because loadings will be calculated later
       }
     }
   }
 
 
+
+
+  #as test:
+  # if(returnscores) {
+  #   return(scores)
+  # }
   return(schatterF)
 }
 
@@ -1878,8 +1909,11 @@ estimate_factor_group <- function(theta, g, lambda, comfactor, initialise = FALS
 #' @param lgfg_list This is a list (length number of groups) containing FgLg for every group.
 #' @param initialise boolean
 #' @inheritParams estimate_theta
+#' @inheritParams calculate_virtual_factor_and_lambda_group
 #' @export
-calculate_lambda <- function(theta, comfactor, g, lgfg_list, initialise = FALSE,
+calculate_lambda <- function(theta, comfactor, g, lgfg_list,
+                             use_macropca_instead_of_cz,
+                             initialise = FALSE,
                              NN = aantal_N, TT = aantal_T,
                              number_of_common_factors = aantalfactoren_common) {
 
@@ -1893,7 +1927,7 @@ calculate_lambda <- function(theta, comfactor, g, lgfg_list, initialise = FALSE,
 
   if(use_robust) {
     #CHANGE LOCATION 6/7
-    if(exists("NO_CZ_YES_MACRO")) {
+    if(use_macropca_instead_of_cz) {
       lambda = return_robust_lambdaobject(W, NA, type = 2, FACTOR = comfactor, number_of_common_factors = nrow(comfactor))
     } else {
       lambda = t(W %*% t(comfactor) / TT)
@@ -1929,8 +1963,11 @@ calculate_lambda <- function(theta, comfactor, g, lgfg_list, initialise = FALSE,
 #' @param UPDATE2 option to indicate the number of common factors is updated during the algorithm; defults to FALSE
 #' @inheritParams estimate_theta
 #' @inheritParams calculate_W
+#' @inheritParams calculate_virtual_factor_and_lambda_group
 #' @export
-calculate_lambda_group <- function(theta, factor_group, g, lambda, comfactor, initialise = FALSE,
+calculate_lambda_group <- function(theta, factor_group, g, lambda, comfactor,
+                                   use_macropca_instead_of_cz,
+                                   initialise = FALSE,
                                    UPDATE1 = update1, UPDATE2 = update2,
                                    NN = aantal_N,
                                    TT = aantal_T,
@@ -1947,7 +1984,7 @@ calculate_lambda_group <- function(theta, factor_group, g, lambda, comfactor, in
       if(use_robust) {
 
         #CHANGE LOCATION 7/7
-        if(exists("NO_CZ_YES_MACRO")) {
+        if(use_macropca_instead_of_cz) {
           #Since in the classical approach each lambda is the mean of a set of products of F and Y (Z),
           #   (lambda_N1 = (F_T1 * Y_N1T1 + F_T2 * Y_N1T2 + ...) / TT)
           #   we can replace this mean by an M-estimator in the robust approach
@@ -2506,13 +2543,13 @@ calculate_PIC <- function(C, number_of_common_factors, number_of_group_factors, 
 #' @inheritParams estimate_theta
 #' @export
 calculate_XT_real <- function(NN = aantal_N, TT = aantal_T, number_of_variables = aantalvars) {
-  if(homogeneous_coefficients) { #relevant for DGP5 (BRamatiCroux)
+  if(homogeneous_coefficients) { #This is only relevant for DGP5 (BramatiCroux)
     XT_real = theta_real[1,] + X[,,1] * theta_real[1,]
     stopifnot(number_of_variables == 1)
   }
   if(heterogeneous_coefficients_groups) {
     if(number_of_variables > 0 & !eclipz & exists("g")) {
-      message("Note that this is not the default option. Extend code (calculate_XT_real()) if needed.")
+      message("Note that this is not the default option. Extend code (calculate_XT_real()) if at some point needed.")
       if(!is.na(g)) {
         XT_real = t(sapply(1:NN,
                               function(x) matrix(cbind(1, X[x,,]) %*% theta_real[,g[x]], nrow = 1)))
@@ -2601,6 +2638,7 @@ calculate_XT_estimated <- function(NN = aantal_N, TT = aantal_T,
 #' @param number_of_groups_real real number of groups
 #' @param number_of_group_factors_real real number of group factors for each group
 #' @param number_of_common_factors_real real number of common factors
+#' @param using_bramaticroux parameter to indicate that we are using data generated with dgp 5
 #' @inheritParams estimate_theta
 #' @inheritParams generate_Y
 #' @param ABDGP1_local gives information about which DGP we use; TRUE of FALSE
@@ -2612,9 +2650,10 @@ calculate_FL_group_real <- function(NN = aantal_N, TT = aantal_T,
                                     number_of_common_factors_real = aantalfactoren_common_real,
                                     num_factors_may_vary = aantalfactors_verschillend_per_group,
                                     eclipz = FALSE,
-                                    ABDGP1_local = ABDGP1) {
+                                    ABDGP1_local = ABDGP1,
+                                    using_bramaticroux = exists("DGP_Bramati_Croux")) {
 
-  if(exists("DGP_Bramati_Croux")) { #when using DGP5 there are no factors -> return NA
+  if(using_bramaticroux) { #when using DGP5 there are no factors -> return NA
     return(NA)
   }
 
@@ -2818,7 +2857,7 @@ calculate_VCsquared <- function(rcj,rc,C_candidates, UPDATE1 = FALSE, UPDATE2 = 
 #' @param parameter_y dependent variable in regression
 #' @param parameter_x independent variables in regression
 #' @param nointercept if TRUE it performs regression without an intercept
-#' @param nosetting option to remove the recommended setting in lmrob(). It is faster. Defaults to FALSE.
+#' @param nosetting option to remove the recommended setting in lmrob(). It is much faster. Defaults to FALSE.
 #' @export
 LMROB <- function(parameter_y, parameter_x, nointercept = FALSE, nosetting = exists("run_lmrob_without_setting")) {
 
