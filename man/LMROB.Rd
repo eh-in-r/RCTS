@@ -18,7 +18,7 @@ LMROB(
 
 \item{nointercept}{if TRUE it performs regression without an intercept}
 
-\item{nosetting}{option to remove the recommended setting in lmrob(). It is faster. Defaults to FALSE.}
+\item{nosetting}{option to remove the recommended setting in lmrob(). It is much faster. Defaults to FALSE.}
 }
 \description{
 Desgined to make sure the following error does not happen anymore:

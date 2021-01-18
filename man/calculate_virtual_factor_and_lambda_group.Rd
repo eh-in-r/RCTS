@@ -12,11 +12,12 @@ calculate_virtual_factor_and_lambda_group(
   number_of_variables = aantalvars,
   number_vars_estimated = SCHATTEN_MET_AANTALVARS,
   number_of_group_factors = aantalfactoren_groups,
-  number_of_common_factors = aantalfactoren_common
+  number_of_common_factors = aantalfactoren_common,
+  use_macropca_instead_of_cz
 )
 }
 \arguments{
-\item{group}{number of group}
+\item{group}{number of groups}
 
 \item{solve_FG_FG_times_FG}{This is the same as groupfactor / T. It is only used in the Classical approach}
 
@@ -31,6 +32,8 @@ calculate_virtual_factor_and_lambda_group(
 \item{number_of_group_factors}{number of groupfactors estimated}
 
 \item{number_of_common_factors}{number of common factors estimated}
+
+\item{use_macropca_instead_of_cz}{If TRUE, then factors are estimated with macropca, else with class-zero-method.}
 }
 \value{
 NxT matrix containing the product of virtual groupfactors and virtual loadings

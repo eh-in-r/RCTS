@@ -9,6 +9,7 @@ estimate_factor_group(
   g,
   lambda,
   comfactor,
+  use_macropca_instead_of_cz,
   initialise = FALSE,
   NN = aantal_N,
   TT = aantal_T,
@@ -24,6 +25,8 @@ estimate_factor_group(
 \item{lambda}{common factor loadings}
 
 \item{comfactor}{common factors}
+
+\item{use_macropca_instead_of_cz}{If TRUE, then factors are estimated with macropca, else with class-zero-method.}
 
 \item{initialise}{boolean}
 

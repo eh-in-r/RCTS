@@ -14,7 +14,8 @@ estimate_theta(
   number_of_common_factors = aantalfactoren_common,
   number_of_variables = aantalvars,
   number_vars_estimated = SCHATTEN_MET_AANTALVARS,
-  num_factors_may_vary = aantalfactors_verschillend_per_group
+  num_factors_may_vary = aantalfactors_verschillend_per_group,
+  use_median_of_individual_theta = exists("USE_MEDIAN_OF_INDIVIDUAL_THETA")
 )
 }
 \arguments{
@@ -37,6 +38,8 @@ estimate_theta(
 \item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
 
 \item{num_factors_may_vary}{whether or not the number of groupfactors is constant over all groups or not}
+
+\item{use_median_of_individual_theta}{for testing purposes}
 }
 \value{
 list: 1st element contains matrix (N columns: 1 for each element of the panel data) with estimated theta's.

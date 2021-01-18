@@ -8,6 +8,7 @@ calculate_Z_common(
   theta,
   g,
   lgfg_list,
+  use_pertmm,
   initialise = FALSE,
   NN = aantal_N,
   TT = aantal_T,
@@ -23,6 +24,8 @@ calculate_Z_common(
 \item{g}{vector with group membership}
 
 \item{lgfg_list}{This is a list (length number of groups) containing FgLg for every group.}
+
+\item{use_pertmm}{indicates that factors are estimated with pertMM}
 
 \item{initialise}{boolean}
 

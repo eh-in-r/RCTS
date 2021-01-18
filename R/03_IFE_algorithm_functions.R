@@ -528,7 +528,7 @@ initialise_theta <- function(eclipz = FALSE,
 #' We calculate FgLg (the groupfactorstructure) for all  possible groups where individual i can be placed. For each group we have before estimated
 #' the groupfactors (Fg). Now we need to the grouploadings for each group as well. In the classical case these are calculated by Fg*Y/T. In the robust case
 #' these are robust.
-#' @param group number of group
+#' @param group number of groups
 #' @param solve_FG_FG_times_FG This is the same as groupfactor / T. It is only used in the Classical approach
 #' @param use_macropca_instead_of_cz If TRUE, then factors are estimated with macropca, else with class-zero-method.
 #' @inheritParams estimate_theta
@@ -877,6 +877,8 @@ update_g <- function(NN = aantal_N, TT = aantal_T,
 
 #' Function that puts individuals in a separate "class zero", when their distance to all possible groups is bigger then a threshold.
 #'
+#' @param g vector with group membership
+#' @param number_of_groups number of groups
 #' It starts with defining a robust location and scatter (based on Ma & Genton (2000): Highly robust estimation of the autocovariance function)
 #' @return new clustering, including class zero
 clustering_with_robust_distances <- function(g, number_of_groups) {
@@ -1356,7 +1358,9 @@ estimate_theta <- function(optimize_kappa = FALSE, eclipz = FALSE,
         theta = pmap(list(X_special_list, Y_special_list, 1:NN),  function(x,y,z) determine_theta("heterogeen",x, y, TRUE, indices = z,  TT = TT, number_of_variables = number_of_variables) )
       } else {
         #note that mapply would be about 10% faster
+        message("1")
         theta = map2(X_special_list, Y_special_list,  function(x,y) determine_theta("heterogeen",x, y, TRUE, indices = NA,  TT = TT, number_of_variables = number_of_variables) )
+        message("2")
         theta_new = mapply( function(x,y) { determine_theta("heterogeen",x, y, TRUE, indices = NA,  TT = TT, number_of_variables = number_of_variables) }, x = X_special_list, y = y_special_list )
         message("check map2 and mapply ")
         print(summary(c(theta - theta_new)))
@@ -2104,7 +2108,6 @@ grid_add_variables <- function(grid, theta, lambda, comfactor,
                                number_of_variables = aantalvars,
                                number_vars_estimated = SCHATTEN_MET_AANTALVARS,
                                number_of_groups = aantalgroepen) {
-  stopifnot(!heterogeneous_coefficients_groups | (number_of_groups >= 0 & number_of_groups < LIMIET_AANTAL_GROEPEN_heterogroups)) #code exists up to 11 groups
   if(number_of_variables > 0) {
     #for homogeneous theta (1 -> 4 at this moment), we only need 1 column as all columns are the same
     if(homogeneous_coefficients) {
@@ -2113,6 +2116,8 @@ grid_add_variables <- function(grid, theta, lambda, comfactor,
       grid$XTHETA =  (apply(grid, 1, function(x) c(1, X[x[1],x[2],]) %*% theta_used))
     } else {
       if(heterogeneous_coefficients_groups) {
+        stopifnot((number_of_groups >= 0 & number_of_groups < LIMIT_NUMBER_OF_GROUPS_heterogroups)) #code exists up to 11 groups
+
         #for each group: define XT
         if(number_of_groups > 0) grid$XTHETA1 = (apply(grid, 1, function(x) c(1, X[x[1],x[2],]) %*% theta[,1]))
         if(number_of_groups > 1) grid$XTHETA2 = (apply(grid, 1, function(x) c(1, X[x[1],x[2],]) %*% theta[,2]))
@@ -2125,7 +2130,7 @@ grid_add_variables <- function(grid, theta, lambda, comfactor,
         if(number_of_groups > 8) grid$XTHETA9 = (apply(grid, 1, function(x) c(1, X[x[1],x[2],]) %*% theta[,9]))
         if(number_of_groups > 9) grid$XTHETA10 = (apply(grid, 1, function(x) c(1, X[x[1],x[2],]) %*% theta[,10]))
         if(number_of_groups > 10) grid$XTHETA11 = (apply(grid, 1, function(x) c(1, X[x[1],x[2],]) %*% theta[,11]))
-        # if(number_of_groups > LIMIET_AANTAL_GROEPEN_heterogroups) {
+        # if(number_of_groups > LIMIT_NUMBER_OF_GROUPS_heterogroups) {
         #   message("add code (grid_add_variables")
         #   Sys.sleep(900)
         # }
@@ -2861,7 +2866,7 @@ calculate_VCsquared <- function(rcj,rc,C_candidates, UPDATE1 = FALSE, UPDATE2 = 
 #' @export
 LMROB <- function(parameter_y, parameter_x, nointercept = FALSE, nosetting = exists("run_lmrob_without_setting")) {
 
-  if(is.na(parameter_x)) { #when there are no independent variables
+  if(is.na(parameter_x)[1]) { #when there are no independent variables
     result2 = tryCatch(
       {
         if(nosetting) {

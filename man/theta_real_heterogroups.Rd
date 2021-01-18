@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{theta_real_heterogroups}
 \alias{theta_real_heterogroups}
-\title{Helpfunction in create_theta_real() for the option theta_real_heterogeen_groups. (This is the deault option.)}
+\title{Helpfunction in create_theta_real() for the option theta_real_heterogeen_groups. (This is the default option.)}
 \usage{
 theta_real_heterogroups(
   number_of_variables,
@@ -18,5 +18,5 @@ theta_real_heterogroups(
 \item{EXTRA_THETA_FACTOR}{multiplies coefficients in theta; default = 1}
 }
 \description{
-Helpfunction in create_theta_real() for the option theta_real_heterogeen_groups. (This is the deault option.)
+Helpfunction in create_theta_real() for the option theta_real_heterogeen_groups. (This is the default option.)
 }

@@ -12,7 +12,8 @@ calculate_errors_virtual_groups(
   TT,
   number_of_variables,
   number_of_common_factors,
-  number_of_group_factors
+  number_of_group_factors,
+  number_vars_estimated = SCHATTEN_MET_AANTALVARS
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ calculate_errors_virtual_groups(
 \item{number_of_common_factors}{number of common factors estimated}
 
 \item{number_of_group_factors}{number of groupfactors estimated}
+
+\item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
 }
 \value{
 NxT matrix with errors (=Y - XB - FgLg - FL)

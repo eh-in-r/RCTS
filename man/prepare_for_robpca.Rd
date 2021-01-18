@@ -4,7 +4,7 @@
 \alias{prepare_for_robpca}
 \title{Helpfunction: prepares object to perform robust PCA on.}
 \usage{
-prepare_for_robpca(object, NN = aantal_N, TT = aantal_T)
+prepare_for_robpca(object, NN = aantal_N, TT = aantal_T, option = 3)
 }
 \arguments{
 \item{object}{this is the object of which we may take the covariance matrix and then to perform robust PCA on}
@@ -12,6 +12,8 @@ prepare_for_robpca(object, NN = aantal_N, TT = aantal_T)
 \item{NN}{N}
 
 \item{TT}{T}
+
+\item{option}{1 (robust covmatrix), 2 (classical covmatrix), 3 (no covmatrix)}
 }
 \description{
 It contains options to use the classical or robust covmatrix or no covariance matrix at all.

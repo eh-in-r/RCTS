@@ -14,7 +14,8 @@ calculate_FL_group_real(
   number_of_common_factors_real = aantalfactoren_common_real,
   num_factors_may_vary = aantalfactors_verschillend_per_group,
   eclipz = FALSE,
-  ABDGP1_local = ABDGP1
+  ABDGP1_local = ABDGP1,
+  using_bramaticroux = exists("DGP_Bramati_Croux")
 )
 }
 \arguments{
@@ -37,6 +38,8 @@ calculate_FL_group_real(
 \item{eclipz}{parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
 
 \item{ABDGP1_local}{gives information about which DGP we use; TRUE of FALSE}
+
+\item{using_bramaticroux}{parameter to indicate that we are using data generated with dgp 5}
 }
 \value{
 list with NjxT matrices

@@ -9,6 +9,7 @@ calculate_lambda(
   comfactor,
   g,
   lgfg_list,
+  use_macropca_instead_of_cz,
   initialise = FALSE,
   NN = aantal_N,
   TT = aantal_T,
@@ -23,6 +24,8 @@ calculate_lambda(
 \item{g}{vector with group membership}
 
 \item{lgfg_list}{This is a list (length number of groups) containing FgLg for every group.}
+
+\item{use_macropca_instead_of_cz}{If TRUE, then factors are estimated with macropca, else with class-zero-method.}
 
 \item{initialise}{boolean}
 

@@ -11,7 +11,8 @@ update_g(
   number_of_variables = aantalvars,
   number_vars_estimated = SCHATTEN_MET_AANTALVARS,
   number_of_group_factors = aantalfactoren_groups,
-  number_of_common_factors = aantalfactoren_common
+  number_of_common_factors = aantalfactoren_common,
+  use_class_zero = FALSE
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ update_g(
 \item{number_of_group_factors}{number of groupfactors estimated}
 
 \item{number_of_common_factors}{number of common factors estimated}
+
+\item{use_class_zero}{boolean: if set to TRUE, then individuals with high distance to all possible groups are put in a separate class zero}
 }
 \value{
 list: 1st element contains group membership and second element contains the values which are used to determine group membership

@@ -14,7 +14,8 @@ calculate_Z_group(
   TT = aantal_T,
   number_of_variables = aantalvars,
   number_vars_estimated = SCHATTEN_MET_AANTALVARS,
-  eclipz = FALSE
+  eclipz = FALSE,
+  number_of_common_factors = aantalfactoren_common
 )
 }
 \arguments{
@@ -37,6 +38,8 @@ calculate_Z_group(
 \item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
 
 \item{eclipz}{parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
+
+\item{number_of_common_factors}{number of common factors estimated}
 }
 \description{
 Calculates Z = Y - X*THETA - LF), to use in estimate of groupfactorstructure.

@@ -14,7 +14,7 @@ robustpca(object, number_eigenvectors, KMAX = 20)
 \item{KMAX}{The maximal number of principal components to compute. This is a paramater in cellWise::MacroPCA()}
 }
 \description{
-Contains Robpca (obsolete) and MacroPCA
+Contains MacroPCA
 }
 \details{
 Notes for MACROPCA:
@@ -23,5 +23,6 @@ this number needs to be big enough, otherwise eigen() will be used.
 Variation in k does give different results for lambda}factor
 
 NOTE: this function may (not certain) crash (in case of MACROPCA) when ncol(object) >> nrow(object)
-Actually it crashes with specific values of dim(object). For example when dim(object) = c(193,27)
+Actually it crashes with specific values of dim(object). For example when dim(object) = c(193,27).
+This is solved with evade_crashes_macropca()
 }

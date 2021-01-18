@@ -10,9 +10,11 @@ calculate_lambda_group(
   g,
   lambda,
   comfactor,
+  use_macropca_instead_of_cz,
   initialise = FALSE,
   UPDATE1 = update1,
   UPDATE2 = update2,
+  NN = aantal_N,
   TT = aantal_T,
   number_of_groups = aantalgroepen,
   number_of_group_factors = aantalfactoren_groups
@@ -29,11 +31,15 @@ calculate_lambda_group(
 
 \item{comfactor}{common factors}
 
+\item{use_macropca_instead_of_cz}{If TRUE, then factors are estimated with macropca, else with class-zero-method.}
+
 \item{initialise}{boolean}
 
 \item{UPDATE1}{option to indicate the number of groupfactors is updated during the algorithm; defults to FALSE}
 
 \item{UPDATE2}{option to indicate the number of common factors is updated during the algorithm; defults to FALSE}
+
+\item{NN}{number of individuals}
 
 \item{TT}{length of time series}
 
