@@ -1234,6 +1234,7 @@ determine_theta <- function(string, X_special,Y_special, correct, initialisatie 
 #' heterogeneous_coefficients_individuals = TRUE
 #' ABDGP1 = FALSE
 #' ABintercept = TRUE
+#' use_macropca_instead_of_cz = TRUE
 #' theta = estimate_theta(NN = 300, TT = 30,
 #'   number_of_groups = 3, number_of_group_factors = c(3,3,3), number_of_common_factors = 0,
 #'  number_of_variables = 3,number_vars_estimated=3,num_factors_may_vary=FALSE)[[1]]
@@ -1357,20 +1358,20 @@ estimate_theta <- function(optimize_kappa = FALSE, eclipz = FALSE,
       if(optimize_kappa) {
         theta = pmap(list(X_special_list, Y_special_list, 1:NN),  function(x,y,z) determine_theta("heterogeen",x, y, TRUE, indices = z,  TT = TT, number_of_variables = number_of_variables) )
       } else {
-        #note that mapply would be about 10% faster
-        message("1.")
+        #note that mapply isnt faster
         theta = map2(X_special_list, Y_special_list,  function(x,y) determine_theta("heterogeen",x, y, TRUE, indices = NA,  TT = TT, number_of_variables = number_of_variables) )
-        message("2")
-        theta_new = mapply( function(x,y) { determine_theta("heterogeen",x, y, TRUE, indices = NA,  TT = TT, number_of_variables = number_of_variables) }, x = X_special_list, y = Y_special_list )
-        message("check map2 and mapply ")
-        print(summary(c( matrix(unlist(theta),ncol = NN)  - theta_new)))
-        print(sum(c( matrix(unlist(theta),ncol = NN)  - theta_new)))
-        # print(dim(matrix(unlist(theta),ncol = NN)))
-        # print(class(matrix(unlist(theta),ncol = NN)))
-        # print(dim(theta_new))
-        # print(class(theta_new))
-        Sys.sleep(3)
-
+        # print(summary(c( matrix(unlist(theta),ncol = NN)  - theta_new)))
+        # print(sum(c( matrix(unlist(theta),ncol = NN)  - theta_new)))
+        #
+        # micro = microbenchmark::microbenchmark(
+        #   theta = map2(X_special_list, Y_special_list,  function(x,y) determine_theta("heterogeen",x, y, TRUE, indices = NA,  TT = TT, number_of_variables = number_of_variables) ),
+        #   theta_new = mapply( function(x,y) { determine_theta("heterogeen",x, y, TRUE, indices = NA,  TT = TT, number_of_variables = number_of_variables) }, x = X_special_list, y = Y_special_list ),
+        #   times = 15
+        # )
+        # print(summary(micro))
+        # expr      min       lq     mean   median       uq      max neval cld
+        # 1     theta 3.544195 3.585846 3.643604 3.622231 3.672088 3.829970    15   a
+        # 2 theta_new 3.543808 3.553852 3.621918 3.597413 3.680516 3.731678    15   a
       }
       ########################################################
       #Possible use of future::map2 instead of map2:
