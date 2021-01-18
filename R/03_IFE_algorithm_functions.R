@@ -1361,7 +1361,7 @@ estimate_theta <- function(optimize_kappa = FALSE, eclipz = FALSE,
         message("1")
         theta = map2(X_special_list, Y_special_list,  function(x,y) determine_theta("heterogeen",x, y, TRUE, indices = NA,  TT = TT, number_of_variables = number_of_variables) )
         message("2")
-        theta_new = mapply( function(x,y) { determine_theta("heterogeen",x, y, TRUE, indices = NA,  TT = TT, number_of_variables = number_of_variables) }, x = X_special_list, y = y_special_list )
+        theta_new = mapply( function(x,y) { determine_theta("heterogeen",x, y, TRUE, indices = NA,  TT = TT, number_of_variables = number_of_variables) }, x = X_special_list, y = Y_special_list )
         message("check map2 and mapply ")
         print(summary(c(theta - theta_new)))
         Sys.sleep(3)
