@@ -10,7 +10,7 @@ calculate_virtual_factor_and_lambda_group(
   NN,
   TT,
   number_of_variables = aantalvars,
-  number_vars_estimated = SCHATTEN_MET_AANTALVARS,
+  number_vars_estimated = number_variables_estimated,
   number_of_group_factors = aantalfactoren_groups,
   number_of_common_factors = aantalfactoren_common,
   use_macropca_instead_of_cz

@@ -2,29 +2,16 @@
 % Please edit documentation in R/07_IFE_robust_lambda.R
 \name{determine_robust_lambda}
 \alias{determine_robust_lambda}
-\title{Calculates vector of which the mean is equal to classical lambda -> function should be obsolete}
+\title{Help-function for return_robust_lambdaobject().}
 \usage{
 determine_robust_lambda(almost_classical_lambda)
 }
 \arguments{
 \item{almost_classical_lambda}{matrix where the mean of each row is equal to the classical lambda}
-
-\item{Y_like_object}{NxT matrix}
-
-\item{NUMBER_FACTORS}{number of factors (common or group, depending on context)}
-
-\item{group}{index of group}
-
-\item{NN}{N}
 }
 \value{
-matrix where the mean of each row is equal to the classical lambda.
-Help-function for return_robust_lambdaobject().
-
-Uses the almost classical lambda to create a robust lambda by using M estimation.
-
 M-estimator of location of the parameter, by minimizing sum of rho()
 }
 \description{
-Calculates vector of which the mean is equal to classical lambda -> function should be obsolete
+Uses the almost classical lambda to create a robust lambda by using M estimation.
 }

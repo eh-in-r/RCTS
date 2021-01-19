@@ -13,7 +13,7 @@ estimate_theta(
   number_of_group_factors = aantalfactoren_groups,
   number_of_common_factors = aantalfactoren_common,
   number_of_variables = aantalvars,
-  number_vars_estimated = SCHATTEN_MET_AANTALVARS,
+  number_vars_estimated = number_variables_estimated,
   num_factors_may_vary = aantalfactors_verschillend_per_group,
   use_median_of_individual_theta = exists("USE_MEDIAN_OF_INDIVIDUAL_THETA")
 )
@@ -69,6 +69,7 @@ heterogeneous_coefficients_groups = FALSE
 heterogeneous_coefficients_individuals = TRUE
 ABDGP1 = FALSE
 ABintercept = TRUE
+use_macropca_instead_of_cz = TRUE
 theta = estimate_theta(NN = 300, TT = 30,
   number_of_groups = 3, number_of_group_factors = c(3,3,3), number_of_common_factors = 0,
  number_of_variables = 3,number_vars_estimated=3,num_factors_may_vary=FALSE)[[1]]

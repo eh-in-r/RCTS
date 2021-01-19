@@ -12,7 +12,8 @@ return_robust_lambdaobject(
   number_of_group_factors = aantalfactoren_groups,
   FACTOR = comfactor,
   number_of_common_factors = aantalfactoren_common,
-  NN = aantal_N
+  NN = aantal_N,
+  eclipz = FALSE
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ return_robust_lambdaobject(
 \item{number_of_common_factors}{number of common factors}
 
 \item{NN}{N}
+
+\item{eclipz}{indicator of using the eclipzdataset}
 }
 \value{
 Nxk dataframe

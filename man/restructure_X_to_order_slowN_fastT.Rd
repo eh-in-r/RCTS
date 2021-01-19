@@ -8,7 +8,7 @@ restructure_X_to_order_slowN_fastT(
   X,
   eclipz,
   number_of_variables = aantalvars,
-  number_vars_estimated = SCHATTEN_MET_AANTALVARS
+  number_vars_estimated = number_variables_estimated
 )
 }
 \arguments{

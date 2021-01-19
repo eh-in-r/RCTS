@@ -13,7 +13,7 @@ calculate_errors_virtual_groups(
   number_of_variables,
   number_of_common_factors,
   number_of_group_factors,
-  number_vars_estimated = SCHATTEN_MET_AANTALVARS
+  number_vars_estimated = number_variables_estimated
 )
 }
 \arguments{

@@ -9,7 +9,7 @@ initialise_theta(
   NN = aantal_N,
   TT = aantal_T,
   number_of_variables = aantalvars,
-  number_vars_estimated = SCHATTEN_MET_AANTALVARS,
+  number_vars_estimated = number_variables_estimated,
   number_of_groups = aantalgroepen
 )
 }

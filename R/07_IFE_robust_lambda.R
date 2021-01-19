@@ -1,32 +1,14 @@
 
 
 
-#' Calculates vector of which the mean is equal to classical lambda -> function should be obsolete
-#'
-#' @param Y_like_object NxT matrix
-#' @param factor_like_object
-#' @param NUMBER_FACTORS number of factors (common or group, depending on context)
-#' @param group index of group
-#' @param NN N
-#' @return matrix where the mean of each row is equal to the classical lambda.
-# all_almost_classical_lambda <- function(Y_like_object, factor_like_object, NUMBER_FACTORS, group, NN) {
-#   temp = matrix(NA, nrow = NN, ncol = aantal_T)
-#   for(ii in 1:NN) {
-#     for(rr in 1:NUMBER_FACTORS) {
-#
-#       almost_classical_lambda = (Y_like_object[ii,] * t(factor_like_object)[,rr])  #the mean of this is equal to classical lambda
-#       temp[ii,] = almost_classical_lambda
-#     }
-#   }
-#   return(temp)
-# }
-
 
 
 #' Help-function for return_robust_lambdaobject().
 #'
 #' Uses the almost classical lambda to create a robust lambda by using M estimation.
+#'
 #' @param almost_classical_lambda matrix where the mean of each row is equal to the classical lambda
+#' @importFrom stats optim
 #' @return M-estimator of location of the parameter, by minimizing sum of rho()
 determine_robust_lambda <- function(almost_classical_lambda) {
 
@@ -70,6 +52,7 @@ determine_robust_lambda <- function(almost_classical_lambda) {
 #' @param FACTOR estimation of common factors
 #' @param number_of_common_factors number of common factors
 #' @param NN N
+#' @param eclipz indicator of using the eclipzdataset
 #' @return Nxk dataframe
 #' @export
 return_robust_lambdaobject <- function(Y_like_object, group, type,
@@ -77,7 +60,8 @@ return_robust_lambdaobject <- function(Y_like_object, group, type,
                                        number_of_group_factors = aantalfactoren_groups,
                                        FACTOR = comfactor,
                                        number_of_common_factors = aantalfactoren_common,
-                                       NN = aantal_N) {
+                                       NN = aantal_N,
+                                       eclipz = FALSE) {
 
 
   if(type == 1) {  #used in calculate_virtual_factor_and_lambda_group()

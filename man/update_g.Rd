@@ -9,7 +9,7 @@ update_g(
   TT = aantal_T,
   number_of_groups = aantalgroepen,
   number_of_variables = aantalvars,
-  number_vars_estimated = SCHATTEN_MET_AANTALVARS,
+  number_vars_estimated = number_variables_estimated,
   number_of_group_factors = aantalfactoren_groups,
   number_of_common_factors = aantalfactoren_common,
   use_class_zero = FALSE
@@ -49,7 +49,8 @@ Y = RobClustTimeSeries::Y_dgp3
 #Set estimations for group factors and its loadings, and group membership to the real value
 lambda_group = RobClustTimeSeries::lambda_group_real_dgp3
 factor_group = RobClustTimeSeries::factor_group_real_dgp3
-g = RobClustTimeSeries::g_real_dgp3
+g_real = RobClustTimeSeries::g_real_dgp3 #true values of group membership
+g = g_real #estimated values of group membership; set in this example to be equal to true values
 #There are no common factors to be estimated  -> but needs placeholder
 lambda = matrix(0,nrow=1,ncol=300)
 comfactor = matrix(0,nrow=1,ncol=30)
@@ -61,14 +62,17 @@ heterogeneous_coefficients_groups = FALSE
 heterogeneous_coefficients_individuals = TRUE
 ABDGP1 = FALSE
 ABintercept = TRUE
+use_macropca_instead_of_cz = TRUE
+number_variables_estimated = 3
 theta = estimate_theta(NN = 300, TT = 30,
   number_of_groups = 3, number_of_group_factors = c(3,3,3), number_of_common_factors = 0,
-  number_of_variables = 3,number_vars_estimated=3,num_factors_may_vary=FALSE)[[1]]
+  number_of_variables = 3, number_vars_estimated = number_variables_estimated,
+  num_factors_may_vary = FALSE)[[1]]
 grid = grid_add_variables(grid,theta, lambda, comfactor, NN = 300, TT = 30,
-  number_of_variables = 3, number_vars_estimated = 3, number_of_groups = 3)
+  number_of_variables = 3, number_vars_estimated = number_variables_estimated, number_of_groups = 3)
 eclipz = FALSE
 g_new = update_g(NN = 300, TT = 30, number_of_groups = 3, number_of_variables = 3,
-  number_vars_estimated = 3,
+  number_vars_estimated = number_variables_estimated,
   number_of_group_factors = c(3,3,3),
   number_of_common_factors = 0)[[1]]
 }
