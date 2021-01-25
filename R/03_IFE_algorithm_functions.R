@@ -2347,9 +2347,14 @@ calculate_error_term <- function(no_common_factorstructure = FALSE, no_group_fac
   group_membership = list()
   for(k in 1:number_of_groups) {
     print(k)
-    LGclean = as.matrix(lambda_group %>% arrange(.data$id) %>%
-                          filter(.data$groep == k) %>%
-                          dplyr::select(starts_with("X")))
+    LGclean = lambda_group %>% arrange(.data$id) %>%
+                          filter(.data$groep == k)
+      #replaced because of using ".data" in combination with "starts_with"
+      #%>%  dplyr::select(starts_with("X")))
+
+    selectcolumns = which(str_detect(names(LGclean), "X"))
+    LGclean = as.matrix(LGclean[,selectcolumns])
+
     lf_group[[k]] = LGclean[,1:number_of_group_factors[k]] %*% factor_group[[k]]
     group_membership[[k]] = data.frame(as.matrix(lambda_group %>% arrange(.data$id) %>%
                                                    filter(.data$groep == k) %>%
@@ -2420,9 +2425,15 @@ calculate_error_term_individuals <- function(NN = aantal_N,
   lf_group = list()
   group_membership = list()
   for(k in 1:number_of_groups) {
-    LGclean = as.matrix(lambda_group %>% arrange(.data$id) %>%
-                          filter(.data$groep == k) %>%
-                          dplyr::select(starts_with("X")))
+    LGclean = lambda_group %>% arrange(.data$id) %>%
+                          filter(.data$groep == k)
+                  #replaced because of using ".data" in combination with "starts_with"
+                  #%>% dplyr::select(starts_with("X")))
+
+    selectcolumns = which(str_detect(names(LGclean), "X"))
+    LGclean = as.matrix(LGclean[,selectcolumns])
+
+
     lf_group[[k]] = LGclean[,1:number_of_group_factors[k]] %*% factor_group[[k]]
     group_membership[[k]] = data.frame(as.matrix(lambda_group %>% arrange(.data$id) %>%
                                                    filter(.data$groep == k) %>%
