@@ -126,14 +126,14 @@ return_robust_lambdaobject <- function(Y_like_object, group, type,
         for(rr in 1:number_of_common_factors) {
 
           almost_classical_lambda = (Y_like_object[ii,] * t(FACTOR)[,rr]) #the mean of this is equal to the classical lambda
-          if(is.na(almost_classical_lambda) | is.nan(almost_classical_lambda)) {
+          #if(is.na(almost_classical_lambda) | is.nan(almost_classical_lambda)) {
             message("problem with almost_classical_lambda 1")
             print(almost_classical_lambda)
             print(ii)
             print(rr)
             print(Y_like_object[ii,])
             print(factor_for_grouping[,rr])
-          }
+          #}
           robust_lambda = determine_robust_lambda(almost_classical_lambda)
           lambda[rr,ii] = robust_lambda
         }
