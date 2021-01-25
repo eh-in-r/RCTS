@@ -1792,7 +1792,7 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20) {
         }
     }
     if(error_macropca) {
-      temp = handle_macropca_errors(object, temp, KMAX,number_eigenvectors)
+      factors_macropca = handle_macropca_errors(object, temp, KMAX,number_eigenvectors)
       message("do scores exist now?")
       message(scores)
     }
