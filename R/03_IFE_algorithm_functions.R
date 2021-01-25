@@ -2353,6 +2353,8 @@ calculate_error_term <- function(no_common_factorstructure = FALSE, no_group_fac
       #%>%  dplyr::select(starts_with("X")))
     print("ok")
     print(colnames(LGclean))
+    print(class(LGclean))
+    print(head(LGclean))
     selectcolumns = which(str_detect(colnames(LGclean), "X"))
     print(selectcolumns)
     LGclean = as.matrix(LGclean[,selectcolumns])
