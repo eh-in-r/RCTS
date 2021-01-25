@@ -2352,7 +2352,8 @@ calculate_error_term <- function(no_common_factorstructure = FALSE, no_group_fac
       #replaced because of using ".data" in combination with "starts_with"
       #%>%  dplyr::select(starts_with("X")))
     print("ok")
-    selectcolumns = which(str_detect(names(LGclean), "X"))
+    print(colnames(LGclean))
+    selectcolumns = which(str_detect(colnames(LGclean), "X"))
     print(selectcolumns)
     LGclean = as.matrix(LGclean[,selectcolumns])
 
@@ -2431,7 +2432,7 @@ calculate_error_term_individuals <- function(NN = aantal_N,
                   #replaced because of using ".data" in combination with "starts_with"
                   #%>% dplyr::select(starts_with("X")))
 
-    selectcolumns = which(str_detect(names(LGclean), "X"))
+    selectcolumns = which(str_detect(colnames(LGclean), "X"))
     LGclean = as.matrix(LGclean[,selectcolumns])
 
 
