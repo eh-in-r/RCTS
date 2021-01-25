@@ -759,7 +759,7 @@ calculate_obj_for_g <- function(i, k, ERRORS_VIRTUAL, rho_parameters, TT = aanta
     #     (because: use of #rho_parameters[[k]][[2]][i] leads tot random grouping)
     #"location" is then defined the same way
     #rho_parameters is a list of 'number_of_groups' elements. Every element has 2 elements with 'NN' values.
-    # DO NOT USE FUTURE_MAP() HERE: this is way slower.
+    #Note: do not use FUTURE_MAP() here: this is way slower.
     location = (unlist(lapply(rho_parameters,function(x) x[[1]][i]))) #map over virtual groups; take 1st element (=median) and take individual i
     scaling = (unlist(lapply(rho_parameters,function(x) x[[2]][i]))) #map over virtual groups; take 2nd element (=mad) and take individual i
 
@@ -780,7 +780,7 @@ calculate_obj_for_g <- function(i, k, ERRORS_VIRTUAL, rho_parameters, TT = aanta
       E_prep_loc_scale = (E_prep - location) / scaling #this is a scalar
       E = Mpsi(E_prep_loc_scale, cc = 4.685, psi = "bisquare", deriv = -1) #rho-functie on scaled errors
 
-    } else { #non-robuste version:
+    } else { #classical version:
       E = E_prep^2
     }
     # print("***")
@@ -1536,12 +1536,12 @@ calculate_W <- function(theta, g ,
 #' Calculates Z = Y - X*THETA - LgFg, to use in estimate of common factorstructure
 #' @inheritParams calculate_W
 #' @param lgfg_list This is a list (length number of groups) containing FgLg for every group.
-#' @param use_pertmm indicates that factors are estimated with pertMM
+#' @param estimate_factors_with_pertMM indicates that factors are estimated with pertMM
 #' @param initialise boolean
 #' @inheritParams estimate_theta
 #' @export
 calculate_Z_common <- function(theta, g, lgfg_list,
-                               use_pertmm,
+                               estimate_factors_with_pertMM,
                                initialise = FALSE,
                                NN = aantal_N,
                                TT = aantal_T,
@@ -1557,7 +1557,7 @@ calculate_Z_common <- function(theta, g, lgfg_list,
   for(i in 1:NN) {
     y = Y[i,] %>% as.numeric
     if(do_we_estimate_group_factors(number_of_group_factors)) { #when there are group factors to be estimated
-      if(use_pertmm & class(lgfg_list) != "list") {
+      if(estimate_factors_with_pertMM & class(lgfg_list) != "list") {
         #then lgfg_list is not a list, but a data frame of dimension NxT
         LF_GROUP = lgfg_list[i,]
       } else {
@@ -1765,6 +1765,7 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20) {
       Sys.sleep(5)
 
     }
+    message("--start macropca here:")
     temp =  tryCatch(
       cellWise::MacroPCA(object, k = max(macropca_kmax, number_eigenvectors), MacroPCApars = list(kmax=KMAX)),
       error = function(e) { message(e); return(e) }
@@ -1772,6 +1773,9 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20) {
     if("error" %in% class(temp)) {
       error_macropca = TRUE
     }
+    message("--*--")
+    print(dim(temp$scores))
+    print(dim(temp$loadings))
     scores = temp$scores[,1:number_eigenvectors] #these are the factor loadings
     factors_macropca = temp$loadings[,1:number_eigenvectors] #these are the factors
     message(class(factors_macropca)) #should be matrix
@@ -1811,6 +1815,7 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20) {
 #' @inheritParams calculate_W
 #' @param lgfg_list This is a list (length number of groups) containing FgLg for every group.
 #' @param initialise boolean
+#' @param estimate_factors_with_pertMM indicates that factors are estimated with pertMM
 #' @inheritParams estimate_theta
 #' @inheritParams calculate_virtual_factor_and_lambda_group
 #' @return r x T matrix
@@ -1818,6 +1823,7 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20) {
 #' @export
 estimate_factor <- function(theta, g, lgfg_list,
                             use_macropca_instead_of_cz,
+                            estimate_factors_with_pertMM,
                             initialise = FALSE,
                             NN = aantal_N,
                             TT = aantal_T,
@@ -1828,7 +1834,7 @@ estimate_factor <- function(theta, g, lgfg_list,
   if(initialise) {
     W = calculate_W(theta, g) #Y - XT
   } else {
-    W = calculate_Z_common(theta, g, lgfg_list) #this is a "rows_without_NA x T - matrix"
+    W = calculate_Z_common(theta, g, lgfg_list, estimate_factors_with_pertMM) #this is a "rows_without_NA x T - matrix"
   }
 
   #if there are individuals in "class zero", then they are considered outliers
@@ -1943,12 +1949,14 @@ estimate_factor_group <- function(theta, g, lambda, comfactor,
 
           #CHANGE LOCATION 2/7
           if(use_macropca_instead_of_cz) {
+            ##MACROPCA
             temp = prepare_for_robpca(Wj)
             temp2 = robustpca(temp, number_of_group_factors[group])
             schatterF[[group]] = t(sqrt(TT) * temp2[[1]]) #robust pca
             scores[[group]] = temp2[[2]]
             rm(temp2)
           } else {
+            ##CZ
             temp = t(Wj)%*%Wj #dividing by NT does not make any difference for the eigenvectors
             scores[[group]] = NA #because loadings will be calculated later
             schatterF[[group]] = t(sqrt(TT) * eigen(temp)$vectors[,1:number_of_group_factors[group]])
@@ -1999,7 +2007,7 @@ calculate_lambda <- function(theta, comfactor, g, lgfg_list,
   if(initialise) {
     W = calculate_W(theta, g)
   }  else {
-    W = calculate_Z_common(theta, g, lgfg_list)
+    W = calculate_Z_common(theta, g, lgfg_list, estimate_factors_with_pertMM)
   }
 
 
@@ -2338,6 +2346,7 @@ calculate_error_term <- function(no_common_factorstructure = FALSE, no_group_fac
   lf_group = list()
   group_membership = list()
   for(k in 1:number_of_groups) {
+    print(k)
     LGclean = as.matrix(lambda_group %>% arrange(.data$id) %>%
                           filter(.data$groep == k) %>%
                           dplyr::select(starts_with("X")))
