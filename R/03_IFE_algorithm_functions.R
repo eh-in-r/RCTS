@@ -2349,12 +2349,16 @@ calculate_error_term <- function(no_common_factorstructure = FALSE, no_group_fac
     print(k)
     LGclean = lambda_group %>% arrange(.data$id) %>%
                           filter(.data$groep == k)
+    print(class(lambda_group))
+    print(head(lambda_group))
+    print(class(LGclean))
+    print(head(LGclean))
+    print(class(data.frame(LGclean)))
+    print(head(data.frame(LGclean)))
       #replaced because of using ".data" in combination with "starts_with"
       #%>%  dplyr::select(starts_with("X")))
     print("ok")
     print(colnames(LGclean))
-    print(class(LGclean))
-    print(head(LGclean))
     selectcolumns = which(str_detect(colnames(LGclean), "X"))
     print(selectcolumns)
     LGclean = as.matrix(LGclean[,selectcolumns])
