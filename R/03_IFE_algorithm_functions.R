@@ -1375,7 +1375,7 @@ estimate_theta <- function(optimize_kappa = FALSE, eclipz = FALSE,
 
         for(i in 1:length(indices_group)) {
           index = indices_group[i]
-          LAMBDAGROUP = as.matrix(lambda_group %>% filter(.data$id %in% index) %>% dplyr::select(-.data$groep,-.data$id))
+          LAMBDAGROUP = as.matrix(lambda_group %>% dplyr::filter(.data$id %in% index) %>% dplyr::select(-.data$groep,-.data$id))
           Y_special[i,] = Y_special[i,] -
             t(lambda[,index]) %*% comfactor[,] -
             LAMBDAGROUP %*% factor_group[[g[index]]]
@@ -2348,7 +2348,7 @@ calculate_error_term <- function(no_common_factorstructure = FALSE, no_group_fac
   for(k in 1:number_of_groups) {
     print(k)
     LGclean = lambda_group %>% arrange(.data$id) %>%
-                          filter(.data$groep == k)
+                          dplyr::filter(.data$groep == k)
     print(class(lambda_group))
     print(head(lambda_group))
     print(class(LGclean))
@@ -2365,7 +2365,7 @@ calculate_error_term <- function(no_common_factorstructure = FALSE, no_group_fac
 
     lf_group[[k]] = LGclean[,1:number_of_group_factors[k]] %*% factor_group[[k]]
     group_membership[[k]] = data.frame(as.matrix(lambda_group %>% arrange(.data$id) %>%
-                                                   filter(.data$groep == k) %>%
+                                                   dplyr::filter(.data$groep == k) %>%
                                                    dplyr::select(.data$groep, .data$id)))
   }
 
@@ -2433,8 +2433,9 @@ calculate_error_term_individuals <- function(NN = aantal_N,
   lf_group = list()
   group_membership = list()
   for(k in 1:number_of_groups) {
-    LGclean = lambda_group %>% arrange(.data$id) %>%
-                          filter(.data$groep == k)
+    LGclean = lambda_group %>%
+      arrange(.data$id) %>%
+      dplyr::filter(.data$groep == k)
                   #replaced because of using ".data" in combination with "starts_with"
                   #%>% dplyr::select(starts_with("X")))
 
@@ -2444,7 +2445,7 @@ calculate_error_term_individuals <- function(NN = aantal_N,
 
     lf_group[[k]] = LGclean[,1:number_of_group_factors[k]] %*% factor_group[[k]]
     group_membership[[k]] = data.frame(as.matrix(lambda_group %>% arrange(.data$id) %>%
-                                                   filter(.data$groep == k) %>%
+                                                   dplyr::filter(.data$groep == k) %>%
                                                    dplyr::select(.data$groep, .data$id)))
 
   }
