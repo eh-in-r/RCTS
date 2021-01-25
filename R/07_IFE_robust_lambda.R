@@ -131,8 +131,8 @@ return_robust_lambdaobject <- function(Y_like_object, group, type,
             print(almost_classical_lambda)
             print(ii)
             print(rr)
-            print(Y_like_object[ii,])
-            print(factor_for_grouping[,rr])
+            print(Y_like_object[ii,1:5])
+            print(FACTOR[,rr])
           #}
           robust_lambda = determine_robust_lambda(almost_classical_lambda)
           lambda[rr,ii] = robust_lambda
@@ -182,7 +182,7 @@ return_robust_lambdaobject <- function(Y_like_object, group, type,
           print(almost_classical_lambda)
           print(ii)
           print(rr)
-          print(Y_like_object[ii,])
+          print(Y_like_object[ii,1:5])
           print(factor_for_grouping[,rr])
         }
         lambda_local[ii,rr] = determine_robust_lambda(almost_classical_lambda)
