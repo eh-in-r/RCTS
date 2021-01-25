@@ -90,7 +90,7 @@ return_robust_lambdaobject <- function(Y_like_object, group, type,
                                        NN = aantal_N,
                                        eclipz = FALSE) {
 
-
+  print(paste("type =",type))
   if(type == 1) {  #used in calculate_virtual_factor_and_lambda_group()
     if(number_of_group_factors[group] > 0) { #this can be zero when updating the number of factors
       LG_local = data.frame(matrix(NA,nrow = NN, ncol = number_of_group_factors[group]))
@@ -126,8 +126,8 @@ return_robust_lambdaobject <- function(Y_like_object, group, type,
         for(rr in 1:number_of_common_factors) {
 
           almost_classical_lambda = (Y_like_object[ii,] * t(FACTOR)[,rr]) #the mean of this is equal to the classical lambda
-          if(is.na(almost_classical_lambda) | is.nan(almost_classical_lambda) | length(almost_classical_lambda) != ncol(Y_like_object)) {
-            message("problem with almost_classical_lambda 2")
+          if(is.na(almost_classical_lambda) | is.nan(almost_classical_lambda)) {
+            message("problem with almost_classical_lambda 1")
             print(almost_classical_lambda)
             print(ii)
             print(rr)
@@ -177,7 +177,7 @@ return_robust_lambdaobject <- function(Y_like_object, group, type,
       for(rr in 1:ncol(factor_for_grouping)) {
         #stopifnot(length(Y_like_object[ii,]) == length(factor_for_grouping[,rr]))
         almost_classical_lambda = (Y_like_object[ii,] * factor_for_grouping[,rr]) #Do not use the transpose here, because we use factor_for_grouping here.
-        if(is.na(almost_classical_lambda) | is.nan(almost_classical_lambda) | length(almost_classical_lambda) != ncol(Y_like_object)) {
+        if(is.na(almost_classical_lambda) | is.nan(almost_classical_lambda)) {
           message("problem with almost_classical_lambda 2")
           print(almost_classical_lambda)
           print(ii)
