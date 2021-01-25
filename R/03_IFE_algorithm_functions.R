@@ -2351,8 +2351,9 @@ calculate_error_term <- function(no_common_factorstructure = FALSE, no_group_fac
                           filter(.data$groep == k)
       #replaced because of using ".data" in combination with "starts_with"
       #%>%  dplyr::select(starts_with("X")))
-
+    print("ok")
     selectcolumns = which(str_detect(names(LGclean), "X"))
+    print(selectcolumns)
     LGclean = as.matrix(LGclean[,selectcolumns])
 
     lf_group[[k]] = LGclean[,1:number_of_group_factors[k]] %*% factor_group[[k]]
