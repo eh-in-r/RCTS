@@ -1226,7 +1226,6 @@ determine_theta <- function(string, X_special,Y_special, correct, initialisatie 
   #Regression:
   if(use_robust) {
     if(exists("use_bramaticroux")) {
-      message("bramati croux...")
       model = RpanFE(Y_special, X_special, TT, 0.20, 20, number_of_variables, length(Y_special)/TT)[[1]]
     } else {
       model <- LMROB(Y_special, X_special) #-> lmrob(Y_special ~ X_special, setting="KS2014")
@@ -2051,7 +2050,7 @@ calculate_lambda <- function(theta, comfactor, g, lgfg_list,
   } else {
     lambda = t(W %*% t(comfactor) / TT)
   }
-  message("ok")
+
   if(number_of_common_factors == 0 & !initialise) {
     #then schatterF is of size 1 x TT, which is still an apropriate size to use in this case -> just set to zero
     lambda = lambda - lambda
