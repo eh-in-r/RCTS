@@ -1456,7 +1456,6 @@ estimate_theta <- function(optimize_kappa = FALSE, eclipz = FALSE,
         theta = pmap(list(X_special_list, Y_special_list, 1:NN),  function(x,y,z) determine_theta("heterogeen",x, y, TRUE, indices = z,  TT = TT, number_of_variables = number_of_variables) )
       } else {
         #note that mapply isnt faster
-        print("hier nu")
         theta = map2(X_special_list, Y_special_list,  function(x,y) determine_theta("heterogeen",x, y, TRUE, indices = NA,  TT = TT, number_of_variables = number_of_variables) )
         # print(summary(c( matrix(unlist(theta),ncol = NN)  - theta_new)))
         # print(sum(c( matrix(unlist(theta),ncol = NN)  - theta_new)))
