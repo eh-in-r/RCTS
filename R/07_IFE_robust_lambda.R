@@ -14,7 +14,7 @@
 #' @importFrom stats nlm
 #' @return M-estimator of location of the parameter, by minimizing sum of rho()
 determine_robust_lambda <- function(almost_classical_lambda, fastoption = TRUE, fastoption2 = FALSE) {
-
+  print("hier dus")
   ############
   #speedtests:
   # testje = t(apply(Y[1:500,], 1, function(x) x * factor_for_grouping[,1]))

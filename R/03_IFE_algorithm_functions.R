@@ -538,8 +538,9 @@ initialise_theta <- function(eclipz = FALSE,
 
         if(use_robust) {
           if(exists("use_bramaticroux")) {
-            message("bramati croux init")
-            model = RpanFE(Y_special, X_special, TT, 0.20, 20, number_of_variables, NN)[[1]]
+            message(paste("bramati croux init",i))
+            model = RpanFE(Y_special, X_special, TT, 0.20, 20, number_of_variables, 1)[[1]]
+
           } else {
             if(ABDGP1 & ABintercept) { #This is DGP 1
               #no intercept, because ABDGP1 defines the first variable in X as an intercept
@@ -558,7 +559,11 @@ initialise_theta <- function(eclipz = FALSE,
         }
 
         if(ABDGP1 & ABintercept) {
-          values = c(0,model$coefficients)
+          if(exists("use_bramaticroux")) {
+            values = c(0,model)
+          } else {
+            values = c(0,model$coefficients)
+          }
           theta[,i] = values
         } else {
           theta[,i] = model$coefficients
@@ -1221,8 +1226,8 @@ determine_theta <- function(string, X_special,Y_special, correct, initialisatie 
   #Regression:
   if(use_robust) {
     if(exists("use_bramaticroux")) {
-      message("bramati croux")
-      model = RpanFE(Y_special, X_special, TT, 0.20, 20, number_of_variables, NN)[[1]]
+      message("bramati croux...")
+      model = RpanFE(Y_special, X_special, TT, 0.20, 20, number_of_variables, length(Y_special)/TT)[[1]]
     } else {
       model <- LMROB(Y_special, X_special) #-> lmrob(Y_special ~ X_special, setting="KS2014")
     }
@@ -1265,9 +1270,15 @@ determine_theta <- function(string, X_special,Y_special, correct, initialisatie 
       } else {
         return(as.numeric(model$coefficients))
       }
-    } else {
+    } else { #ncvreg or rpanfe
+
+
       if(ABDGP1 & ABintercept) { #=DGP1
-        return(c(0,model$beta[-2,1]))
+        if(exists("use_bramaticroux")) {
+          return( c(0,model) )
+        } else {
+          return(c(0,model$beta[-2,1]))
+        }
       } else {
         return(model$beta[,1])
       }
@@ -1445,6 +1456,7 @@ estimate_theta <- function(optimize_kappa = FALSE, eclipz = FALSE,
         theta = pmap(list(X_special_list, Y_special_list, 1:NN),  function(x,y,z) determine_theta("heterogeen",x, y, TRUE, indices = z,  TT = TT, number_of_variables = number_of_variables) )
       } else {
         #note that mapply isnt faster
+        print("hier nu")
         theta = map2(X_special_list, Y_special_list,  function(x,y) determine_theta("heterogeen",x, y, TRUE, indices = NA,  TT = TT, number_of_variables = number_of_variables) )
         # print(summary(c( matrix(unlist(theta),ncol = NN)  - theta_new)))
         # print(sum(c( matrix(unlist(theta),ncol = NN)  - theta_new)))
@@ -1570,6 +1582,7 @@ calculate_Z_common <- function(theta, g, lgfg_list,
   for(i in 1:NN) {
     y = Y[i,] %>% as.numeric
     if(do_we_estimate_group_factors(number_of_group_factors)) { #when there are group factors to be estimated
+
       if(estimate_factors_with_pertMM & class(lgfg_list) != "list") {
         #then lgfg_list is not a list, but a data frame of dimension NxT
         LF_GROUP = lgfg_list[i,]
@@ -1583,6 +1596,7 @@ calculate_Z_common <- function(theta, g, lgfg_list,
     } else {
       LF_GROUP = 0
     }
+
     if(number_vars_estimated > 0) {
       if(homogeneous_coefficients | heterogeneous_coefficients_groups) THETA = as.matrix(theta[,g[i]])
       if(heterogeneous_coefficients_individuals) THETA = as.matrix(theta[,i])
@@ -2007,28 +2021,30 @@ estimate_factor_group <- function(theta, g, lambda, comfactor,
 #' @param comfactor common factors
 #' @param lgfg_list This is a list (length number of groups) containing FgLg for every group.
 #' @param initialise boolean
+#' @param efwp indicates that factors are estimated with pertMM
 #' @inheritParams estimate_theta
 #' @inheritParams calculate_virtual_factor_and_lambda_group
 #' @inheritParams calculate_Z_common
 #' @export
 calculate_lambda <- function(theta, comfactor, g, lgfg_list,
                              use_macropca_instead_of_cz,
-                             estimate_factors_with_pertMM = estimate_factors_with_pertMM,
+                             efwp = estimate_factors_with_pertMM,
                              initialise = FALSE,
                              NN = aantal_N, TT = aantal_T,
                              number_of_common_factors = aantalfactoren_common) {
 
-
+  print("ok1")
   if(initialise) {
     W = calculate_W(theta, g)
   }  else {
-    W = calculate_Z_common(theta, g, lgfg_list, estimate_factors_with_pertMM)
+    W = calculate_Z_common(theta, g, lgfg_list, efwp)
   }
-
+  print("ok2")
 
   if(use_robust) {
     #CHANGE LOCATION 6/7
     if(use_macropca_instead_of_cz) {
+      print("ok3")
       lambda = return_robust_lambdaobject(W, NA, type = 2, FACTOR = comfactor, number_of_common_factors = nrow(comfactor), eclipz = eclipz)
     } else {
       lambda = t(W %*% t(comfactor) / TT)
@@ -2036,7 +2052,7 @@ calculate_lambda <- function(theta, comfactor, g, lgfg_list,
   } else {
     lambda = t(W %*% t(comfactor) / TT)
   }
-
+  message("ok")
   if(number_of_common_factors == 0 & !initialise) {
     #then schatterF is of size 1 x TT, which is still an apropriate size to use in this case -> just set to zero
     lambda = lambda - lambda
