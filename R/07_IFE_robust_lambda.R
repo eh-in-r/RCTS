@@ -9,7 +9,9 @@
 #'
 #' @param almost_classical_lambda matrix where the mean of each row is equal to the classical lambda
 #' @param fastoption Uses nlm() instead of optim(). This is faster.
+#' @param fastoption2 experimental parameter: can speed nlm() up (10%), but loses accuracy. Could use finetuning.
 #' @importFrom stats optim
+#' @importFrom stats nlm
 #' @return M-estimator of location of the parameter, by minimizing sum of rho()
 determine_robust_lambda <- function(almost_classical_lambda, fastoption = TRUE, fastoption2 = FALSE) {
 

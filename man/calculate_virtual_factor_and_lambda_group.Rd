@@ -9,11 +9,11 @@ calculate_virtual_factor_and_lambda_group(
   solve_FG_FG_times_FG,
   NN,
   TT,
+  use_macropca_instead_of_cz,
   number_of_variables = aantalvars,
   number_vars_estimated = number_variables_estimated,
   number_of_group_factors = aantalfactoren_groups,
-  number_of_common_factors = aantalfactoren_common,
-  use_macropca_instead_of_cz
+  number_of_common_factors = aantalfactoren_common
 )
 }
 \arguments{
@@ -25,6 +25,8 @@ calculate_virtual_factor_and_lambda_group(
 
 \item{TT}{length of time series}
 
+\item{use_macropca_instead_of_cz}{If TRUE, then factors are estimated robustly with macropca (or pertMM), else with class-zero-method.}
+
 \item{number_of_variables}{number of observable variables}
 
 \item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
@@ -32,14 +34,12 @@ calculate_virtual_factor_and_lambda_group(
 \item{number_of_group_factors}{number of groupfactors estimated}
 
 \item{number_of_common_factors}{number of common factors estimated}
-
-\item{use_macropca_instead_of_cz}{If TRUE, then factors are estimated with macropca, else with class-zero-method.}
 }
 \value{
 NxT matrix containing the product of virtual groupfactors and virtual loadings
 }
 \description{
-We calculate FgLg (the groupfactorstructure) for all  possible groups where individual i can be placed. For each group we have before estimated
-the groupfactors (Fg). Now we need to the grouploadings for each group as well. In the classical case these are calculated by Fg*Y/T. In the robust case
+We calculate FgLg (the groupfactorstructure) for all possible groups where individual i can be placed. For each group we have before estimated
+the groupfactors (Fg). Now we need the grouploadings for each group as well. In the classical case these are calculated by Fg*Y/T. In the robust case
 these are robust.
 }

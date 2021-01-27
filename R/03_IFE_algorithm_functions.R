@@ -19,7 +19,9 @@ utils::globalVariables(c("use_robust",
                          "expert_based_initial_factors",
                          "step",
                          "theta_real_heterogeen_groups", "theta_real_heterogeen_individueel", "theta_real_homogeen",
-                         "update1", "update2", "use_macropca_instead_of_cz",
+                         "update1", "update2",
+                         "use_macropca_instead_of_cz",
+                         "estimate_factors_with_pertMM",
                          "ERR", "Smax", "X", "Y", "XG", "XL", "X_restructured",
                          "add_outliers_eclipzstyle_fractie",
                          "define_expert_based_initial_factors",
@@ -535,11 +537,16 @@ initialise_theta <- function(eclipz = FALSE,
         Y_special = as.vector(t(Y[i,]))
 
         if(use_robust) {
-          if(ABDGP1 & ABintercept) { #This is DGP 1
-            #no intercept, because ABDGP1 defines the first variable in X as an intercept
-            model <- LMROB(Y_special,X_special, nointercept = TRUE)  #-> lmrob(Y_special ~ X_special + 0,setting="KS2014)
+          if(exists("use_bramaticroux")) {
+            message("bramati croux init")
+            model = RpanFE(Y_special, X_special, TT, 0.20, 20, number_of_variables, NN)[[1]]
           } else {
-            model <- LMROB(Y_special,X_special)
+            if(ABDGP1 & ABintercept) { #This is DGP 1
+              #no intercept, because ABDGP1 defines the first variable in X as an intercept
+              model <- LMROB(Y_special,X_special, nointercept = TRUE)  #-> lmrob(Y_special ~ X_special + 0,setting="KS2014)
+            } else {
+              model <- LMROB(Y_special,X_special)
+            }
           }
         } else {
           if(ABDGP1 & ABintercept) { #This is DGP 1
@@ -576,22 +583,23 @@ initialise_theta <- function(eclipz = FALSE,
 
 #' Helpfunction used in update_g()
 #'
-#' We calculate FgLg (the groupfactorstructure) for all  possible groups where individual i can be placed. For each group we have before estimated
-#' the groupfactors (Fg). Now we need to the grouploadings for each group as well. In the classical case these are calculated by Fg*Y/T. In the robust case
+#' We calculate FgLg (the groupfactorstructure) for all possible groups where individual i can be placed. For each group we have before estimated
+#' the groupfactors (Fg). Now we need the grouploadings for each group as well. In the classical case these are calculated by Fg*Y/T. In the robust case
 #' these are robust.
 #' @param group number of groups
 #' @param solve_FG_FG_times_FG This is the same as groupfactor / T. It is only used in the Classical approach
-#' @param use_macropca_instead_of_cz If TRUE, then factors are estimated with macropca, else with class-zero-method.
+#' @param use_macropca_instead_of_cz If TRUE, then factors are estimated robustly with macropca (or pertMM), else with class-zero-method.
 #' @inheritParams estimate_theta
 #' @return NxT matrix containing the product of virtual groupfactors and virtual loadings
 
 calculate_virtual_factor_and_lambda_group <- function(group, solve_FG_FG_times_FG,
                                                       NN, TT,
+                                                      use_macropca_instead_of_cz,
                                                       number_of_variables = aantalvars,
                                                       number_vars_estimated = number_variables_estimated,
                                                       number_of_group_factors = aantalfactoren_groups,
-                                                      number_of_common_factors = aantalfactoren_common,
-                                                      use_macropca_instead_of_cz ) {
+                                                      number_of_common_factors = aantalfactoren_common
+                                                      ) {
   FG = factor_group[[group]]
   indices = 1:NN
   LF = t(lambda) %*% comfactor
@@ -1181,7 +1189,7 @@ calculate_lgfg <- function(lambda_group, factor_group, number_of_groups, number_
 #' @importFrom ncvreg ncvreg
 #' @inheritParams generate_Y
 determine_theta <- function(string, X_special,Y_special, correct, initialisatie = FALSE, indices = NA, optimize_kappa = FALSE,
-                           TT = aantal_T,
+                           TT = aantal_T, NN = aantal_N,
                            number_of_variables = aantalvars) {
   if(!(heterogeneous_coefficients_groups & initialisatie == TRUE)) {
     #calculate My, which is some sort of scaling thing, and subtract it from Y:
@@ -1212,7 +1220,12 @@ determine_theta <- function(string, X_special,Y_special, correct, initialisatie 
 
   #Regression:
   if(use_robust) {
-    model <- LMROB(Y_special, X_special) #-> lmrob(Y_special ~ X_special, setting="KS2014")
+    if(exists("use_bramaticroux")) {
+      message("bramati croux")
+      model = RpanFE(Y_special, X_special, TT, 0.20, 20, number_of_variables, NN)[[1]]
+    } else {
+      model <- LMROB(Y_special, X_special) #-> lmrob(Y_special ~ X_special, setting="KS2014")
+    }
   } else {
 
 
@@ -1815,9 +1828,9 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20) {
 #' @inheritParams calculate_W
 #' @param lgfg_list This is a list (length number of groups) containing FgLg for every group.
 #' @param initialise boolean
-#' @param estimate_factors_with_pertMM indicates that factors are estimated with pertMM
 #' @inheritParams estimate_theta
 #' @inheritParams calculate_virtual_factor_and_lambda_group
+#' @inheritParams calculate_Z_common
 #' @return r x T matrix
 #' @importFrom stringr str_c
 #' @export
@@ -1996,9 +2009,11 @@ estimate_factor_group <- function(theta, g, lambda, comfactor,
 #' @param initialise boolean
 #' @inheritParams estimate_theta
 #' @inheritParams calculate_virtual_factor_and_lambda_group
+#' @inheritParams calculate_Z_common
 #' @export
 calculate_lambda <- function(theta, comfactor, g, lgfg_list,
                              use_macropca_instead_of_cz,
+                             estimate_factors_with_pertMM = estimate_factors_with_pertMM,
                              initialise = FALSE,
                              NN = aantal_N, TT = aantal_T,
                              number_of_common_factors = aantalfactoren_common) {
@@ -2317,6 +2332,7 @@ do_we_estimate_group_factors <- function(number_of_group_factors) {
 #' @param no_group_factorstructure if there is a group factorstructure being estimated
 #' @inheritParams grid_add_variables
 #' @inheritParams estimate_theta
+#' @importFrom stringr str_detect
 #' @importFrom rlang .data
 #' @export
 calculate_error_term <- function(no_common_factorstructure = FALSE, no_group_factorstructure = FALSE,
@@ -3005,6 +3021,8 @@ calculate_VCsquared <- function(rcj,rc,C_candidates, UPDATE1 = FALSE, UPDATE2 = 
 #' @importFrom robustbase lmrob
 #' @export
 LMROB <- function(parameter_y, parameter_x, nointercept = FALSE, nosetting = exists("run_lmrob_without_setting")) {
+
+
 
   if(is.na(parameter_x)[1]) { #when there are no independent variables
     result2 = tryCatch(

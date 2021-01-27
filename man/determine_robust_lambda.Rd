@@ -4,10 +4,18 @@
 \alias{determine_robust_lambda}
 \title{Help-function for return_robust_lambdaobject().}
 \usage{
-determine_robust_lambda(almost_classical_lambda)
+determine_robust_lambda(
+  almost_classical_lambda,
+  fastoption = TRUE,
+  fastoption2 = FALSE
+)
 }
 \arguments{
 \item{almost_classical_lambda}{matrix where the mean of each row is equal to the classical lambda}
+
+\item{fastoption}{Uses nlm() instead of optim(). This is faster.}
+
+\item{fastoption2}{experimental parameter: can speed nlm() up (10\%), but loses accuracy. Could use finetuning.}
 }
 \value{
 M-estimator of location of the parameter, by minimizing sum of rho()

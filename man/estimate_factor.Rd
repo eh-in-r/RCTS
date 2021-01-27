@@ -9,6 +9,7 @@ estimate_factor(
   g,
   lgfg_list,
   use_macropca_instead_of_cz,
+  estimate_factors_with_pertMM,
   initialise = FALSE,
   NN = aantal_N,
   TT = aantal_T,
@@ -22,7 +23,9 @@ estimate_factor(
 
 \item{lgfg_list}{This is a list (length number of groups) containing FgLg for every group.}
 
-\item{use_macropca_instead_of_cz}{If TRUE, then factors are estimated with macropca, else with class-zero-method.}
+\item{use_macropca_instead_of_cz}{If TRUE, then factors are estimated robustly with macropca (or pertMM), else with class-zero-method.}
+
+\item{estimate_factors_with_pertMM}{indicates that factors are estimated with pertMM}
 
 \item{initialise}{boolean}
 
