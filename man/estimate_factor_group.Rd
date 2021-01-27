@@ -26,7 +26,7 @@ estimate_factor_group(
 
 \item{comfactor}{common factors}
 
-\item{use_macropca_instead_of_cz}{If TRUE, then factors are estimated with macropca, else with class-zero-method.}
+\item{use_macropca_instead_of_cz}{If TRUE, then factors are estimated robustly with macropca (or pertMM), else with class-zero-method.}
 
 \item{initialise}{boolean}
 
