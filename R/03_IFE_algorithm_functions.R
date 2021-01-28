@@ -1713,7 +1713,7 @@ handle_macropca_errors <- function(object, temp, KMAX, number_eigenvectors) {
   if("error" %in% class(temp)) {
     message("*******************************")
     message(paste("MacroPCA with .... fails, -> use different amount of eigenvectors. Start with a couple more and decrease 1 by 1."))
-    Sys.sleep(2)
+
     teller = 0
     while("error" %in% class(temp)) {
       teller = teller + 1
@@ -1724,8 +1724,29 @@ handle_macropca_errors <- function(object, temp, KMAX, number_eigenvectors) {
           cellWise::MacroPCA(object, k = max(12, number_eigenvectors) - teller, MacroPCApars = list(kmax=KMAX)),
           error = function(e) { message(e); return(e) }
       )
-      temp = temp$loadings[,1:number_eigenvectors]
 
+      #sometimes, when there occurred too often errors in macropca, we end up with only a limited amount of possible eigenvectors that are calculated.
+      #This happens when a group has very little elements.
+      #In that case
+      print("----")
+      print(class(temp))
+      number_columns = 999
+      temp =  tryCatch(
+        number_columns = ncol(temp$loadings),
+        error = function(e) { message(e); return(e) }
+      )
+      temp =  tryCatch(
+          temp = temp$loadings[,1:min(number_eigenvectors, number_columns)],
+          error = function(e) { message(e); return(e) }
+      )
+      if(number_columns < number_eigenvectors) {
+        message("---")
+        message(paste("add",number_eigenvectors - number_columns,"columns to temp"))
+        print(temp2)
+        message("sleep...")
+        Sys.sleep(9000)
+      }
+      print("$$$$")
       if(teller >= 10) {
         message("-------------infinite loop (MacroPCA does not work with any k) -> use (classical) eigen(): has to be squared matrix -> take covariance matrix of object-------------")
         #(reason: Error in svd::propack.svd(Y, neig = min(n, d)) : BLAS/LAPACK routine 'DLASCL' gave error code -4)
@@ -1821,6 +1842,7 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20) {
       message("do scores exist now?")
       message(scores)
     }
+    print("end")
     return(list(factors_macropca,scores))
 
 
