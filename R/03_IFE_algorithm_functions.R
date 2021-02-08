@@ -2010,7 +2010,7 @@ estimate_factor_group <- function(theta, g, lambda, comfactor,
           }
 
         } else {
-          if(nrow(Wj) < 3) message("This group contains a very small number of elements. -> macropca can not work -> use non-robust estimation of factors")
+          if(nrow(Wj) < 3 & use_robust) message("This group contains a very small number of elements. -> macropca can not work -> use non-robust estimation of factors")
 
           temp = t(Wj)%*%Wj #dividing by NT does not make any difference for the eigenvectors
           scores[[group]] = NA #because loadings will be calculated later
@@ -2588,13 +2588,13 @@ calculate_PIC_term1 <- function(e2) {
 calculate_PIC_term4 <- function(temp, term4, Nj, NN = aantal_N) {
 
 
-  if(exists("ALTERNATIVE_PIC_2")) {
+  if(exists("ALTERNATIVE_PIC_2")) { #PIC of AB2017-code (includes 3 other changes (see test_alternative_PIC()))
     term4 = term4 + (temp * Nj/NN)
   } else {
 
-    if(exists("ALTERNATIVE_PIC")) { #PIC of code AB2017
+    if(exists("ALTERNATIVE_PIC")) {
       if(ALTERNATIVE_PIC == TRUE) {
-        message("We use an Alternative PIC")
+        #message("We use an Alternative PIC")
         term4 = term4 + (temp * Nj/NN) #=weigh with "P/PP"
       } else {
         term4 = term4 + temp
@@ -3165,7 +3165,7 @@ adapt_allpic_with_sigma2maxmodel <- function(all_pic, sigma2_max_model, UPDATE1 
     message("Use sigma2_max_model in PIC (in object all_pic).")
     for(i in 1:nrow(all_pic)) {
       SIGMA2 = as.numeric(df_results$sigma2[i])
-      all_pic[i,] = (all_pic[i,] - SIGMA2) / SIGMA2 * sigma2_max_model + SIGMA2
+      all_pic[i,] = (unlist(all_pic[i,]) - SIGMA2) / SIGMA2 * sigma2_max_model + SIGMA2
     }
     message("...done")
   }
