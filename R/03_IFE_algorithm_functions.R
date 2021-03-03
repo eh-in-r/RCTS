@@ -34,7 +34,7 @@ utils::globalVariables(c("use_robust",
                          "rows_with_NA", "rows_without_NA",
                          "grid",
                          "v1", "v2", "v3",
-                         "eclipz"
+                         "eclipz","usecoviddata_cases","usecoviddata_deaths"
 
 
 ))
@@ -627,7 +627,8 @@ calculate_virtual_factor_and_lambda_group <- function(group, solve_FG_FG_times_F
                                              NN = NN,
                                              number_of_group_factors = number_of_group_factors,
                                              number_of_common_factors = number_of_common_factors,
-                                            eclipz = eclipz)
+                                            eclipz = eclipz,
+                                            application_covid = exists("usecoviddata_cases") | exists("usecoviddata_deaths"))
     } else {
       LG_local = t(solve_FG_FG_times_FG[[group]] %*% t(Y_ster)) #This equalS to Fg*Y/T
     }
@@ -2065,7 +2066,8 @@ calculate_lambda <- function(theta, comfactor, g, lgfg_list,
     #CHANGE LOCATION 6/7
     if(use_macropca_instead_of_cz) {
       print("ok3")
-      lambda = return_robust_lambdaobject(W, NA, type = 2, FACTOR = comfactor, number_of_common_factors = nrow(comfactor), eclipz = eclipz)
+      lambda = return_robust_lambdaobject(W, NA, type = 2, FACTOR = comfactor, number_of_common_factors = nrow(comfactor), eclipz = eclipz,
+                                          application_covid = exists("usecoviddata_cases") | exists("usecoviddata_deaths"))
     } else {
       lambda = t(W %*% t(comfactor) / TT)
     }
@@ -2127,9 +2129,11 @@ calculate_lambda_group <- function(theta, factor_group, g, lambda, comfactor,
           #   (lambda_N1 = (F_T1 * Y_N1T1 + F_T2 * Y_N1T2 + ...) / TT)
           #   we can replace this mean by an M-estimator in the robust approach
           if(UPDATE1) {
-            lambda_local[[group]] = return_robust_lambdaobject(Wj, group, type = 3, FACTOR_GROUP = factor_group, number_of_group_factors = unlist(lapply(factor_group, nrow)), eclipz = eclipz)
+            lambda_local[[group]] = return_robust_lambdaobject(Wj, group, type = 3, FACTOR_GROUP = factor_group, number_of_group_factors = unlist(lapply(factor_group, nrow)), eclipz = eclipz,
+                                                               application_covid = exists("usecoviddata_cases") | exists("usecoviddata_deaths"))
           } else {
-            lambda_local[[group]] = return_robust_lambdaobject(Wj, group, type = 3, eclipz = eclipz)
+            lambda_local[[group]] = return_robust_lambdaobject(Wj, group, type = 3, eclipz = eclipz,
+                                                               application_covid = exists("usecoviddata_cases") | exists("usecoviddata_deaths"))
           }
         } else {
           FGG = factor_group[[group]]

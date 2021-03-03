@@ -13,7 +13,7 @@
 #' @importFrom stats optim
 #' @importFrom stats nlm
 #' @return M-estimator of location of the parameter, by minimizing sum of rho()
-determine_robust_lambda <- function(almost_classical_lambda, fastoption = TRUE, fastoption2 = FALSE) {
+determine_robust_lambda <- function(almost_classical_lambda, fastoption = TRUE, fastoption2 = FALSE, application_covid = FALSE) {
 
   ############
   #speedtests:
@@ -27,7 +27,10 @@ determine_robust_lambda <- function(almost_classical_lambda, fastoption = TRUE, 
 
   #the option fastoption2 wins about 10% extra, but would not be accurate enough.
   ############
-
+  if(application_covid) {
+    #nlm does not find minimum, so use optim
+    fastoption = FALSE
+  }
 
   almost_classical_lambda = unlist(almost_classical_lambda) #because sometimes is not a vector (bvb with eclipz with N=3112)
   MADCL =  mad(almost_classical_lambda) #this is a value for one person and one factor (depends on i & r)
@@ -49,6 +52,10 @@ determine_robust_lambda <- function(almost_classical_lambda, fastoption = TRUE, 
   sum_of_rho <- function(x) {
     sum( Mpsi((almost_classical_lambda - x) / MADCL , cc = 4.685, psi = "bisquare", deriv = -1) )
   }
+  # par(mfrow=c(1,2))
+  # plot(almost_classical_lambda)
+  # print(sapply(-50:5,function(x) sum_of_rho(x)))
+  # plot(-50:5,sapply(-50:5,function(x) sum_of_rho(x)))
 
   if(fastoption) {
     if(fastoption2) {
@@ -82,6 +89,7 @@ determine_robust_lambda <- function(almost_classical_lambda, fastoption = TRUE, 
 #' @param number_of_common_factors number of common factors
 #' @param NN N
 #' @param eclipz indicator of using the eclipzdataset
+#' @param application_covid indicator of using the coviddataset
 #' @return Nxk dataframe
 #' @export
 return_robust_lambdaobject <- function(Y_like_object, group, type,
@@ -90,7 +98,8 @@ return_robust_lambdaobject <- function(Y_like_object, group, type,
                                        FACTOR = comfactor,
                                        number_of_common_factors = aantalfactoren_common,
                                        NN = aantal_N,
-                                       eclipz = FALSE) {
+                                       eclipz = FALSE,
+                                       application_covid = FALSE) {
 
   print(paste("type =",type))
   if(type == 1) {  #used in calculate_virtual_factor_and_lambda_group()
@@ -107,7 +116,7 @@ return_robust_lambdaobject <- function(Y_like_object, group, type,
           if(eclipz) almost_classical_lambda = unlist(almost_classical_lambda) #to evade errors
           #print(almost_classical_lambda)
 
-          robust_lambda = determine_robust_lambda(almost_classical_lambda)
+          robust_lambda = determine_robust_lambda(almost_classical_lambda, application_covid = application_covid)
           LG_local[ii,rr] = robust_lambda
         }
       }
@@ -129,7 +138,7 @@ return_robust_lambdaobject <- function(Y_like_object, group, type,
 
           almost_classical_lambda = (Y_like_object[ii,] * t(FACTOR)[,rr]) #the mean of this is equal to the classical lambda
 
-          robust_lambda = determine_robust_lambda(almost_classical_lambda)
+          robust_lambda = determine_robust_lambda(almost_classical_lambda, application_covid = application_covid)
           lambda[rr,ii] = robust_lambda
         }
       }
@@ -149,7 +158,7 @@ return_robust_lambdaobject <- function(Y_like_object, group, type,
         almost_classical_lambda = (Y_like_object[ii,] * t(FACTOR_GROUP[[group]])[,rr])  #the mean of this is equal to classical lambda
         #print(mean(almost_classical_lambda))
 
-        robust_lambda = determine_robust_lambda(almost_classical_lambda)
+        robust_lambda = determine_robust_lambda(almost_classical_lambda, application_covid = application_covid)
 
         lambda_local[ii,rr] = robust_lambda
       }
@@ -170,10 +179,13 @@ return_robust_lambdaobject <- function(Y_like_object, group, type,
 
     for(ii in 1:nrow(Y_like_object)) {
       for(rr in 1:ncol(factor_for_grouping)) {
-        #stopifnot(length(Y_like_object[ii,]) == length(factor_for_grouping[,rr]))
+        stopifnot(length(Y_like_object[ii,]) == length(factor_for_grouping[,rr]))
+        #reason can be that input in macropca() contained columns with zero or tiny median absolute deviation.
+        #These are ignored in analysis.
+
         almost_classical_lambda = (Y_like_object[ii,] * factor_for_grouping[,rr]) #Do not use the transpose here, because we use factor_for_grouping here.
 
-        lambda_local[ii,rr] = determine_robust_lambda(almost_classical_lambda)
+        lambda_local[ii,rr] = determine_robust_lambda(almost_classical_lambda, application_covid = application_covid)
       }
     }
 
