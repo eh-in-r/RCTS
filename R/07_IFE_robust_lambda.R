@@ -9,7 +9,8 @@
 #'
 #' @param almost_classical_lambda matrix where the mean of each row is equal to the classical lambda
 #' @param fastoption Uses nlm() instead of optim(). This is faster.
-#' @param fastoption2 experimental parameter: can speed nlm() up (10%), but loses accuracy. Could use finetuning.
+#' @param fastoption2 experimental parameter: can speed nlm() up (10%), but loses accuracy. May benefit from finetuning.
+#' @param application_covid indicator of using the coviddataset
 #' @importFrom stats optim
 #' @importFrom stats nlm
 #' @return M-estimator of location of the parameter, by minimizing sum of rho()
@@ -17,10 +18,10 @@ determine_robust_lambda <- function(almost_classical_lambda, fastoption = TRUE, 
 
   ############
   #speedtests:
-  # testje = t(apply(Y[1:500,], 1, function(x) x * factor_for_grouping[,1]))
-  # micro = microbenchmark::microbenchmark(f1=apply(testje, 1, function(x) determine_robust_lambda(x, fastoption = FALSE)),
-  #                                        f2=apply(testje, 1, function(x) determine_robust_lambda(x, fastoption = TRUE, fastoption2 = FALSE)),
-  #                                        f3=apply(testje, 1, function(x) determine_robust_lambda(x, fastoption = TRUE, fastoption2 = TRUE)),times = 50)
+  # test = t(apply(Y[1:500,], 1, function(x) x * factor_for_grouping[,1]))
+  # micro = microbenchmark::microbenchmark(f1=apply(test, 1, function(x) determine_robust_lambda(x, fastoption = FALSE)),
+  #                                        f2=apply(test, 1, function(x) determine_robust_lambda(x, fastoption = TRUE, fastoption2 = FALSE)),
+  #                                        f3=apply(test, 1, function(x) determine_robust_lambda(x, fastoption = TRUE, fastoption2 = TRUE)),times = 50)
   # time gain of using nlm():
   # when N = 500, time gain is on average 117/173 (68%) when using fastoption.
   # when N = 2000, time gain is on average 475/713 (67%) when using fastoption.
@@ -28,7 +29,7 @@ determine_robust_lambda <- function(almost_classical_lambda, fastoption = TRUE, 
   #the option fastoption2 wins about 10% extra, but would not be accurate enough.
   ############
   if(application_covid) {
-    #nlm does not find minimum, so use optim
+    #nlm() does not find minimum, so use optim()
     fastoption = FALSE
   }
 
@@ -52,10 +53,6 @@ determine_robust_lambda <- function(almost_classical_lambda, fastoption = TRUE, 
   sum_of_rho <- function(x) {
     sum( Mpsi((almost_classical_lambda - x) / MADCL , cc = 4.685, psi = "bisquare", deriv = -1) )
   }
-  # par(mfrow=c(1,2))
-  # plot(almost_classical_lambda)
-  # print(sapply(-50:5,function(x) sum_of_rho(x)))
-  # plot(-50:5,sapply(-50:5,function(x) sum_of_rho(x)))
 
   if(fastoption) {
     if(fastoption2) {
@@ -101,12 +98,11 @@ return_robust_lambdaobject <- function(Y_like_object, group, type,
                                        eclipz = FALSE,
                                        application_covid = FALSE) {
 
-  print(paste("type =",type))
+  #print(paste("type =",type))
   if(type == 1) {  #used in calculate_virtual_factor_and_lambda_group()
     if(number_of_group_factors[group] > 0) { #this can be zero when updating the number of factors
       LG_local = data.frame(matrix(NA,nrow = NN, ncol = number_of_group_factors[group]))
 
-      #almost_classical_lambda = lapply(1:NN, function(x) lapply(1:number_of_group_factors[group], function(y) (Y_like_object[x,] * t(FACTOR_GROUP[[group]])[,y])))
 
       for(ii in 1:NN) {
         for(rr in 1:number_of_group_factors[group]) {
@@ -114,7 +110,6 @@ return_robust_lambdaobject <- function(Y_like_object, group, type,
           almost_classical_lambda = (Y_like_object[ii,] * t(FACTOR_GROUP[[group]])[,rr])  #the mean of this is equal to classical lambda
 
           if(eclipz) almost_classical_lambda = unlist(almost_classical_lambda) #to evade errors
-          #print(almost_classical_lambda)
 
           robust_lambda = determine_robust_lambda(almost_classical_lambda, application_covid = application_covid)
           LG_local[ii,rr] = robust_lambda
@@ -156,7 +151,6 @@ return_robust_lambdaobject <- function(Y_like_object, group, type,
     for(ii in 1:length(which(g == group))) {
       for(rr in 1:number_of_group_factors[group]) {
         almost_classical_lambda = (Y_like_object[ii,] * t(FACTOR_GROUP[[group]])[,rr])  #the mean of this is equal to classical lambda
-        #print(mean(almost_classical_lambda))
 
         robust_lambda = determine_robust_lambda(almost_classical_lambda, application_covid = application_covid)
 
@@ -192,14 +186,10 @@ return_robust_lambdaobject <- function(Y_like_object, group, type,
     #############################################
     #this is equally fast/slow for (N=500,T=100), so keep the double loop from above
     # for(rr in 1:ncol(factor_for_grouping)) {
-    #   testje = t(apply(Y_like_object, 1, function(x) x * factor_for_grouping[,1]))
-    #   lambda_local[,rr] = apply(testje, 1, function(x) determine_robust_lambda(x))
+    #   test = t(apply(Y_like_object, 1, function(x) x * factor_for_grouping[,1]))
+    #   lambda_local[,rr] = apply(test, 1, function(x) determine_robust_lambda(x))
     # }
     #############################################
-    # print(sum(c(testje - as.matrix(lambda_local[,1]))))
-    # print(testje[1:5])
-    # print(lambda_local[1:5,1:3])
-
 
     # micro = microbenchmark::microbenchmark(f1(),f2(),times = 20)
     # summary(micro)
