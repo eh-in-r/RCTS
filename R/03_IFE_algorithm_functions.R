@@ -1218,9 +1218,9 @@ determine_theta <- function(string, X_special, Y_special, initialisation = FALSE
 
     if(initialisation) {
       #initialisation of theta, so no factorstructure in Y_special
-      Y_special = as.vector(t(Y)-My) #order: N1T1, N2T1,...N1T2,...N_endT_end
+      Y_special = as.vector(t(Y)) #order: N1T1, N2T1,...N1T2,...N_endT_end
     } else {
-      Y_special = as.vector(t(Y_special)-My) #order: N1T1, N2T1,...N1T2,...N_endT_end
+      Y_special = as.vector(t(Y_special)) #order: N1T1, N2T1,...N1T2,...N_endT_end
     }
 
     #remove NA's from regression:
