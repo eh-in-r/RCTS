@@ -7,7 +7,8 @@
 determine_robust_lambda(
   almost_classical_lambda,
   fastoption = TRUE,
-  fastoption2 = FALSE
+  fastoption2 = FALSE,
+  application_covid = FALSE
 )
 }
 \arguments{
@@ -15,7 +16,9 @@ determine_robust_lambda(
 
 \item{fastoption}{Uses nlm() instead of optim(). This is faster.}
 
-\item{fastoption2}{experimental parameter: can speed nlm() up (10\%), but loses accuracy. Could use finetuning.}
+\item{fastoption2}{experimental parameter: can speed nlm() up (10\%), but loses accuracy. May benefit from finetuning.}
+
+\item{application_covid}{indicator of using the coviddataset}
 }
 \value{
 M-estimator of location of the parameter, by minimizing sum of rho()

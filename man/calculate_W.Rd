@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{calculate_W}
 \alias{calculate_W}
-\title{Calculates W = Y - X*THETA}
+\title{Calculates W = Y - X*THETA. It is used in the initializationstep of the algorithm, to initialise the factorstructures.}
 \usage{
 calculate_W(
   theta,
@@ -33,5 +33,5 @@ calculate_W(
 NxT matrix
 }
 \description{
-Calculates W = Y - X*THETA
+Calculates W = Y - X*THETA. It is used in the initializationstep of the algorithm, to initialise the factorstructures.
 }

@@ -11,11 +11,11 @@ theta_real_heterogroups(
 )
 }
 \arguments{
-\item{number_of_variables}{number of variables}
+\item{number_of_variables}{number of observable variables}
 
 \item{number_of_groups_real}{real numbr of groups}
 
-\item{EXTRA_THETA_FACTOR}{multiplies coefficients in theta; default = 1}
+\item{EXTRA_THETA_FACTOR}{option to multiply the coefficients in theta; default = 1}
 }
 \description{
 Helpfunction in create_theta_real() for the option theta_real_heterogeen_groups. (This is the default option.)

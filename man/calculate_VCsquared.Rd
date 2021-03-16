@@ -20,9 +20,9 @@ calculate_VCsquared(
 
 \item{C_candidates}{candidates for C (parameter in PIC)}
 
-\item{UPDATE1}{option to indicate the number of groupfactors is updated during the algorithm; defults to FALSE}
+\item{UPDATE1}{option to indicate the number of groupfactors is updated during the algorithm; defaults to FALSE}
 
-\item{UPDATE2}{option to indicate the number of common factors is updated during the algorithm; defults to FALSE}
+\item{UPDATE2}{option to indicate the number of common factors is updated during the algorithm; defaults to FALSE}
 
 \item{number_of_group_factors}{number of groupfactors estimated}
 }

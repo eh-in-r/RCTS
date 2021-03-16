@@ -10,7 +10,7 @@ calculate_lambda(
   g,
   lgfg_list,
   use_macropca_instead_of_cz,
-  estimate_factors_with_pertMM = estimate_factors_with_pertMM,
+  efwp = estimate_factors_with_pertMM,
   initialise = FALSE,
   NN = aantal_N,
   TT = aantal_T,
@@ -28,7 +28,7 @@ calculate_lambda(
 
 \item{use_macropca_instead_of_cz}{If TRUE, then factors are estimated robustly with macropca (or pertMM), else with class-zero-method.}
 
-\item{estimate_factors_with_pertMM}{indicates that factors are estimated with pertMM}
+\item{efwp}{indicates that factors are estimated with pertMM}
 
 \item{initialise}{boolean}
 

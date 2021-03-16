@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{do_we_estimate_common_factors}
 \alias{do_we_estimate_common_factors}
-\title{Helpunction to shorten code: use a and b}
+\title{Helpfunction to shorten code: use a and b}
 \usage{
 do_we_estimate_common_factors(number_of_common_factors)
 }
@@ -10,5 +10,5 @@ do_we_estimate_common_factors(number_of_common_factors)
 \item{number_of_common_factors}{number of common factors}
 }
 \description{
-Helpunction to shorten code: use a and b
+Helpfunction to shorten code: use a and b
 }

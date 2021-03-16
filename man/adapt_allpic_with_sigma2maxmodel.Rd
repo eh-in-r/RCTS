@@ -16,9 +16,9 @@ adapt_allpic_with_sigma2maxmodel(
 
 \item{sigma2_max_model}{sigma2 of model with maximum number of groups and factors}
 
-\item{UPDATE1}{option to indicate the number of groupfactors is updated during the algorithm; defults to FALSE}
+\item{UPDATE1}{option to indicate the number of groupfactors is updated during the algorithm; defaults to FALSE}
 
-\item{UPDATE2}{option to indicate the number of common factors is updated during the algorithm; defults to FALSE}
+\item{UPDATE2}{option to indicate the number of common factors is updated during the algorithm; defaults to FALSE}
 }
 \description{
 The PIC was until now calculated with a sigma2 specific to the configuration (in terms of number of groups and factors).

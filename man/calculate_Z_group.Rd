@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{calculate_Z_group}
 \alias{calculate_Z_group}
-\title{Calculates Z = Y - X*THETA - LF), to use in estimate of groupfactorstructure.}
+\title{Calculates Z = Y - X*THETA - LF. It is used to estimate the groupfactorstructure.}
 \usage{
 calculate_Z_group(
   theta,
@@ -42,5 +42,5 @@ calculate_Z_group(
 \item{number_of_common_factors}{number of common factors estimated}
 }
 \description{
-Calculates Z = Y - X*THETA - LF), to use in estimate of groupfactorstructure.
+Calculates Z = Y - X*THETA - LF. It is used to estimate the groupfactorstructure.
 }

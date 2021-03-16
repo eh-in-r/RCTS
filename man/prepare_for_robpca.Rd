@@ -17,5 +17,4 @@ prepare_for_robpca(object, NN = aantal_N, TT = aantal_T, option = 3)
 }
 \description{
 It contains options to use the classical or robust covmatrix or no covariance matrix at all.
-Is currently dependent on global variables.
 }

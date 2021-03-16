@@ -15,7 +15,7 @@ create_covMat_crosssectional_dependence(parameter, NN)
 NxN covariance matrix
 }
 \description{
-Used to include cross-sectional dependence or serial dependence into the simulated panel data. It is based on Ando/Bai-code.
+Used to include cross-sectional dependence or serial dependence into the simulated panel data.
 }
 \examples{
 create_covMat_crosssectional_dependence(0.3,300)

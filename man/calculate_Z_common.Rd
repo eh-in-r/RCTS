@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{calculate_Z_common}
 \alias{calculate_Z_common}
-\title{Calculates Z = Y - X*THETA - LgFg, to use in estimate of common factorstructure}
+\title{Calculates Z = Y - X*THETA - LgFg. It is used in the estimate of the common factorstructure.}
 \usage{
 calculate_Z_common(
   theta,
@@ -42,5 +42,5 @@ calculate_Z_common(
 \item{eclipz}{parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
 }
 \description{
-Calculates Z = Y - X*THETA - LgFg, to use in estimate of common factorstructure
+Calculates Z = Y - X*THETA - LgFg. It is used in the estimate of the common factorstructure.
 }

@@ -27,7 +27,7 @@ factors ~ N(j * FGR_FACTOR, FGR_FACTOR_sd) -> default case will be N(j,1)
 }
 \examples{
 library(tidyverse)
-#3 groups, each with 3 groupfactors:
+#For 3 groups, each with 3 groupfactors:
 g_real = ceiling(runif(300) * 3)
 LGR_FACTOR_mean = 0
 LGR_FACTOR = 1

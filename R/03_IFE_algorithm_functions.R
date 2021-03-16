@@ -44,7 +44,7 @@ utils::globalVariables(c("use_robust",
 
 #' Function used in generating simulated data with non normal errors.
 #'
-#' Used to include cross-sectional dependence or serial dependence into the simulated panel data. It is based on Ando/Bai-code.
+#' Used to include cross-sectional dependence or serial dependence into the simulated panel data.
 #' @param parameter amount of cross-sectional dependence
 #' @inheritParams estimate_theta
 #' @return NxN covariance matrix
@@ -63,30 +63,39 @@ create_covMat_crosssectional_dependence <- function(parameter,NN) {
 
 #' Helpfunction in create_theta_real() for the option theta_real_heterogeen_groups. (This is the default option.)
 #'
-#' @param number_of_variables number of variables
+#' @param number_of_variables number of observable variables
 #' @param number_of_groups_real real numbr of groups
-#' @param EXTRA_THETA_FACTOR multiplies coefficients in theta; default = 1
+#' @param EXTRA_THETA_FACTOR option to multiply the coefficients in theta; default = 1
 #' @importFrom stats runif
 #' @importFrom magrittr %>%
 theta_real_heterogroups <- function(number_of_variables, number_of_groups_real, EXTRA_THETA_FACTOR = 1) {
   stopifnot(number_of_groups_real < LIMIT_TRUE_GROUPS) #Code allows up to 9 real groups at this point.
 
+  #######################################################################################
+  # Define real values for theta, for each group, when there are 3 or less observable variables
   #These are the values for DGP 3 & 4 (For DGP 1 & 2 theta_real is defined in 08_IFE_make_AB_DGP1.R)
 
   #1st element is the intercept.
   theta_part1 = c(0, 4,  3.5,  3,  2.5)  * EXTRA_THETA_FACTOR
   theta_part2 = c(0,-2.5, -2, -2.5, -2)  * EXTRA_THETA_FACTOR
   theta_part3 = c(0, 1,  0.5,  1.5,  1)  * EXTRA_THETA_FACTOR
-  theta_part4 = c(0,(round(runif(4),1) - 0.5) * 4) * EXTRA_THETA_FACTOR#between -2 and 2
-  theta_part5 = c(0,(round(runif(4),1) - 0.5) * 4) * EXTRA_THETA_FACTOR#between -2 and 2
-  theta_part6 = c(0,(round(runif(4),1) - 0.5) * 4) * EXTRA_THETA_FACTOR#between -2 and 2
-  theta_part7 = c(0,(round(runif(4),1) - 0.5) * 4) * EXTRA_THETA_FACTOR#between -2 and 2
-  theta_part8 = c(0,(round(runif(4),1) - 0.5) * 4) * EXTRA_THETA_FACTOR#between -2 and 2
-  theta_part9 = c(0,(round(runif(4),1) - 0.5) * 4) * EXTRA_THETA_FACTOR#between -2 and 2
-  theta_part10 = c(0,(round(runif(4),1) - 0.5) * 4) * EXTRA_THETA_FACTOR#between -2 and 2
-  theta_part11 = c(0,(round(runif(4),1) - 0.5) * 4) * EXTRA_THETA_FACTOR#between -2 and 2
-  theta_part12 = c(0,(round(runif(4),1) - 0.5) * 4) * EXTRA_THETA_FACTOR#between -2 and 2
 
+  theta_define_further_true_values <- function(number_of_values) {
+    #starting from group 4 we randomly generate values for the real values of theta
+    return(c(0,(round(runif(number_of_values),1) - 0.5) * 4) * EXTRA_THETA_FACTOR) #between -2 and 2
+  }
+  theta_part4 = theta_define_further_true_values(4)
+  theta_part5 = theta_define_further_true_values(4)
+  theta_part6 = theta_define_further_true_values(4)
+  theta_part7 = theta_define_further_true_values(4)
+  theta_part8 = theta_define_further_true_values(4)
+  theta_part9 = theta_define_further_true_values(4)
+  theta_part10 = theta_define_further_true_values(4)
+  theta_part11 = theta_define_further_true_values(4)
+  theta_part12 = theta_define_further_true_values(4)
+
+  #######################################################################################
+  # Define real values for theta, for each group, when there are more than 3 variables
   if(number_of_variables > 3) { #add when there are more than 3 observable variables:
     theta_part1 = c(theta_part1, (round(runif(number_of_variables - 3),1) - 0.5) * 4)
     theta_part2 = c(theta_part2, (round(runif(number_of_variables - 3),1) - 0.5) * 4)
@@ -542,18 +551,18 @@ initialise_theta <- function(eclipz = FALSE,
         Y_special = as.vector(t(Y[i,]))
 
         if(use_robust) {
-          if(exists("use_bramaticroux")) {
-            message(paste("bramati croux init",i))
-            model = RpanFE(Y_special, X_special, TT, 0.20, 20, number_of_variables, 1)[[1]]
-
-          } else {
+          # if(exists("use_bramaticroux")) {
+          #   message(paste("bramati croux init",i))
+          #   model = RpanFE(Y_special, X_special, TT, 0.20, 20, number_of_variables, 1)[[1]]
+          #
+          # } else {
             if(ABDGP1 & ABintercept) { #This is DGP 1
               #no intercept, because ABDGP1 defines the first variable in X as an intercept
               model <- LMROB(Y_special,X_special, nointercept = TRUE)  #-> lmrob(Y_special ~ X_special + 0,setting="KS2014)
             } else {
               model <- LMROB(Y_special,X_special)
             }
-          }
+          # }
         } else {
           if(ABDGP1 & ABintercept) { #This is DGP 1
             model <- lm(Y_special ~ X_special + 0)
@@ -564,11 +573,11 @@ initialise_theta <- function(eclipz = FALSE,
         }
 
         if(ABDGP1 & ABintercept) {
-          if(exists("use_bramaticroux")) {
-            values = c(0,model)
-          } else {
+          # if(exists("use_bramaticroux")) {
+          #   values = c(0,model)
+          # } else {
             values = c(0,model$coefficients)
-          }
+          # }
           theta[,i] = values
         } else {
           theta[,i] = model$coefficients
@@ -616,7 +625,7 @@ calculate_virtual_factor_and_lambda_group <- function(group, solve_FG_FG_times_F
   xtheta = calculate_XT_estimated(NN = NN, TT = TT, number_of_variables = number_of_variables, number_vars_estimated = number_vars_estimated)
 
 
-  if(number_of_common_factors == 0) {
+  if(!do_we_estimate_common_factors(number_of_common_factors)) {
     Y_ster = Y[indices,] - xtheta
   } else {
     Y_ster = Y[indices,] - xtheta - LF
@@ -1201,7 +1210,7 @@ calculate_lgfg <- function(lambda_group, factor_group, number_of_groups, number_
 
 #' Helpfunction in estimate_theta() for estimating theta.
 #'
-#' @param string can have values: "homogeen" or "heterogeen"
+#' @param string can have values: "homogeen" (when one theta is estimated for all individuals together) or "heterogeen" (when theta is estimated either groupwise or elementwise)
 #' @param X_special preprocessed X (observable variables)
 #' @param Y_special preprocessed Y
 #' @param initialisation indicator of being in the initialisation phase
@@ -1234,11 +1243,11 @@ determine_theta <- function(string, X_special, Y_special, initialisation = FALSE
 
   #Regression:
   if(use_robust) {
-    if(exists("use_bramaticroux")) {
-      model = RpanFE(Y_special, X_special, TT, 0.20, 20, number_of_variables, length(Y_special)/TT)[[1]]
-    } else {
+    # if(exists("use_bramaticroux")) {
+    #   model = RpanFE(Y_special, X_special, TT, 0.20, 20, number_of_variables, length(Y_special)/TT)[[1]]
+    # } else {
       model <- LMROB(Y_special, X_special) #-> lmrob(Y_special ~ X_special, setting="KS2014")
-    }
+    # }
   } else {
 
 
@@ -1282,11 +1291,11 @@ determine_theta <- function(string, X_special, Y_special, initialisation = FALSE
 
 
       if(ABDGP1 & ABintercept) { #=DGP1
-        if(exists("use_bramaticroux")) {
-          return( c(0,model) )
-        } else {
+        # if(exists("use_bramaticroux")) {
+        #   return( c(0,model) )
+        # } else {
           return(c(0,model$beta[-2,1]))
-        }
+        # }
       } else {
         return(model$beta[,1])
       }
@@ -1416,7 +1425,6 @@ estimate_theta <- function(optimize_kappa = FALSE, eclipz = FALSE,
     }
     if(heterogeneous_coefficients_individuals) {
 
-      #Vectorized version: Microbenchmark: This takes only 75% of time for (1000,30)-system.
       X_local = adapt_X_estimating_less_variables(number_of_variables, number_vars_estimated, eclipz) #makes X smaller when number_vars_estimated < number_of_variables
       if(eclipz) {
         number_of_vars = number_of_variables
@@ -1427,7 +1435,7 @@ estimate_theta <- function(optimize_kappa = FALSE, eclipz = FALSE,
                                                                                    eclipz,
                                                                                    number_of_variables = number_of_variables,
                                                                                    number_vars_estimated = number_vars_estimated))
-
+      #helpfunction
       make_Y_special <- function(i) {
         Y_special = unlist(matrix(Y[i,], nrow = 1))
         if(dim(t(Y_special))[2] == TT) {
@@ -1511,7 +1519,7 @@ use_median_values_theta <- function(theta, g, number_of_groups) {
   return(theta)
 }
 
-#' Calculates W = Y - X*THETA
+#' Calculates W = Y - X*THETA. It is used in the initializationstep of the algorithm, to initialise the factorstructures.
 #'
 #' @param theta theta
 #' @param g vector with group membership
@@ -1549,8 +1557,6 @@ calculate_W <- function(theta, g ,
     for(i in 1:NN) W = as.matrix(Y)
   }
 
-
-
   if(anyNA(W)) {
 
     #handle NA's: which currently means: remove the rows with NA's
@@ -1559,7 +1565,7 @@ calculate_W <- function(theta, g ,
   return(W)
 }
 
-#' Calculates Z = Y - X*THETA - LgFg, to use in estimate of common factorstructure
+#' Calculates Z = Y - X*THETA - LgFg. It is used in the estimate of the common factorstructure.
 #' @inheritParams calculate_W
 #' @param lgfg_list This is a list (length number of groups) containing FgLg for every group.
 #' @param estimate_factors_with_pertMM indicates that factors are estimated with pertMM
@@ -1617,7 +1623,7 @@ calculate_Z_common <- function(theta, g, lgfg_list,
   return(Z)
 }
 
-#' Calculates Z = Y - X*THETA - LF), to use in estimate of groupfactorstructure.
+#' Calculates Z = Y - X*THETA - LF. It is used to estimate the groupfactorstructure.
 #' @inheritParams calculate_W
 #' @inheritParams estimate_theta
 #' @param lambda common factor loadings
@@ -1817,7 +1823,7 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20) {
       error_macropca = TRUE
     }
     ###############################
-    #sometimes the output of MacroPCA() has too little columns (should be equal to "number_eigenvectors".
+    #sometimes the output of MacroPCA() has too little columns (should be equal to "number_eigenvectors").
     #Possible related to performing MacroPCA on a very small group, and/or the elements of the group are very similar.
     #Solution: add one-column(s) to the factors (-> temp$loadings), and zero-column(s) to factor loadings (-> temp$scores).
     #  (Note: adding zero-column to temp$scores would have the result that the rank of factor_group[...] is too low, therefore use one-column(s).)
@@ -1828,10 +1834,13 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20) {
     print(paste("number of eigenvectors:", number_eigenvectors))
     if(!is.null(dim(temp$scores))) {
       if(dim(temp$loadings)[2] != number_eigenvectors) {
-        message("issue with dimensions of factors -> add one-column(s)")
+        message(paste("issue with dimensions of factors: MacroPCA returns only",dim(temp$loadings)[2],
+        "eigenvectors, instead of", number_eigenvectors,  "-> add one-column(s)"))
         for(i in 1:(number_eigenvectors - dim(temp$loadings)[2])) {
-          temp$scores = cbind(temp$scores, 0)
-          temp$loadings = cbind(temp$loadings, 1)
+          temp$scores = cbind(temp$scores, 0) #add 0 to factor loadings
+          temp$loadings = cbind(temp$loadings, 1) #add 1 to factors
+          message("resulting factors:")
+          print(temp$loadings[1:5,])
 
           #temporary global variable, for testing purposes:
           #errordataframe <-- errordataframe %>% rbind(aantalfactoren_groups)
@@ -1841,7 +1850,7 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20) {
     ##############################
     scores = temp$scores[,1:number_eigenvectors] #these are the factor loadings
     factors_macropca = temp$loadings[,1:number_eigenvectors] #these are the factors
-    message(class(factors_macropca)) #should be matrix
+    #message(class(factors_macropca)) #should be matrix
     if(class(factors_macropca) == "numeric") { #case of estimating 1 factor -> numeric -> make matrix
       factors_macropca = matrix(factors_macropca)
     }
@@ -1938,8 +1947,8 @@ estimate_factor <- function(theta, g, lgfg_list,
     schatterF = t(sqrt(TT) * eigen(temp)$vectors[,1:number_of_common_factors])
     scores = NA #because loadings will be calculated later
   }
-  if(number_of_common_factors == 0) {
-    #then schatterF is TT, which is still an apropriate size to use in this case -> just set to zero
+  if(!do_we_estimate_common_factors(number_of_common_factors) ) {
+    #then schatterF has length TT, which is still an apropriate size to use in this case -> just set values to zero
     schatterF = schatterF - schatterF
   }
 
@@ -2083,8 +2092,7 @@ calculate_lambda <- function(theta, comfactor, g, lgfg_list,
     lambda = t(W %*% t(comfactor) / TT)
   }
 
-  if(number_of_common_factors == 0 & !initialise) {
-    #then schatterF is of size 1 x TT, which is still an apropriate size to use in this case -> just set to zero
+  if(!do_we_estimate_common_factors(number_of_common_factors) & !initialise) {
     lambda = lambda - lambda
   }
 
@@ -2240,9 +2248,9 @@ calculate_lambda_group <- function(theta, factor_group, g, lambda, comfactor,
 }
 
 
-#' Function which is used to have a df ("grid") with data (individualindex, timeindex, XT and LF) available.
+#' Function which is used to have a dataframe (called "grid") with data (individualindex, timeindex, XT and LF) available.
 #'
-#' It is used in update_g().
+#' The dataframe "grid" is required in update_g(), via OF_vectorized3().
 #' @param grid dataframe containing values for X*theta and LF (product of common factor and its loadings)
 #' @param theta theta
 #' @param lambda loadings of the common factors
@@ -2590,24 +2598,26 @@ calculate_PIC_term1 <- function(e2) {
 #' @param term4 term 4 of PIC, updated until group n-1; this function updates this value with group n
 #' @param Nj number of individuals in group j
 #' @param NN N
-calculate_PIC_term4 <- function(temp, term4, Nj, NN = aantal_N) {
+#' @param use_alterpic indicates using an alternative version of the PIC (the one of AB2016 instead of AB2017). It weighs the foruth term with an extra factor relative to the size of the groups.
+calculate_PIC_term4 <- function(temp, term4, Nj, NN = aantal_N, use_alterpic = ALTERNATIVE_PIC) {
 
 
   if(exists("ALTERNATIVE_PIC_2")) { #PIC of AB2017-code (includes 3 other changes (see test_alternative_PIC()))
     term4 = term4 + (temp * Nj/NN)
   } else {
 
-    if(exists("ALTERNATIVE_PIC")) {
-      if(ALTERNATIVE_PIC == TRUE) {
-        #message("We use an Alternative PIC")
+    # if(exists("ALTERNATIVE_PIC")) {
+      if(use_alterpic == TRUE) {
+        #message("We use an Alternative PIC -> Ando/Bai2016-paper")
         term4 = term4 + (temp * Nj/NN) #=weigh with relative size of groups
       } else {
+        #=Standard PIC (from Ando/Bai2017-paper)
         term4 = term4 + temp
       }
-    } else {
-      #=Standard PIC (from Ando/Bai2017-paper)
-      term4 = term4 + temp
-    }
+    # } else {
+    #   #=Standard PIC (from Ando/Bai2017-paper)
+    #   term4 = term4 + temp
+    # }
   }
   return(term4)
 }
@@ -2672,7 +2682,23 @@ calculate_PIC <- function(C, number_of_common_factors, number_of_group_factors, 
   return(term1 + term2 + term3 + term4)
 }
 
-
+#' This function tests alternative PIC's.
+#'
+#' @inheritParams calculate_PIC
+#' @param term2 term2 of PIC
+#' @param term3 term3 of PIC
+#' @param term4 term4 of PIC
+test_alternative_PIC <- function(C, term2, term3, term4) {
+  #For testing purposes:
+  if(exists("ALTERNATIVE_PIC_2")) {
+    #message("use PIC of AB-code (4 things are different (part2: 1/C and 2xC)")
+    #note that Nj/N was added earlier already
+    term2 = term2 / aantal_T
+    term3 = C * term3
+    term4 = C * term4
+  }
+  return(list(term2,term3,term4))
+}
 
 
 
@@ -3033,7 +3059,7 @@ calculate_VCsquared <- function(rcj,rc,C_candidates, UPDATE1 = FALSE, UPDATE2 = 
 #'
 #' Desgined to make sure the following error does not happen anymore:
 #' Error in if (init$scale == 0)  : missing value where TRUE/FALSE needed.
-#' KS2014 is the recommended setting. It however does lead to increased computational time.
+#' KS2014 is the recommended setting. It however does lead to a strongly increased computational time.
 #' @param parameter_y dependent variable in regression
 #' @param parameter_x independent variables in regression
 #' @param nointercept if TRUE it performs regression without an intercept
@@ -3041,7 +3067,6 @@ calculate_VCsquared <- function(rcj,rc,C_candidates, UPDATE1 = FALSE, UPDATE2 = 
 #' @importFrom robustbase lmrob
 #' @export
 LMROB <- function(parameter_y, parameter_x, nointercept = FALSE, nosetting = exists("run_lmrob_without_setting")) {
-
 
 
   if(is.na(parameter_x)[1]) { #when there are no independent variables
@@ -3104,7 +3129,7 @@ LMROB <- function(parameter_y, parameter_x, nointercept = FALSE, nosetting = exi
 
 #' Calculates sigma2maxmodel
 #'
-#' Sigma2 is the sum of the squared errors, divided by NT. We need the sigma2 of the maxmodel to use (in term 2,3,4 of the PIC) instead of the configuration-dependent sigma2. (based on text in AndoBai 2016).
+#' Sigma2 is the sum of the squared errors, divided by NT. We need the sigma2 of the maxmodel to use (in term 2,3,4 of the PIC) instead of the configuration-dependent sigma2. (See text in paper AndoBai 2016).
 #' sigma2_max_model could actually be set to 1 as well, as it can be absorbed in parameter C of the PIC.
 #' @inheritParams determine_theta
 #' @inheritParams calculate_lambda_group

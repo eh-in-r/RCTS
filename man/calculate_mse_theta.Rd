@@ -30,8 +30,7 @@ calculate_mse_theta(
 \item{ABDGP1_local}{gives information about which DGP we use; TRUE of FALSE}
 }
 \description{
-(calculated with formula of AndoBai2017: supplementary: p19).
-Notes:
+It is calculated with the formula of AndoBai2017: supplementary: p19.
 Heterogeneous_coefficients_individuals is the default case.
-For DGP 1 & 2: When the number of variables in X is not equal to the standard of 3 it returns NA.
+For DGP 1 & 2: When the true number of variables in X is not equal to the standard of 3 it currently returns NA.
 }

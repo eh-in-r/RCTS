@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{grid_add_variables}
 \alias{grid_add_variables}
-\title{Function which is used to have a df ("grid") with data (individualindex, timeindex, XT and LF) available.}
+\title{Function which is used to have a dataframe (called "grid") with data (individualindex, timeindex, XT and LF) available.}
 \usage{
 grid_add_variables(
   grid,
@@ -36,5 +36,5 @@ grid_add_variables(
 \item{number_of_groups}{number of groups estimated}
 }
 \description{
-It is used in update_g().
+The dataframe "grid" is required in update_g(), via OF_vectorized3().
 }

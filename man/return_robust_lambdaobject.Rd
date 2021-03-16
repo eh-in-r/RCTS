@@ -13,7 +13,8 @@ return_robust_lambdaobject(
   FACTOR = comfactor,
   number_of_common_factors = aantalfactoren_common,
   NN = aantal_N,
-  eclipz = FALSE
+  eclipz = FALSE,
+  application_covid = FALSE
 )
 }
 \arguments{
@@ -34,6 +35,8 @@ return_robust_lambdaobject(
 \item{NN}{N}
 
 \item{eclipz}{indicator of using the eclipzdataset}
+
+\item{application_covid}{indicator of using the coviddataset}
 }
 \value{
 Nxk dataframe

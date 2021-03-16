@@ -8,30 +8,30 @@ determine_theta(
   string,
   X_special,
   Y_special,
-  correct,
-  initialisatie = FALSE,
+  initialisation = FALSE,
   indices = NA,
   optimize_kappa = FALSE,
   TT = aantal_T,
+  NN = aantal_N,
   number_of_variables = aantalvars
 )
 }
 \arguments{
-\item{string}{can have values: "homogeen" or "heterogeen"}
+\item{string}{can have values: "homogeen" (when one theta is estimated for all individuals together) or "heterogeen" (when theta is estimated either groupwise or elementwise)}
 
 \item{X_special}{preprocessed X (observable variables)}
 
 \item{Y_special}{preprocessed Y}
 
-\item{correct}{Defaults to TRUE. If TRUE, then My is not being used. My is an scaling thing that came out of Ando/Bai.}
-
-\item{initialisatie}{boolean}
+\item{initialisation}{indicator of being in the initialisation phase}
 
 \item{indices}{individuals for which theta is being estimated}
 
 \item{optimize_kappa}{indicates if kappa has to be optimized or not; defaults to FALSE}
 
 \item{TT}{length of time series}
+
+\item{NN}{number of individuals}
 
 \item{number_of_variables}{number of observable variables}
 }

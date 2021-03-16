@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{estimate_factor}
 \alias{estimate_factor}
-\title{Helpfunction in estimate_factor() for the robust approach.}
+\title{Estimates common factor F}
 \usage{
 estimate_factor(
   theta,
@@ -39,10 +39,6 @@ estimate_factor(
 r x T matrix
 }
 \description{
-It has some options used for testing.
-Estimates common factor F
-}
-\details{
 The estimator for F, see Anderson (1984), is equal to the first r eigenvectors (multiplied by sqrt(T) due to the restriction F'F/T = I)
 associated with first r largest eigenvalues of the matrix WW' (which is TxT)
 W is called Z in Ando/Bai (2017)
