@@ -17,6 +17,8 @@ theta_real_heterogroups(
 \item{number_of_groups_real}{real numbr of groups}
 
 \item{EXTRA_THETA_FACTOR}{option to multiply the coefficients in theta; default = 1}
+
+\item{limit_true_groups}{Maximum number of true groups in a simulation-DGP for which the code in this package is implemented. Currently equals 12. For application on realworld data this parameter is not relevant.}
 }
 \description{
 Helpfunction in create_theta_real() for the option theta_real_heterogeen_groups. (This is the default option.)

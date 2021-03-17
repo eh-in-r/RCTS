@@ -36,5 +36,6 @@ library(tidyverse)
 theta_real_homogeen = FALSE
 theta_real_heterogeen_groups = TRUE
 theta_real_heterogeen_individueel = FALSE
+LIMIT_TRUE_GROUPS = 12 #set the maximum allowed number of true groups
 create_theta_real(3,NN=300,number_of_groups_real = 3)
 }
