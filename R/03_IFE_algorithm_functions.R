@@ -69,8 +69,8 @@ create_covMat_crosssectional_dependence <- function(parameter,NN) {
 #' @param EXTRA_THETA_FACTOR option to multiply the coefficients in theta; default = 1
 #' @importFrom stats runif
 #' @importFrom magrittr %>%
-theta_real_heterogroups <- function(number_of_variables, number_of_groups_real, EXTRA_THETA_FACTOR = 1) {
-  stopifnot(number_of_groups_real < LIMIT_TRUE_GROUPS) #Code allows up to 9 real groups at this point.
+theta_real_heterogroups <- function(number_of_variables, number_of_groups_real, EXTRA_THETA_FACTOR = 1, limit_true_groups = LIMIT_TRUE_GROUPS) {
+  stopifnot(number_of_groups_real < limit_true_groups) #Code allows up to 12 real groups at this point.
 
   #######################################################################################
   # Define real values for theta, for each group, when there are 3 or less observable variables
