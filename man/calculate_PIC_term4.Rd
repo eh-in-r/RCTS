@@ -4,7 +4,13 @@
 \alias{calculate_PIC_term4}
 \title{Function to calculate term4 of PIC for a group j; includes options for testing alternative PIC's.}
 \usage{
-calculate_PIC_term4(temp, term4, Nj, NN = aantal_N)
+calculate_PIC_term4(
+  temp,
+  term4,
+  Nj,
+  NN = aantal_N,
+  use_alterpic = ALTERNATIVE_PIC
+)
 }
 \arguments{
 \item{temp}{term4 of PIC for group n}
@@ -14,6 +20,8 @@ calculate_PIC_term4(temp, term4, Nj, NN = aantal_N)
 \item{Nj}{number of individuals in group j}
 
 \item{NN}{N}
+
+\item{use_alterpic}{indicates using an alternative version of the PIC (the one of AB2016 instead of AB2017). It weighs the foruth term with an extra factor relative to the size of the groups.}
 }
 \description{
 Used in calculate_PIC(), in a loop over all groups.
