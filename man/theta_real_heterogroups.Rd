@@ -7,7 +7,8 @@
 theta_real_heterogroups(
   number_of_variables,
   number_of_groups_real,
-  EXTRA_THETA_FACTOR = 1
+  EXTRA_THETA_FACTOR = 1,
+  limit_true_groups = LIMIT_TRUE_GROUPS
 )
 }
 \arguments{

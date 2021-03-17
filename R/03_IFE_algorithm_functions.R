@@ -67,6 +67,7 @@ create_covMat_crosssectional_dependence <- function(parameter,NN) {
 #' @param number_of_variables number of observable variables
 #' @param number_of_groups_real real numbr of groups
 #' @param EXTRA_THETA_FACTOR option to multiply the coefficients in theta; default = 1
+#' @param limit_true_groups Maximum number of true groups in a simulation-DGP for which the code in this package is implemented. Currently equals 12. For application on realworld data this parameter is not relevant.
 #' @importFrom stats runif
 #' @importFrom magrittr %>%
 theta_real_heterogroups <- function(number_of_variables, number_of_groups_real, EXTRA_THETA_FACTOR = 1, limit_true_groups = LIMIT_TRUE_GROUPS) {
@@ -147,6 +148,7 @@ theta_real_heterogroups <- function(number_of_variables, number_of_groups_real, 
 #' theta_real_homogeen = FALSE
 #' theta_real_heterogeen_groups = TRUE
 #' theta_real_heterogeen_individueel = FALSE
+#' LIMIT_TRUE_GROUPS = 12 #set the maximum allowed number of true groups
 #' create_theta_real(3,NN=300,number_of_groups_real = 3)
 #' @importFrom stats rnorm
 #' @export
@@ -1832,7 +1834,7 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20) {
     #This ensures that the product of factor and factor loadings does not get altered.
     #  (Note: adding zero-column to temp$scores would have the result that the rank of factor_group[...] is too low, therefore use one-column(s).)
 
-    message("----dimension of factorloadings and of factors:----")
+    message("----dimension of output of macropca (factorloadings and factors):----")
     print(dim(temp$scores))
     print(dim(temp$loadings))
     print(paste("number of eigenvectors:", number_eigenvectors))
