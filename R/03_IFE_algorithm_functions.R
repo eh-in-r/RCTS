@@ -16,6 +16,7 @@ utils::globalVariables(c("use_robust",
                          "ALTERNATIVE_PIC", "C",
                          "FGR_FACTOR","FGR_FACTOR_sd","LGR_FACTOR","LGR_FACTOR_mean",
                          "LIMIT_NUMBER_OF_GROUPS_heterogroups",
+                         "LIMIT_TRUE_GROUPS",
                          "expert_based_initial_factors",
                          "step",
                          "theta_real_heterogeen_groups", "theta_real_heterogeen_individueel", "theta_real_homogeen",
@@ -836,10 +837,10 @@ solveFG <- function(TT, number_of_groups, number_of_group_factors){
         print(FG[,1:3])
       }
       print(paste("rank of matrix FG: ",as.numeric(rankMatrix(FG))))
-      solve_FG_FG_times_FG[[group]] = solve(FG%*%t(FG))%*%FG #this is actually just FG/T (the code comes from AndoBai)
+      solve_FG_FG_times_FG[[group]] = solve(FG%*%t(FG))%*%FG #this is actually the same as FG/T
       rm(FG)
     } else {
-      #make 0- matrix with 1 row
+      #make 0-matrix with 1 row
       solve_FG_FG_times_FG[[group]] = matrix(0, nrow = 1, ncol = TT)
     }
   }
@@ -1744,9 +1745,9 @@ handle_macropca_errors <- function(object, temp, KMAX, number_eigenvectors) {
           error = function(e) { message(e); return(e) }
       )
       if(number_columns < number_eigenvectors) {
-        message("---- does this still occur? ----")
+        message("---- This should be solved. Does this still occur? ----")
         message(paste("add",number_eigenvectors - number_columns,"columns to temp"))
-        print(temp2)
+        print(temp)
         message("sleep...")
         Sys.sleep(9000)
       }
@@ -1815,6 +1816,8 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20) {
     # }
 
     message("--start of macropca")
+    print(paste("rank of input:", rankMatrix(object)))
+    print(paste("required number of eigenvectors:",number_eigenvectors))
     temp =  tryCatch(
       cellWise::MacroPCA(object, k = max(macropca_kmax, number_eigenvectors), MacroPCApars = list(kmax=KMAX)),
       error = function(e) { message(e); return(e) }
@@ -1826,6 +1829,7 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20) {
     #sometimes the output of MacroPCA() has too little columns (should be equal to "number_eigenvectors").
     #Possible related to performing MacroPCA on a very small group, and/or the elements of the group are very similar.
     #Solution: add one-column(s) to the factors (-> temp$loadings), and zero-column(s) to factor loadings (-> temp$scores).
+    #This ensures that the product of factor and factor loadings does not get altered.
     #  (Note: adding zero-column to temp$scores would have the result that the rank of factor_group[...] is too low, therefore use one-column(s).)
 
     message("----dimension of factorloadings and of factors:----")
@@ -1850,7 +1854,6 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20) {
     ##############################
     scores = temp$scores[,1:number_eigenvectors] #these are the factor loadings
     factors_macropca = temp$loadings[,1:number_eigenvectors] #these are the factors
-    #message(class(factors_macropca)) #should be matrix
     if(class(factors_macropca) == "numeric") { #case of estimating 1 factor -> numeric -> make matrix
       factors_macropca = matrix(factors_macropca)
     }
