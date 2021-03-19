@@ -42,7 +42,6 @@ utils::globalVariables(c("use_robust",
 
 
 
-
 #' Function used in generating simulated data with non normal errors.
 #'
 #' Used to include cross-sectional dependence or serial dependence into the simulated panel data.
