@@ -465,16 +465,16 @@ generate_Y <- function(NN, TT, number_of_common_factors_real,number_of_group_fac
 #' @param number_vars_estimated number of variables from which the coefficients are estimated
 #' @param number_of_groups number of groups
 #' @examples
-#' library(RobClustTimeSeries)
+#' library(RCTS)
 #' library(tidyverse)
 #' library(robustbase)
 #'
-#' X = RobClustTimeSeries::X_dgp3
-#' Y = RobClustTimeSeries::Y_dgp3
+#' X = RCTS::X_dgp3
+#' Y = RCTS::Y_dgp3
 #' #Set estimations for group factors and its loadings, and group membership to the real value
-#' lambda_group = RobClustTimeSeries::lambda_group_real_dgp3
-#' factor_group = RobClustTimeSeries::factor_group_real_dgp3
-#' g = RobClustTimeSeries::g_real_dgp3
+#' lambda_group = RCTS::lambda_group_real_dgp3
+#' factor_group = RCTS::factor_group_real_dgp3
+#' g = RCTS::g_real_dgp3
 #' #There are no common factors to be estimated  -> but needs placeholder
 #' lambda = matrix(0,nrow=1,ncol=300)
 #' comfactor = matrix(0,nrow=1,ncol=30)
@@ -856,16 +856,16 @@ solveFG <- function(TT, number_of_groups, number_of_group_factors){
 #' @param use_class_zero boolean: if set to TRUE, then individuals with high distance to all possible groups are put in a separate class zero
 #' @examples
 #' #This function needs several initial parameters to be initialized in order to work on itself
-#' library(RobClustTimeSeries)
+#' library(RCTS)
 #' library(tidyverse)
 #' library(robustbase)
 #'
-#' X = RobClustTimeSeries::X_dgp3
-#' Y = RobClustTimeSeries::Y_dgp3
+#' X = RCTS::X_dgp3
+#' Y = RCTS::Y_dgp3
 #' #Set estimations for group factors and its loadings, and group membership to the real value
-#' lambda_group = RobClustTimeSeries::lambda_group_real_dgp3
-#' factor_group = RobClustTimeSeries::factor_group_real_dgp3
-#' g_real = RobClustTimeSeries::g_real_dgp3 #true values of group membership
+#' lambda_group = RCTS::lambda_group_real_dgp3
+#' factor_group = RCTS::factor_group_real_dgp3
+#' g_real = RCTS::g_real_dgp3 #true values of group membership
 #' g = g_real #estimated values of group membership; set in this example to be equal to true values
 #' #There are no common factors to be estimated  -> but needs placeholder
 #' lambda = matrix(0,nrow=1,ncol=300)
@@ -1166,8 +1166,8 @@ OF_vectorized3 <- function(group_memberships, THETA = theta,
 #' @importFrom dplyr arrange
 #' @examples
 #' library(tidyverse)
-#' lambda_group = RobClustTimeSeries::lambda_group_real_dgp3
-#' factor_group = RobClustTimeSeries::factor_group_real_dgp3
+#' lambda_group = RCTS::lambda_group_real_dgp3
+#' factor_group = RCTS::factor_group_real_dgp3
 #' calculate_lgfg(lambda_group,factor_group,3,c(3,3,3),0,FALSE)
 #' @importFrom rlang .data
 #' @export
@@ -1326,16 +1326,16 @@ determine_theta <- function(string, X_special, Y_special, initialisation = FALSE
 #' @return list: 1st element contains matrix (N columns: 1 for each element of the panel data) with estimated theta's.
 #' @examples
 #' #This function needs several initial parameters to be initialized in order to work on itself.
-#' library(RobClustTimeSeries)
+#' library(RCTS)
 #' library(tidyverse)
 #' library(robustbase)
 #'
-#' X = RobClustTimeSeries::X_dgp3
-#' Y = RobClustTimeSeries::Y_dgp3
+#' X = RCTS::X_dgp3
+#' Y = RCTS::Y_dgp3
 #' #Set estimations for group factors and its loadings, and group membership to the real value
-#' lambda_group = RobClustTimeSeries::lambda_group_real_dgp3
-#' factor_group = RobClustTimeSeries::factor_group_real_dgp3
-#' g = RobClustTimeSeries::g_real_dgp3
+#' lambda_group = RCTS::lambda_group_real_dgp3
+#' factor_group = RCTS::factor_group_real_dgp3
+#' g = RCTS::g_real_dgp3
 #' #There are no common factors to be estimated  -> but needs placeholder
 #' lambda = matrix(0,nrow=1,ncol=300)
 #' comfactor = matrix(0,nrow=1,ncol=30)
