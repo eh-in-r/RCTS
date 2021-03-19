@@ -1093,7 +1093,7 @@ OF_vectorized_helpfunction3 <- function(i,t,XTHETA,LF,
   if(do_we_estimate_group_factors(number_of_group_factors) != 0 & group_memberships[i] != 0) {
 
     if(t > ncol(lgfg_list[[group_memberships[i]]])) { #this is the case when macropca() dropped columns
-      message("issue with dropped columns in macropca (OF_vectorized_helpfunction3())")
+      message("Unsolved issue: macropca has dropped columns (OF_vectorized_helpfunction3())")
       print(t)
       print(dim(lgfg_list[[group_memberships[i]]]))
     } else {
@@ -1132,10 +1132,10 @@ OF_vectorized3 <- function(group_memberships, THETA = theta,
                            number_of_group_factors = aantalfactoren_groups,
                            num_factors_may_vary = aantalfactors_verschillend_per_group) {
   #this is a list (length number of groups) of the product FgLg (which is the groupfactorstructure)
-  lgfg_list = calculate_lgfg(LAMBDA_GROUP,FACTOR_GROUP, number_of_groups, number_of_group_factors, number_of_common_factors, num_factors_may_vary)
+  lgfg_list = calculate_lgfg(LAMBDA_GROUP, FACTOR_GROUP, number_of_groups, number_of_group_factors, number_of_common_factors, num_factors_may_vary)
 
   if(homogeneous_coefficients | heterogeneous_coefficients_individuals) {
-    return(sum(apply(grid,1,function(x) OF_vectorized_helpfunction3(x[1],x[2],x[3],x[4],group_memberships, lgfg_list, number_of_group_factors))))
+    return(sum(apply(grid,1,function(x) OF_vectorized_helpfunction3(x[1], x[2], x[3], x[4], group_memberships, lgfg_list, number_of_group_factors))))
   }
   if(heterogeneous_coefficients_groups) {
     #construct a vector with XTHETA-values depending on the group of the individuals:

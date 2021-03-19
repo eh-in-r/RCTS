@@ -1,5 +1,5 @@
 
-#' RobClustTimeSeries
+#' RCTS
 #'
 #' This package is about clustering time series in a robust manner.
 #' The method of Ando & Bai (Clustering Huge Number of Financial Time Series: A Panel Data Approach With High-Dimensional Predictors and Factor Structures)
@@ -7,6 +7,6 @@
 #' It also contains a simulated dataset (dataset_Y_dgp3).
 #'
 #' @docType package
-#' @name RobClustTimeSeries
+#' @name RCTS
 NULL
 ## NULL

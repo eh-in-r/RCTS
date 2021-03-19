@@ -1,6 +1,6 @@
-Package: RobClustTimeSeries
+Package: RCTS 
 Title: The package RCTS (Robust Clustering of Time Series) contains functions to cluster time series, and can handle outliers
-Version: 0.0.1
+Version: 0.1
 Authors@R: 
     person(given = "Ewoud",
            family = "Heyndels",
