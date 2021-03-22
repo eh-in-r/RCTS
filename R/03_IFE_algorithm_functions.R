@@ -1940,14 +1940,24 @@ estimate_factor <- function(theta, g, lgfg_list,
                             initialise = FALSE,
                             NN = aantal_N,
                             TT = aantal_T,
-                            number_of_common_factors = aantalfactoren_common) {
+                            number_of_common_factors = aantalfactoren_common,
+                            number_of_variables = aantalvars,
+                            number_vars_estimated = number_variables_estimated) {
 
 
   #initialisation: has no grouped factorstructure yet
   if(initialise) {
-    W = calculate_W(theta, g) #Y - XT
+    W = calculate_W(theta, g,
+                    NN = NN,
+                    TT = TT,
+                    number_of_variables = number_of_variables,
+                    number_vars_estimated = number_vars_estimated) #Y - XT
   } else {
-    W = calculate_Z_common(theta, g, lgfg_list, estimate_factors_with_pertMM) #this is a "rows_without_NA x T - matrix"
+    W = calculate_Z_common(theta, g, lgfg_list, estimate_factors_with_pertMM,
+                           NN = NN,
+                           TT = TT,
+                           number_of_variables = number_of_variables,
+                           number_vars_estimated = number_vars_estimated) #this is a "rows_without_NA x T - matrix"
   }
 
   #if there are individuals in "class zero", then they are considered outliers
@@ -2122,13 +2132,23 @@ calculate_lambda <- function(theta, comfactor, g, lgfg_list,
                              efwp = estimate_factors_with_pertMM,
                              initialise = FALSE,
                              NN = aantal_N, TT = aantal_T,
-                             number_of_common_factors = aantalfactoren_common) {
+                             number_of_common_factors = aantalfactoren_common,
+                             number_of_variables = aantalvars,
+                             number_vars_estimated = number_variables_estimated) {
 
 
   if(initialise) {
-    W = calculate_W(theta, g)
+    W = calculate_W(theta, g,
+                    NN = NN,
+                    TT = TT,
+                    number_of_variables = number_of_variables,
+                    number_vars_estimated = number_vars_estimated)
   }  else {
-    W = calculate_Z_common(theta, g, lgfg_list, efwp)
+    W = calculate_Z_common(theta, g, lgfg_list, efwp,
+                           NN = NN,
+                           TT = TT,
+                           number_of_variables = number_of_variables,
+                           number_vars_estimated = number_vars_estimated)
   }
 
   if(use_robust) {
@@ -2192,6 +2212,7 @@ calculate_lambda_group <- function(theta, factor_group, g, lambda, comfactor,
                              TT = TT,
                              number_of_variables = number_of_variables,
                              number_vars_estimated = number_vars_estimated)
+
       #robust things:
       if(use_robust) {
 
@@ -2202,10 +2223,13 @@ calculate_lambda_group <- function(theta, factor_group, g, lambda, comfactor,
           #   We replace this mean by an M-estimator in the robust approach.
           if(UPDATE1) {
             lambda_local[[group]] = return_robust_lambdaobject(Wj, group, type = 3, FACTOR_GROUP = factor_group,
-                                                               number_of_group_factors = unlist(lapply(factor_group, nrow)), eclipz = eclipz,
+                                                               number_of_group_factors = unlist(lapply(factor_group, nrow)),
+                                                               eclipz = eclipz,
                                                                application_covid = exists("usecoviddata_cases") | exists("usecoviddata_deaths"))
           } else {
-            lambda_local[[group]] = return_robust_lambdaobject(Wj, group, type = 3, eclipz = eclipz,
+            lambda_local[[group]] = return_robust_lambdaobject(Wj, group, type = 3,
+                                                               number_of_group_factors = number_of_group_factors,
+                                                               eclipz = eclipz,
                                                                application_covid = exists("usecoviddata_cases") | exists("usecoviddata_deaths"))
           }
         } else {
@@ -2232,6 +2256,7 @@ calculate_lambda_group <- function(theta, factor_group, g, lambda, comfactor,
                                      1)
     }
   }
+
 
   #for income-series with NA's, the lambda's cannot be determined -> set to zero with this function
   add_lambdas_from_NArows <- function(DF, groep) {
