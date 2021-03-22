@@ -659,7 +659,8 @@ calculate_virtual_factor_and_lambda_group <- function(group, solve_FG_FG_times_F
                                                       number_of_variables = aantalvars,
                                                       number_vars_estimated = number_variables_estimated,
                                                       number_of_group_factors = aantalfactoren_groups,
-                                                      number_of_common_factors = aantalfactoren_common
+                                                      number_of_common_factors = aantalfactoren_common,
+                                                      eclipz = eclipz
                                                       ) {
   FG = factor_group[[group]]
   indices = 1:NN
@@ -939,7 +940,8 @@ update_g <- function(NN = aantal_N, TT = aantal_T,
                      number_vars_estimated = number_variables_estimated,
                      number_of_group_factors = aantalfactoren_groups,
                      number_of_common_factors = aantalfactoren_common,
-                     use_class_zero = FALSE) {
+                     use_class_zero = FALSE,
+                     eclipz = eclipz) {
 
 
 
@@ -953,7 +955,8 @@ update_g <- function(NN = aantal_N, TT = aantal_T,
                                                                                                                         number_vars_estimated = number_vars_estimated,
                                                                                                                         number_of_group_factors = number_of_group_factors,
                                                                                                                         number_of_common_factors = number_of_common_factors,
-                                                                                                                        use_macropca_instead_of_cz = use_macropca_instead_of_cz))
+                                                                                                                        use_macropca_instead_of_cz = use_macropca_instead_of_cz,
+                                                                                                                        eclipz = eclipz))
 
 
   } else {
@@ -2046,15 +2049,16 @@ estimate_factor_group <- function(theta, g, lambda, comfactor,
                                   TT = aantal_T,
                                   number_of_groups = aantalgroepen,
                                   number_of_group_factors = aantalfactoren_groups,
+                                  number_of_common_factors = aantalfactoren_common,
                                   number_of_variables = aantalvars,
                                   number_vars_estimated = number_variables_estimated,
                                   eclipz = eclipz,
                                   expert_based_initial_factors = exists("expert_based_initial_factors")
                                   #returnscores = FALSE
                                   ) {
+
   schatterF = list()
   scores = list()
-
   if(eclipz & expert_based_initial_factors & iteration == 0) {
     schatterF = define_expert_based_initial_factors(number_of_groups)
   } else {
@@ -2068,7 +2072,9 @@ estimate_factor_group <- function(theta, g, lambda, comfactor,
         Wj = calculate_Z_group(theta, g, lambda, comfactor, group, initialise,
                                TT = TT,
                                number_of_variables = number_of_variables,
-                               number_vars_estimated = number_vars_estimated)
+                               number_vars_estimated = number_vars_estimated,
+                               number_of_common_factors = number_of_common_factors)
+        print("--1")
 
         #use limit on nrow(Wj) due to error in otherwise ("The input data must have at least 3 rows (cases)")
         #When the number of rows withing the group is bigger than 3, macropca runs, but in some cases can drop columns (when values within this column are equal).
