@@ -2036,6 +2036,8 @@ estimate_factor_group <- function(theta, g, lambda, comfactor,
                                   TT = aantal_T,
                                   number_of_groups = aantalgroepen,
                                   number_of_group_factors = aantalfactoren_groups,
+                                  number_of_variables = aantalvars,
+                                  number_vars_estimated = number_variables_estimated,
                                   eclipz = eclipz,
                                   expert_based_initial_factors = exists("expert_based_initial_factors")
                                   #returnscores = FALSE
@@ -2053,7 +2055,10 @@ estimate_factor_group <- function(theta, g, lambda, comfactor,
           message("-> There are too many factors to be estimated, compared to TT.")
         }
 
-        Wj = calculate_Z_group(theta, g, lambda, comfactor, group, initialise)
+        Wj = calculate_Z_group(theta, g, lambda, comfactor, group, initialise,
+                               TT = TT,
+                               number_of_variables = number_of_variables,
+                               number_vars_estimated = number_vars_estimated)
 
         #use limit on nrow(Wj) due to error in otherwise ("The input data must have at least 3 rows (cases)")
         #When the number of rows withing the group is bigger than 3, macropca runs, but in some cases can drop columns (when values within this column are equal).
@@ -2174,14 +2179,19 @@ calculate_lambda_group <- function(theta, factor_group, g, lambda, comfactor,
                                    NN = aantal_N,
                                    TT = aantal_T,
                                    number_of_groups = aantalgroepen,
-                                   number_of_group_factors = aantalfactoren_groups) {
+                                   number_of_group_factors = aantalfactoren_groups,
+                                   number_of_variables = aantalvars,
+                                   number_vars_estimated = number_variables_estimated) {
 
 
   lambda_local = list()
 
   for(group in 1:number_of_groups) {
     if(number_of_group_factors[group] > 0) {
-      Wj = calculate_Z_group(theta, g, lambda, comfactor, group, initialise)
+      Wj = calculate_Z_group(theta, g, lambda, comfactor, group, initialise,
+                             TT = TT,
+                             number_of_variables = number_of_variables,
+                             number_vars_estimated = number_vars_estimated)
       #robust things:
       if(use_robust) {
 
