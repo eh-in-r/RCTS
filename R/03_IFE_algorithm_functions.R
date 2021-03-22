@@ -27,7 +27,7 @@ utils::globalVariables(c("use_robust",
                          "add_outliers_eclipzstyle_fractie",
                          "define_expert_based_initial_factors",
                          "df_results", "sigma2_max_model",
-                         "a1", "factor_for_grouping",
+                         "indices_subset", "factor_for_grouping",
                          "heterogeneous_coefficients_groups",
                          "heterogeneous_coefficients_individuals",
                          "homogeneous_coefficients",
@@ -139,39 +139,44 @@ theta_real_heterogroups <- function(number_of_variables, number_of_groups_real, 
 #' @param number_of_groups_real number of groups
 #' @param eclipz boolean to indicate using eClipzdatabase; defaults to FALSE
 #' @param extra_theta_factor multiplies coefficients in theta; default = 1
+#' @param theta_real_homogeneous whether true theta is equal for all individuals
+#' @param theta_real_heterogeneous_groups whether true theta is equal within groups, and different between groups
+#' @param theta_real_heterogeneous_individuals whether true theta is different for all individuals
 #' @return matrix with number of rows equal to number of observable variables + 1 (the first row contains the intercept) and number of culumns
 #' equal to the real number of groups.
 #' @examples
 #' library(tidyverse)
 #' #Decide if theta is common, or specific to groups or individuals: Choose 1 of the following 3.
-#' theta_real_homogeen = FALSE
-#' theta_real_heterogeen_groups = TRUE
-#' theta_real_heterogeen_individueel = FALSE
 #' LIMIT_TRUE_GROUPS = 12 #set the maximum allowed number of true groups
-#' create_theta_real(3,NN=300,number_of_groups_real = 3)
+#' create_theta_real(3, NN = 300, number_of_groups_real = 3,
+#' theta_real_homogeneous = FALSE, theta_real_heterogeneous_groups = TRUE, theta_real_heterogeneous_individuals = FALSE)
 #' @importFrom stats rnorm
 #' @export
 create_theta_real <- function(number_of_variables,
                               NN = aantal_N,
                               number_of_groups_real = aantalgroepen_real,
                               eclipz = FALSE,
-                              extra_theta_factor = 1) {
+                              extra_theta_factor = 1,
+                              theta_real_homogeneous = theta_real_homogeen,
+                              theta_real_heterogeneous_groups = theta_real_heterogeen_groups,
+                              theta_real_heterogeneous_individuals = theta_real_heterogeen_individueel) {
+  stopifnot((theta_real_homogeneous + theta_real_heterogeneous_groups + theta_real_heterogeneous_individuals) == 1)
   #real world eclipzdata: theta_real does not exist -> return NA
   if(eclipz) return(NA)
 
 
   if(number_of_variables > 0) {
     #common theta_real:
-    if(theta_real_homogeen) {
+    if(theta_real_homogeneous) {
       theta_real = c(0, c(1,2,3,28,33,38,43,48,53,58,63,68,73,78,83)[1:number_of_variables]) #intercept 0, and after that values for the real theta's
       theta_real = matrix(rep(theta_real, number_of_groups_real), nrow = (number_of_variables + 1))
     }
     #groupsspecific theta_real: -> default case
-    if(theta_real_heterogeen_groups) {
-      theta_real = theta_real_heterogroups(number_of_variables, number_of_groups_real, EXTRA_THETA_FACTOR = extra_theta_factor)
+    if(theta_real_heterogeneous_groups) {
+      theta_real = theta_real_heterogroups(number_of_variables, number_of_groups_real, EXTRA_THETA_FACTOR = extra_theta_factor, limit_true_groups = LIMIT_TRUE_GROUPS)
     }
     #individualspecific theta_real:
-    if(theta_real_heterogeen_individueel) {
+    if(theta_real_heterogeneous_individuals) {
       theta_real = matrix(rnorm(NN * (number_of_variables + 1)), nrow = (number_of_variables + 1), ncol = NN)
     }
   } else {
@@ -307,14 +312,17 @@ restructure_X_to_order_slowN_fastT <- function(X, eclipz,
 #' library(tidyverse)
 #' #For 3 groups, each with 3 groupfactors:
 #' g_real = ceiling(runif(300) * 3)
-#' LGR_FACTOR_mean = 0
-#' LGR_FACTOR = 1
-#' FGR_FACTOR_sd = 1
-#' FGR_FACTOR = 1
 #' generate_grouped_factorstructure(3,c(3,3,3), TT = 30)
 #' @importFrom dplyr bind_rows
 #' @export
 generate_grouped_factorstructure <- function(S, number_of_group_factors_real, TT = aantal_T_fulldata) {
+  if(!exists("LGR_FACTOR") | !exists("FGR_FACTOR")) {
+    #set these to their default value
+    LGR_FACTOR_mean = 0
+    LGR_FACTOR = 1
+    FGR_FACTOR_sd = 1
+    FGR_FACTOR = 1
+  }
   if(mean(number_of_group_factors_real) > 0) {
 
 
@@ -1340,7 +1348,7 @@ determine_theta <- function(string, X_special, Y_special, initialisation = FALSE
 #' comfactor = matrix(0,nrow=1,ncol=30)
 #
 #' use_robust = TRUE
-#' #Choose how coefficients of the observable are estimated
+#' #Choose how coefficients of the observable variables are estimated
 #' homogeneous_coefficients = FALSE
 #' heterogeneous_coefficients_groups = FALSE
 #' heterogeneous_coefficients_individuals = TRUE
@@ -3010,7 +3018,7 @@ calculate_VCsquared <- function(rcj,rc,C_candidates, UPDATE1 = FALSE, UPDATE2 = 
   #vector with max number of groups
   Smax_local = rep(Smax,length(C_candidates))
 
-  NUMBER_SUBSETS = length(a1) #number of subsamples used
+  NUMBER_SUBSETS = length(indices_subset) #number of subsamples used
 
   for(C_local in C_candidates) {
     C_index = which(C_candidates == C_local)
