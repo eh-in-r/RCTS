@@ -1395,8 +1395,7 @@ determine_theta <- function(string, X_special, Y_special, initialisation = FALSE
 #' @importFrom purrr map2
 #' @importFrom rlang .data
 #' @export
-estimate_theta <- function(optimize_kappa = FALSE, eclipz = FALSE,
-                           NN = aantal_N,
+estimate_theta <- function(NN = aantal_N,
                            TT = aantal_T,
                            number_of_groups = aantalgroepen,
                            number_of_group_factors = aantalfactoren_groups,
@@ -1404,7 +1403,8 @@ estimate_theta <- function(optimize_kappa = FALSE, eclipz = FALSE,
                            number_of_variables = aantalvars,
                            number_vars_estimated = number_variables_estimated,
                            num_factors_may_vary = aantalfactors_verschillend_per_group,
-                           use_median_of_individual_theta = exists("USE_MEDIAN_OF_INDIVIDUAL_THETA")) {
+                           use_median_of_individual_theta = exists("USE_MEDIAN_OF_INDIVIDUAL_THETA"),
+                           optimize_kappa = FALSE, eclipz = FALSE) {
   if(number_vars_estimated > 0) {
 
 
@@ -2035,7 +2035,9 @@ estimate_factor_group <- function(theta, g, lambda, comfactor,
                                   NN = aantal_N,
                                   TT = aantal_T,
                                   number_of_groups = aantalgroepen,
-                                  number_of_group_factors = aantalfactoren_groups
+                                  number_of_group_factors = aantalfactoren_groups,
+                                  eclipz = eclipz,
+                                  expert_based_initial_factors = exists("expert_based_initial_factors")
                                   #returnscores = FALSE
                                   ) {
   schatterF = list()
