@@ -219,8 +219,8 @@ initialise_X <- function(NN,TT, number_of_variables = aantalvars) {
 #'
 #' @param X input
 #' @param firsttime Scaling before generating Y and before adding outliers -> this is always with mean and sd. If this is FALSE, it indicates that
-#' @param eclipz parameter to indicate using real world Eclipzdataset. Defaults to FALSE.
 #' we are using the function for a second time, after adding the outliers. In the robust case it uses median and MAD, otherwise again mean and sd.
+#' @param eclipz parameter to indicate using real world Eclipzdataset. Defaults to FALSE.
 #' @inheritParams create_theta_real
 #' @examples
 #' X = initialise_X(300,30, number_of_variables = 3)
@@ -229,18 +229,32 @@ initialise_X <- function(NN,TT, number_of_variables = aantalvars) {
 #' @importFrom stats sd
 #' @export
 scaling_X <- function(X, firsttime, eclipz = FALSE, number_of_variables = aantalvars) {
-
+  #
+  # rewrote this codeblock by a less concise but more clear codeblock
+  #
+  ##################
+  # if(use_robust & !firsttime) {
+  #   message("Scale with median and mad")
+  #   med = median(X[,,k])
+  #   mad = mad(X[,,k])
+  #
+  #   X[,,k] = (X[,,k] - med) / mad #Note that this is NOT column-based (timeindex) scaling!
+  # } else {
+  #   if(eclipz) {
+  #     message("Scale with mean and sd of NxT-matrix")
+  #     X[,,k] = (X[,,k] - mean(X[,,k])) / sd(X[,,k]) #for eclipzdata, we cannot use scale(),
+  #     #  since there are variables (for example age) that have constant columns, so scale() (which is columnbased) would produce errors
+  #   } else {
+  #     message("Scale with mean and sd (for each t separate)")
+  #     X[,,k] = scale(X[,,k])      #Note that this is column-based (timeindex) scaling!
+  #   }
+  # }
+  #################
   if(number_of_variables > 0) {
     for(k in 1:number_of_variables) {
       #print(paste("sd of variable",k,": Before:",sd(X[,,k])))
       if(mad(X[,,k]) != 0) {
-        if(use_robust & !firsttime) {
-          message("Scale with median and mad")
-          med = median(X[,,k])
-          mad = mad(X[,,k])
-
-          X[,,k] = (X[,,k] - med) / mad #Note that this is NOT column-based (timeindex) scaling!
-        } else {
+        if(firsttime) {
           if(eclipz) {
             message("Scale with mean and sd of NxT-matrix")
             X[,,k] = (X[,,k] - mean(X[,,k])) / sd(X[,,k]) #for eclipzdata, we cannot use scale(),
@@ -249,7 +263,25 @@ scaling_X <- function(X, firsttime, eclipz = FALSE, number_of_variables = aantal
             message("Scale with mean and sd (for each t separate)")
             X[,,k] = scale(X[,,k])      #Note that this is column-based (timeindex) scaling!
           }
+        } else {
+          if(use_robust) {
+            message("Scale with median and mad")
+            med = median(X[,,k])
+            mad = mad(X[,,k])
+
+            X[,,k] = (X[,,k] - med) / mad #Note that this is NOT column-based (timeindex) scaling!
+          } else {
+            if(eclipz) {
+              message("Scale with mean and sd of NxT-matrix")
+              X[,,k] = (X[,,k] - mean(X[,,k])) / sd(X[,,k]) #for eclipzdata, we cannot use scale(),
+              #  since there are variables (for example age) that have constant columns, so scale() (which is columnbased) would produce errors
+            } else {
+              message("Scale with mean and sd (for each t separate)")
+              X[,,k] = scale(X[,,k])      #Note that this is column-based (timeindex) scaling!
+            }
+          }
         }
+
         print(paste("sd of variable",k,": After:",sd(X[,,k])))
       }
     }
