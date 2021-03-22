@@ -18,7 +18,7 @@ utils::globalVariables(c("use_robust",
                          "LIMIT_NUMBER_OF_GROUPS_heterogroups",
                          "LIMIT_TRUE_GROUPS",
                          "expert_based_initial_factors",
-                         "step",
+                         "iteration",
                          "theta_real_heterogeen_groups", "theta_real_heterogeen_individueel", "theta_real_homogeen",
                          "update1", "update2",
                          "use_macropca_instead_of_cz",
@@ -2043,7 +2043,7 @@ estimate_factor_group <- function(theta, g, lambda, comfactor,
   schatterF = list()
   scores = list()
 
-  if(eclipz & expert_based_initial_factors & step == 0) {
+  if(eclipz & expert_based_initial_factors & iteration == 0) {
     schatterF = define_expert_based_initial_factors(number_of_groups)
   } else {
     for(group in 1:number_of_groups) {
