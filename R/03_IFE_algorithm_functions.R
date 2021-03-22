@@ -766,7 +766,8 @@ calculate_errors_virtual_groups <- function(k,LF,virtual_grouped_factor_structur
                                             number_of_variables,
                                             number_of_common_factors,
                                             number_of_group_factors,
-                                            number_vars_estimated = number_variables_estimated) {
+                                            number_vars_estimated = number_variables_estimated,
+                                            eclipz = eclipz) {
   E_prep = matrix(NA, nrow = NN, ncol = TT)
 
   a = do_we_estimate_common_factors(number_of_common_factors)
@@ -907,7 +908,7 @@ solveFG <- function(TT, number_of_groups, number_of_group_factors){
 #' factor_group = RCTS::factor_group_real_dgp3
 #' g_real = RCTS::g_real_dgp3 #true values of group membership
 #' g = g_real #estimated values of group membership; set in this example to be equal to true values
-#' #There are no common factors to be estimated  -> but needs placeholder
+#' #There are no common factors to be estimated  ->  use placeholder with values set to zero
 #' lambda = matrix(0,nrow=1,ncol=300)
 #' comfactor = matrix(0,nrow=1,ncol=30)
 #
@@ -944,7 +945,7 @@ update_g <- function(NN = aantal_N, TT = aantal_T,
                      eclipz = eclipz) {
 
 
-
+  print("1")
   if(do_we_estimate_group_factors(number_of_group_factors)) { #if there are groupfactors estimated
     solve_FG_FG_times_FG = solveFG(TT, number_of_groups, number_of_group_factors)
 
@@ -962,27 +963,29 @@ update_g <- function(NN = aantal_N, TT = aantal_T,
   } else {
     virtual_grouped_factor_structure = NA
   }
-
+  print("2")
 
   LF = (t(lambda) %*% comfactor)
 
   #init matrix with objectivefunctionvalues for all groups
   matrix_obj_values = matrix(NA, nrow = NN, ncol = number_of_groups)
 
-
+  print("3")
   #calculate errors for each possible group
   ERRORS_VIRTUAL = lapply(1:number_of_groups, function(x) calculate_errors_virtual_groups(x,LF,virtual_grouped_factor_structure, NN, TT,
                                                                                           number_of_variables,
                                                                                           number_of_common_factors,
-                                                                                          number_of_group_factors))
+                                                                                          number_of_group_factors,
+                                                                                          number_vars_estimated = number_vars_estimated,
+                                                                                          eclipz))
 
-
+  print("4")
   if(use_robust) {
     rho_parameters = lapply(1:number_of_groups,function(x) define_rho_parameters(ERRORS_VIRTUAL[[x]])) #(parameter object = NA -> returns median and madn of the calculated error term)
   } else {
     rho_parameters = NA
   }
-
+  print("5")
   for(i in 1:NN) {
     obj_values = map_dbl(1:number_of_groups, function(x) calculate_obj_for_g(i, x, ERRORS_VIRTUAL, rho_parameters, TT = TT))
     g[i] = which.min(obj_values)
