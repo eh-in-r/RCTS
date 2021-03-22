@@ -1588,11 +1588,11 @@ calculate_W <- function(theta, g ,
     }
     if(heterogeneous_coefficients_individuals) {
       for(i in 1:NN) {
-        if(aantal_N_fulldata == 3112 & eclipz) { #this combination has issues with format of Y; not clear why
-          W[i,] = matrix(unlist(Y[i,]), nrow = 1) - t(cbind(1,X[i,,]) %*% as.matrix(theta[,i]))
-        } else {
+        # if(aantal_N_fulldata == 3112 & eclipz) { #this combination has issues with format of Y; not clear why
+        #   W[i,] = matrix(unlist(Y[i,]), nrow = 1) - t(cbind(1,X[i,,]) %*% as.matrix(theta[,i]))
+        # } else {
           W[i,] = Y[i,] - t(cbind(1,X[i,,]) %*% as.matrix(theta[,i]))
-        }
+        # }
       }
     }
   } else {
