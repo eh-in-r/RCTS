@@ -149,7 +149,7 @@ theta_real_heterogroups <- function(number_of_variables, number_of_groups_real, 
 #' #Decide if theta is common, or specific to groups or individuals: Choose 1 of the following 3.
 #' LIMIT_TRUE_GROUPS = 12 #set the maximum allowed number of true groups
 #' create_theta_real(3, NN = 300, number_of_groups_real = 3,
-#' theta_real_homogeneous = FALSE, theta_real_heterogeneous_groups = TRUE, theta_real_heterogeneous_individuals = FALSE)
+#' theta_real_homogeneous = FALSE, theta_real_heterogeneous_groups = TRUE, theta_real_heterogeneous_individuals = FALSE, LIMIT_TRUE_GROUPS = 12)
 #' @importFrom stats rnorm
 #' @export
 create_theta_real <- function(number_of_variables,
@@ -159,7 +159,7 @@ create_theta_real <- function(number_of_variables,
                               extra_theta_factor = 1,
                               theta_real_homogeneous = theta_real_homogeen,
                               theta_real_heterogeneous_groups = theta_real_heterogeen_groups,
-                              theta_real_heterogeneous_individuals = theta_real_heterogeen_individueel) {
+                              theta_real_heterogeneous_individuals = theta_real_heterogeen_individueel, LIMIT_TRUE_GROUPS = LIMIT_TRUE_GROUPS) {
   stopifnot((theta_real_homogeneous + theta_real_heterogeneous_groups + theta_real_heterogeneous_individuals) == 1)
   #real world eclipzdata: theta_real does not exist -> return NA
   if(eclipz) return(NA)
@@ -207,6 +207,8 @@ initialise_X <- function(NN,TT, number_of_variables = aantalvars) {
         }
       }
     }
+    X = scaling_X(X, firsttime = TRUE, eclipz = FALSE, number_of_variables = number_of_variables) #1e keer schalen van X: moet gebeuren voor het genereren van Y (toch als intercepttrick toegepast wordt). Outliers worden nadien ingevoegd, waarna X opnieuw geschaald wordt.
+
 
     return(X)
   } else {
@@ -256,33 +258,33 @@ scaling_X <- function(X, firsttime, eclipz = FALSE, number_of_variables = aantal
       if(mad(X[,,k]) != 0) {
         if(firsttime) {
           if(eclipz) {
-            message("Scale with mean and sd of NxT-matrix")
+            #message("Scale with mean and sd of NxT-matrix")
             X[,,k] = (X[,,k] - mean(X[,,k])) / sd(X[,,k]) #for eclipzdata, we cannot use scale(),
             #  since there are variables (for example age) that have constant columns, so scale() (which is columnbased) would produce errors
           } else {
-            message("Scale with mean and sd (for each t separate)")
+            #message("Scale with mean and sd (for each t separate)")
             X[,,k] = scale(X[,,k])      #Note that this is column-based (timeindex) scaling!
           }
         } else {
           if(use_robust) {
-            message("Scale with median and mad")
+            #message("Scale with median and mad")
             med = median(X[,,k])
             mad = mad(X[,,k])
 
             X[,,k] = (X[,,k] - med) / mad #Note that this is NOT column-based (timeindex) scaling!
           } else {
             if(eclipz) {
-              message("Scale with mean and sd of NxT-matrix")
+              #message("Scale with mean and sd of NxT-matrix")
               X[,,k] = (X[,,k] - mean(X[,,k])) / sd(X[,,k]) #for eclipzdata, we cannot use scale(),
               #  since there are variables (for example age) that have constant columns, so scale() (which is columnbased) would produce errors
             } else {
-              message("Scale with mean and sd (for each t separate)")
+              #message("Scale with mean and sd (for each t separate)")
               X[,,k] = scale(X[,,k])      #Note that this is column-based (timeindex) scaling!
             }
           }
         }
 
-        print(paste("sd of variable",k,": After:",sd(X[,,k])))
+        #print(paste("sd of variable",k,": After:",sd(X[,,k])))
       }
     }
     stopifnot(!is.nan(X[1,1,1]))
@@ -592,6 +594,9 @@ initialise_theta <- function(eclipz = FALSE,
                                                        number_vars_estimated = number_vars_estimated)
         Y_special = as.vector(t(Y[i,]))
 
+        #####################
+        # define model
+        #####################
         if(use_robust) {
           # if(exists("use_bramaticroux")) {
           #   message(paste("bramati croux init",i))
@@ -613,7 +618,9 @@ initialise_theta <- function(eclipz = FALSE,
 
           }
         }
-
+        #####################
+        #get the coefficients
+        #####################
         if(ABDGP1 & ABintercept) {
           # if(exists("use_bramaticroux")) {
           #   values = c(0,model)
@@ -877,9 +884,10 @@ solveFG <- function(TT, number_of_groups, number_of_group_factors){
       FG = factor_group[[group]]
       if(as.numeric(rankMatrix(FG)) != number_of_group_factors[group]) {
         message("___")
+        message(paste("rank of matrix FG: ",as.numeric(rankMatrix(FG))))
+        message(paste("number_of_group_factors[group]: ",number_of_group_factors[group]))
         print(FG[,1:3])
       }
-      print(paste("rank of matrix FG: ",as.numeric(rankMatrix(FG))))
       solve_FG_FG_times_FG[[group]] = solve(FG%*%t(FG))%*%FG #this is actually the same as FG/T
       rm(FG)
     } else {
@@ -945,7 +953,7 @@ update_g <- function(NN = aantal_N, TT = aantal_T,
                      eclipz = eclipz) {
 
 
-  print("1")
+
   if(do_we_estimate_group_factors(number_of_group_factors)) { #if there are groupfactors estimated
     solve_FG_FG_times_FG = solveFG(TT, number_of_groups, number_of_group_factors)
 
@@ -963,14 +971,14 @@ update_g <- function(NN = aantal_N, TT = aantal_T,
   } else {
     virtual_grouped_factor_structure = NA
   }
-  print("2")
+
 
   LF = (t(lambda) %*% comfactor)
 
   #init matrix with objectivefunctionvalues for all groups
   matrix_obj_values = matrix(NA, nrow = NN, ncol = number_of_groups)
 
-  print("3")
+
   #calculate errors for each possible group
   ERRORS_VIRTUAL = lapply(1:number_of_groups, function(x) calculate_errors_virtual_groups(x,LF,virtual_grouped_factor_structure, NN, TT,
                                                                                           number_of_variables,
@@ -979,20 +987,20 @@ update_g <- function(NN = aantal_N, TT = aantal_T,
                                                                                           number_vars_estimated = number_vars_estimated,
                                                                                           eclipz))
 
-  print("4")
+
   if(use_robust) {
     rho_parameters = lapply(1:number_of_groups,function(x) define_rho_parameters(ERRORS_VIRTUAL[[x]])) #(parameter object = NA -> returns median and madn of the calculated error term)
   } else {
     rho_parameters = NA
   }
-  print("5")
+
   for(i in 1:NN) {
     obj_values = map_dbl(1:number_of_groups, function(x) calculate_obj_for_g(i, x, ERRORS_VIRTUAL, rho_parameters, TT = TT))
     g[i] = which.min(obj_values)
     matrix_obj_values[i,] = obj_values
   } #vectorizing is not faster: g = sapply(1:NN, function(z) which.min(map_dbl(1:number_of_groups, function(x) calculate_obj_for_g(z, x, ERRORS_VIRTUAL, rho_parameters))))
   print("current g-table is:")
-  if(!is.na(g_real)) {
+  if(!is.na(g_real[1])) {
     print(table(g,g_real))
   } else {
     print(table(g))
@@ -1696,7 +1704,7 @@ calculate_Z_group <- function(theta, g, lambda, comfactor, group, initialise,
   #if number_vars_estimated < number_of_variables the obsoleterows in theta were already erased -> do the same in X
   X = adapt_X_estimating_less_variables(number_of_variables, number_vars_estimated, eclipz)
 
-  for(i in 1:length(indices_group)) { #loop over aantal elementen in groep
+  for(i in 1:length(indices_group)) { #loop over the number of elements in the group
     index = indices_group[i]
 
     #define XT
@@ -2036,6 +2044,8 @@ prepare_for_robpca <- function(object, NN = aantal_N, TT = aantal_T, option = 3)
   return(temp)
 }
 
+
+
 #' Estimates group factors
 #'
 #' @inheritParams calculate_W
@@ -2071,6 +2081,7 @@ estimate_factor_group <- function(theta, g, lambda, comfactor,
         if(TT < number_of_group_factors[group]) {
           message("-> There are too many factors to be estimated, compared to TT.")
         }
+        print("***")
 
         Wj = calculate_Z_group(theta, g, lambda, comfactor, group, initialise,
                                TT = TT,
@@ -2163,7 +2174,8 @@ calculate_lambda <- function(theta, comfactor, g, lgfg_list,
   if(use_robust) {
     #CHANGE LOCATION 6/7
     if(use_macropca_instead_of_cz) {
-      lambda = return_robust_lambdaobject(W, NA, type = 2, FACTOR = comfactor, number_of_common_factors = nrow(comfactor), eclipz = eclipz,
+      lambda = return_robust_lambdaobject(W, NA, type = 2, FACTOR = comfactor, number_of_common_factors = nrow(comfactor),
+                                          NN = NN, eclipz = eclipz,
                                           application_covid = exists("usecoviddata_cases") | exists("usecoviddata_deaths"))
     } else {
       lambda = t(W %*% t(comfactor) / TT)
@@ -2176,11 +2188,18 @@ calculate_lambda <- function(theta, comfactor, g, lgfg_list,
     lambda = lambda - lambda
   }
 
-  #for income-series with NA's, the lambda's cannot be determined -> set to zero ...
-  temp = data.frame(matrix(NA, nrow = max(number_of_common_factors,1), ncol = NN)) #new dataframe
-  temp[,rows_without_NA] = lambda #put calculated lambda's in df
-  if(sum(rows_with_NA,na.rm=T) > 0)  temp[,rows_with_NA] = 0 #set the rest to zero
-  lambda = as.matrix(temp)
+  ############################
+  # for time-series with NA's,
+  # the lambda's could not be determined (dimension of lambda is smaller) -> set NA's to zero
+  ############################
+  if(anyNA(Y)) {
+    rows_with_NA = which(apply(Y,1,anyNA))
+    rows_without_NA = which(!apply(Y,1,anyNA))
+    temp = data.frame(matrix(NA, nrow = max(number_of_common_factors, 1), ncol = NN)) #new dataframe
+    temp[,rows_without_NA] = lambda #put calculated lambda's in df
+    if(sum(rows_with_NA,na.rm=T) > 0)  temp[,rows_with_NA] = 0 #set the rest to zero
+    lambda = as.matrix(temp)
+  }
 
 
   return(lambda)
@@ -2209,6 +2228,7 @@ calculate_lambda_group <- function(theta, factor_group, g, lambda, comfactor,
                                    TT = aantal_T,
                                    number_of_groups = aantalgroepen,
                                    number_of_group_factors = aantalfactoren_groups,
+                                   number_of_common_factors = aantalfactoren_common,
                                    number_of_variables = aantalvars,
                                    number_vars_estimated = number_variables_estimated) {
 
@@ -2220,7 +2240,8 @@ calculate_lambda_group <- function(theta, factor_group, g, lambda, comfactor,
       Wj = calculate_Z_group(theta, g, lambda, comfactor, group, initialise,
                              TT = TT,
                              number_of_variables = number_of_variables,
-                             number_vars_estimated = number_vars_estimated)
+                             number_vars_estimated = number_vars_estimated,
+                             number_of_common_factors = number_of_common_factors)
 
       #robust things:
       if(use_robust) {
@@ -2259,16 +2280,20 @@ calculate_lambda_group <- function(theta, factor_group, g, lambda, comfactor,
         lambda_local[[group]] = Wj %*% t(FGG) / TT
       }
 
-    } else {
-      lambda_local[[group]] = matrix(0,
-                                     length(rows_without_NA[(rows_without_NA %in% which(g == group))]),
-                                     1)
+    } else { #estimate zero group factors for this group -> matrix with 1 column
+        # lambda_local[[group]] = matrix(0,
+        #                                length(rows_without_NA[(rows_without_NA %in% which(g == group))]),
+        #                                1)
+        lambda_local[[group]] = matrix(0, table(g)[group], 1)
     }
+
   }
 
 
   #for income-series with NA's, the lambda's cannot be determined -> set to zero with this function
   add_lambdas_from_NArows <- function(DF, groep) {
+    rows_with_NA = which(apply(Y,1,anyNA))
+    rows_without_NA = which(!apply(Y,1,anyNA))
     ids = rows_with_NA[(rows_with_NA %in% which(g == groep))]
     if(length(ids) > 0) {
       temp_init = rep(0, length(ids)) #zero's
@@ -2288,8 +2313,8 @@ calculate_lambda_group <- function(theta, factor_group, g, lambda, comfactor,
 
   #change list to dataframe:
   lambda_local2 = data.frame(lambda_local[[1]])
-
   names(lambda_local2) = str_c("X",1:ncol(lambda_local2))  #str_c("X",1:max(1,number_of_group_factors[1]))
+  rows_without_NA = which(!apply(Y,1,anyNA))
   lambda_local2 = lambda_local2 %>% mutate(groep = 1, id = rows_without_NA[(rows_without_NA %in% which(g == 1))])
 
 
@@ -2866,7 +2891,7 @@ calculate_XT_estimated <- function(NN = aantal_N, TT = aantal_T,
   #if number_vars_estimated < number_of_variables, then the obsolete rows in theta are already erased -> now do the same in X
   X = adapt_X_estimating_less_variables(number_of_variables, number_vars_estimated, eclipz)
 
-  if(number_of_variables > 0 & !is.na(X)) {
+  if(number_of_variables > 0 & !is.na(X[1])) {
     if(homogeneous_coefficients) { #only designed for DGP 5 at the moment
       XT_geschat = theta[1] + X[,,1] * theta[1]
       stopifnot(number_of_variables == 1)
