@@ -65,12 +65,13 @@ create_covMat_crosssectional_dependence <- function(parameter,NN) {
 #'
 #' @param number_of_variables number of observable variables
 #' @param number_of_groups_real real numbr of groups
-#' @param EXTRA_BETA_FACTOR option to multiply the coefficients in beta_est; default = 1
+#' @param EXTRA_BETA_FACTOR option to multiply the coefficients in true beta; default = 1
+#' @param limit_true_groups_BTH  Maximum number of true groups in a simulation-DGP for which the code in this package is implemented. Currently equals 12. For application on realworld data this parameter is not relevant.
 #' @inheritParams create_true_beta
 #' @importFrom stats runif
 #' @importFrom magrittr %>%
-beta_true_heterogroups <- function(number_of_variables, number_of_groups_real, EXTRA_BETA_FACTOR = 1, limit_true_groups = LIMIT_TRUE_GROUPS) {
-  stopifnot(number_of_groups_real < limit_true_groups) #Code allows up to 12 real groups at this point.
+beta_true_heterogroups <- function(number_of_variables, number_of_groups_real, EXTRA_BETA_FACTOR = 1, limit_true_groups_BTH = LIMIT_TRUE_GROUPS) {
+  stopifnot(number_of_groups_real < limit_true_groups_BTH) #Code allows up to 12 real groups at this point.
 
   #######################################################################################
   # Define real values for beta_est, for each group, when there are 3 or less observable variables
@@ -176,7 +177,7 @@ create_true_beta <- function(number_of_variables,
     }
     #groupsspecific beta_true: -> default case
     if(beta_true_heterogeneous_groups) {
-      beta_true = beta_true_heterogroups(number_of_variables, number_of_groups_real, EXTRA_BETA_FACTOR = extra_beta_factor, limit_true_groups = LIMIT_TRUE_GROUPS)
+      beta_true = beta_true_heterogroups(number_of_variables, number_of_groups_real, EXTRA_BETA_FACTOR = extra_beta_factor, limit_true_groups_BTH = limit_true_groups)
     }
     #individualspecific beta_true:
     if(beta_true_heterogeneous_individuals) {
