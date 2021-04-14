@@ -1375,7 +1375,7 @@ determine_beta <- function(string, X_special, Y_special, initialisation = FALSE,
 #' @param number_of_variables number of observable variables
 #' @param number_vars_estimated number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.
 #' @param num_factors_may_vary whether or not the number of groupfactors is constant over all groups or not
-#' @param use_median_of_individual_theta for testing purposes
+#' @param use_median_of_individual_beta for testing purposes
 #' @return list: 1st element contains matrix (N columns: 1 for each element of the panel data) with estimated beta_est's.
 #' @examples
 #' #This function needs several initial parameters to be initialized in order to work on itself.
@@ -1417,7 +1417,7 @@ estimate_beta <- function(NN = aantal_N,
                            number_of_variables = aantalvars,
                            number_vars_estimated = number_variables_estimated,
                            num_factors_may_vary = aantalfactors_verschillend_per_group,
-                           use_median_of_individual_theta = exists("USE_MEDIAN_OF_INDIVIDUAL_THETA"),
+                           use_median_of_individual_beta = exists("USE_MEDIAN_OF_INDIVIDUAL_THETA"),
                            optimize_kappa = FALSE, eclipz = FALSE) {
   if(number_vars_estimated > 0) {
 
@@ -1547,7 +1547,7 @@ estimate_beta <- function(NN = aantal_N,
 
       beta_est = matrix(unlist(beta_est),ncol = NN)
 
-      if(use_median_of_individual_theta) {
+      if(use_median_of_individual_beta) {
         beta_est = use_median_values_beta(beta_est, g, number_of_groups)
       }
 
