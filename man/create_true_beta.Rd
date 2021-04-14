@@ -2,12 +2,12 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{create_true_beta}
 \alias{create_true_beta}
-\title{Creates beta_true, which contains the real values of beta_est (= the coefficients of X)}
+\title{Creates beta_true, which contains the true values of beta (= the coefficients of X)}
 \usage{
 create_true_beta(
   number_of_variables,
   NN = aantal_N,
-  number_of_groups_real = aantalgroepen_real,
+  true_number_of_groups = aantalgroepen_real,
   eclipz = FALSE,
   extra_beta_factor = 1,
   beta_true_homogeneous = beta_true_homogeen,
@@ -21,7 +21,7 @@ create_true_beta(
 
 \item{NN}{number of individuals}
 
-\item{number_of_groups_real}{number of groups}
+\item{true_number_of_groups}{number of groups}
 
 \item{eclipz}{boolean to indicate using eClipzdatabase; defaults to FALSE}
 
@@ -37,7 +37,7 @@ create_true_beta(
 }
 \value{
 matrix with number of rows equal to number of observable variables + 1 (the first row contains the intercept) and number of culumns
-equal to the real number of groups.
+equal to the true number of groups.
 }
 \description{
 beta_true_heterogeen_groups is the default case
@@ -46,7 +46,7 @@ beta_true_heterogeen_groups is the default case
 library(tidyverse)
 #Decide if beta_est is common, or specific to groups or individuals: Choose 1 of the following 3.
 LIMIT_TRUE_GROUPS = 12 #set the maximum allowed number of true groups
-create_true_beta(3, NN = 300, number_of_groups_real = 3,
+create_true_beta(3, NN = 300, true_number_of_groups = 3,
   beta_true_homogeneous = FALSE, beta_true_heterogeneous_groups = TRUE,
   beta_true_heterogeneous_individuals = FALSE, limit_true_groups = 12)
 }

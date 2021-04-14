@@ -21,7 +21,7 @@ calculate_PIC_term4(
 
 \item{NN}{N}
 
-\item{use_alterpic}{indicates using an alternative version of the PIC (the one of AB2016 instead of AB2017). It weighs the foruth term with an extra factor relative to the size of the groups.}
+\item{use_alterpic}{indicates using an alternative version of the PIC (the one of AB2016 instead of AB2017). It weighs the fourth term with an extra factor relative to the size of the groups.}
 }
 \description{
 Used in calculate_PIC(), in a loop over all groups.

@@ -1,6 +1,6 @@
 
 utils::globalVariables(c("use_robust",
-                         "g", "g_real",
+                         "g", "g_true",
                          "beta_est", "beta_true",
                          "aantal_N", "aantal_T",
                          "aantal_N_fulldata", "aantal_T_fulldata",
@@ -8,11 +8,11 @@ utils::globalVariables(c("use_robust",
                          "aantalfactoren_common_real", "aantalfactoren_common", "k_common_candidates",
                          "aantalfactoren_groups_real", "aantalfactoren_groups", "k_max",
                          "comfactor", "lambda",
-                         "factor_group", "factor_group_real",
-                         "lambda_group", "lambda_group_real",
+                         "factor_group", "factor_group_true",
+                         "lambda_group", "lambda_group_true",
                          "aantalfactors_verschillend_per_group",
                          "aantalvars", "number_variables_estimated",
-                         "ABDGP1", "ABintercept",
+                         "dgp1_AB", "dgp1_spread_group_centers",
                          "ALTERNATIVE_PIC", "C",
                          "FGR_FACTOR","FGR_FACTOR_sd","LGR_FACTOR","LGR_FACTOR_mean",
                          "LIMIT_NUMBER_OF_GROUPS_heterogroups",
@@ -64,17 +64,17 @@ create_covMat_crosssectional_dependence <- function(parameter,NN) {
 #' Helpfunction in create_true_beta() for the option beta_true_heterogeen_groups. (This is the default option.)
 #'
 #' @param number_of_variables number of observable variables
-#' @param number_of_groups_real real numbr of groups
+#' @param true_number_of_groups true number of groups
 #' @param EXTRA_BETA_FACTOR option to multiply the coefficients in true beta; default = 1
 #' @param limit_true_groups_BTH  Maximum number of true groups in a simulation-DGP for which the code in this package is implemented. Currently equals 12. For application on realworld data this parameter is not relevant.
 #' @inheritParams create_true_beta
 #' @importFrom stats runif
 #' @importFrom magrittr %>%
-beta_true_heterogroups <- function(number_of_variables, number_of_groups_real, EXTRA_BETA_FACTOR = 1, limit_true_groups_BTH = LIMIT_TRUE_GROUPS) {
-  stopifnot(number_of_groups_real < limit_true_groups_BTH) #Code allows up to 12 real groups at this point.
+beta_true_heterogroups <- function(number_of_variables, true_number_of_groups, EXTRA_BETA_FACTOR = 1, limit_true_groups_BTH = LIMIT_TRUE_GROUPS) {
+  stopifnot(true_number_of_groups < limit_true_groups_BTH) #Code allows up to 12 true groups at this point.
 
   #######################################################################################
-  # Define real values for beta_est, for each group, when there are 3 or less observable variables
+  # Define true values for beta, for each group, when there are 3 or less observable variables
   #These are the values for DGP 3 & 4 (For DGP 1 & 2 beta_true is defined in 08_IFE_make_AB_DGP1.R)
 
   #1st element is the intercept.
@@ -83,7 +83,7 @@ beta_true_heterogroups <- function(number_of_variables, number_of_groups_real, E
   beta_part3 = c(0, 1,  0.5,  1.5,  1)  * EXTRA_BETA_FACTOR
 
   beta_define_further_true_values <- function(number_of_values) {
-    #starting from group 4 we randomly generate values for the real values of beta_est
+    #starting from group 4 we randomly generate values for the true values of beta
     return(c(0,(round(runif(number_of_values),1) - 0.5) * 4) * EXTRA_BETA_FACTOR) #between -2 and 2
   }
   beta_part4 = beta_define_further_true_values(4)
@@ -97,7 +97,7 @@ beta_true_heterogroups <- function(number_of_variables, number_of_groups_real, E
   beta_part12 = beta_define_further_true_values(4)
 
   #######################################################################################
-  # Define real values for beta_est, for each group, when there are more than 3 variables
+  # Define true values for beta_est, for each group, when there are more than 3 variables
   if(number_of_variables > 3) { #add when there are more than 3 observable variables:
     beta_part1 = c(beta_part1, (round(runif(number_of_variables - 3),1) - 0.5) * 4)
     beta_part2 = c(beta_part2, (round(runif(number_of_variables - 3),1) - 0.5) * 4)
@@ -114,30 +114,30 @@ beta_true_heterogroups <- function(number_of_variables, number_of_groups_real, E
   }
 
   #Add the values of the different groups together in one object.
-  if(number_of_groups_real >= 1) {
+  if(true_number_of_groups >= 1) {
     beta_true = matrix(beta_part1[1:(number_of_variables + 1)])
   }
-  if(number_of_groups_real >= 2) beta_true = beta_true %>% cbind(beta_part2[1:(number_of_variables + 1)])
-  if(number_of_groups_real >= 3) beta_true = beta_true %>% cbind(beta_part3[1:(number_of_variables + 1)])
-  if(number_of_groups_real >= 4) beta_true = beta_true %>% cbind(beta_part4[1:(number_of_variables + 1)])
-  if(number_of_groups_real >= 5) beta_true = beta_true %>% cbind(beta_part5[1:(number_of_variables + 1)])
-  if(number_of_groups_real >= 6) beta_true = beta_true %>% cbind(beta_part6[1:(number_of_variables + 1)])
-  if(number_of_groups_real >= 7) beta_true = beta_true %>% cbind(beta_part7[1:(number_of_variables + 1)])
-  if(number_of_groups_real >= 8) beta_true = beta_true %>% cbind(beta_part8[1:(number_of_variables + 1)])
-  if(number_of_groups_real >= 9) beta_true = beta_true %>% cbind(beta_part9[1:(number_of_variables + 1)])
-  if(number_of_groups_real >= 10) beta_true = beta_true %>% cbind(beta_part10[1:(number_of_variables + 1)])
-  if(number_of_groups_real >= 11) beta_true = beta_true %>% cbind(beta_part11[1:(number_of_variables + 1)])
-  if(number_of_groups_real >= 12) beta_true = beta_true %>% cbind(beta_part12[1:(number_of_variables + 1)])
+  if(true_number_of_groups >= 2) beta_true = beta_true %>% cbind(beta_part2[1:(number_of_variables + 1)])
+  if(true_number_of_groups >= 3) beta_true = beta_true %>% cbind(beta_part3[1:(number_of_variables + 1)])
+  if(true_number_of_groups >= 4) beta_true = beta_true %>% cbind(beta_part4[1:(number_of_variables + 1)])
+  if(true_number_of_groups >= 5) beta_true = beta_true %>% cbind(beta_part5[1:(number_of_variables + 1)])
+  if(true_number_of_groups >= 6) beta_true = beta_true %>% cbind(beta_part6[1:(number_of_variables + 1)])
+  if(true_number_of_groups >= 7) beta_true = beta_true %>% cbind(beta_part7[1:(number_of_variables + 1)])
+  if(true_number_of_groups >= 8) beta_true = beta_true %>% cbind(beta_part8[1:(number_of_variables + 1)])
+  if(true_number_of_groups >= 9) beta_true = beta_true %>% cbind(beta_part9[1:(number_of_variables + 1)])
+  if(true_number_of_groups >= 10) beta_true = beta_true %>% cbind(beta_part10[1:(number_of_variables + 1)])
+  if(true_number_of_groups >= 11) beta_true = beta_true %>% cbind(beta_part11[1:(number_of_variables + 1)])
+  if(true_number_of_groups >= 12) beta_true = beta_true %>% cbind(beta_part12[1:(number_of_variables + 1)])
 
 
   return(beta_true)
 }
 
-#' Creates beta_true, which contains the real values of beta_est (= the coefficients of X)
+#' Creates beta_true, which contains the true values of beta (= the coefficients of X)
 #'
 #' beta_true_heterogeen_groups is the default case
 #' @inheritParams estimate_beta
-#' @param number_of_groups_real number of groups
+#' @param true_number_of_groups number of groups
 #' @param eclipz boolean to indicate using eClipzdatabase; defaults to FALSE
 #' @param extra_beta_factor multiplies coefficients in beta_est; default = 1
 #' @param beta_true_homogeneous whether true beta is equal for all individuals
@@ -145,19 +145,19 @@ beta_true_heterogroups <- function(number_of_variables, number_of_groups_real, E
 #' @param beta_true_heterogeneous_individuals whether true beta is different for all individuals
 #' @param limit_true_groups Maximum number of true groups in a simulation-DGP for which the code in this package is implemented. Currently equals 12. For application on realworld data this parameter is not relevant.
 #' @return matrix with number of rows equal to number of observable variables + 1 (the first row contains the intercept) and number of culumns
-#' equal to the real number of groups.
+#' equal to the true number of groups.
 #' @examples
 #' library(tidyverse)
 #' #Decide if beta_est is common, or specific to groups or individuals: Choose 1 of the following 3.
 #' LIMIT_TRUE_GROUPS = 12 #set the maximum allowed number of true groups
-#' create_true_beta(3, NN = 300, number_of_groups_real = 3,
+#' create_true_beta(3, NN = 300, true_number_of_groups = 3,
 #'   beta_true_homogeneous = FALSE, beta_true_heterogeneous_groups = TRUE,
 #'   beta_true_heterogeneous_individuals = FALSE, limit_true_groups = 12)
 #' @importFrom stats rnorm
 #' @export
 create_true_beta <- function(number_of_variables,
                               NN = aantal_N,
-                              number_of_groups_real = aantalgroepen_real,
+                              true_number_of_groups = aantalgroepen_real,
                               eclipz = FALSE,
                               extra_beta_factor = 1,
                               beta_true_homogeneous = beta_true_homogeen,
@@ -172,19 +172,19 @@ create_true_beta <- function(number_of_variables,
   if(number_of_variables > 0) {
     #common beta_true:
     if(beta_true_homogeneous) {
-      beta_true = c(0, c(1,2,3,28,33,38,43,48,53,58,63,68,73,78,83)[1:number_of_variables]) #intercept 0, and after that values for the real beta_est's
-      beta_true = matrix(rep(beta_true, number_of_groups_real), nrow = (number_of_variables + 1))
+      beta_true = c(0, c(1,2,3,28,33,38,43,48,53,58,63,68,73,78,83)[1:number_of_variables]) #intercept 0, and after that values for the true beta's
+      beta_true = matrix(rep(beta_true, true_number_of_groups), nrow = (number_of_variables + 1))
     }
     #groupsspecific beta_true: -> default case
     if(beta_true_heterogeneous_groups) {
-      beta_true = beta_true_heterogroups(number_of_variables, number_of_groups_real, EXTRA_BETA_FACTOR = extra_beta_factor, limit_true_groups_BTH = limit_true_groups)
+      beta_true = beta_true_heterogroups(number_of_variables, true_number_of_groups, EXTRA_BETA_FACTOR = extra_beta_factor, limit_true_groups_BTH = limit_true_groups)
     }
     #individualspecific beta_true:
     if(beta_true_heterogeneous_individuals) {
       beta_true = matrix(rnorm(NN * (number_of_variables + 1)), nrow = (number_of_variables + 1), ncol = NN)
     }
   } else {
-    beta_true = rep(NA,number_of_groups_real)
+    beta_true = rep(NA,true_number_of_groups)
   }
 
   return(beta_true)
@@ -335,25 +335,25 @@ restructure_X_to_order_slowN_fastT <- function(X, eclipz,
 
 
 
-#' Generates the real groupfactorstructure, to use in simulations.
+#' Generates the true groupfactorstructure, to use in simulations.
 #'
 #' Loadings and factors are generated by:
 #' loadings ~ N(LGR_FACTOR_mean, j * LGR_FACTOR) -> default case will be N(0,j)
 #' factors ~ N(j * FGR_FACTOR, FGR_FACTOR_sd) -> default case will be N(j,1)
 #'
-#' @param S real number of groups
-#' @param number_of_group_factors_real vector with as length the number of groups, where each element is the number of real groupfactors of that group.
+#' @param S true number of groups
+#' @param true_number_of_group_factors vector with as length the number of groups, where each element is the true number of groupfactors of that group.
 #' @inheritParams estimate_beta
-#' @return list: first element contains real groupfactors and second element contains real groupfactor loadings
+#' @return list: first element contains true groupfactors and second element contains true groupfactor loadings
 #' @importFrom dplyr mutate
 #' @examples
 #' library(tidyverse)
 #' #For 3 groups, each with 3 groupfactors:
-#' g_real = ceiling(runif(300) * 3)
+#' g_true = ceiling(runif(300) * 3)
 #' generate_grouped_factorstructure(3,c(3,3,3), TT = 30)
 #' @importFrom dplyr bind_rows
 #' @export
-generate_grouped_factorstructure <- function(S, number_of_group_factors_real, TT = aantal_T_fulldata) {
+generate_grouped_factorstructure <- function(S, true_number_of_group_factors, TT = aantal_T_fulldata) {
   if(!exists("LGR_FACTOR") | !exists("FGR_FACTOR")) {
     #set these to their default value
     LGR_FACTOR_mean = 0
@@ -361,80 +361,80 @@ generate_grouped_factorstructure <- function(S, number_of_group_factors_real, TT
     FGR_FACTOR_sd = 1
     FGR_FACTOR = 1
   }
-  if(mean(number_of_group_factors_real) > 0) {
+  if(mean(true_number_of_group_factors) > 0) {
 
 
     LGR = list()
-    factor_group_real = list()
+    factor_group_true = list()
     for(i in 1:S) {
-      LGR[[i]] = matrix(nrow = sum(g_real == i), ncol = number_of_group_factors_real[i])
-      factor_group_real[[i]] = matrix(NA, nrow = number_of_group_factors_real[i], ncol = TT)
+      LGR[[i]] = matrix(nrow = sum(g_true == i), ncol = true_number_of_group_factors[i])
+      factor_group_true[[i]] = matrix(NA, nrow = true_number_of_group_factors[i], ncol = TT)
     }
 
     for(j in 1:S) {
-      for(i in 1:number_of_group_factors_real[j]) {
-        for(k in 1:(sum(g_real == j))) {
+      for(i in 1:true_number_of_group_factors[j]) {
+        for(k in 1:(sum(g_true == j))) {
           LGR[[j]][k,i] = rnorm(1, mean = LGR_FACTOR_mean, sd = j * LGR_FACTOR)
         }
         for(k in 1:TT) {
-          factor_group_real[[j]][i,k] = rnorm(1, mean = j * FGR_FACTOR, sd = FGR_FACTOR_sd)
+          factor_group_true[[j]][i,k] = rnorm(1, mean = j * FGR_FACTOR, sd = FGR_FACTOR_sd)
         }
       }
     }
-    #lambda_group_real to dataframe (easier to work with)
+    #lambda_group_true to dataframe (easier to work with)
     test = data.frame(LGR[[1]])
     test %>% mutate(groep = 1)
-    lambda_group_real = data.frame(LGR[[1]]) %>% mutate(groep = 1, id = which(g_real == 1))
-    if(number_of_group_factors_real[1] == 1) { #change name when only 1 factor (when there are more names are automatically X1,X2,...)
-      names(lambda_group_real)[1] = "X1"
+    lambda_group_true = data.frame(LGR[[1]]) %>% mutate(groep = 1, id = which(g_true == 1))
+    if(true_number_of_group_factors[1] == 1) { #change name when only 1 factor (when there are more names are automatically X1,X2,...)
+      names(lambda_group_true)[1] = "X1"
     }
     for(i in 2:S) {
-      temporary = data.frame(LGR[[i]]) %>% mutate(groep = i, id =  which(g_real == i))
-      if(number_of_group_factors_real[i] == 1) {
+      temporary = data.frame(LGR[[i]]) %>% mutate(groep = i, id =  which(g_true == i))
+      if(true_number_of_group_factors[i] == 1) {
         names(temporary)[1] = "X1"
       }
-      if(ncol(lambda_group_real) >= ncol(temporary)) {
-        lambda_group_real = lambda_group_real %>% bind_rows(temporary)
+      if(ncol(lambda_group_true) >= ncol(temporary)) {
+        lambda_group_true = lambda_group_true %>% bind_rows(temporary)
       } else {
-        lambda_group_real = temporary %>% bind_rows(lambda_group_real)
+        lambda_group_true = temporary %>% bind_rows(lambda_group_true)
       }
     }
-    lambda_group_real = lambda_group_real %>% arrange(groep)
-    lambda_group_real[is.na(lambda_group_real)] <- 0
+    lambda_group_true = lambda_group_true %>% arrange(groep)
+    lambda_group_true[is.na(lambda_group_true)] <- 0
   } else {
-    factor_group_real = NA
-    lambda_group_real = NA
+    factor_group_true = NA
+    lambda_group_true = NA
   }
 
   #geval van 1 factor in group: format to matrix:
   for(groep in 1:S) {
-    if(number_of_group_factors_real[groep] == 1) {
-      factor_group_real[[groep]] = matrix(factor_group_real[[groep]], nrow = number_of_group_factors_real[groep])
+    if(true_number_of_group_factors[groep] == 1) {
+      factor_group_true[[groep]] = matrix(factor_group_true[[groep]], nrow = true_number_of_group_factors[groep])
     }
   }
-  return(list(factor_group_real, lambda_group_real))
+  return(list(factor_group_true, lambda_group_true))
 }
 
 
 #' Generate panel data Y for simulations.
 #' @inheritParams estimate_beta
-#' @param number_of_common_factors_real real number of common factors
-#' @param number_of_group_factors_real Vector of length the number of groups. Each element contains the real number of group factors for that group.
-#' @param g_real vector with real group memberships
-#' @param beta_true real coefficients with the observable variables
-#' @param lambda_group_real loadings of the group factors
-#' @param factor_group_real groupfactors
-#' @param lambda_real loadings of the common factors
-#' @param factor_real common factors
+#' @param true_number_of_common_factors true number of common factors
+#' @param true_number_of_group_factors Vector of length the number of groups. Each element contains the true number of group factors for that group.
+#' @param g_true vector of length N with true group memberships
+#' @param beta_true true coefficients with the observable variables
+#' @param lambda_group_true loadings of the group factors
+#' @param factor_group_true groupfactors
+#' @param lambda_true loadings of the common factors
+#' @param comfactor_true common factors
 #' @param epsilon NN x TT-matrix containing the error term
 #' @param ando_bai loads Ando/Bai-dataset; only for testing purposes. Defaults to FALSE.
 #' @param ando_bai_2017 loads Ando/Bai-dataset; only for testing purposes. Defaults to FALSE.
 #' @inheritParams create_true_beta
 #' @return N x T matrix
 #' @export
-generate_Y <- function(NN, TT, number_of_common_factors_real,number_of_group_factors_real,
-                       g_real, beta_true, lambda_group_real, factor_group_real,
-                       lambda_real, factor_real, epsilon,
+generate_Y <- function(NN, TT, true_number_of_common_factors,true_number_of_group_factors,
+                       g_true, beta_true, lambda_group_true, factor_group_true,
+                       lambda_true, comfactor_true, epsilon,
                        ando_bai = FALSE,
                        ando_bai_2017 = FALSE,
                        eclipz = FALSE,
@@ -449,10 +449,10 @@ generate_Y <- function(NN, TT, number_of_common_factors_real,number_of_group_fac
     for(i in 1:NN) {
 
       if(!ando_bai & !ando_bai_2017 & !eclipz) {
-        if(mean(number_of_group_factors_real) > 0) {
-          dropvars <- names(lambda_group_real) %in% c("groep","id")
-          LAMBDAGROUP = as.matrix(subset(lambda_group_real, lambda_group_real$id == i)[!dropvars])
-          LAMBDAGROUP = LAMBDAGROUP[1:number_of_group_factors_real[g_real[i]]]
+        if(mean(true_number_of_group_factors) > 0) {
+          dropvars <- names(lambda_group_true) %in% c("groep","id")
+          LAMBDAGROUP = as.matrix(subset(lambda_group_true, lambda_group_true$id == i)[!dropvars])
+          LAMBDAGROUP = LAMBDAGROUP[1:true_number_of_group_factors[g_true[i]]]
         } else {
           LAMBDAGROUP = NA
         }
@@ -462,7 +462,7 @@ generate_Y <- function(NN, TT, number_of_common_factors_real,number_of_group_fac
       for(t in 1:TT) {
 
         if(number_of_variables > 0) {
-          XT = c(1, X[i,t,]) %*% beta_true[,g_real[i]] #add 1 to X[i,t,] to make room for the intercept (which is in beta_est)
+          XT = c(1, X[i,t,]) %*% beta_true[,g_true[i]] #add 1 to X[i,t,] to make room for the intercept (which is in beta_est)
 
         } else {
           XT = 0
@@ -479,13 +479,13 @@ generate_Y <- function(NN, TT, number_of_common_factors_real,number_of_group_fac
             XL[t,i] + ERR[t,i]
         } else {
           #randomly generated data
-          if(number_of_common_factors_real > 0) {
-            LF = t(lambda_real[,i]) %*% factor_real[,t]
+          if(true_number_of_common_factors > 0) {
+            LF = t(lambda_true[,i]) %*% comfactor_true[,t]
           } else {
             LF = 0
           }
-          if(mean(number_of_group_factors_real) > 0) {
-            LF_GROUP = LAMBDAGROUP %*% factor_group_real[[g_real[i]]][,t]
+          if(mean(true_number_of_group_factors) > 0) {
+            LF_GROUP = LAMBDAGROUP %*% factor_group_true[[g_true[i]]][,t]
           } else {
             LF_GROUP = 0
           }
@@ -516,10 +516,10 @@ generate_Y <- function(NN, TT, number_of_common_factors_real,number_of_group_fac
 #'
 #' X = RCTS::X_dgp3
 #' Y = RCTS::Y_dgp3
-#' #Set estimations for group factors and its loadings, and group membership to the real value
-#' lambda_group = RCTS::lambda_group_real_dgp3
-#' factor_group = RCTS::factor_group_real_dgp3
-#' g = RCTS::g_real_dgp3
+#' #Set estimations for group factors and its loadings, and group membership to the true value
+#' lambda_group = RCTS::lambda_group_true_dgp3
+#' factor_group = RCTS::factor_group_true_dgp3
+#' g = RCTS::g_true_dgp3
 #' #There are no common factors to be estimated  -> but needs placeholder
 #' lambda = matrix(0,nrow=1,ncol=300)
 #' comfactor = matrix(0,nrow=1,ncol=30)
@@ -529,8 +529,8 @@ generate_Y <- function(NN, TT, number_of_common_factors_real,number_of_group_fac
 #' homogeneous_coefficients = FALSE
 #' heterogeneous_coefficients_groups = FALSE
 #' heterogeneous_coefficients_individuals = TRUE #estimating beta_i for every individual
-#' ABDGP1 = FALSE
-#' ABintercept = TRUE
+#' dgp1_AB = FALSE
+#' dgp1_spread_group_centers = TRUE #this value is only relevant if dgp1_AB ise set to TRUE
 #' beta_init = initialise_beta(NN = 300, TT = 30,
 #'   number_of_variables = 3, number_vars_estimated = 3, number_of_groups = 3)
 #' @importFrom stats lm
@@ -567,7 +567,7 @@ initialise_beta <- function(eclipz = FALSE,
 
     }
     if(heterogeneous_coefficients_groups) {
-      for(group in 1:number_of_groups) { #for each  real group there must be a column in beta_est.
+      for(group in 1:number_of_groups) { #for each group there must be a column in beta_est.
         #select parts of X and Y of this group
         indices_group = which(g == group)
         if(length(indices_group) == 0) {
@@ -601,39 +601,52 @@ initialise_beta <- function(eclipz = FALSE,
         #####################
         # define model
         #####################
-        if(use_robust) {
+        if(use_robust) { #robust -> lmrob
           # if(exists("use_bramaticroux")) {
           #   message(paste("bramati croux init",i))
           #   model = RpanFE(Y_special, X_special, TT, 0.20, 20, number_of_variables, 1)[[1]]
           #
           # } else {
-            if(ABDGP1 & ABintercept) { #This is DGP 1
-              #no intercept, because ABDGP1 defines the first variable in X as an intercept
-              model <- LMROB(Y_special,X_special, nointercept = TRUE)  #-> lmrob(Y_special ~ X_special + 0,setting="KS2014)
+            if(dgp1_AB)  {
+              if(dgp1_spread_group_centers) { #split in two if statements, so dgp1_spread_group_centers does not have to exists for RCTS-examples.
+                #This is DGP 1
+                #no intercept, because dgp1_spread_group_centers defines the first variable in X as an intercept
+                model <- LMROB(Y_special, X_special, nointercept = TRUE)  #-> lmrob(Y_special ~ X_special + 0,setting="KS2014)
+              } else {
+                #This is the old dgp 2.
+                model <- LMROB(Y_special, X_special)
+              }
             } else {
-              model <- LMROB(Y_special,X_special)
+              #This is for the old dgp 3 (now called dgp 2) and old dgp 4.
+              model <- LMROB(Y_special, X_special)
             }
           # }
-        } else {
-          if(ABDGP1 & ABintercept) { #This is DGP 1
-            model <- lm(Y_special ~ X_special + 0)
+        } else {  #classical -> lm
+          if(dgp1_AB) {
+            if(dgp1_spread_group_centers) {
+              model <- lm(Y_special ~ X_special + 0) #for dgp 1
+            } else {
+              model <- lm(Y_special ~ X_special) #for dgp 2
+            }
           } else {
-            model <- lm(Y_special ~ X_special)
-
+            model <- lm(Y_special ~ X_special) #for dgp 3 & 4
           }
         }
         #####################
         #get the coefficients
         #####################
-        if(ABDGP1 & ABintercept) {
-          # if(exists("use_bramaticroux")) {
-          #   values = c(0,model)
-          # } else {
-            values = c(0,model$coefficients)
-          # }
-          beta_est[,i] = values
+        # if(exists("use_bramaticroux")) {
+        #   beta_est[,i] = c(0,model)
+        # } else .....
+        #
+        if(dgp1_AB) {
+          if(dgp1_spread_group_centers) {
+            beta_est[,i] = c(0,model$coefficients) #for dgp 1
+          } else {
+            beta_est[,i] = model$coefficients #for dgp 2
+          }
         } else {
-          beta_est[,i] = model$coefficients
+          beta_est[,i] = model$coefficients #for dgp3 & 4
         }
       }
 
@@ -926,11 +939,11 @@ solveFG <- function(TT, number_of_groups, number_of_group_factors){
 #'
 #' X = RCTS::X_dgp3
 #' Y = RCTS::Y_dgp3
-#' #Set estimations for group factors and its loadings, and group membership to the real value
-#' lambda_group = RCTS::lambda_group_real_dgp3
-#' factor_group = RCTS::factor_group_real_dgp3
-#' g_real = RCTS::g_real_dgp3 #true values of group membership
-#' g = g_real #estimated values of group membership; set in this example to be equal to true values
+#' #Set estimations for group factors and its loadings, and group membership to the true value
+#' lambda_group = RCTS::lambda_group_true_dgp3
+#' factor_group = RCTS::factor_group_true_dgp3
+#' g_true = RCTS::g_true_dgp3 #true values of group membership
+#' g = g_true #estimated values of group membership; set in this example to be equal to true values
 #' #There are no common factors to be estimated  ->  use placeholder with values set to zero
 #' lambda = matrix(0,nrow=1,ncol=300)
 #' comfactor = matrix(0,nrow=1,ncol=30)
@@ -941,8 +954,8 @@ solveFG <- function(TT, number_of_groups, number_of_group_factors){
 #' homogeneous_coefficients = FALSE
 #' heterogeneous_coefficients_groups = FALSE
 #' heterogeneous_coefficients_individuals = TRUE
-#' ABDGP1 = FALSE
-#' ABintercept = TRUE
+#' dgp1_AB = FALSE
+#' dgp1_spread_group_centers = TRUE
 #' use_macropca_instead_of_cz = TRUE
 #' number_variables_estimated = 3
 #' beta_est = estimate_beta(NN = 300, TT = 30,
@@ -1018,8 +1031,8 @@ update_g <- function(NN = aantal_N, TT = aantal_T,
     matrix_obj_values[i,] = obj_values
   } #vectorizing is not faster: g = sapply(1:NN, function(z) which.min(map_dbl(1:number_of_groups, function(x) calculate_obj_for_g(z, x, ERRORS_VIRTUAL, rho_parameters))))
   print("current g-table is:")
-  if(!is.na(g_real[1])) {
-    print(table(g,g_real))
+  if(!is.na(g_true[1])) {
+    print(table(g,g_true))
   } else {
     print(table(g))
   }
@@ -1120,7 +1133,7 @@ clustering_with_robust_distances <- function(g, number_of_groups) {
 #' @param f groupfactors
 #' @param l grouploadings
 #' @param j Number of groupfactors that are being used in the calculation.
-#' @inheritParams calculate_FL_group_real
+#' @inheritParams calculate_FL_group_true
 #' @inheritParams generate_Y
 #' @inheritParams update_g
 #' @export
@@ -1237,8 +1250,8 @@ OF_vectorized3 <- function(group_memberships, beta_est = beta_est,
 #' @importFrom dplyr arrange
 #' @examples
 #' library(tidyverse)
-#' lambda_group = RCTS::lambda_group_real_dgp3
-#' factor_group = RCTS::factor_group_real_dgp3
+#' lambda_group = RCTS::lambda_group_true_dgp3
+#' factor_group = RCTS::factor_group_true_dgp3
 #' calculate_lgfg(lambda_group,factor_group,3,c(3,3,3),0,FALSE)
 #' @importFrom rlang .data
 #' @export
@@ -1356,7 +1369,7 @@ determine_beta <- function(string, X_special, Y_special, initialisation = FALSE,
   }
   if(string == "heterogeen") {
     if(class(model) == "lm" | class(model) == "lmrob") {
-      if(ABDGP1 & ABintercept) { #=DGP1
+      if(dgp1_AB & dgp1_spread_group_centers) { #=DGP1
         return(c(0,as.numeric(model$coefficients[-2])))
       } else {
         return(as.numeric(model$coefficients))
@@ -1364,7 +1377,7 @@ determine_beta <- function(string, X_special, Y_special, initialisation = FALSE,
     } else { #ncvreg or rpanfe
 
 
-      if(ABDGP1 & ABintercept) { #=DGP1
+      if(dgp1_AB & dgp1_spread_group_centers) { #=DGP1
         # if(exists("use_bramaticroux")) {
         #   return( c(0,model) )
         # } else {
@@ -1403,10 +1416,10 @@ determine_beta <- function(string, X_special, Y_special, initialisation = FALSE,
 #'
 #' X = RCTS::X_dgp3
 #' Y = RCTS::Y_dgp3
-#' #Set estimations for group factors and its loadings, and group membership to the real value
-#' lambda_group = RCTS::lambda_group_real_dgp3
-#' factor_group = RCTS::factor_group_real_dgp3
-#' g = RCTS::g_real_dgp3
+#' #Set estimations for group factors and its loadings, and group membership to the true value
+#' lambda_group = RCTS::lambda_group_true_dgp3
+#' factor_group = RCTS::factor_group_true_dgp3
+#' g = RCTS::g_true_dgp3
 #' #There are no common factors to be estimated  -> but needs placeholder
 #' lambda = matrix(0,nrow=1,ncol=300)
 #' comfactor = matrix(0,nrow=1,ncol=30)
@@ -1416,8 +1429,8 @@ determine_beta <- function(string, X_special, Y_special, initialisation = FALSE,
 #' homogeneous_coefficients = FALSE
 #' heterogeneous_coefficients_groups = FALSE
 #' heterogeneous_coefficients_individuals = TRUE
-#' ABDGP1 = FALSE
-#' ABintercept = TRUE
+#' dgp1_AB = FALSE
+#' dgp1_spread_group_centers = TRUE
 #' use_macropca_instead_of_cz = TRUE
 #' beta_est = estimate_beta(NN = 300, TT = 30,
 #'   number_of_groups = 3, number_of_group_factors = c(3,3,3), number_of_common_factors = 0,
@@ -2734,7 +2747,7 @@ calculate_PIC_term1 <- function(e2) {
 #' @param term4 term 4 of PIC, updated until group n-1; this function updates this value with group n
 #' @param Nj number of individuals in group j
 #' @param NN N
-#' @param use_alterpic indicates using an alternative version of the PIC (the one of AB2016 instead of AB2017). It weighs the foruth term with an extra factor relative to the size of the groups.
+#' @param use_alterpic indicates using an alternative version of the PIC (the one of AB2016 instead of AB2017). It weighs the fourth term with an extra factor relative to the size of the groups.
 calculate_PIC_term4 <- function(temp, term4, Nj, NN = aantal_N, use_alterpic = ALTERNATIVE_PIC) {
 
 
@@ -2850,36 +2863,36 @@ test_alternative_PIC <- function(C, term2, term3, term4) {
 
 
 
-#' Calculates the product of X*beta_est (the real value of this).
+#' Calculates the product of X*beta_true .
 #' @inheritParams estimate_beta
 #' @export
-calculate_XT_real <- function(NN = aantal_N, TT = aantal_T, number_of_variables = aantalvars) {
+calculate_XB_true <- function(NN = aantal_N, TT = aantal_T, number_of_variables = aantalvars) {
   if(homogeneous_coefficients) { #This is only relevant for DGP5 (BramatiCroux)
-    XT_real = beta_true[1,] + X[,,1] * beta_true[1,]
+    XB_true = beta_true[1,] + X[,,1] * beta_true[1,]
     stopifnot(number_of_variables == 1)
   }
   if(heterogeneous_coefficients_groups) {
     if(number_of_variables > 0 & !eclipz & exists("g")) {
       if(!is.na(g)) {
-        XT_real = t(sapply(1:NN,
+        XB_true = t(sapply(1:NN,
                               function(x) matrix(cbind(1, X[x,,]) %*% beta_true[,g[x]], nrow = 1)))
       } else {
-        XT_real = NA
+        XB_true = NA
       }
     } else {
-      XT_real = NA
+      XB_true = NA
     }
   }
   if(heterogeneous_coefficients_individuals) {
     if(number_of_variables > 0 & !eclipz ) {
-      XT_real = (t(sapply(1:NN,
-                          function(y) sapply(1:TT, function(x) c(1, X[y,x,1:aantalvars]) %*% beta_true[,g_real][,y]))))
+      XB_true = (t(sapply(1:NN,
+                          function(y) sapply(1:TT, function(x) c(1, X[y,x,1:aantalvars]) %*% beta_true[,g_true][,y]))))
     } else {
-      XT_real = NA
+      XB_true = NA
     }
   }
 
-  return(XT_real)
+  return(XB_true)
 }
 
 #' When we run the algorithm with a different number of observable variables then the number we actually have, we need to reformat X.
@@ -2945,46 +2958,46 @@ calculate_XT_estimated <- function(NN = aantal_N, TT = aantal_T,
 #' @return list with NjxT matrices
 #' @param LAMBDA_GROUP_REAL true group factor loadings
 #' @param FACTOR_GROUP_REAL true group factors
-#' @param number_of_groups_real true number of groups
-#' @param number_of_group_factors_real true number of group factors for each group
-#' @param number_of_common_factors_real true number of common factors
+#' @param true_number_of_groups true number of groups
+#' @param true_number_of_group_factors true number of group factors for each group
+#' @param true_number_of_common_factors true number of common factors
 #' @param using_bramaticroux parameter to indicate that we are using data generated with dgp 5
 #' @inheritParams estimate_beta
 #' @inheritParams generate_Y
-#' @param ABDGP1_local gives information about which DGP we use; TRUE of FALSE
+#' @param dgp1_AB_local gives information about which DGP we use; TRUE of FALSE
 #' @export
-calculate_FL_group_real <- function(NN = aantal_N, TT = aantal_T,
-                                    LAMBDA_GROUP_REAL = lambda_group_real, FACTOR_GROUP_REAL = factor_group_real,
-                                    number_of_groups_real = aantalgroepen_real,
-                                    number_of_group_factors_real = aantalfactoren_groups_real,
-                                    number_of_common_factors_real = aantalfactoren_common_real,
+calculate_FL_group_true <- function(NN = aantal_N, TT = aantal_T,
+                                    LAMBDA_GROUP_REAL = lambda_group_true, FACTOR_GROUP_REAL = factor_group_true,
+                                    true_number_of_groups = aantalgroepen_real,
+                                    true_number_of_group_factors = aantalfactoren_groups_real,
+                                    true_number_of_common_factors = aantalfactoren_common_real,
                                     num_factors_may_vary = aantalfactors_verschillend_per_group,
                                     eclipz = FALSE,
-                                    ABDGP1_local = ABDGP1,
+                                    dgp1_AB_local = dgp1_AB,
                                     using_bramaticroux = exists("DGP_Bramati_Croux")) {
 
   if(using_bramaticroux) { #when using DGP5 there are no factors -> return NA
     return(NA)
   }
 
-  if(!eclipz & !ABDGP1_local) { #not using for DGP 1, because real values are not available given current coding (they do exist however)
+  if(!eclipz & !dgp1_AB_local) { #not using for DGP 1, because true values are not available given current coding
     temp = calculate_lgfg(LAMBDA_GROUP_REAL, FACTOR_GROUP_REAL,
-                          number_of_groups_real,
-                          number_of_group_factors_real,
-                          number_of_common_factors_real,
+                          true_number_of_groups,
+                          true_number_of_group_factors,
+                          true_number_of_common_factors,
                           num_factors_may_vary)
-    FL_GROUP_real = t(lapply(1:NN, function(x) temp[[g_real[x]]][x,]) %>% unlist %>% matrix(nrow = TT))
+    FL_GROUP_true = t(lapply(1:NN, function(x) temp[[g_true[x]]][x,]) %>% unlist %>% matrix(nrow = TT))
   } else {
-    FL_GROUP_real = NA
+    FL_GROUP_true = NA
   }
-  return(FL_GROUP_real)
+  return(FL_GROUP_true)
 }
 
 
 #' Returns the estimated groupfactorstructure.
 #' @param LAMBDA_GROUP loadings of group factors
 #' @param FACTOR_GROUP group factors
-#' @inheritParams calculate_FL_group_real
+#' @inheritParams calculate_FL_group_true
 #' @inheritParams generate_Y
 #' @inheritParams update_g
 #' @return list with NjxT matrices
@@ -3021,17 +3034,17 @@ calculate_FL_group_estimated <- function(LAMBDA_GROUP = lambda_group, FACTOR_GRO
 #' It is calculated with the formula of AndoBai2017: supplementary: p19.
 #' Heterogeneous_coefficients_individuals is the default case.
 #' For DGP 1 & 2: When the true number of variables in X is not equal to the standard of 3 it currently returns NA.
-#' @param beta_est estimated values of beta_est
-#' @param beta_true real values of beta_est
+#' @param beta_est estimated values of beta
+#' @param beta_true true values of beta
 #' @param without_intercept boolean to remove the intercept in the calculation
-#' @param ABintercept boolean to remove the de facto intercept in the calculation (this is only for DGP 1 & 2, due to how they are defined)
+#' @param dgp1_spread_group_centers boolean to remove the de facto intercept in the calculation (this is specific for DGP 1 (& old dgp 2), due to how they are defined.)
 #' @inheritParams estimate_beta
-#' @inheritParams calculate_FL_group_real
+#' @inheritParams calculate_FL_group_true
 #' @export
-calculate_mse_beta <- function(beta_est, beta_true, without_intercept = FALSE, ABintercept = FALSE,
+calculate_mse_beta <- function(beta_est, beta_true, without_intercept = FALSE, dgp1_spread_group_centers = FALSE,
                                 NN = aantal_N,
                                 number_of_variables = aantalvars,
-                                ABDGP1_local = ABDGP1) {
+                                dgp1_AB_local = dgp1_AB) {
 
   if(homogeneous_coefficients) { #relevant for DGP05 (Bramati-Croux)
     mse = mean( (beta_est - beta_true)^2 )
@@ -3040,15 +3053,15 @@ calculate_mse_beta <- function(beta_est, beta_true, without_intercept = FALSE, A
   }
 
   if(heterogeneous_coefficients_groups) {
-    pre_mse = mse_heterogeneous_groups(without_intercept, ABintercept)
+    pre_mse = mse_heterogeneous_groups(without_intercept, dgp1_spread_group_centers)
   }
 
   if(heterogeneous_coefficients_individuals) { #Default case; In case of DGP 1 & 2 it returns NA when number of variables is not equal to 3.
     if(without_intercept) {
-      if(ABintercept) { #calculate MSE without real and without de facto intercept
+      if(dgp1_spread_group_centers) { #calculate MSE without the normal, and without the de facto intercept
         beta_est = matrix(beta_est[c(-1,-2),],ncol=NN)
         beta_true = beta_true[c(-1,-2),]
-      } else { #calculate MSE without real intercept
+      } else { #calculate MSE without the normal intercept
         beta_est = beta_est[-1,]
         beta_true = beta_true[-1,]
       }
@@ -3058,17 +3071,17 @@ calculate_mse_beta <- function(beta_est, beta_true, without_intercept = FALSE, A
     pre_mse = rep(NA,NN)
     for(i in 1:NN) {
       #Case of DGP01 and DGP02: These dgp's (can) contain added noise: v1, v2, ...
-      if(ABDGP1_local) {
+      if(dgp1_AB_local) {
         if(number_of_variables == 3) { #if not TRUE, bvb if > 3, then v4,v5,... should be added
           if(without_intercept) {
-            if(ABintercept) {
+            if(dgp1_spread_group_centers) {
               #stopifnot(length(beta_est[,i]) == 2)
-              afw = beta_est[,i] - (beta_true[,g_real[i]] + c(v2[i], v3[i])) #v1 not necessary (it belongs to the de facto intercept)
+              afw = beta_est[,i] - (beta_true[,g_true[i]] + c(v2[i], v3[i])) #v1 not necessary (it belongs to the de facto intercept)
             } else {
-              afw = beta_est[,i] - (beta_true[,g_real[i]] + c(v1[i], v2[i], v3[i])) #beta_true[,...] has number_of_variables elements
+              afw = beta_est[,i] - (beta_true[,g_true[i]] + c(v1[i], v2[i], v3[i])) #beta_true[,...] has number_of_variables elements
             }
           } else {
-            afw = beta_est[,i] - (beta_true[,g_real[i]] + c(0, v1[i], v2[i], v3[i])) #beta_true[,...] has (number_of_variables + 1) elements
+            afw = beta_est[,i] - (beta_true[,g_true[i]] + c(0, v1[i], v2[i], v3[i])) #beta_true[,...] has (number_of_variables + 1) elements
           }
         } else { #when number_of_variables != 3
 
@@ -3077,7 +3090,7 @@ calculate_mse_beta <- function(beta_est, beta_true, without_intercept = FALSE, A
 
         }
       } else { #Case of DGP03 and DGP04:
-        afw = beta_est[,i] - beta_true[,g_real[i]]
+        afw = beta_est[,i] - beta_true[,g_true[i]]
       }
       pre_mse[i] = mean(afw^2) #this is (beta_est - beta_true)^2 (mean() goes over the number of variables)
     }
@@ -3091,10 +3104,10 @@ calculate_mse_beta <- function(beta_est, beta_true, without_intercept = FALSE, A
 #' (beta is estimated for each group separately).
 #'
 #' @param without_intercept boolean to remove the intercept in the calculation
-#' @param ABintercept boolean to remove the de facto intercept in the calculation (this is only for DGP 1 & 2, due to how they are defined)
-mse_heterogeneous_groups <- function(without_intercept, ABintercept) {
+#' @inheritParams calculate_mse_beta
+mse_heterogeneous_groups <- function(without_intercept, dgp1_spread_group_centers) {
 
-  #1. The order of the estimated groups is not necessarily the same as the order of the real groups. -> nood aan permutatie van g om MSE te kunnen bepalen?
+  #1. The order of the estimated groups is not necessarily the same as the order of the true groups. -> nood aan permutatie van g om MSE te kunnen bepalen?
   #-> this is countered by the order in the object beta_est
   #-> we do not need permutation here
 
@@ -3104,10 +3117,10 @@ mse_heterogeneous_groups <- function(without_intercept, ABintercept) {
   }
 
   if(without_intercept) {
-    if(ABintercept) { #->calculate MSE without real and without de facto intercept of DGP1
+    if(dgp1_spread_group_centers) { #->calculate MSE without true and without de facto intercept of DGP1
       beta_est = beta_est[c(-1,-2),]
       beta_true = beta_true[c(-1,-2),]
-    } else { #calculate MSE without real intercept
+    } else { #calculate MSE without true intercept
       beta_est = beta_est[-1,]
       beta_true = beta_true[-1,]
     }
@@ -3116,7 +3129,7 @@ mse_heterogeneous_groups <- function(without_intercept, ABintercept) {
   pre_mse = rep(NA,aantal_N)
   for(i in 1:aantal_N) {
 
-    afw = beta_est[,g[i]] - (beta_true[,g_real[i]])
+    afw = beta_est[,g[i]] - (beta_true[,g_true[i]])
     pre_mse[i] = mean(afw^2)
   }
   return(pre_mse)

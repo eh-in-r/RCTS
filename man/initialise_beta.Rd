@@ -36,10 +36,10 @@ library(robustbase)
 
 X = RCTS::X_dgp3
 Y = RCTS::Y_dgp3
-#Set estimations for group factors and its loadings, and group membership to the real value
-lambda_group = RCTS::lambda_group_real_dgp3
-factor_group = RCTS::factor_group_real_dgp3
-g = RCTS::g_real_dgp3
+#Set estimations for group factors and its loadings, and group membership to the true value
+lambda_group = RCTS::lambda_group_true_dgp3
+factor_group = RCTS::factor_group_true_dgp3
+g = RCTS::g_true_dgp3
 #There are no common factors to be estimated  -> but needs placeholder
 lambda = matrix(0,nrow=1,ncol=300)
 comfactor = matrix(0,nrow=1,ncol=30)
@@ -49,8 +49,8 @@ use_robust = TRUE
 homogeneous_coefficients = FALSE
 heterogeneous_coefficients_groups = FALSE
 heterogeneous_coefficients_individuals = TRUE #estimating beta_i for every individual
-ABDGP1 = FALSE
-ABintercept = TRUE
+dgp1_AB = FALSE
+dgp1_spread_group_centers = TRUE #this value is only relevant if dgp1_AB ise set to TRUE
 beta_init = initialise_beta(NN = 300, TT = 30,
   number_of_variables = 3, number_vars_estimated = 3, number_of_groups = 3)
 }

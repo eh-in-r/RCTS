@@ -7,14 +7,14 @@
 generate_Y(
   NN,
   TT,
-  number_of_common_factors_real,
-  number_of_group_factors_real,
-  g_real,
+  true_number_of_common_factors,
+  true_number_of_group_factors,
+  g_true,
   beta_true,
-  lambda_group_real,
-  factor_group_real,
-  lambda_real,
-  factor_real,
+  lambda_group_true,
+  factor_group_true,
+  lambda_true,
+  comfactor_true,
   epsilon,
   ando_bai = FALSE,
   ando_bai_2017 = FALSE,
@@ -27,21 +27,21 @@ generate_Y(
 
 \item{TT}{length of time series}
 
-\item{number_of_common_factors_real}{real number of common factors}
+\item{true_number_of_common_factors}{true number of common factors}
 
-\item{number_of_group_factors_real}{Vector of length the number of groups. Each element contains the real number of group factors for that group.}
+\item{true_number_of_group_factors}{Vector of length the number of groups. Each element contains the true number of group factors for that group.}
 
-\item{g_real}{vector with real group memberships}
+\item{g_true}{vector of length N with true group memberships}
 
-\item{beta_true}{real coefficients with the observable variables}
+\item{beta_true}{true coefficients with the observable variables}
 
-\item{lambda_group_real}{loadings of the group factors}
+\item{lambda_group_true}{loadings of the group factors}
 
-\item{factor_group_real}{groupfactors}
+\item{factor_group_true}{groupfactors}
 
-\item{lambda_real}{loadings of the common factors}
+\item{lambda_true}{loadings of the common factors}
 
-\item{factor_real}{common factors}
+\item{comfactor_true}{common factors}
 
 \item{epsilon}{NN x TT-matrix containing the error term}
 

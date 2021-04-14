@@ -8,26 +8,26 @@ calculate_mse_beta(
   beta_est,
   beta_true,
   without_intercept = FALSE,
-  ABintercept = FALSE,
+  dgp1_spread_group_centers = FALSE,
   NN = aantal_N,
   number_of_variables = aantalvars,
-  ABDGP1_local = ABDGP1
+  dgp1_AB_local = dgp1_AB
 )
 }
 \arguments{
-\item{beta_est}{estimated values of beta_est}
+\item{beta_est}{estimated values of beta}
 
-\item{beta_true}{real values of beta_est}
+\item{beta_true}{true values of beta}
 
 \item{without_intercept}{boolean to remove the intercept in the calculation}
 
-\item{ABintercept}{boolean to remove the de facto intercept in the calculation (this is only for DGP 1 & 2, due to how they are defined)}
+\item{dgp1_spread_group_centers}{boolean to remove the de facto intercept in the calculation (this is specific for DGP 1 (& old dgp 2), due to how they are defined.)}
 
 \item{NN}{number of individuals}
 
 \item{number_of_variables}{number of observable variables}
 
-\item{ABDGP1_local}{gives information about which DGP we use; TRUE of FALSE}
+\item{dgp1_AB_local}{gives information about which DGP we use; TRUE of FALSE}
 }
 \description{
 It is calculated with the formula of AndoBai2017: supplementary: p19.

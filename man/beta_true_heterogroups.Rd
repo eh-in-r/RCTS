@@ -6,7 +6,7 @@
 \usage{
 beta_true_heterogroups(
   number_of_variables,
-  number_of_groups_real,
+  true_number_of_groups,
   EXTRA_BETA_FACTOR = 1,
   limit_true_groups_BTH = LIMIT_TRUE_GROUPS
 )
@@ -14,7 +14,7 @@ beta_true_heterogroups(
 \arguments{
 \item{number_of_variables}{number of observable variables}
 
-\item{number_of_groups_real}{real numbr of groups}
+\item{true_number_of_groups}{true number of groups}
 
 \item{EXTRA_BETA_FACTOR}{option to multiply the coefficients in true beta; default = 1}
 
