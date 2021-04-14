@@ -8,13 +8,14 @@ return_robust_lambdaobject(
   Y_like_object,
   group,
   type,
-  FACTOR_GROUP = factor_group,
-  number_of_group_factors = aantalfactoren_groups,
-  FACTOR = comfactor,
-  number_of_common_factors = aantalfactoren_common,
   NN = aantal_N,
-  eclipz = FALSE,
-  application_covid = FALSE
+  factor_group_RRN = factor_group,
+  number_of_group_factors_RRN = aantalfactoren_groups,
+  comfactor_RRN = comfactor,
+  number_of_common_factors_RRN = aantalfactoren_common,
+  eclipz_RRN = FALSE,
+  application_covid = FALSE,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -24,19 +25,21 @@ return_robust_lambdaobject(
 
 \item{type}{scalar which shows in which setting this function is used}
 
-\item{FACTOR_GROUP}{estimation of groupfactors}
-
-\item{number_of_group_factors}{number of group factors}
-
-\item{FACTOR}{estimation of common factors}
-
-\item{number_of_common_factors}{number of common factors}
-
 \item{NN}{N}
 
-\item{eclipz}{indicator of using the eclipzdataset}
+\item{factor_group_RRN}{estimation of groupfactors}
+
+\item{number_of_group_factors_RRN}{number of group factors}
+
+\item{comfactor_RRN}{estimation of common factors}
+
+\item{number_of_common_factors_RRN}{number of common factors}
+
+\item{eclipz_RRN}{indicator of using the eclipzdataset}
 
 \item{application_covid}{indicator of using the coviddataset}
+
+\item{verbose}{when TRUE, it prints messages}
 }
 \value{
 Nxk dataframe

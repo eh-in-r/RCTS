@@ -7,14 +7,15 @@
 calculate_virtual_factor_and_lambda_group(
   group,
   solve_FG_FG_times_FG,
-  NN,
-  TT,
-  use_macropca_instead_of_cz,
-  number_of_variables = aantalvars,
-  number_vars_estimated = number_variables_estimated,
-  number_of_group_factors = aantalfactoren_groups,
-  number_of_common_factors = aantalfactoren_common,
-  eclipz = eclipz
+  NN_local,
+  TT_local,
+  use_macropca_instead_of_cz_local,
+  number_of_variables_local = aantalvars,
+  number_vars_estimated_local = number_variables_estimated,
+  number_of_group_factors_local = aantalfactoren_groups,
+  number_of_common_factors_local = aantalfactoren_common,
+  eclipz_local = eclipz,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -22,21 +23,9 @@ calculate_virtual_factor_and_lambda_group(
 
 \item{solve_FG_FG_times_FG}{This is the same as groupfactor / T. It is only used in the Classical approach}
 
-\item{NN}{number of individuals}
-
-\item{TT}{length of time series}
+\item{verbose}{when TRUE, it prints messages}
 
 \item{use_macropca_instead_of_cz}{If TRUE, then factors are estimated robustly with macropca (or pertMM), else with class-zero-method.}
-
-\item{number_of_variables}{number of observable variables}
-
-\item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
-
-\item{number_of_group_factors}{number of groupfactors estimated}
-
-\item{number_of_common_factors}{number of common factors estimated}
-
-\item{eclipz}{parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
 }
 \value{
 NxT matrix containing the product of virtual groupfactors and virtual loadings

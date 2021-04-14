@@ -13,7 +13,8 @@ update_g(
   number_of_group_factors = aantalfactoren_groups,
   number_of_common_factors = aantalfactoren_common,
   use_class_zero = FALSE,
-  eclipz = eclipz
+  eclipz_inupdateg = eclipz,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -31,9 +32,11 @@ update_g(
 
 \item{number_of_common_factors}{number of common factors estimated}
 
-\item{use_class_zero}{boolean: if set to TRUE, then individuals with high distance to all possible groups are put in a separate class zero}
+\item{use_class_zero}{if set to TRUE, then individuals with high distance to all possible groups are put in a separate class zero}
 
-\item{eclipz}{parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
+\item{eclipz_inupdateg}{Parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
+
+\item{verbose}{when TRUE, it prints messages}
 }
 \value{
 list: 1st element contains group membership and second element contains the values which are used to determine group membership
