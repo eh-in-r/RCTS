@@ -668,7 +668,6 @@ initialise_beta <- function(eclipz = FALSE,
 #' @param number_of_common_factors_local number of common factors to be estimated
 #' @param eclipz_local Parameter to indicate using real world Eclipzdataset. Defaults to FALSE.
 #' @param verbose when TRUE, it prints messages
-#' @inheritParams estimate_beta
 #' @return NxT matrix containing the product of virtual groupfactors and virtual loadings
 
 calculate_virtual_factor_and_lambda_group <- function(group, solve_FG_FG_times_FG,
