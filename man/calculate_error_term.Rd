@@ -31,9 +31,9 @@ calculate_error_term(
 
 \item{number_of_groups}{number of groups estimated}
 
-\item{number_of_group_factors}{number of groupfactors estimated}
+\item{number_of_group_factors}{number of groupfactors to be estimated}
 
-\item{number_of_common_factors}{number of common factors estimated}
+\item{number_of_common_factors}{number of common factors to be estimated}
 }
 \value{
 NxT matrix

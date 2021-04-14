@@ -23,9 +23,23 @@ calculate_virtual_factor_and_lambda_group(
 
 \item{solve_FG_FG_times_FG}{This is the same as groupfactor / T. It is only used in the Classical approach}
 
-\item{verbose}{when TRUE, it prints messages}
+\item{NN_local}{N}
 
-\item{use_macropca_instead_of_cz}{If TRUE, then factors are estimated robustly with macropca (or pertMM), else with class-zero-method.}
+\item{TT_local}{T}
+
+\item{use_macropca_instead_of_cz_local}{If TRUE, then factors are estimated robustly with macropca (or pertMM), else with class-zero-method.}
+
+\item{number_of_variables_local}{number of observable variables}
+
+\item{number_vars_estimated_local}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
+
+\item{number_of_group_factors_local}{number of group factors to be estimated}
+
+\item{number_of_common_factors_local}{number of common factors to be estimated}
+
+\item{eclipz_local}{Parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
+
+\item{verbose}{when TRUE, it prints messages}
 }
 \value{
 NxT matrix containing the product of virtual groupfactors and virtual loadings

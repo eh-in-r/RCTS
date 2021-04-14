@@ -37,7 +37,7 @@ calculate_Z_common(
 
 \item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
 
-\item{number_of_group_factors}{number of groupfactors estimated}
+\item{number_of_group_factors}{number of groupfactors to be estimated}
 
 \item{eclipz}{parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
 }

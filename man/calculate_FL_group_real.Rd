@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{calculate_FL_group_real}
 \alias{calculate_FL_group_real}
-\title{Calculate real groupfactorstructure.}
+\title{Calculate true groupfactorstructure.}
 \usage{
 calculate_FL_group_real(
   NN = aantal_N,
@@ -23,15 +23,15 @@ calculate_FL_group_real(
 
 \item{TT}{length of time series}
 
-\item{LAMBDA_GROUP_REAL}{real group factor loadings}
+\item{LAMBDA_GROUP_REAL}{true group factor loadings}
 
-\item{FACTOR_GROUP_REAL}{real group factors}
+\item{FACTOR_GROUP_REAL}{true group factors}
 
-\item{number_of_groups_real}{real number of groups}
+\item{number_of_groups_real}{true number of groups}
 
-\item{number_of_group_factors_real}{real number of group factors for each group}
+\item{number_of_group_factors_real}{true number of group factors for each group}
 
-\item{number_of_common_factors_real}{real number of common factors}
+\item{number_of_common_factors_real}{true number of common factors}
 
 \item{num_factors_may_vary}{whether or not the number of groupfactors is constant over all groups or not}
 
@@ -45,5 +45,5 @@ calculate_FL_group_real(
 list with NjxT matrices
 }
 \description{
-Calculate real groupfactorstructure.
+Calculate true groupfactorstructure.
 }

@@ -30,9 +30,9 @@ calculate_errors_virtual_groups(
 
 \item{number_of_variables}{number of observable variables}
 
-\item{number_of_common_factors}{number of common factors estimated}
+\item{number_of_common_factors}{number of common factors to be estimated}
 
-\item{number_of_group_factors}{number of groupfactors estimated}
+\item{number_of_group_factors}{number of groupfactors to be estimated}
 
 \item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
 

@@ -11,7 +11,7 @@ solveFG(TT, number_of_groups, number_of_group_factors)
 
 \item{number_of_groups}{number of groups}
 
-\item{number_of_group_factors}{number of group factors}
+\item{number_of_group_factors}{number of group factors to be estimated}
 }
 \description{
 Helpfunction in update_g(), to calculate solve(FG x t(FG)) x FG

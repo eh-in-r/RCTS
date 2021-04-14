@@ -8,7 +8,7 @@ return_robust_lambdaobject(
   Y_like_object,
   group,
   type,
-  NN = aantal_N,
+  NN_RRN = aantal_N,
   factor_group_RRN = factor_group,
   number_of_group_factors_RRN = aantalfactoren_groups,
   comfactor_RRN = comfactor,
@@ -25,7 +25,7 @@ return_robust_lambdaobject(
 
 \item{type}{scalar which shows in which setting this function is used}
 
-\item{NN}{N}
+\item{NN_RRN}{N}
 
 \item{factor_group_RRN}{estimation of groupfactors}
 

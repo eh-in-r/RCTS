@@ -38,7 +38,7 @@ calculate_lambda(
 
 \item{TT}{length of time series}
 
-\item{number_of_common_factors}{number of common factors estimated}
+\item{number_of_common_factors}{number of common factors to be estimated}
 
 \item{number_of_variables}{number of observable variables}
 

@@ -20,9 +20,9 @@ calculate_PIC(
 \arguments{
 \item{C}{determines relative contribution of the penamlty terms}
 
-\item{number_of_common_factors}{number of common factors estimated}
+\item{number_of_common_factors}{number of common factors to be estimated}
 
-\item{number_of_group_factors}{number of groupfactors estimated}
+\item{number_of_group_factors}{number of groupfactors to be estimated}
 
 \item{e2}{matrix with error terms}
 

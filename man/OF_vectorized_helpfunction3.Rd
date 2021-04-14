@@ -27,7 +27,7 @@ OF_vectorized_helpfunction3(
 
 \item{lgfg_list}{product of groupfactors and their loadings; list with length the number of groups}
 
-\item{number_of_group_factors}{vector containing the number of group factors for all groups}
+\item{number_of_group_factors}{vector containing the number of group factors to be estimated for all groups}
 }
 \description{
 Helpfunction in OF_vectorized3()

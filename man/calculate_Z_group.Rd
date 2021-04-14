@@ -39,7 +39,7 @@ calculate_Z_group(
 
 \item{eclipz}{parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
 
-\item{number_of_common_factors}{number of common factors estimated}
+\item{number_of_common_factors}{number of common factors to be estimated}
 }
 \description{
 Calculates Z = Y - X*beta_est - LF. It is used to estimate the groupfactorstructure.

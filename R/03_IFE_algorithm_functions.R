@@ -659,7 +659,14 @@ initialise_beta <- function(eclipz = FALSE,
 #' these are robust.
 #' @param group number of groups
 #' @param solve_FG_FG_times_FG This is the same as groupfactor / T. It is only used in the Classical approach
-#' @param use_macropca_instead_of_cz If TRUE, then factors are estimated robustly with macropca (or pertMM), else with class-zero-method.
+#' @param use_macropca_instead_of_cz_local If TRUE, then factors are estimated robustly with macropca (or pertMM), else with class-zero-method.
+#' @param NN_local N
+#' @param TT_local T
+#' @param number_of_variables_local number of observable variables
+#' @param number_vars_estimated_local number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.
+#' @param number_of_group_factors_local number of group factors to be estimated
+#' @param number_of_common_factors_local number of common factors to be estimated
+#' @param eclipz_local Parameter to indicate using real world Eclipzdataset. Defaults to FALSE.
 #' @param verbose when TRUE, it prints messages
 #' @inheritParams estimate_beta
 #' @return NxT matrix containing the product of virtual groupfactors and virtual loadings
@@ -693,7 +700,7 @@ calculate_virtual_factor_and_lambda_group <- function(group, solve_FG_FG_times_F
     if(use_macropca_instead_of_cz_local) {
       #we need a robust version of the virtual factorstructure:
       LG_local = return_robust_lambdaobject(Y_ster, group, type = 1,
-                                             NN = NN_local,
+                                            NN_RRN = NN_local,
                                              number_of_group_factors_RRN = number_of_group_factors_local,
                                              number_of_common_factors_RRN = number_of_common_factors_local,
                                             eclipz_RRN = eclipz_local,
@@ -882,7 +889,7 @@ calculate_obj_for_g <- function(i, k, ERRORS_VIRTUAL, rho_parameters, TT = aanta
 #'
 #' @param TT length of time series
 #' @param number_of_groups number of groups
-#' @param number_of_group_factors number of group factors
+#' @param number_of_group_factors number of group factors to be estimated
 solveFG <- function(TT, number_of_groups, number_of_group_factors){
   solve_FG_FG_times_FG = list()
   for(group in 1:number_of_groups) {
@@ -1147,7 +1154,7 @@ calculate_FL_group_estimated2 <- function(f,l,j,
 #' @param LF matrixproduct of common factors and its loadings
 #' @param group_memberships vector with group memberships
 #' @param lgfg_list product of groupfactors and their loadings; list with length the number of groups
-#' @param number_of_group_factors vector containing the number of group factors for all groups
+#' @param number_of_group_factors vector containing the number of group factors to be estimated for all groups
 OF_vectorized_helpfunction3 <- function(i,t,XBETA,LF,
                                         group_memberships,
                                         lgfg_list,
@@ -1381,8 +1388,8 @@ determine_beta <- function(string, X_special, Y_special, initialisation = FALSE,
 #' @param NN number of individuals
 #' @param TT length of time series
 #' @param number_of_groups number of groups estimated
-#' @param number_of_group_factors number of groupfactors estimated
-#' @param number_of_common_factors number of common factors estimated
+#' @param number_of_group_factors number of groupfactors to be estimated
+#' @param number_of_common_factors number of common factors to be estimated
 #' @param number_of_variables number of observable variables
 #' @param number_vars_estimated number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.
 #' @param num_factors_may_vary whether or not the number of groupfactors is constant over all groups or not
@@ -1953,6 +1960,7 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20) {
 #' @inheritParams calculate_W
 #' @param lgfg_list This is a list (length number of groups) containing FgLg for every group.
 #' @param initialise boolean
+#' @param use_macropca_instead_of_cz If TRUE, then factors are estimated robustly with macropca (or pertMM), else with class-zero-method.
 #' @inheritParams estimate_beta
 #' @inheritParams calculate_virtual_factor_and_lambda_group
 #' @inheritParams calculate_Z_common
@@ -2066,6 +2074,7 @@ prepare_for_robpca <- function(object, NN = aantal_N, TT = aantal_T, option = 3)
 #' @param expert_based_initial_factors indicates using a previously defined set of (initial) factors; defaults to FALSE
 #' @inheritParams estimate_beta
 #' @inheritParams calculate_virtual_factor_and_lambda_group
+#' @inheritParams estimate_factor
 #' @export
 estimate_factor_group <- function(beta_est, g, lambda, comfactor,
                                   use_macropca_instead_of_cz,
@@ -2156,8 +2165,8 @@ estimate_factor_group <- function(beta_est, g, lambda, comfactor,
 #' @param initialise boolean
 #' @param efwp indicates that factors are estimated with pertMM
 #' @inheritParams estimate_beta
-#' @inheritParams calculate_virtual_factor_and_lambda_group
 #' @inheritParams calculate_Z_common
+#' @inheritParams estimate_factor
 #' @export
 calculate_lambda <- function(beta_est, comfactor, g, lgfg_list,
                              use_macropca_instead_of_cz,
@@ -2229,7 +2238,7 @@ calculate_lambda <- function(beta_est, comfactor, g, lgfg_list,
 #' @param UPDATE2 option to indicate the number of common factors is updated during the algorithm; defaults to FALSE
 #' @inheritParams estimate_beta
 #' @inheritParams calculate_W
-#' @inheritParams calculate_virtual_factor_and_lambda_group
+#' @inheritParams estimate_factor
 #' @importFrom rlang .data
 #' @export
 calculate_lambda_group <- function(beta_est, factor_group, g, lambda, comfactor,
@@ -2499,7 +2508,7 @@ do_we_estimate_common_factors <- function(number_of_common_factors) {
   return(a)
 }
 #' Helpfunction to shorten code: use a and b
-#' @param number_of_group_factors number of group factors
+#' @param number_of_group_factors number of group factors to be estimated
 do_we_estimate_group_factors <- function(number_of_group_factors) {
   if(mean(number_of_group_factors, na.rm = T) == 0) {
     b = 0
@@ -2932,13 +2941,13 @@ calculate_XT_estimated <- function(NN = aantal_N, TT = aantal_T,
 }
 
 
-#' Calculate real groupfactorstructure.
+#' Calculate true groupfactorstructure.
 #' @return list with NjxT matrices
-#' @param LAMBDA_GROUP_REAL real group factor loadings
-#' @param FACTOR_GROUP_REAL real group factors
-#' @param number_of_groups_real real number of groups
-#' @param number_of_group_factors_real real number of group factors for each group
-#' @param number_of_common_factors_real real number of common factors
+#' @param LAMBDA_GROUP_REAL true group factor loadings
+#' @param FACTOR_GROUP_REAL true group factors
+#' @param number_of_groups_real true number of groups
+#' @param number_of_group_factors_real true number of group factors for each group
+#' @param number_of_common_factors_real true number of common factors
 #' @param using_bramaticroux parameter to indicate that we are using data generated with dgp 5
 #' @inheritParams estimate_beta
 #' @inheritParams generate_Y

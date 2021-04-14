@@ -7,7 +7,7 @@
 do_we_estimate_group_factors(number_of_group_factors)
 }
 \arguments{
-\item{number_of_group_factors}{number of group factors}
+\item{number_of_group_factors}{number of group factors to be estimated}
 }
 \description{
 Helpfunction to shorten code: use a and b

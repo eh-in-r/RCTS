@@ -35,9 +35,9 @@ OF_vectorized3(
 
 \item{number_of_groups}{number of groups estimated}
 
-\item{number_of_common_factors}{number of common factors estimated}
+\item{number_of_common_factors}{number of common factors to be estimated}
 
-\item{number_of_group_factors}{number of groupfactors estimated}
+\item{number_of_group_factors}{number of groupfactors to be estimated}
 
 \item{num_factors_may_vary}{whether or not the number of groupfactors is constant over all groups or not}
 }
