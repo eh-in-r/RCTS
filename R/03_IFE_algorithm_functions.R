@@ -156,10 +156,11 @@ create_true_beta <- function(number_of_variables,
                               NN = aantal_N,
                               number_of_groups_real = aantalgroepen_real,
                               eclipz = FALSE,
-                              EXTRA_BETA_FACTOR = 1,
+                              extra_beta_factor = 1,
                               beta_true_homogeneous = beta_true_homogeen,
                               beta_true_heterogeneous_groups = beta_true_heterogeen_groups,
-                              beta_true_heterogeneous_individuals = beta_true_heterogeen_individueel, LIMIT_TRUE_GROUPS = LIMIT_TRUE_GROUPS) {
+                              beta_true_heterogeneous_individuals = beta_true_heterogeen_individueel,
+                              limit_true_groups = LIMIT_TRUE_GROUPS) {
   stopifnot((beta_true_homogeneous + beta_true_heterogeneous_groups + beta_true_heterogeneous_individuals) == 1)
   #real world eclipzdata: beta_true does not exist -> return NA
   if(eclipz) return(NA)
@@ -173,7 +174,7 @@ create_true_beta <- function(number_of_variables,
     }
     #groupsspecific beta_true: -> default case
     if(beta_true_heterogeneous_groups) {
-      beta_true = beta_true_heterogroups(number_of_variables, number_of_groups_real, EXTRA_BETA_FACTOR = EXTRA_BETA_FACTOR, limit_true_groups = LIMIT_TRUE_GROUPS)
+      beta_true = beta_true_heterogroups(number_of_variables, number_of_groups_real, EXTRA_BETA_FACTOR = extra_beta_factor, limit_true_groups = LIMIT_TRUE_GROUPS)
     }
     #individualspecific beta_true:
     if(beta_true_heterogeneous_individuals) {
@@ -2052,6 +2053,7 @@ prepare_for_robpca <- function(object, NN = aantal_N, TT = aantal_T, option = 3)
 #' @param lambda common factor loadings
 #' @param comfactor common factors
 #' @param initialise boolean
+#' @param expert_based_initial_factors indicates using a previously defined set of (initial) factors; defaults to FALSE
 #' @inheritParams estimate_beta
 #' @inheritParams calculate_virtual_factor_and_lambda_group
 #' @export
@@ -2066,7 +2068,7 @@ estimate_factor_group <- function(beta_est, g, lambda, comfactor,
                                   number_of_variables = aantalvars,
                                   number_vars_estimated = number_variables_estimated,
                                   eclipz = eclipz,
-                                  expert_based_initial_factors = exists("expert_based_initial_factors")
+                                  expert_based_initial_factors = FALSE #exists("expert_based_initial_factors")
                                   #returnscores = FALSE
                                   ) {
 

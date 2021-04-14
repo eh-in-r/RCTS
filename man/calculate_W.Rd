@@ -2,10 +2,10 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{calculate_W}
 \alias{calculate_W}
-\title{Calculates W = Y - X*THETA. It is used in the initializationstep of the algorithm, to initialise the factorstructures.}
+\title{Calculates W = Y - X*beta_est. It is used in the initializationstep of the algorithm, to initialise the factorstructures.}
 \usage{
 calculate_W(
-  theta,
+  beta_est,
   g,
   NN = aantal_N,
   TT = aantal_T,
@@ -15,7 +15,7 @@ calculate_W(
 )
 }
 \arguments{
-\item{theta}{theta}
+\item{beta_est}{beta_est}
 
 \item{g}{vector with group membership}
 
@@ -33,5 +33,5 @@ calculate_W(
 NxT matrix
 }
 \description{
-Calculates W = Y - X*THETA. It is used in the initializationstep of the algorithm, to initialise the factorstructures.
+Calculates W = Y - X*beta_est. It is used in the initializationstep of the algorithm, to initialise the factorstructures.
 }

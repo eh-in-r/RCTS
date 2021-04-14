@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{calculate_error_term}
 \alias{calculate_error_term}
-\title{Calculates the error term Y - X*THETA - LF - LgFg.}
+\title{Calculates the error term Y - X*beta_est - LF - LgFg.}
 \usage{
 calculate_error_term(
   no_common_factorstructure = FALSE,
@@ -39,5 +39,5 @@ calculate_error_term(
 NxT matrix
 }
 \description{
-Calculates the error term Y - X*THETA - LF - LgFg.
+Calculates the error term Y - X*beta_est - LF - LgFg.
 }

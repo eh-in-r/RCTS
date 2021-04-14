@@ -13,7 +13,8 @@ calculate_virtual_factor_and_lambda_group(
   number_of_variables = aantalvars,
   number_vars_estimated = number_variables_estimated,
   number_of_group_factors = aantalfactoren_groups,
-  number_of_common_factors = aantalfactoren_common
+  number_of_common_factors = aantalfactoren_common,
+  eclipz = eclipz
 )
 }
 \arguments{
@@ -34,6 +35,8 @@ calculate_virtual_factor_and_lambda_group(
 \item{number_of_group_factors}{number of groupfactors estimated}
 
 \item{number_of_common_factors}{number of common factors estimated}
+
+\item{eclipz}{parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
 }
 \value{
 NxT matrix containing the product of virtual groupfactors and virtual loadings

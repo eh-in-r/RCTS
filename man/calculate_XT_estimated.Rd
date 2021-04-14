@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{calculate_XT_estimated}
 \alias{calculate_XT_estimated}
-\title{Calculates (the estimated value of) the matrix X*theta.}
+\title{Calculates (the estimated value of) the matrix X*beta_est.}
 \usage{
 calculate_XT_estimated(
   NN = aantal_N,
@@ -24,5 +24,5 @@ calculate_XT_estimated(
 \item{eclipz}{parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
 }
 \description{
-Calculates (the estimated value of) the matrix X*theta.
+Calculates (the estimated value of) the matrix X*beta_est.
 }

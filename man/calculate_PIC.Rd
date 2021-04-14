@@ -39,7 +39,7 @@ calculate_PIC(
 \item{number_of_groups}{number of groups estimated}
 }
 \description{
-This depends on kappa1 -> kappaN, through p (=number of nonzero elements of theta).
+This depends on kappa1 -> kappaN, through p (=number of nonzero elements of beta_est).
 The parameter 'sigma2' is the non-robust sigma2. As it is only used in term 2 to 4, it does not actually matter what its value is (needs to be > 0).
 Could be set to 1 as well.
 }

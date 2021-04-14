@@ -5,7 +5,7 @@
 \title{Estimates group factors}
 \usage{
 estimate_factor_group(
-  theta,
+  beta_est,
   g,
   lambda,
   comfactor,
@@ -14,11 +14,16 @@ estimate_factor_group(
   NN = aantal_N,
   TT = aantal_T,
   number_of_groups = aantalgroepen,
-  number_of_group_factors = aantalfactoren_groups
+  number_of_group_factors = aantalfactoren_groups,
+  number_of_common_factors = aantalfactoren_common,
+  number_of_variables = aantalvars,
+  number_vars_estimated = number_variables_estimated,
+  eclipz = eclipz,
+  expert_based_initial_factors = exists("expert_based_initial_factors")
 )
 }
 \arguments{
-\item{theta}{theta}
+\item{beta_est}{beta_est}
 
 \item{g}{vector with group membership}
 
@@ -37,6 +42,14 @@ estimate_factor_group(
 \item{number_of_groups}{number of groups estimated}
 
 \item{number_of_group_factors}{number of groupfactors estimated}
+
+\item{number_of_common_factors}{number of common factors estimated}
+
+\item{number_of_variables}{number of observable variables}
+
+\item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
+
+\item{eclipz}{parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
 }
 \description{
 Estimates group factors

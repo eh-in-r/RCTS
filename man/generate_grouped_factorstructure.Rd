@@ -29,9 +29,5 @@ factors ~ N(j * FGR_FACTOR, FGR_FACTOR_sd) -> default case will be N(j,1)
 library(tidyverse)
 #For 3 groups, each with 3 groupfactors:
 g_real = ceiling(runif(300) * 3)
-LGR_FACTOR_mean = 0
-LGR_FACTOR = 1
-FGR_FACTOR_sd = 1
-FGR_FACTOR = 1
 generate_grouped_factorstructure(3,c(3,3,3), TT = 30)
 }

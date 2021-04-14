@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{calculate_error_term_individuals}
 \alias{calculate_error_term_individuals}
-\title{Calculates the error term Y - X*THETA - LF - LgFg.}
+\title{Calculates the error term Y - X*beta_est - LF - LgFg.}
 \usage{
 calculate_error_term_individuals(
   NN = aantal_N,

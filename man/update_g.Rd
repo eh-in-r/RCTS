@@ -12,7 +12,8 @@ update_g(
   number_vars_estimated = number_variables_estimated,
   number_of_group_factors = aantalfactoren_groups,
   number_of_common_factors = aantalfactoren_common,
-  use_class_zero = FALSE
+  use_class_zero = FALSE,
+  eclipz = eclipz
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ update_g(
 \item{number_of_common_factors}{number of common factors estimated}
 
 \item{use_class_zero}{boolean: if set to TRUE, then individuals with high distance to all possible groups are put in a separate class zero}
+
+\item{eclipz}{parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
 }
 \value{
 list: 1st element contains group membership and second element contains the values which are used to determine group membership
@@ -40,18 +43,18 @@ Function that estimates group membership.
 }
 \examples{
 #This function needs several initial parameters to be initialized in order to work on itself
-library(RobClustTimeSeries)
+library(RCTS)
 library(tidyverse)
 library(robustbase)
 
-X = RobClustTimeSeries::X_dgp3
-Y = RobClustTimeSeries::Y_dgp3
+X = RCTS::X_dgp3
+Y = RCTS::Y_dgp3
 #Set estimations for group factors and its loadings, and group membership to the real value
-lambda_group = RobClustTimeSeries::lambda_group_real_dgp3
-factor_group = RobClustTimeSeries::factor_group_real_dgp3
-g_real = RobClustTimeSeries::g_real_dgp3 #true values of group membership
+lambda_group = RCTS::lambda_group_real_dgp3
+factor_group = RCTS::factor_group_real_dgp3
+g_real = RCTS::g_real_dgp3 #true values of group membership
 g = g_real #estimated values of group membership; set in this example to be equal to true values
-#There are no common factors to be estimated  -> but needs placeholder
+#There are no common factors to be estimated  ->  use placeholder with values set to zero
 lambda = matrix(0,nrow=1,ncol=300)
 comfactor = matrix(0,nrow=1,ncol=30)
 use_robust = TRUE
@@ -64,11 +67,11 @@ ABDGP1 = FALSE
 ABintercept = TRUE
 use_macropca_instead_of_cz = TRUE
 number_variables_estimated = 3
-theta = estimate_theta(NN = 300, TT = 30,
+beta_est = estimate_beta(NN = 300, TT = 30,
   number_of_groups = 3, number_of_group_factors = c(3,3,3), number_of_common_factors = 0,
   number_of_variables = 3, number_vars_estimated = number_variables_estimated,
   num_factors_may_vary = FALSE)[[1]]
-grid = grid_add_variables(grid,theta, lambda, comfactor, NN = 300, TT = 30,
+grid = grid_add_variables(grid,beta_est, lambda, comfactor, NN = 300, TT = 30,
   number_of_variables = 3, number_vars_estimated = number_variables_estimated, number_of_groups = 3)
 eclipz = FALSE
 g_new = update_g(NN = 300, TT = 30, number_of_groups = 3, number_of_variables = 3,

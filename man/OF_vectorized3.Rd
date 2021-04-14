@@ -6,7 +6,7 @@
 \usage{
 OF_vectorized3(
   group_memberships,
-  THETA = theta,
+  beta_est = beta_est,
   LAMBDA = lambda,
   FACTOR = comfactor,
   LAMBDA_GROUP = lambda_group,
@@ -21,7 +21,7 @@ OF_vectorized3(
 \arguments{
 \item{group_memberships}{Vector containing groupmembership for all individuals.}
 
-\item{THETA}{theta}
+\item{beta_est}{beta_est}
 
 \item{LAMBDA}{loadings of common factors}
 

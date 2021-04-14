@@ -10,7 +10,7 @@ generate_Y(
   number_of_common_factors_real,
   number_of_group_factors_real,
   g_real,
-  theta_real,
+  beta_true,
   lambda_group_real,
   factor_group_real,
   lambda_real,
@@ -33,7 +33,7 @@ generate_Y(
 
 \item{g_real}{vector with real group memberships}
 
-\item{theta_real}{real coefficients with the observable variables}
+\item{beta_true}{real coefficients with the observable variables}
 
 \item{lambda_group_real}{loadings of the group factors}
 

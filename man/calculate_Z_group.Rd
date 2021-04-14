@@ -2,10 +2,10 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{calculate_Z_group}
 \alias{calculate_Z_group}
-\title{Calculates Z = Y - X*THETA - LF. It is used to estimate the groupfactorstructure.}
+\title{Calculates Z = Y - X*beta_est - LF. It is used to estimate the groupfactorstructure.}
 \usage{
 calculate_Z_group(
-  theta,
+  beta_est,
   g,
   lambda,
   comfactor,
@@ -19,7 +19,7 @@ calculate_Z_group(
 )
 }
 \arguments{
-\item{theta}{theta}
+\item{beta_est}{beta_est}
 
 \item{g}{vector with group membership}
 
@@ -42,5 +42,5 @@ calculate_Z_group(
 \item{number_of_common_factors}{number of common factors estimated}
 }
 \description{
-Calculates Z = Y - X*THETA - LF. It is used to estimate the groupfactorstructure.
+Calculates Z = Y - X*beta_est - LF. It is used to estimate the groupfactorstructure.
 }

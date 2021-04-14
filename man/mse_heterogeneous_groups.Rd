@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{mse_heterogeneous_groups}
 \alias{mse_heterogeneous_groups}
-\title{Helpfunction in calculate_mse_theta, when heterogeneous_coefficients_groups == TRUE.
+\title{Helpfunction in calculate_mse_beta, when heterogeneous_coefficients_groups == TRUE.
 (beta is estimated for each group separately).}
 \usage{
 mse_heterogeneous_groups(without_intercept, ABintercept)
@@ -13,6 +13,6 @@ mse_heterogeneous_groups(without_intercept, ABintercept)
 \item{ABintercept}{boolean to remove the de facto intercept in the calculation (this is only for DGP 1 & 2, due to how they are defined)}
 }
 \description{
-Helpfunction in calculate_mse_theta, when heterogeneous_coefficients_groups == TRUE.
+Helpfunction in calculate_mse_beta, when heterogeneous_coefficients_groups == TRUE.
 (beta is estimated for each group separately).
 }
