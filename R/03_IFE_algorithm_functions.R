@@ -660,42 +660,45 @@ initialise_beta <- function(eclipz = FALSE,
 #' @param group number of groups
 #' @param solve_FG_FG_times_FG This is the same as groupfactor / T. It is only used in the Classical approach
 #' @param use_macropca_instead_of_cz If TRUE, then factors are estimated robustly with macropca (or pertMM), else with class-zero-method.
+#' @param verbose when TRUE, it prints messages
 #' @inheritParams estimate_beta
 #' @return NxT matrix containing the product of virtual groupfactors and virtual loadings
 
 calculate_virtual_factor_and_lambda_group <- function(group, solve_FG_FG_times_FG,
-                                                      NN, TT,
-                                                      use_macropca_instead_of_cz,
-                                                      number_of_variables = aantalvars,
-                                                      number_vars_estimated = number_variables_estimated,
-                                                      number_of_group_factors = aantalfactoren_groups,
-                                                      number_of_common_factors = aantalfactoren_common,
-                                                      eclipz = eclipz
+                                                      NN_local, TT_local,
+                                                      use_macropca_instead_of_cz_local,
+                                                      number_of_variables_local = aantalvars,
+                                                      number_vars_estimated_local = number_variables_estimated,
+                                                      number_of_group_factors_local = aantalfactoren_groups,
+                                                      number_of_common_factors_local = aantalfactoren_common,
+                                                      eclipz_local = eclipz,
+                                                      verbose = FALSE
                                                       ) {
+
   FG = factor_group[[group]]
-  indices = 1:NN
+  indices = 1:NN_local
   LF = t(lambda) %*% comfactor
-  xbeta = calculate_XT_estimated(NN = NN, TT = TT, number_of_variables = number_of_variables, number_vars_estimated = number_vars_estimated)
+  xbeta = calculate_XT_estimated(NN = NN_local, TT = TT_local, number_of_variables = number_of_variables_local, number_vars_estimated = number_vars_estimated_local)
 
 
-  if(!do_we_estimate_common_factors(number_of_common_factors)) {
+  if(!do_we_estimate_common_factors(number_of_common_factors_local)) {
     Y_ster = Y[indices,] - xbeta
   } else {
     Y_ster = Y[indices,] - xbeta - LF
   }
 
-
   #robust grouplambda:
   if(use_robust) {
     #CHANGE LOCATION 5/7
-    if(use_macropca_instead_of_cz) {
+    if(use_macropca_instead_of_cz_local) {
       #we need a robust version of the virtual factorstructure:
       LG_local = return_robust_lambdaobject(Y_ster, group, type = 1,
-                                             NN = NN,
-                                             number_of_group_factors = number_of_group_factors,
-                                             number_of_common_factors = number_of_common_factors,
-                                            eclipz = eclipz,
+                                             NN = NN_local,
+                                             number_of_group_factors_RRN = number_of_group_factors_local,
+                                             number_of_common_factors_RRN = number_of_common_factors_local,
+                                            eclipz_RRN = eclipz_local,
                                             application_covid = exists("usecoviddata_cases") | exists("usecoviddata_deaths"))
+
     } else {
       LG_local = t(solve_FG_FG_times_FG[[group]] %*% t(Y_ster)) #This equalS to Fg*Y/T
     }
@@ -905,7 +908,9 @@ solveFG <- function(TT, number_of_groups, number_of_group_factors){
 #'
 #' @return list: 1st element contains group membership and second element contains the values which are used to determine group membership
 #' @inheritParams estimate_beta
-#' @param use_class_zero boolean: if set to TRUE, then individuals with high distance to all possible groups are put in a separate class zero
+#' @param use_class_zero if set to TRUE, then individuals with high distance to all possible groups are put in a separate class zero
+#' @param eclipz_inupdateg Parameter to indicate using real world Eclipzdataset. Defaults to FALSE.
+#' @param verbose when TRUE, it prints messages
 #' @examples
 #' #This function needs several initial parameters to be initialized in order to work on itself
 #' library(RCTS)
@@ -953,7 +958,7 @@ update_g <- function(NN = aantal_N, TT = aantal_T,
                      number_of_group_factors = aantalfactoren_groups,
                      number_of_common_factors = aantalfactoren_common,
                      use_class_zero = FALSE,
-                     eclipz = eclipz) {
+                     eclipz_inupdateg = eclipz, verbose = FALSE) {
 
 
 
@@ -963,12 +968,13 @@ update_g <- function(NN = aantal_N, TT = aantal_T,
     #we calculate FgLg (groupfactors times grouploadings) for all the possible groups to which individual i could end up:
 
     virtual_grouped_factor_structure = lapply(1:number_of_groups, function(y) calculate_virtual_factor_and_lambda_group(y, solve_FG_FG_times_FG, NN, TT,
-                                                                                                                        number_of_variables = number_of_variables,
-                                                                                                                        number_vars_estimated = number_vars_estimated,
-                                                                                                                        number_of_group_factors = number_of_group_factors,
-                                                                                                                        number_of_common_factors = number_of_common_factors,
-                                                                                                                        use_macropca_instead_of_cz = use_macropca_instead_of_cz,
-                                                                                                                        eclipz = eclipz))
+                                                                                                                        number_of_variables_local = number_of_variables,
+                                                                                                                        number_vars_estimated_local = number_vars_estimated,
+                                                                                                                        number_of_group_factors_local = number_of_group_factors,
+                                                                                                                        number_of_common_factors_local = number_of_common_factors,
+                                                                                                                        use_macropca_instead_of_cz_local = use_macropca_instead_of_cz,
+                                                                                                                        eclipz_local = eclipz_inupdateg))
+    if(verbose) message("virtual_grouped_factor_structure is created")
 
 
   } else {
@@ -988,7 +994,8 @@ update_g <- function(NN = aantal_N, TT = aantal_T,
                                                                                           number_of_common_factors,
                                                                                           number_of_group_factors,
                                                                                           number_vars_estimated = number_vars_estimated,
-                                                                                          eclipz))
+                                                                                          eclipz_inupdateg))
+  if(verbose) message("ERRORS_VIRTUAL is created")
 
 
   if(use_robust) {
@@ -996,6 +1003,7 @@ update_g <- function(NN = aantal_N, TT = aantal_T,
   } else {
     rho_parameters = NA
   }
+  if(verbose) message("rho_parameters is created")
 
   for(i in 1:NN) {
     obj_values = map_dbl(1:number_of_groups, function(x) calculate_obj_for_g(i, x, ERRORS_VIRTUAL, rho_parameters, TT = TT))
@@ -2178,8 +2186,8 @@ calculate_lambda <- function(beta_est, comfactor, g, lgfg_list,
   if(use_robust) {
     #CHANGE LOCATION 6/7
     if(use_macropca_instead_of_cz) {
-      lambda = return_robust_lambdaobject(W, NA, type = 2, FACTOR = comfactor, number_of_common_factors = nrow(comfactor),
-                                          NN = NN, eclipz = eclipz,
+      lambda = return_robust_lambdaobject(W, NA, type = 2, comfactor_RRN = comfactor, number_of_common_factors_RRN = nrow(comfactor),
+                                          NN_RRN = NN, eclipz_RRN = eclipz,
                                           application_covid = exists("usecoviddata_cases") | exists("usecoviddata_deaths"))
     } else {
       lambda = t(W %*% t(comfactor) / TT)
@@ -2256,14 +2264,14 @@ calculate_lambda_group <- function(beta_est, factor_group, g, lambda, comfactor,
           #   (lambda_N1 = (F_T1 * Y_N1T1 + F_T2 * Y_N1T2 + ...) / TT)
           #   We replace this mean by an M-estimator in the robust approach.
           if(UPDATE1) {
-            lambda_local[[group]] = return_robust_lambdaobject(Wj, group, type = 3, FACTOR_GROUP = factor_group,
-                                                               number_of_group_factors = unlist(lapply(factor_group, nrow)),
-                                                               eclipz = eclipz,
+            lambda_local[[group]] = return_robust_lambdaobject(Wj, group, type = 3, factor_group_RRN = factor_group,
+                                                               number_of_group_factors_RRN = unlist(lapply(factor_group, nrow)),
+                                                               eclipz_RRN = eclipz,
                                                                application_covid = exists("usecoviddata_cases") | exists("usecoviddata_deaths"))
           } else {
             lambda_local[[group]] = return_robust_lambdaobject(Wj, group, type = 3,
-                                                               number_of_group_factors = number_of_group_factors,
-                                                               eclipz = eclipz,
+                                                               number_of_group_factors_RRN = number_of_group_factors,
+                                                               eclipz_RRN = eclipz,
                                                                application_covid = exists("usecoviddata_cases") | exists("usecoviddata_deaths"))
           }
         } else {

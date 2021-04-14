@@ -10,11 +10,11 @@
 #' @param almost_classical_lambda matrix where the mean of each row is equal to the classical lambda
 #' @param fastoption Uses nlm() instead of optim(). This is faster.
 #' @param fastoption2 experimental parameter: can speed nlm() up (10%), but loses accuracy. May benefit from finetuning.
-#' @param application_covid indicator of using the coviddataset
+#' @param application_covid_DRL indicator of using the coviddataset
 #' @importFrom stats optim
 #' @importFrom stats nlm
 #' @return M-estimator of location of the parameter, by minimizing sum of rho()
-determine_robust_lambda <- function(almost_classical_lambda, fastoption = TRUE, fastoption2 = FALSE, application_covid = FALSE) {
+determine_robust_lambda <- function(almost_classical_lambda, fastoption = TRUE, fastoption2 = FALSE, application_covid_DRL = FALSE) {
 
   ############
   #speedtests:
@@ -28,7 +28,7 @@ determine_robust_lambda <- function(almost_classical_lambda, fastoption = TRUE, 
 
   #the option fastoption2 wins about 10% extra, but would not be accurate enough.
   ############
-  if(application_covid) {
+  if(application_covid_DRL) {
     #nlm() does not find minimum, so use optim()
     fastoption = FALSE
   }
@@ -80,38 +80,43 @@ determine_robust_lambda <- function(almost_classical_lambda, fastoption = TRUE, 
 #' @param Y_like_object this is Y_ster or W or W_j
 #' @param group index of group
 #' @param type scalar which shows in which setting this function is used
-#' @param FACTOR_GROUP estimation of groupfactors
-#' @param number_of_group_factors number of group factors
-#' @param FACTOR estimation of common factors
-#' @param number_of_common_factors number of common factors
+#' @param factor_group_RRN estimation of groupfactors
+#' @param number_of_group_factors_RRN number of group factors
+#' @param comfactor_RRN estimation of common factors
+#' @param number_of_common_factors_RRN number of common factors
 #' @param NN N
-#' @param eclipz indicator of using the eclipzdataset
+#' @param eclipz_RRN indicator of using the eclipzdataset
 #' @param application_covid indicator of using the coviddataset
+#' @param verbose when TRUE, it prints messages
 #' @return Nxk dataframe
 #' @export
 return_robust_lambdaobject <- function(Y_like_object, group, type,
-                                       FACTOR_GROUP = factor_group,
-                                       number_of_group_factors = aantalfactoren_groups,
-                                       FACTOR = comfactor,
-                                       number_of_common_factors = aantalfactoren_common,
                                        NN = aantal_N,
-                                       eclipz = FALSE,
-                                       application_covid = FALSE) {
+                                       factor_group_RRN = factor_group,
+                                       number_of_group_factors_RRN = aantalfactoren_groups,
+                                       comfactor_RRN = comfactor,
+                                       number_of_common_factors_RRN = aantalfactoren_common,
+                                       eclipz_RRN = FALSE,
+                                       application_covid = FALSE,
+                                       verbose = FALSE) {
 
-  #print(paste("type =",type))
+  if(verbose) message(paste("type =",type))
   if(type == 1) {  #used in calculate_virtual_factor_and_lambda_group()
-    if(number_of_group_factors[group] > 0) { #this can be zero when updating the number of factors
-      LG_local = data.frame(matrix(NA,nrow = NN, ncol = number_of_group_factors[group]))
+    if(number_of_group_factors_RRN[group] > 0) { #this can be zero when updating the number of factors
+      LG_local = data.frame(matrix(NA, nrow = NN, ncol = number_of_group_factors_RRN[group]))
 
 
       for(ii in 1:NN) {
-        for(rr in 1:number_of_group_factors[group]) {
+        #if(verbose) message(ii)
+        for(rr in 1:number_of_group_factors_RRN[group]) {
+          #if(verbose) message(rr)
 
-          almost_classical_lambda = (Y_like_object[ii,] * t(FACTOR_GROUP[[group]])[,rr])  #the mean of this is equal to classical lambda
+          almost_classical_lambda = (Y_like_object[ii,] * t(factor_group_RRN[[group]])[,rr])  #the mean of this is equal to classical lambda
 
-          if(eclipz) almost_classical_lambda = unlist(almost_classical_lambda) #to evade errors
-
-          robust_lambda = determine_robust_lambda(almost_classical_lambda, application_covid = application_covid)
+          if(eclipz_RRN) almost_classical_lambda = unlist(almost_classical_lambda) #to evade errors
+          if(verbose) message(paste("start determine_robust_lambda()"))
+          robust_lambda = determine_robust_lambda(almost_classical_lambda, application_covid_DRL = application_covid)
+          if(verbose) message(paste("end determine_robust_lambda()"))
           LG_local[ii,rr] = robust_lambda
         }
       }
@@ -125,15 +130,15 @@ return_robust_lambdaobject <- function(Y_like_object, group, type,
 
 
   if(type == 2) { #used in calculate_lambda()
-    if(number_of_common_factors > 0) {
-      lambda = matrix(NA, nrow = number_of_common_factors, ncol = NN)
+    if(number_of_common_factors_RRN > 0) {
+      lambda = matrix(NA, nrow = number_of_common_factors_RRN, ncol = NN)
 
       for(ii in 1:NN) {
-        for(rr in 1:number_of_common_factors) {
+        for(rr in 1:number_of_common_factors_RRN) {
 
-          almost_classical_lambda = (Y_like_object[ii,] * t(FACTOR)[,rr]) #the mean of this is equal to the classical lambda
+          almost_classical_lambda = (Y_like_object[ii,] * t(comfactor_RRN)[,rr]) #the mean of this is equal to the classical lambda
 
-          robust_lambda = determine_robust_lambda(almost_classical_lambda, application_covid = application_covid)
+          robust_lambda = determine_robust_lambda(almost_classical_lambda, application_covid_DRL = application_covid)
           lambda[rr,ii] = robust_lambda
         }
       }
@@ -146,13 +151,13 @@ return_robust_lambdaobject <- function(Y_like_object, group, type,
 
 
   if(type == 3) { #used in calculate_lambda_group()
-    lambda_local = data.frame(matrix(NA,nrow = length(which(g == group)), ncol = number_of_group_factors[group]))
+    lambda_local = data.frame(matrix(NA,nrow = length(which(g == group)), ncol = number_of_group_factors_RRN[group]))
 
     for(ii in 1:length(which(g == group))) {
-      for(rr in 1:number_of_group_factors[group]) {
-        almost_classical_lambda = (Y_like_object[ii,] * t(FACTOR_GROUP[[group]])[,rr])  #the mean of this is equal to classical lambda
+      for(rr in 1:number_of_group_factors_RRN[group]) {
+        almost_classical_lambda = (Y_like_object[ii,] * t(factor_group_RRN[[group]])[,rr])  #the mean of this is equal to classical lambda
 
-        robust_lambda = determine_robust_lambda(almost_classical_lambda, application_covid = application_covid)
+        robust_lambda = determine_robust_lambda(almost_classical_lambda, application_covid_DRL = application_covid)
 
         lambda_local[ii,rr] = robust_lambda
       }
@@ -179,7 +184,7 @@ return_robust_lambdaobject <- function(Y_like_object, group, type,
 
         almost_classical_lambda = (Y_like_object[ii,] * factor_for_grouping[,rr]) #Do not use the transpose here, because we use factor_for_grouping here.
 
-        lambda_local[ii,rr] = determine_robust_lambda(almost_classical_lambda, application_covid = application_covid)
+        lambda_local[ii,rr] = determine_robust_lambda(almost_classical_lambda, application_covid_DRL = application_covid)
       }
     }
 

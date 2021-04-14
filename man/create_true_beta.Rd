@@ -32,6 +32,8 @@ create_true_beta(
 \item{beta_true_heterogeneous_groups}{whether true beta is equal within groups, and different between groups}
 
 \item{beta_true_heterogeneous_individuals}{whether true beta is different for all individuals}
+
+\item{limit_true_groups}{Maximum number of true groups in a simulation-DGP for which the code in this package is implemented. Currently equals 12. For application on realworld data this parameter is not relevant.}
 }
 \value{
 matrix with number of rows equal to number of observable variables + 1 (the first row contains the intercept) and number of culumns
@@ -43,6 +45,7 @@ beta_true_heterogeen_groups is the default case
 \examples{
 library(tidyverse)
 #Decide if beta_est is common, or specific to groups or individuals: Choose 1 of the following 3.
+LIMIT_TRUE_GROUPS = 12 #set the maximum allowed number of true groups
 create_true_beta(3, NN = 300, number_of_groups_real = 3,
   beta_true_homogeneous = FALSE, beta_true_heterogeneous_groups = TRUE,
   beta_true_heterogeneous_individuals = FALSE, limit_true_groups = 12)
