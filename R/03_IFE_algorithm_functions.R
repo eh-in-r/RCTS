@@ -698,7 +698,7 @@ calculate_virtual_factor_and_lambda_group <- function(group, solve_FG_FG_times_F
   FG = factor_group[[group]]
   indices = 1:NN_local
   LF = t(lambda) %*% comfactor
-  xbeta = calculate_XT_estimated(NN = NN_local, TT = TT_local, number_of_variables = number_of_variables_local, number_vars_estimated = number_vars_estimated_local)
+  xbeta = calculate_XB_estimated(NN = NN_local, TT = TT_local, number_of_variables = number_of_variables_local, number_vars_estimated = number_vars_estimated_local)
 
 
   if(!do_we_estimate_common_factors(number_of_common_factors_local)) {
@@ -2440,7 +2440,7 @@ grid_add_variables <- function(grid, beta_est, lambda, comfactor,
 
       }
       if(heterogeneous_coefficients_individuals) {
-        grid$XBETA = c(calculate_XT_estimated(NN = NN, TT = TT, number_of_variables = number_of_variables, number_vars_estimated = number_vars_estimated))
+        grid$XBETA = c(calculate_XB_estimated(NN = NN, TT = TT, number_of_variables = number_of_variables, number_vars_estimated = number_vars_estimated))
       }
     }
   } else {
@@ -2560,7 +2560,7 @@ calculate_error_term <- function(no_common_factorstructure = FALSE, no_group_fac
                   function(y) sapply(1:TT, function(x) c(1, X[y,x,]) %*% beta_est[,g[y]]))
     }
     if(heterogeneous_coefficients_individuals) {
-      xt = t(calculate_XT_estimated(NN = NN, TT = TT, number_of_variables = number_of_variables)) #TxN matrix
+      xt = t(calculate_XB_estimated(NN = NN, TT = TT, number_of_variables = number_of_variables)) #TxN matrix
     }
   } else {
     xt = matrix(0, nrow = TT, ncol = NN) #TxN
@@ -2918,7 +2918,7 @@ adapt_X_estimating_less_variables <- function(number_of_variables,
 #'
 #' @inheritParams estimate_beta
 #' @export
-calculate_XT_estimated <- function(NN = aantal_N, TT = aantal_T,
+calculate_XB_estimated <- function(NN = aantal_N, TT = aantal_T,
                                    number_of_variables = aantalvars,
                                    number_vars_estimated = number_variables_estimated,
                                    eclipz = FALSE) {
