@@ -9,11 +9,11 @@ create_true_beta(
   NN = aantal_N,
   number_of_groups_real = aantalgroepen_real,
   eclipz = FALSE,
-  EXTRA_BETA_FACTOR = 1,
+  extra_beta_factor = 1,
   beta_true_homogeneous = beta_true_homogeen,
   beta_true_heterogeneous_groups = beta_true_heterogeen_groups,
   beta_true_heterogeneous_individuals = beta_true_heterogeen_individueel,
-  LIMIT_TRUE_GROUPS = LIMIT_TRUE_GROUPS
+  limit_true_groups = LIMIT_TRUE_GROUPS
 )
 }
 \arguments{
@@ -25,13 +25,13 @@ create_true_beta(
 
 \item{eclipz}{boolean to indicate using eClipzdatabase; defaults to FALSE}
 
-\item{EXTRA_BETA_FACTOR}{multiplies coefficients in beta_est; default = 1}
-
 \item{beta_true_homogeneous}{whether true beta is equal for all individuals}
 
 \item{beta_true_heterogeneous_groups}{whether true beta is equal within groups, and different between groups}
 
 \item{beta_true_heterogeneous_individuals}{whether true beta is different for all individuals}
+
+\item{EXTRA_BETA_FACTOR}{multiplies coefficients in beta_est; default = 1}
 }
 \value{
 matrix with number of rows equal to number of observable variables + 1 (the first row contains the intercept) and number of culumns

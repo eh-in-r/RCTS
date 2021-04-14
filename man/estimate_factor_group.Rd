@@ -19,7 +19,7 @@ estimate_factor_group(
   number_of_variables = aantalvars,
   number_vars_estimated = number_variables_estimated,
   eclipz = eclipz,
-  expert_based_initial_factors = exists("expert_based_initial_factors")
+  expert_based_initial_factors = FALSE
 )
 }
 \arguments{
@@ -50,6 +50,8 @@ estimate_factor_group(
 \item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
 
 \item{eclipz}{parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
+
+\item{expert_based_initial_factors}{indicates using a previously defined set of (initial) factors; defaults to FALSE}
 }
 \description{
 Estimates group factors
