@@ -66,7 +66,7 @@ create_covMat_crosssectional_dependence <- function(parameter,NN) {
 #' @param number_of_variables number of observable variables
 #' @param number_of_groups_real real numbr of groups
 #' @param EXTRA_BETA_FACTOR option to multiply the coefficients in beta_est; default = 1
-#' @param limit_true_groups Maximum number of true groups in a simulation-DGP for which the code in this package is implemented. Currently equals 12. For application on realworld data this parameter is not relevant.
+#' @inheritParams create_true_beta
 #' @importFrom stats runif
 #' @importFrom magrittr %>%
 beta_true_heterogroups <- function(number_of_variables, number_of_groups_real, EXTRA_BETA_FACTOR = 1, limit_true_groups = LIMIT_TRUE_GROUPS) {
@@ -142,11 +142,13 @@ beta_true_heterogroups <- function(number_of_variables, number_of_groups_real, E
 #' @param beta_true_homogeneous whether true beta is equal for all individuals
 #' @param beta_true_heterogeneous_groups whether true beta is equal within groups, and different between groups
 #' @param beta_true_heterogeneous_individuals whether true beta is different for all individuals
+#' @param limit_true_groups Maximum number of true groups in a simulation-DGP for which the code in this package is implemented. Currently equals 12. For application on realworld data this parameter is not relevant.
 #' @return matrix with number of rows equal to number of observable variables + 1 (the first row contains the intercept) and number of culumns
 #' equal to the real number of groups.
 #' @examples
 #' library(tidyverse)
 #' #Decide if beta_est is common, or specific to groups or individuals: Choose 1 of the following 3.
+#' LIMIT_TRUE_GROUPS = 12 #set the maximum allowed number of true groups
 #' create_true_beta(3, NN = 300, number_of_groups_real = 3,
 #'   beta_true_homogeneous = FALSE, beta_true_heterogeneous_groups = TRUE,
 #'   beta_true_heterogeneous_individuals = FALSE, limit_true_groups = 12)
