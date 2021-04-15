@@ -4,7 +4,7 @@
 \alias{robustpca}
 \title{Function that uses robust PCA and estimates robust factors and loadings.}
 \usage{
-robustpca(object, number_eigenvectors, KMAX = 20)
+robustpca(object, number_eigenvectors, KMAX = 20, verbose_robustpca = FALSE)
 }
 \arguments{
 \item{object}{input}
@@ -18,7 +18,7 @@ Contains MacroPCA
 }
 \details{
 Notes for MACROPCA:
-KMAX: Different values for kmax give different factors, but the  product lambda\emph{factor stays constant. Note that
+KMAX: Different values for kmax give different factors, but the product lambda\emph{factor stays constant. Note that
 this number needs to be big enough, otherwise eigen() will be used.
 Variation in k does give different results for lambda}factor
 

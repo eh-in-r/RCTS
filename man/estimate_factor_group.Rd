@@ -19,7 +19,8 @@ estimate_factor_group(
   number_of_variables = aantalvars,
   number_vars_estimated = number_variables_estimated,
   eclipz = eclipz,
-  expert_based_initial_factors = FALSE
+  expert_based_initial_factors = FALSE,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -52,6 +53,8 @@ estimate_factor_group(
 \item{eclipz}{parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
 
 \item{expert_based_initial_factors}{indicates using a previously defined set of (initial) factors; defaults to FALSE}
+
+\item{verbose}{when TRUE, it prints messages}
 }
 \description{
 Estimates group factors

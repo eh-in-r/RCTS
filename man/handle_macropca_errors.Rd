@@ -4,7 +4,13 @@
 \alias{handle_macropca_errors}
 \title{Helpfunction in robustpca().}
 \usage{
-handle_macropca_errors(object, temp, KMAX, number_eigenvectors)
+handle_macropca_errors(
+  object,
+  temp,
+  KMAX,
+  number_eigenvectors,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{object}{input}

@@ -67,7 +67,6 @@ create_covMat_crosssectional_dependence <- function(parameter,NN) {
 #' @param true_number_of_groups true number of groups
 #' @param EXTRA_BETA_FACTOR option to multiply the coefficients in true beta; default = 1
 #' @param limit_true_groups_BTH  Maximum number of true groups in a simulation-DGP for which the code in this package is implemented. Currently equals 12. For application on realworld data this parameter is not relevant.
-#' @inheritParams create_true_beta
 #' @importFrom stats runif
 #' @importFrom magrittr %>%
 beta_true_heterogroups <- function(number_of_variables, true_number_of_groups, EXTRA_BETA_FACTOR = 1, limit_true_groups_BTH = LIMIT_TRUE_GROUPS) {
@@ -681,7 +680,7 @@ initialise_beta <- function(eclipz = FALSE,
 #' @param number_of_group_factors_local number of group factors to be estimated
 #' @param number_of_common_factors_local number of common factors to be estimated
 #' @param eclipz_local Parameter to indicate using real world Eclipzdataset. Defaults to FALSE.
-#' @param verbose when TRUE, it prints messages
+#' @inheritParams update_g
 #' @return NxT matrix containing the product of virtual groupfactors and virtual loadings
 
 calculate_virtual_factor_and_lambda_group <- function(group, solve_FG_FG_times_FG,
@@ -909,7 +908,7 @@ solveFG <- function(TT, number_of_groups, number_of_group_factors){
     if(number_of_group_factors[group] > 0) {
       FG = factor_group[[group]]
       if(as.numeric(rankMatrix(FG)) != number_of_group_factors[group]) {
-        message("___")
+        message("___There is an issue in solveFG(): rank of FG should be the same as the number of group factors")
         message(paste("rank of matrix FG: ",as.numeric(rankMatrix(FG))))
         message(paste("number_of_group_factors[group]: ",number_of_group_factors[group]))
         print(FG[,1:3])
@@ -1030,11 +1029,14 @@ update_g <- function(NN = aantal_N, TT = aantal_T,
     g[i] = which.min(obj_values)
     matrix_obj_values[i,] = obj_values
   } #vectorizing is not faster: g = sapply(1:NN, function(z) which.min(map_dbl(1:number_of_groups, function(x) calculate_obj_for_g(z, x, ERRORS_VIRTUAL, rho_parameters))))
-  print("current g-table is:")
-  if(!is.na(g_true[1])) {
-    print(table(g,g_true))
-  } else {
-    print(table(g))
+
+  if(verbose) {
+    print("current g-table is:")
+    if(!is.na(g_true[1])) {
+      print(table(g,g_true))
+    } else {
+      print(table(g))
+    }
   }
 
   g_before_class_zero = g
@@ -1177,7 +1179,7 @@ OF_vectorized_helpfunction3 <- function(i,t,XBETA,LF,
   if(do_we_estimate_group_factors(number_of_group_factors) != 0 & group_memberships[i] != 0) {
 
     if(t > ncol(lgfg_list[[group_memberships[i]]])) { #this is the case when macropca() dropped columns
-      message("Unsolved issue: macropca has dropped columns (OF_vectorized_helpfunction3())")
+      warning("Unsolved issue: macropca has dropped columns (OF_vectorized_helpfunction3())")
       print(t)
       print(dim(lgfg_list[[group_memberships[i]]]))
     } else {
@@ -1369,22 +1371,28 @@ determine_beta <- function(string, X_special, Y_special, initialisation = FALSE,
   }
   if(string == "heterogeen") {
     if(class(model) == "lm" | class(model) == "lmrob") {
-      if(dgp1_AB & dgp1_spread_group_centers) { #=DGP1
-        return(c(0,as.numeric(model$coefficients[-2])))
+      if(dgp1_AB) {
+        if(dgp1_spread_group_centers) { #=DGP1
+          return(c(0,as.numeric(model$coefficients[-2])))
+        } else {
+          return(as.numeric(model$coefficients)) #for old dgp 2
+        }
       } else {
-        return(as.numeric(model$coefficients))
+        return(as.numeric(model$coefficients)) #for old dgp 3 & 4
       }
     } else { #ncvreg or rpanfe
 
-
-      if(dgp1_AB & dgp1_spread_group_centers) { #=DGP1
-        # if(exists("use_bramaticroux")) {
-        #   return( c(0,model) )
-        # } else {
+      # if(exists("use_bramaticroux")) {
+      #   return( c(0,model) )
+      # }
+      if(dgp1_AB) {
+        if(dgp1_spread_group_centers) { #=DGP1
           return(c(0,model$beta[-2,1]))
-        # }
+        } else {
+          return(model$beta[,1])  #for old dgp 2
+        }
       } else {
-        return(model$beta[,1])
+        return(model$beta[,1]) #for old dgp 3 & 4
       }
     }
   }
@@ -1724,10 +1732,10 @@ calculate_Z_group <- function(beta_est, g, lambda, comfactor, group, initialise,
                               number_vars_estimated = number_variables_estimated,
                               eclipz = FALSE,
                               number_of_common_factors = aantalfactoren_common) {
-  #print("calc Z_group")
+
   indices_group = which(g == group)
   if(length(indices_group) == 0) {
-    print("empty group (calculate_Z_group())")
+    message("empty group (calculate_Z_group())")
     Sys.sleep(1)
   }
 
@@ -1740,10 +1748,10 @@ calculate_Z_group <- function(beta_est, g, lambda, comfactor, group, initialise,
 
     #define XT
     if(number_vars_estimated > 0) {
-      if(homogeneous_coefficients | heterogeneous_coefficients_groups)  beta_est = as.matrix(beta_est[,g[index]])
-      if(heterogeneous_coefficients_individuals) beta_est = as.matrix(beta_est[,index])
+      if(homogeneous_coefficients | heterogeneous_coefficients_groups)  BETA = as.matrix(beta_est[,g[index]])
+      if(heterogeneous_coefficients_individuals) BETA = as.matrix(beta_est[,index])
 
-      XT = t(cbind(1,X[index,,]) %*% beta_est)
+      XT = t(cbind(1,X[index,,]) %*% BETA)
     } else {
       XT = rep(0,TT)
     }
@@ -1800,7 +1808,7 @@ evade_crashes_macropca <- function(object) {
 #' @param temp this is the result of the trycatch block of using macropca on object
 #' @param KMAX parameter kmax in MacroPCA
 #' @param number_eigenvectors number of principal components that are needed
-handle_macropca_errors <- function(object, temp, KMAX, number_eigenvectors) {
+handle_macropca_errors <- function(object, temp, KMAX, number_eigenvectors, verbose = FALSE) {
 
   if("error" %in% class(temp)) {
     message("*******************************")
@@ -1809,7 +1817,7 @@ handle_macropca_errors <- function(object, temp, KMAX, number_eigenvectors) {
     teller = 0
     while("error" %in% class(temp)) {
       teller = teller + 1
-      print(paste("teller:",teller))
+      if(verbose) print(paste("teller:",teller))
 
 
       temp =  tryCatch(
@@ -1819,8 +1827,10 @@ handle_macropca_errors <- function(object, temp, KMAX, number_eigenvectors) {
 
       #sometimes, when there occurred too often errors in macropca, we end up with only a limited amount of possible eigenvectors that are calculated.
       #This happens when a group has very little elements.
-      print("----")
-      print(class(temp))
+      if(verbose) {
+        print("----")
+        print(class(temp))
+      }
       number_columns = 999
       temp =  tryCatch(
         number_columns = ncol(temp$loadings),
@@ -1839,7 +1849,7 @@ handle_macropca_errors <- function(object, temp, KMAX, number_eigenvectors) {
       }
 
       if(teller >= 10) {
-        message("-------------infinite loop (MacroPCA does not work with any k) -> use (classical) eigen(): has to be squared matrix -> take covariance matrix of object-------------")
+        warning("-------------infinite loop (MacroPCA does not work with any k) -> use (classical) eigen(): has to be squared matrix -> take covariance matrix of object-------------")
         #(reason: Error in svd::propack.svd(Y, neig = min(n, d)) : BLAS/LAPACK routine 'DLASCL' gave error code -4)
         #eigen() needs always square matrix -> take covmatrix
         temp = eigen(t(object)%*%object)$vectors[,1:number_eigenvectors]
@@ -1855,7 +1865,7 @@ handle_macropca_errors <- function(object, temp, KMAX, number_eigenvectors) {
 #' Contains MacroPCA
 #'
 #' Notes for MACROPCA:
-#' KMAX: Different values for kmax give different factors, but the  product lambda*factor stays constant. Note that
+#' KMAX: Different values for kmax give different factors, but the product lambda*factor stays constant. Note that
 #'  this number needs to be big enough, otherwise eigen() will be used.
 #' Variation in k does give different results for lambda*factor
 #'
@@ -1865,11 +1875,15 @@ handle_macropca_errors <- function(object, temp, KMAX, number_eigenvectors) {
 #' @param object input
 #' @param number_eigenvectors number of eigenvectors to extract
 #' @param KMAX The maximal number of principal components to compute. This is a paramater in cellWise::MacroPCA()
+#' @inheritParams update_g
 #' @export
-robustpca <- function(object, number_eigenvectors, KMAX = 20) {
+robustpca <- function(object, number_eigenvectors, KMAX = 20, verbose_robustpca = FALSE) {
 
-  print(paste("*************************************************robust PCA with:",number_eigenvectors))
-  print(dim(object))
+  if(verbose_robustpca) {
+    print(paste("*************************************************robust PCA with:",number_eigenvectors))
+    print("dimension of input:")
+    print(dim(object))
+  }
 
 
   ######################
@@ -1878,11 +1892,10 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20) {
   error_macropca = FALSE
   object = evade_crashes_macropca(object)
 
-    print(number_eigenvectors)
+    #print(number_eigenvectors)
     if(number_eigenvectors > KMAX) {
       #Note that when k > kmax, k gets the value of kmax.
-      message("MacroPCA is (through kmax) limited to 20 factors.")
-      Sys.sleep(15)
+      message("MacroPCA is (through KMAX) limited to 20 factors.")
     }
 
     macropca_kmax = number_eigenvectors
@@ -1901,9 +1914,11 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20) {
     #   Sys.sleep(5)
     # }
 
-    message("--start of macropca")
-    print(paste("rank of input:", rankMatrix(object)))
-    print(paste("required number of eigenvectors:",number_eigenvectors))
+    if(verbose_robustpca) {
+      message("--start of macropca")
+      print(paste("rank of input:", rankMatrix(object)))
+      print(paste("required number of eigenvectors:",number_eigenvectors))
+    }
     temp =  tryCatch(
       cellWise::MacroPCA(object, k = max(macropca_kmax, number_eigenvectors), MacroPCApars = list(kmax=KMAX)),
       error = function(e) { message(e); return(e) }
@@ -1917,23 +1932,24 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20) {
     #Solution: add one-column(s) to the factors (-> temp$loadings), and zero-column(s) to factor loadings (-> temp$scores).
     #This ensures that the product of factor and factor loadings does not get altered.
     #  (Note: adding zero-column to temp$scores would have the result that the rank of factor_group[...] is too low, therefore use one-column(s).)
-
-    message("----dimension of output of macropca (factorloadings and factors):----")
-    print(dim(temp$scores))
-    print(dim(temp$loadings))
-    print(paste("number of eigenvectors:", number_eigenvectors))
+    if(verbose_robustpca) {
+      message("----dimension of output of macropca (factorloadings and factors):----")
+      print(dim(temp$scores))
+      print(dim(temp$loadings))
+      print(paste("number of eigenvectors:", number_eigenvectors))
+    }
     if(!is.null(dim(temp$scores))) {
       if(dim(temp$loadings)[2] != number_eigenvectors) {
-        message(paste("issue with dimensions of factors: MacroPCA returns only",dim(temp$loadings)[2],
+        message(paste("There is an issue with the dimensions of the factors: MacroPCA returns only",dim(temp$loadings)[2],
         "eigenvectors, instead of", number_eigenvectors,  "-> add one-column(s)"))
         for(i in 1:(number_eigenvectors - dim(temp$loadings)[2])) {
           temp$scores = cbind(temp$scores, 0) #add 0 to factor loadings
           temp$loadings = cbind(temp$loadings, 1) #add 1 to factors
-          message("resulting factors:")
-          print(temp$loadings[1:5,])
+          if(verbose_robustpca) {
+            message("resulting factors:")
+            print(temp$loadings[1:5,])
+          }
 
-          #temporary global variable, for testing purposes:
-          #errordataframe <-- errordataframe %>% rbind(aantalfactoren_groups)
         }
       }
     }
@@ -1949,7 +1965,6 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20) {
           print(dim(object))
           print(dim(factors_macropca))
           message("--MacroPCA has dropped a column for unknown reasons---") #This leads to wrong dimensions in the factors, and gives error in rstudio.
-          Sys.sleep(3)
         }
     }
     if(error_macropca) {
@@ -1974,6 +1989,7 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20) {
 #' @param lgfg_list This is a list (length number of groups) containing FgLg for every group.
 #' @param initialise boolean
 #' @param use_macropca_instead_of_cz If TRUE, then factors are estimated robustly with macropca (or pertMM), else with class-zero-method.
+#' @param verbose_robustpca when TRUE, it prints messages
 #' @inheritParams estimate_beta
 #' @inheritParams calculate_virtual_factor_and_lambda_group
 #' @inheritParams calculate_Z_common
@@ -1988,9 +2004,13 @@ estimate_factor <- function(beta_est, g, lgfg_list,
                             TT = aantal_T,
                             number_of_common_factors = aantalfactoren_common,
                             number_of_variables = aantalvars,
-                            number_vars_estimated = number_variables_estimated) {
+                            number_vars_estimated = number_variables_estimated,
+                            verbose = FALSE) {
 
-
+  if(!do_we_estimate_common_factors(number_of_common_factors) ) {
+    #return matrix with only zero's
+    return(list(t(matrix(rep(0,200))), NA))
+  }
   #initialisation: has no grouped factorstructure yet
   if(initialise) {
     W = calculate_W(beta_est, g,
@@ -2035,7 +2055,7 @@ estimate_factor <- function(beta_est, g, lgfg_list,
     message(str_c("Estimate ",number_of_common_factors," common factors"))
     #CHANGE LOCATION 1/7
     if(use_macropca_instead_of_cz) {
-      temp2 = robustpca(temp, number_of_common_factors)
+      temp2 = robustpca(temp, number_of_common_factors, verbose_robustpca = verbose)
       schatterF = t(sqrt(TT) * temp2[[1]])
       scores = temp2[[2]] #=factor loadings coming out of macropca
       rm(temp2)
@@ -2047,10 +2067,11 @@ estimate_factor <- function(beta_est, g, lgfg_list,
     schatterF = t(sqrt(TT) * eigen(temp)$vectors[,1:number_of_common_factors])
     scores = NA #because loadings will be calculated later
   }
-  if(!do_we_estimate_common_factors(number_of_common_factors) ) {
-    #then schatterF has length TT, which is still an apropriate size to use in this case -> just set values to zero
-    schatterF = schatterF - schatterF
-  }
+  #OLD:
+  # if(!do_we_estimate_common_factors(number_of_common_factors) ) {
+  #   #then schatterF has length TT, which is still an apropriate size to use in this case -> just set values to zero
+  #   schatterF = schatterF - schatterF
+  # }
 
 
   return(list(schatterF, scores))
@@ -2088,6 +2109,7 @@ prepare_for_robpca <- function(object, NN = aantal_N, TT = aantal_T, option = 3)
 #' @inheritParams estimate_beta
 #' @inheritParams calculate_virtual_factor_and_lambda_group
 #' @inheritParams estimate_factor
+#' @inheritParams update_g
 #' @export
 estimate_factor_group <- function(beta_est, g, lambda, comfactor,
                                   use_macropca_instead_of_cz,
@@ -2100,7 +2122,8 @@ estimate_factor_group <- function(beta_est, g, lambda, comfactor,
                                   number_of_variables = aantalvars,
                                   number_vars_estimated = number_variables_estimated,
                                   eclipz = eclipz,
-                                  expert_based_initial_factors = FALSE #exists("expert_based_initial_factors")
+                                  expert_based_initial_factors = FALSE, #=exists("expert_based_initial_factors")
+                                  verbose = FALSE
                                   #returnscores = FALSE
                                   ) {
 
@@ -2135,7 +2158,7 @@ estimate_factor_group <- function(beta_est, g, lambda, comfactor,
           if(use_macropca_instead_of_cz) {
             ##MACROPCA
             temp = prepare_for_robpca(Wj)
-            temp2 = robustpca(temp, number_of_group_factors[group])
+            temp2 = robustpca(temp, number_of_group_factors[group], verbose_robustpca = verbose)
             schatterF[[group]] = t(sqrt(TT) * temp2[[1]]) #robust pca
             scores[[group]] = temp2[[2]]
             rm(temp2)
@@ -2190,7 +2213,9 @@ calculate_lambda <- function(beta_est, comfactor, g, lgfg_list,
                              number_of_variables = aantalvars,
                              number_vars_estimated = number_variables_estimated) {
 
-
+  if(!do_we_estimate_common_factors(number_of_common_factors)) {
+    return(t(matrix(rep(0,300))))
+  }
   if(initialise) {
     W = calculate_W(beta_est, g,
                     NN = NN,
@@ -2218,9 +2243,12 @@ calculate_lambda <- function(beta_est, comfactor, g, lgfg_list,
     lambda = t(W %*% t(comfactor) / TT)
   }
 
-  if(!do_we_estimate_common_factors(number_of_common_factors) & !initialise) {
-    lambda = lambda - lambda
-  }
+  #OLD:
+  # if(!do_we_estimate_common_factors(number_of_common_factors) & !initialise) {
+  #   lambda = lambda - lambda
+  # }
+
+
 
   ############################
   # for time-series with NA's,
@@ -3085,7 +3113,7 @@ calculate_mse_beta <- function(beta_est, beta_true, without_intercept = FALSE, d
           }
         } else { #when number_of_variables != 3
 
-          print("number_of_variables != 3 -> return NA")
+          message("number_of_variables != 3 -> return NA")
           return(NA)
 
         }

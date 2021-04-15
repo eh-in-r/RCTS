@@ -15,7 +15,8 @@ estimate_factor(
   TT = aantal_T,
   number_of_common_factors = aantalfactoren_common,
   number_of_variables = aantalvars,
-  number_vars_estimated = number_variables_estimated
+  number_vars_estimated = number_variables_estimated,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -40,6 +41,10 @@ estimate_factor(
 \item{number_of_variables}{number of observable variables}
 
 \item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
+
+\item{verbose}{when TRUE, it prints messages}
+
+\item{verbose_robustpca}{when TRUE, it prints messages}
 }
 \value{
 r x T matrix
