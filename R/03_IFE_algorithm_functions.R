@@ -1808,6 +1808,7 @@ evade_crashes_macropca <- function(object) {
 #' @param temp this is the result of the trycatch block of using macropca on object
 #' @param KMAX parameter kmax in MacroPCA
 #' @param number_eigenvectors number of principal components that are needed
+#' @inheritParams update_g
 handle_macropca_errors <- function(object, temp, KMAX, number_eigenvectors, verbose = FALSE) {
 
   if("error" %in% class(temp)) {
@@ -1875,7 +1876,7 @@ handle_macropca_errors <- function(object, temp, KMAX, number_eigenvectors, verb
 #' @param object input
 #' @param number_eigenvectors number of eigenvectors to extract
 #' @param KMAX The maximal number of principal components to compute. This is a paramater in cellWise::MacroPCA()
-#' @inheritParams update_g
+#' @param verbose_robustpca when TRUE, it prints messages
 #' @export
 robustpca <- function(object, number_eigenvectors, KMAX = 20, verbose_robustpca = FALSE) {
 
@@ -1989,10 +1990,10 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20, verbose_robustpca 
 #' @param lgfg_list This is a list (length number of groups) containing FgLg for every group.
 #' @param initialise boolean
 #' @param use_macropca_instead_of_cz If TRUE, then factors are estimated robustly with macropca (or pertMM), else with class-zero-method.
-#' @param verbose_robustpca when TRUE, it prints messages
 #' @inheritParams estimate_beta
 #' @inheritParams calculate_virtual_factor_and_lambda_group
 #' @inheritParams calculate_Z_common
+#' @inheritParams update_g
 #' @return r x T matrix
 #' @importFrom stringr str_c
 #' @export

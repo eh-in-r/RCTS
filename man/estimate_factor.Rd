@@ -43,8 +43,6 @@ estimate_factor(
 \item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
 
 \item{verbose}{when TRUE, it prints messages}
-
-\item{verbose_robustpca}{when TRUE, it prints messages}
 }
 \value{
 r x T matrix

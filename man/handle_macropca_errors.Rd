@@ -20,6 +20,8 @@ handle_macropca_errors(
 \item{KMAX}{parameter kmax in MacroPCA}
 
 \item{number_eigenvectors}{number of principal components that are needed}
+
+\item{verbose}{when TRUE, it prints messages}
 }
 \description{
 It handles possible thrown errors in MacroPCA.
