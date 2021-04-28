@@ -1780,12 +1780,14 @@ calculate_Z_group <- function(beta_est, g, lambda, comfactor, group, initialise,
 #' No information is added by this, so no influence on end result,
 #' but crashes of Rstudio are evaded.
 #' @param object input
-evade_crashes_macropca <- function(object) {
+evade_crashes_macropca <- function(object, verbose = FALSE) {
   #--------------------MacroPCA seems to make Rstudio crash when the dimension of object = (27,193) -----------------
   size_with_crashes1 = c( 27,  27,  25,  43,  66,  24)#,  44,  41)
   size_with_crashes2 = c(193, 310, 600, 560, 387, 374)#, 201, 201)
   changed_objectsize = FALSE
-  message("Test size of object (for MacroPCA)")
+
+  if(verbose) message("Test size of object (for MacroPCA)")
+
   for(i in 1:length(size_with_crashes1)) {
     if(changed_objectsize == FALSE & dim(object)[1] == size_with_crashes1[i] & dim(object)[2] == size_with_crashes2[i]) {
       message("Rstudio would crash -> double amount of rows")
@@ -1795,7 +1797,7 @@ evade_crashes_macropca <- function(object) {
       changed_objectsize = TRUE
     }
   }
-  message("Test size: done")
+  if(verbose) message("Test size: done")
   return(object)
 }
 
@@ -1889,7 +1891,7 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20, verbose_robustpca 
   # MacroPCA
   ######################
   error_macropca = FALSE
-  object = evade_crashes_macropca(object)
+  object = evade_crashes_macropca(object, verbose = verbose_robustpca)
 
     #print(number_eigenvectors)
     if(number_eigenvectors > KMAX) {
@@ -1970,7 +1972,7 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20, verbose_robustpca 
       factors_macropca = handle_macropca_errors(object, temp, KMAX,number_eigenvectors)
 
     }
-    print("end of macropca")
+    if(verbose_robustpca) print("end of macropca")
     return(list(factors_macropca,scores))
 
 
@@ -2008,7 +2010,7 @@ estimate_factor <- function(beta_est, g, lgfg_list,
 
   if(!do_we_estimate_common_factors(number_of_common_factors) ) {
     #return matrix with only zero's
-    return(list(t(matrix(rep(0,200))), NA))
+    return(list(t(matrix(rep(0, TT))), NA))
   }
   #initialisation: has no grouped factorstructure yet
   if(initialise) {
