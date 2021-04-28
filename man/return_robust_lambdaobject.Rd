@@ -8,12 +8,11 @@ return_robust_lambdaobject(
   Y_like_object,
   group,
   type,
-  NN_RRN = aantal_N,
-  factor_group_RRN = factor_group,
-  number_of_group_factors_RRN = aantalfactoren_groups,
-  comfactor_RRN = comfactor,
-  number_of_common_factors_RRN = aantalfactoren_common,
-  eclipz_RRN = FALSE,
+  NN_rrn = number_of_time_series,
+  factor_group_rrn = factor_group,
+  number_of_group_factors_rrn = number_of_group_factors_fixedvalue,
+  comfactor_rrn = comfactor,
+  number_of_common_factors_rrn = number_of_common_factors_fixedvalue,
   application_covid = FALSE,
   verbose = FALSE
 )
@@ -25,17 +24,15 @@ return_robust_lambdaobject(
 
 \item{type}{scalar which shows in which setting this function is used}
 
-\item{NN_RRN}{N}
+\item{NN_rrn}{number of time series}
 
-\item{factor_group_RRN}{estimation of groupfactors}
+\item{factor_group_rrn}{estimation of groupfactors}
 
-\item{number_of_group_factors_RRN}{number of group factors}
+\item{number_of_group_factors_rrn}{number of group factors}
 
-\item{comfactor_RRN}{estimation of common factors}
+\item{comfactor_rrn}{estimation of common factors}
 
-\item{number_of_common_factors_RRN}{number of common factors}
-
-\item{eclipz_RRN}{indicator of using the eclipzdataset}
+\item{number_of_common_factors_rrn}{number of common factors}
 
 \item{application_covid}{indicator of using the coviddataset}
 

@@ -5,9 +5,9 @@
 \title{Calculates the product of X*beta_true .}
 \usage{
 calculate_XB_true(
-  NN = aantal_N,
-  TT = aantal_T,
-  number_of_variables = aantalvars
+  NN = number_of_time_series,
+  TT = length_of_time_series,
+  number_of_variables = number_of_variables_fixedvalue
 )
 }
 \arguments{

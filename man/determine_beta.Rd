@@ -11,13 +11,13 @@ determine_beta(
   initialisation = FALSE,
   indices = NA,
   optimize_kappa = FALSE,
-  TT = aantal_T,
-  NN = aantal_N,
-  number_of_variables = aantalvars
+  TT = length_of_time_series,
+  NN = number_of_time_series,
+  number_of_variables = number_of_variables_fixedvalue
 )
 }
 \arguments{
-\item{string}{can have values: "homogeen" (when one beta_est is estimated for all individuals together) or "heterogeen" (when beta_est is estimated either groupwise or elementwise)}
+\item{string}{can have values: "homogeneous" (when one beta_est is estimated for all individuals together) or "heterogeneous" (when beta_est is estimated either groupwise or elementwise)}
 
 \item{X_special}{preprocessed X (observable variables)}
 
@@ -27,7 +27,7 @@ determine_beta(
 
 \item{indices}{individuals for which beta_est is being estimated}
 
-\item{optimize_kappa}{indicates if kappa has to be optimized or not; defaults to FALSE}
+\item{optimize_kappa}{indicates if kappa has to be optimized or not (only relevant for the classical algorithm); defaults to FALSE}
 
 \item{TT}{length of time series}
 

@@ -14,13 +14,13 @@ calculate_lambda_group(
   initialise = FALSE,
   UPDATE1 = update1,
   UPDATE2 = update2,
-  NN = aantal_N,
-  TT = aantal_T,
-  number_of_groups = aantalgroepen,
-  number_of_group_factors = aantalfactoren_groups,
-  number_of_common_factors = aantalfactoren_common,
-  number_of_variables = aantalvars,
-  number_vars_estimated = number_variables_estimated
+  NN = number_of_time_series,
+  TT = length_of_time_series,
+  number_of_groups = number_of_groups_fixedvalue,
+  number_of_group_factors = number_of_group_factors_fixedvalue,
+  number_of_common_factors = number_of_common_factors_fixedvalue,
+  number_of_variables = number_of_variables_fixedvalue,
+  number_vars_estimated = number_vars_estimated_fixedvalue
 )
 }
 \arguments{

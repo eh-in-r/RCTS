@@ -6,13 +6,13 @@
 \usage{
 create_true_beta(
   number_of_variables,
-  NN = aantal_N,
-  true_number_of_groups = aantalgroepen_real,
-  eclipz = FALSE,
+  NN,
+  true_number_of_groups,
+  use_real_world_data = FALSE,
   extra_beta_factor = 1,
-  beta_true_homogeneous = beta_true_homogeen,
-  beta_true_heterogeneous_groups = beta_true_heterogeen_groups,
-  beta_true_heterogeneous_individuals = beta_true_heterogeen_individueel,
+  beta_true_homogeneous,
+  beta_true_heterogeneous_groups,
+  beta_true_heterogeneous_individuals,
   limit_true_groups = LIMIT_TRUE_GROUPS
 )
 }
@@ -23,7 +23,7 @@ create_true_beta(
 
 \item{true_number_of_groups}{number of groups}
 
-\item{eclipz}{boolean to indicate using eClipzdatabase; defaults to FALSE}
+\item{use_real_world_data}{indicates using realworld data; defaults to FALSE}
 
 \item{extra_beta_factor}{multiplies coefficients in beta_est; default = 1}
 

@@ -9,11 +9,11 @@ grid_add_variables(
   beta_est,
   lambda,
   comfactor,
-  NN = aantal_N,
-  TT = aantal_T,
-  number_of_variables = aantalvars,
-  number_vars_estimated = number_variables_estimated,
-  number_of_groups = aantalgroepen
+  NN = number_of_time_series,
+  TT = length_of_time_series,
+  number_of_variables = number_of_variables_fixedvalue,
+  number_vars_estimated = number_vars_estimated_fixedvalue,
+  number_of_groups = number_of_groups_fixedvalue
 )
 }
 \arguments{

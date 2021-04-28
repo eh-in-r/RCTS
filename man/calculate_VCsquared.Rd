@@ -10,7 +10,7 @@ calculate_VCsquared(
   C_candidates,
   UPDATE1 = FALSE,
   UPDATE2 = FALSE,
-  number_of_group_factors = aantalfactoren_groups
+  number_of_group_factors = number_of_group_factors_fixedvalue
 )
 }
 \arguments{

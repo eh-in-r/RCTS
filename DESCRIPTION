@@ -7,9 +7,9 @@ Authors@R:
            role = c("aut", "cre"),
            email = "ewoud.heyndels@vub.be",
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: We developed a method to cluster time series, in a robust way. The method is based on Interactive Fixed Effects from Ando and Bai.
-  It iteratively updates beta (coefficients of the observable variables), group membership, and the latent factors (which can be common and group-specific) 
-  with their loadings. This package contains the core functions to be able to do this.
+Description: This package has the functionality to cluster time series using the classical and robust interactive fixed effects framework from Ando and Bai (Clustering huge number of financial time series: A panel data approach with high-dimensional predictors and factor structures (2017)) and Boudt and Heyndels (Robust interactive fixed effects (2021).
+  The method iteratively updates beta (coefficients of the observable variables), group membership, and the latent factors (which can be common and group-specific) 
+  with their loadings. 
 License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: true

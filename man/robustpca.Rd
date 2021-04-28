@@ -20,11 +20,11 @@ Contains MacroPCA
 }
 \details{
 Notes for MACROPCA:
-KMAX: Different values for kmax give different factors, but the product lambda\emph{factor stays constant. Note that
-this number needs to be big enough, otherwise eigen() will be used.
-Variation in k does give different results for lambda}factor
 
-NOTE: this function may (not certain) crash (in case of MACROPCA) when ncol(object) >> nrow(object)
+Different values for kmax give different factors, but the product lambda\emph{factor stays constant. Note that
+this number needs to be big enough, otherwise eigen() will be used. Variation in k does give different results for lambda}factor
+
+NOTE: this function may (not certain) crash when ncol(object) >> nrow(object)
 Actually it crashes with specific values of dim(object). For example when dim(object) = c(193,27).
-This is solved with evade_crashes_macropca()
+This is solved with evade_crashes_macropca(), for those problematic dimensions that are already encountered.
 }

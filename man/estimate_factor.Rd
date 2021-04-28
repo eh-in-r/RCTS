@@ -11,11 +11,11 @@ estimate_factor(
   use_macropca_instead_of_cz,
   estimate_factors_with_pertMM,
   initialise = FALSE,
-  NN = aantal_N,
-  TT = aantal_T,
-  number_of_common_factors = aantalfactoren_common,
-  number_of_variables = aantalvars,
-  number_vars_estimated = number_variables_estimated,
+  NN = number_of_time_series,
+  TT = length_of_time_series,
+  number_of_common_factors = number_of_common_factors_fixedvalue,
+  number_of_variables = number_of_variables_fixedvalue,
+  number_vars_estimated = number_vars_estimated_fixedvalue,
   verbose = FALSE
 )
 }
@@ -50,5 +50,5 @@ r x T matrix
 \description{
 The estimator for F, see Anderson (1984), is equal to the first r eigenvectors (multiplied by sqrt(T) due to the restriction F'F/T = I)
 associated with first r largest eigenvalues of the matrix WW' (which is TxT)
-W is called Z in Ando/Bai (2017)
+W is called Z in Ando and Bai (2017)
 }

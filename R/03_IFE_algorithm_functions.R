@@ -2,29 +2,28 @@
 utils::globalVariables(c("use_robust",
                          "g", "g_true",
                          "beta_est", "beta_true",
-                         "aantal_N", "aantal_T",
-                         "aantal_N_fulldata", "aantal_T_fulldata",
-                         "aantalgroepen_real", "aantalgroepen", "aantalgroepen_candidates",
-                         "aantalfactoren_common_real", "aantalfactoren_common", "k_common_candidates",
-                         "aantalfactoren_groups_real", "aantalfactoren_groups", "k_max",
+                         "number_of_time_series", "length_of_time_series",
+                         "length_of_time_series_fulldata",
+                          "number_of_groups_fixedvalue", "number_of_groups_candidates_fixedvalue",
+                         "number_of_common_factors_fixedvalue", "k_common_candidates",
+                         "number_of_group_factors_fixedvalue", "k_max",
                          "comfactor", "lambda",
                          "factor_group", "factor_group_true",
                          "lambda_group", "lambda_group_true",
-                         "aantalfactors_verschillend_per_group",
-                         "aantalvars", "number_variables_estimated",
+                         "num_factors_may_vary_fixedvalue",
+                         "number_of_variables_fixedvalue", "number_vars_estimated_fixedvalue",
                          "dgp1_AB", "dgp1_spread_group_centers",
                          "ALTERNATIVE_PIC", "C",
                          "FGR_FACTOR","FGR_FACTOR_sd","LGR_FACTOR","LGR_FACTOR_mean",
                          "LIMIT_NUMBER_OF_GROUPS_heterogroups",
                          "LIMIT_TRUE_GROUPS",
-                         "expert_based_initial_factors",
                          "iteration",
                          "beta_true_heterogeen_groups", "beta_true_heterogeen_individueel", "beta_true_homogeen",
                          "update1", "update2",
                          "use_macropca_instead_of_cz",
                          "estimate_factors_with_pertMM",
                          "ERR", "Smax", "X", "Y", "XG", "XL", "X_restructured",
-                         "add_outliers_eclipzstyle_fractie",
+                         "percent_outliers",
                          "define_expert_based_initial_factors",
                          "df_results", "sigma2_max_model",
                          "indices_subset", "factor_for_grouping",
@@ -35,7 +34,7 @@ utils::globalVariables(c("use_robust",
                          "rows_with_NA", "rows_without_NA",
                          "grid",
                          "v1", "v2", "v3",
-                         "eclipz","usecoviddata_cases","usecoviddata_deaths"
+                         "use_real_world_data","usecoviddata_cases","usecoviddata_deaths"
 
 
 ))
@@ -49,7 +48,7 @@ utils::globalVariables(c("use_robust",
 #' @inheritParams estimate_beta
 #' @return NxN covariance matrix
 #' @examples
-#' create_covMat_crosssectional_dependence(0.3,300)
+#' create_covMat_crosssectional_dependence(0.3, 300)
 #' @export
 create_covMat_crosssectional_dependence <- function(parameter,NN) {
   covMat = matrix(NA, nrow = NN, ncol = NN)
@@ -65,25 +64,25 @@ create_covMat_crosssectional_dependence <- function(parameter,NN) {
 #'
 #' @param number_of_variables number of observable variables
 #' @param true_number_of_groups true number of groups
-#' @param EXTRA_BETA_FACTOR option to multiply the coefficients in true beta; default = 1
-#' @param limit_true_groups_BTH  Maximum number of true groups in a simulation-DGP for which the code in this package is implemented. Currently equals 12. For application on realworld data this parameter is not relevant.
+#' @param extra_beta_factor_bth option to multiply the coefficients in true beta; default = 1
+#' @param limit_true_groups_bth  Maximum number of true groups in a simulation-DGP for which the code in this package is implemented. Currently equals 12. For application on realworld data this parameter is not relevant.
 #' @importFrom stats runif
 #' @importFrom magrittr %>%
-beta_true_heterogroups <- function(number_of_variables, true_number_of_groups, EXTRA_BETA_FACTOR = 1, limit_true_groups_BTH = LIMIT_TRUE_GROUPS) {
-  stopifnot(true_number_of_groups < limit_true_groups_BTH) #Code allows up to 12 true groups at this point.
+beta_true_heterogroups <- function(number_of_variables, true_number_of_groups, extra_beta_factor_bth = 1, limit_true_groups_bth = LIMIT_TRUE_GROUPS) {
+  stopifnot(true_number_of_groups < limit_true_groups_bth) #Code allows up to 12 true groups at this point.
 
   #######################################################################################
   # Define true values for beta, for each group, when there are 3 or less observable variables
   #These are the values for DGP 3 & 4 (For DGP 1 & 2 beta_true is defined in 08_IFE_make_AB_DGP1.R)
 
   #1st element is the intercept.
-  beta_part1 = c(0, 4,  3.5,  3,  2.5)  * EXTRA_BETA_FACTOR
-  beta_part2 = c(0,-2.5, -2, -2.5, -2)  * EXTRA_BETA_FACTOR
-  beta_part3 = c(0, 1,  0.5,  1.5,  1)  * EXTRA_BETA_FACTOR
+  beta_part1 = c(0, 4,  3.5,  3,  2.5)  * extra_beta_factor_bth
+  beta_part2 = c(0,-2.5, -2, -2.5, -2)  * extra_beta_factor_bth
+  beta_part3 = c(0, 1,  0.5,  1.5,  1)  * extra_beta_factor_bth
 
   beta_define_further_true_values <- function(number_of_values) {
     #starting from group 4 we randomly generate values for the true values of beta
-    return(c(0,(round(runif(number_of_values),1) - 0.5) * 4) * EXTRA_BETA_FACTOR) #between -2 and 2
+    return(c(0,(round(runif(number_of_values),1) - 0.5) * 4) * extra_beta_factor_bth) #between -2 and 2
   }
   beta_part4 = beta_define_further_true_values(4)
   beta_part5 = beta_define_further_true_values(4)
@@ -137,7 +136,7 @@ beta_true_heterogroups <- function(number_of_variables, true_number_of_groups, E
 #' beta_true_heterogeen_groups is the default case
 #' @inheritParams estimate_beta
 #' @param true_number_of_groups number of groups
-#' @param eclipz boolean to indicate using eClipzdatabase; defaults to FALSE
+#' @param use_real_world_data indicates using realworld data; defaults to FALSE
 #' @param extra_beta_factor multiplies coefficients in beta_est; default = 1
 #' @param beta_true_homogeneous whether true beta is equal for all individuals
 #' @param beta_true_heterogeneous_groups whether true beta is equal within groups, and different between groups
@@ -155,17 +154,17 @@ beta_true_heterogroups <- function(number_of_variables, true_number_of_groups, E
 #' @importFrom stats rnorm
 #' @export
 create_true_beta <- function(number_of_variables,
-                              NN = aantal_N,
-                              true_number_of_groups = aantalgroepen_real,
-                              eclipz = FALSE,
+                              NN,
+                              true_number_of_groups,
+                              use_real_world_data = FALSE,
                               extra_beta_factor = 1,
-                              beta_true_homogeneous = beta_true_homogeen,
-                              beta_true_heterogeneous_groups = beta_true_heterogeen_groups,
-                              beta_true_heterogeneous_individuals = beta_true_heterogeen_individueel,
+                              beta_true_homogeneous,
+                              beta_true_heterogeneous_groups,
+                              beta_true_heterogeneous_individuals,
                               limit_true_groups = LIMIT_TRUE_GROUPS) {
   stopifnot((beta_true_homogeneous + beta_true_heterogeneous_groups + beta_true_heterogeneous_individuals) == 1)
-  #real world eclipzdata: beta_true does not exist -> return NA
-  if(eclipz) return(NA)
+  #real world data: beta_true does not exist -> return NA
+  if(use_real_world_data) return(NA)
 
 
   if(number_of_variables > 0) {
@@ -176,7 +175,7 @@ create_true_beta <- function(number_of_variables,
     }
     #groupsspecific beta_true: -> default case
     if(beta_true_heterogeneous_groups) {
-      beta_true = beta_true_heterogroups(number_of_variables, true_number_of_groups, EXTRA_BETA_FACTOR = extra_beta_factor, limit_true_groups_BTH = limit_true_groups)
+      beta_true = beta_true_heterogroups(number_of_variables, true_number_of_groups, extra_beta_factor_bth = extra_beta_factor, limit_true_groups_bth = limit_true_groups)
     }
     #individualspecific beta_true:
     if(beta_true_heterogeneous_individuals) {
@@ -200,7 +199,7 @@ create_true_beta <- function(number_of_variables,
 #' @examples
 #' initialise_X(300,30, number_of_variables = 3)
 #' @export
-initialise_X <- function(NN,TT, number_of_variables = aantalvars) {
+initialise_X <- function(NN,TT, number_of_variables = number_of_variables_fixedvalue) {
   if(number_of_variables > 0) {
     X = array(0,dim=c(NN, TT, number_of_variables))
     for(i in 1:NN) {
@@ -210,7 +209,7 @@ initialise_X <- function(NN,TT, number_of_variables = aantalvars) {
         }
       }
     }
-    X = scaling_X(X, firsttime = TRUE, eclipz = FALSE, number_of_variables = number_of_variables) #1e keer schalen van X: moet gebeuren voor het genereren van Y (toch als intercepttrick toegepast wordt). Outliers worden nadien ingevoegd, waarna X opnieuw geschaald wordt.
+    X = scaling_X(X, firsttime = TRUE, use_real_world_data = FALSE, number_of_variables = number_of_variables) #1e keer schalen van X: moet gebeuren voor het genereren van Y (toch als intercepttrick toegepast wordt). Outliers worden nadien ingevoegd, waarna X opnieuw geschaald wordt.
 
 
     return(X)
@@ -223,9 +222,9 @@ initialise_X <- function(NN,TT, number_of_variables = aantalvars) {
 #'Scaling of X.
 #'
 #' @param X input
-#' @param firsttime Scaling before generating Y and before adding outliers -> this is always with mean and sd. If this is FALSE, it indicates that
+#' @param firsttime Scaling before generating Y and before adding outliers: this is always with mean and sd. If this is FALSE, it indicates that
 #' we are using the function for a second time, after adding the outliers. In the robust case it uses median and MAD, otherwise again mean and sd.
-#' @param eclipz parameter to indicate using real world Eclipzdataset. Defaults to FALSE.
+#' @param use_real_world_data Parameter to indicate using real world data. Defaults to FALSE.
 #' @inheritParams create_true_beta
 #' @examples
 #' X = initialise_X(300,30, number_of_variables = 3)
@@ -233,7 +232,7 @@ initialise_X <- function(NN,TT, number_of_variables = aantalvars) {
 #' scaling_X(X,TRUE, number_of_variables = 3)
 #' @importFrom stats sd
 #' @export
-scaling_X <- function(X, firsttime, eclipz = FALSE, number_of_variables = aantalvars) {
+scaling_X <- function(X, firsttime, use_real_world_data = FALSE, number_of_variables = number_of_variables_fixedvalue) {
   #
   # rewrote this codeblock by a less concise but more clear codeblock
   #
@@ -245,7 +244,7 @@ scaling_X <- function(X, firsttime, eclipz = FALSE, number_of_variables = aantal
   #
   #   X[,,k] = (X[,,k] - med) / mad #Note that this is NOT column-based (timeindex) scaling!
   # } else {
-  #   if(eclipz) {
+  #   if(use_real_world_data) {
   #     message("Scale with mean and sd of NxT-matrix")
   #     X[,,k] = (X[,,k] - mean(X[,,k])) / sd(X[,,k]) #for eclipzdata, we cannot use scale(),
   #     #  since there are variables (for example age) that have constant columns, so scale() (which is columnbased) would produce errors
@@ -260,7 +259,7 @@ scaling_X <- function(X, firsttime, eclipz = FALSE, number_of_variables = aantal
       #print(paste("sd of variable",k,": Before:",sd(X[,,k])))
       if(mad(X[,,k]) != 0) {
         if(firsttime) {
-          if(eclipz) {
+          if(use_real_world_data) {
             #message("Scale with mean and sd of NxT-matrix")
             X[,,k] = (X[,,k] - mean(X[,,k])) / sd(X[,,k]) #for eclipzdata, we cannot use scale(),
             #  since there are variables (for example age) that have constant columns, so scale() (which is columnbased) would produce errors
@@ -276,7 +275,7 @@ scaling_X <- function(X, firsttime, eclipz = FALSE, number_of_variables = aantal
 
             X[,,k] = (X[,,k] - med) / mad #Note that this is NOT column-based (timeindex) scaling!
           } else {
-            if(eclipz) {
+            if(use_real_world_data) {
               #message("Scale with mean and sd of NxT-matrix")
               X[,,k] = (X[,,k] - mean(X[,,k])) / sd(X[,,k]) #for eclipzdata, we cannot use scale(),
               #  since there are variables (for example age) that have constant columns, so scale() (which is columnbased) would produce errors
@@ -302,20 +301,20 @@ scaling_X <- function(X, firsttime, eclipz = FALSE, number_of_variables = aantal
 #' @inheritParams create_true_beta
 #' @inheritParams estimate_beta
 #' @examples
-#' X = initialise_X(300,30, number_of_variables = 3)
+#' X = initialise_X(300, 30, number_of_variables = 3)
 #' X_restructured = restructure_X_to_order_slowN_fastT(X, FALSE,
 #'   number_of_variables = 3, number_vars_estimated = 3)
 #' @export
-restructure_X_to_order_slowN_fastT <- function(X, eclipz,
-                                               number_of_variables = aantalvars,
-                                               number_vars_estimated = number_variables_estimated) {
+restructure_X_to_order_slowN_fastT <- function(X, use_real_world_data,
+                                               number_of_variables = number_of_variables_fixedvalue,
+                                               number_vars_estimated = number_vars_estimated_fixedvalue) {
 
   if(number_of_variables > 0) {
     if( length(dim(X)) == 2) {
       #occurs when only one element in group
       X = array(X, dim=c(1,nrow(X),ncol(X)))
     }
-    if(eclipz) {
+    if(use_real_world_data) {
       number_of_vars = number_of_variables
     } else {
       number_of_vars = number_vars_estimated
@@ -349,10 +348,10 @@ restructure_X_to_order_slowN_fastT <- function(X, eclipz,
 #' library(tidyverse)
 #' #For 3 groups, each with 3 groupfactors:
 #' g_true = ceiling(runif(300) * 3)
-#' generate_grouped_factorstructure(3,c(3,3,3), TT = 30)
+#' generate_grouped_factorstructure(3, c(3, 3, 3), TT = 30)
 #' @importFrom dplyr bind_rows
 #' @export
-generate_grouped_factorstructure <- function(S, true_number_of_group_factors, TT = aantal_T_fulldata) {
+generate_grouped_factorstructure <- function(S, true_number_of_group_factors, TT = length_of_time_series_fulldata) {
   if(!exists("LGR_FACTOR") | !exists("FGR_FACTOR")) {
     #set these to their default value
     LGR_FACTOR_mean = 0
@@ -436,8 +435,8 @@ generate_Y <- function(NN, TT, true_number_of_common_factors,true_number_of_grou
                        lambda_true, comfactor_true, epsilon,
                        ando_bai = FALSE,
                        ando_bai_2017 = FALSE,
-                       eclipz = FALSE,
-                       number_of_variables = aantalvars) {
+                       use_real_world_data = FALSE,
+                       number_of_variables = number_of_variables_fixedvalue) {
 
   #Define the size of the panel data:
   Y = matrix(NA, nrow = NN, ncol = TT) #initialisation, later on this gets filled in
@@ -447,7 +446,7 @@ generate_Y <- function(NN, TT, true_number_of_common_factors,true_number_of_grou
 
     for(i in 1:NN) {
 
-      if(!ando_bai & !ando_bai_2017 & !eclipz) {
+      if(!ando_bai & !ando_bai_2017 & !use_real_world_data) {
         if(mean(true_number_of_group_factors) > 0) {
           dropvars <- names(lambda_group_true) %in% c("groep","id")
           LAMBDAGROUP = as.matrix(subset(lambda_group_true, lambda_group_true$id == i)[!dropvars])
@@ -534,16 +533,16 @@ generate_Y <- function(NN, TT, true_number_of_common_factors,true_number_of_grou
 #'   number_of_variables = 3, number_vars_estimated = 3, number_of_groups = 3)
 #' @importFrom stats lm
 #' @export
-initialise_beta <- function(eclipz = FALSE,
-                            NN = aantal_N,
-                            TT = aantal_T,
-                            number_of_variables = aantalvars,
-                            number_vars_estimated = number_variables_estimated,
-                            number_of_groups = aantalgroepen) {
+initialise_beta <- function(NN,
+                            TT,
+                            number_of_variables,
+                            number_vars_estimated,
+                            number_of_groups,
+                            use_real_world_data = FALSE) {
 
   stopifnot((homogeneous_coefficients + heterogeneous_coefficients_groups + heterogeneous_coefficients_individuals) == 1)
 
-  if(eclipz) {
+  if(use_real_world_data) {
     number_of_vars = number_of_variables
   } else {
     number_of_vars = number_vars_estimated
@@ -562,7 +561,7 @@ initialise_beta <- function(eclipz = FALSE,
       X_special = X_restructured
       Y_special = Y
       #this includes robust estimation of beta_est:
-      beta_est = determine_beta("homogeen", X_special, Y_special, initialisation = TRUE, indices = 1:NN,  TT = TT, number_of_variables = number_of_variables)
+      beta_est = determine_beta("homogeneous", X_special, Y_special, initialisation = TRUE, indices = 1:NN,  TT = TT, number_of_variables = number_of_variables)
 
     }
     if(heterogeneous_coefficients_groups) {
@@ -575,13 +574,13 @@ initialise_beta <- function(eclipz = FALSE,
 
         #X needs to be in the form of (NN*TT x p matrix)
         X_special = restructure_X_to_order_slowN_fastT(array(X[indices_group,,], dim = c(length(indices_group), TT, number_of_vars)),
-                                                       eclipz,
+                                                       use_real_world_data,
                                                        number_of_variables = number_of_variables,
                                                        number_vars_estimated = number_vars_estimated)
 
         Y_special = as.vector(t(Y[indices_group,])) #order: N1T1, N1T2,N1T3,...N2T1,...N_endT_end
 
-        beta_est[,group] = determine_beta("heterogeen", X_special, Y_special, initialisation = TRUE, indices = indices_group,  TT = TT, number_of_variables = number_of_variables)
+        beta_est[,group] = determine_beta("heterogeneous", X_special, Y_special, initialisation = TRUE, indices = indices_group,  TT = TT, number_of_variables = number_of_variables)
 
       }
 
@@ -592,7 +591,7 @@ initialise_beta <- function(eclipz = FALSE,
       #Initialisation in classical case: use of lm instead of ncvreg (as in AndoBai-code)
       for(i in 1:NN) {
         X_special = restructure_X_to_order_slowN_fastT(matrix(X[i,,], ncol = dim(X)[3]),
-                                                       eclipz,
+                                                       use_real_world_data,
                                                        number_of_variables = number_of_variables,
                                                        number_vars_estimated = number_vars_estimated)
         Y_special = as.vector(t(Y[i,]))
@@ -679,18 +678,18 @@ initialise_beta <- function(eclipz = FALSE,
 #' @param number_vars_estimated_local number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.
 #' @param number_of_group_factors_local number of group factors to be estimated
 #' @param number_of_common_factors_local number of common factors to be estimated
-#' @param eclipz_local Parameter to indicate using real world Eclipzdataset. Defaults to FALSE.
+#' @param use_real_world_data_local Parameter to indicate using real world data. Defaults to FALSE.
 #' @inheritParams update_g
 #' @return NxT matrix containing the product of virtual groupfactors and virtual loadings
 
 calculate_virtual_factor_and_lambda_group <- function(group, solve_FG_FG_times_FG,
                                                       NN_local, TT_local,
                                                       use_macropca_instead_of_cz_local,
-                                                      number_of_variables_local = aantalvars,
-                                                      number_vars_estimated_local = number_variables_estimated,
-                                                      number_of_group_factors_local = aantalfactoren_groups,
-                                                      number_of_common_factors_local = aantalfactoren_common,
-                                                      eclipz_local = eclipz,
+                                                      number_of_variables_local = number_of_variables_fixedvalue,
+                                                      number_vars_estimated_local = number_vars_estimated_fixedvalue,
+                                                      number_of_group_factors_local = number_of_group_factors_fixedvalue,
+                                                      number_of_common_factors_local = number_of_common_factors_fixedvalue,
+                                                      use_real_world_data_local = use_real_world_data,
                                                       verbose = FALSE
                                                       ) {
 
@@ -712,10 +711,10 @@ calculate_virtual_factor_and_lambda_group <- function(group, solve_FG_FG_times_F
     if(use_macropca_instead_of_cz_local) {
       #we need a robust version of the virtual factorstructure:
       LG_local = return_robust_lambdaobject(Y_ster, group, type = 1,
-                                            NN_RRN = NN_local,
-                                             number_of_group_factors_RRN = number_of_group_factors_local,
-                                             number_of_common_factors_RRN = number_of_common_factors_local,
-                                            eclipz_RRN = eclipz_local,
+                                            NN_rrn = NN_local,
+                                             number_of_group_factors_rrn = number_of_group_factors_local,
+                                             number_of_common_factors_rrn = number_of_common_factors_local,
+                                            #use_real_world_data_rrn = use_real_world_data_local,
                                             application_covid = exists("usecoviddata_cases") | exists("usecoviddata_deaths"))
 
     } else {
@@ -782,7 +781,7 @@ define_rho_parameters <- function(object = NULL) {
   return(list(rho_loc,rho_scale))
 }
 
-#' Helpfunction for update_g(). Calculates the errors for every virtual group.
+#' Helpfunction for update_g(). Calculates the errors for one of the possible groups time series can be placed in.
 #'
 #' As we are updating group membership, we use the errorterm as objective function to estimate the group. We assume group membership equals 1,...,NG
 #' (with NG the total number of groups) and calculate the error term.
@@ -791,20 +790,20 @@ define_rho_parameters <- function(object = NULL) {
 #' @param virtual_grouped_factor_structure list with length the number of groups; every element of the list contains NxT-matrix
 #' @inheritParams generate_Y
 #' @inheritParams update_g
-#' @return NxT matrix with errors (=Y - XB - FgLg - FL)
-calculate_errors_virtual_groups <- function(k,LF,virtual_grouped_factor_structure,
+#' @return NxT matrix with the errorterms (=dataset minus the estimated factorstructure and minus X*beta)
+calculate_errors_virtual_groups <- function(k, LF, virtual_grouped_factor_structure,
                                             NN,
                                             TT,
                                             number_of_variables,
                                             number_of_common_factors,
                                             number_of_group_factors,
-                                            number_vars_estimated = number_variables_estimated,
-                                            eclipz = eclipz) {
+                                            number_vars_estimated = number_vars_estimated_fixedvalue,
+                                            use_real_world_data = use_real_world_data) {
   E_prep = matrix(NA, nrow = NN, ncol = TT)
 
   a = do_we_estimate_common_factors(number_of_common_factors)
   b = do_we_estimate_group_factors(number_of_group_factors)
-  X = adapt_X_estimating_less_variables(number_of_variables, number_vars_estimated, eclipz)
+  X = adapt_X_estimating_less_variables(number_of_variables, number_vars_estimated, use_real_world_data)
 
   for(i in 1:NN) {
     #calculate lambda_group for one individual, based on an hypothetical groupmembership
@@ -849,10 +848,10 @@ calculate_errors_virtual_groups <- function(k,LF,virtual_grouped_factor_structur
 #' Depends on an not yet established group k ( cannot use lgfg_list)
 #' @param i individual
 #' @param k group
-#' @param ERRORS_VIRTUAL ...
-#' @param rho_parameters ...
+#' @param ERRORS_VIRTUAL list with errors for each possible group
+#' @param rho_parameters median and madn of the calculated error term
 #' @param TT T
-calculate_obj_for_g <- function(i, k, ERRORS_VIRTUAL, rho_parameters, TT = aantal_T) {
+calculate_obj_for_g <- function(i, k, ERRORS_VIRTUAL, rho_parameters, TT = length_of_time_series) {
 
   totalsum = 0
 
@@ -928,7 +927,7 @@ solveFG <- function(TT, number_of_groups, number_of_group_factors){
 #' @return list: 1st element contains group membership and second element contains the values which are used to determine group membership
 #' @inheritParams estimate_beta
 #' @param use_class_zero if set to TRUE, then individuals with high distance to all possible groups are put in a separate class zero
-#' @param eclipz_inupdateg Parameter to indicate using real world Eclipzdataset. Defaults to FALSE.
+#' @param use_real_world_data_inupdateg Parameter to indicate using real world dataset. Defaults to FALSE.
 #' @param verbose when TRUE, it prints messages
 #' @examples
 #' #This function needs several initial parameters to be initialized in order to work on itself
@@ -956,28 +955,29 @@ solveFG <- function(TT, number_of_groups, number_of_group_factors){
 #' dgp1_AB = FALSE
 #' dgp1_spread_group_centers = TRUE
 #' use_macropca_instead_of_cz = TRUE
-#' number_variables_estimated = 3
+#' number_vars_estimated_fixedvalue = 3
 #' beta_est = estimate_beta(NN = 300, TT = 30,
-#'   number_of_groups = 3, number_of_group_factors = c(3,3,3), number_of_common_factors = 0,
-#'   number_of_variables = 3, number_vars_estimated = number_variables_estimated,
+#'   number_of_groups = 3, number_of_group_factors = c(3, 3, 3), number_of_common_factors = 0,
+#'   number_of_variables = 3, number_vars_estimated = number_vars_estimated_fixedvalue,
 #'   num_factors_may_vary = FALSE)[[1]]
 #' grid = grid_add_variables(grid,beta_est, lambda, comfactor, NN = 300, TT = 30,
-#'   number_of_variables = 3, number_vars_estimated = number_variables_estimated, number_of_groups = 3)
-#' eclipz = FALSE
+#'   number_of_variables = 3, number_vars_estimated = number_vars_estimated_fixedvalue,
+#'   number_of_groups = 3)
+#' use_real_world_data = FALSE
 #' g_new = update_g(NN = 300, TT = 30, number_of_groups = 3, number_of_variables = 3,
-#'   number_vars_estimated = number_variables_estimated,
-#'   number_of_group_factors = c(3,3,3),
+#'   number_vars_estimated = number_vars_estimated_fixedvalue,
+#'   number_of_group_factors = c(3, 3, 3),
 #'   number_of_common_factors = 0)[[1]]
 #' @importFrom purrr map_dbl
 #' @export
-update_g <- function(NN = aantal_N, TT = aantal_T,
-                     number_of_groups = aantalgroepen,
-                     number_of_variables = aantalvars,
-                     number_vars_estimated = number_variables_estimated,
-                     number_of_group_factors = aantalfactoren_groups,
-                     number_of_common_factors = aantalfactoren_common,
+update_g <- function(NN, TT,
+                     number_of_groups = number_of_groups_fixedvalue,
+                     number_of_variables = number_of_variables_fixedvalue,
+                     number_vars_estimated = number_vars_estimated_fixedvalue,
+                     number_of_group_factors = number_of_group_factors_fixedvalue,
+                     number_of_common_factors = number_of_common_factors_fixedvalue,
                      use_class_zero = FALSE,
-                     eclipz_inupdateg = eclipz, verbose = FALSE) {
+                     use_real_world_data_inupdateg = use_real_world_data, verbose = FALSE) {
 
 
 
@@ -992,7 +992,7 @@ update_g <- function(NN = aantal_N, TT = aantal_T,
                                                                                                                         number_of_group_factors_local = number_of_group_factors,
                                                                                                                         number_of_common_factors_local = number_of_common_factors,
                                                                                                                         use_macropca_instead_of_cz_local = use_macropca_instead_of_cz,
-                                                                                                                        eclipz_local = eclipz_inupdateg))
+                                                                                                                        use_real_world_data_local = use_real_world_data_inupdateg))
     if(verbose) message("virtual_grouped_factor_structure is created")
 
 
@@ -1013,7 +1013,7 @@ update_g <- function(NN = aantal_N, TT = aantal_T,
                                                                                           number_of_common_factors,
                                                                                           number_of_group_factors,
                                                                                           number_vars_estimated = number_vars_estimated,
-                                                                                          eclipz_inupdateg))
+                                                                                          use_real_world_data_inupdateg))
   if(verbose) message("ERRORS_VIRTUAL is created")
 
 
@@ -1108,7 +1108,7 @@ clustering_with_robust_distances <- function(g, number_of_groups) {
   # message("limits are:")
   # print(limit)
   # print(limit_empirical)
-  if(add_outliers_eclipzstyle_fractie > 0) {
+  if(percent_outliers > 0) {
     #plot with colored outlierindividuals;
     indices_of_outliers = which(apply(Y,1,function(x) abs(max(x))) > 900) #indices of individuals with at least 1 generated outlier in it
     plot(log(apply(RD,2,min)), col = ((1:nrow(Y)) %in% indices_of_outliers) + 1, main = "minimal log(distance) of i to any group")
@@ -1140,11 +1140,11 @@ clustering_with_robust_distances <- function(g, number_of_groups) {
 #' @inheritParams update_g
 #' @export
 calculate_FL_group_estimated2 <- function(f,l,j,
-                                          number_of_groups = aantalgroepen,
-                                          number_of_common_factors = aantalfactoren_common,
-                                          num_factors_may_vary = aantalfactors_verschillend_per_group,
-                                          NN = aantal_N,
-                                          TT = aantal_T) {
+                                          number_of_groups = number_of_groups_fixedvalue,
+                                          number_of_common_factors = number_of_common_factors_fixedvalue,
+                                          num_factors_may_vary = num_factors_may_vary_fixedvalue,
+                                          NN = number_of_time_series,
+                                          TT = length_of_time_series) {
 
   temp = calculate_lgfg(l,f,number_of_groups, rep(j, number_of_groups), number_of_common_factors, num_factors_may_vary)
   FL_GROUP_geschat = lapply(1:NN, function(x) temp[[g[x]]][x,]) %>% unlist %>% matrix(nrow = TT) %>% t
@@ -1200,25 +1200,25 @@ OF_vectorized_helpfunction3 <- function(i,t,XBETA,LF,
 
 #' Calculates objective function: used in local_search + to determine "best_result".
 #'
-#' @param group_memberships Vector containing groupmembership for all individuals.
+#' @param group_memberships Vector containing the group membership for all individuals.
 #' @param beta_est beta_est
-#' @param LAMBDA loadings of common factors
-#' @param FACTOR common factors
-#' @param LAMBDA_GROUP grouploadings
-#' @param FACTOR_GROUP groupfactors
+#' @param fc estimated common factors
+#' @param lc loadings of estimated common factors
+#' @param fg estimated groupfactors
+#' @param lg estimated grouploadings
 #' @inheritParams estimate_beta
 #' @importFrom tidyselect starts_with
 #' @export
 OF_vectorized3 <- function(group_memberships, beta_est = beta_est,
-                           LAMBDA = lambda, FACTOR = comfactor,
-                           LAMBDA_GROUP = lambda_group, FACTOR_GROUP = factor_group,
-                           NN = aantal_N,
-                           number_of_groups = aantalgroepen,
-                           number_of_common_factors = aantalfactoren_common,
-                           number_of_group_factors = aantalfactoren_groups,
-                           num_factors_may_vary = aantalfactors_verschillend_per_group) {
+                           lc = lambda, fc = comfactor,
+                           lg = lambda_group, fg = factor_group,
+                           NN = number_of_time_series,
+                           number_of_groups = number_of_groups_fixedvalue,
+                           number_of_common_factors = number_of_common_factors_fixedvalue,
+                           number_of_group_factors = number_of_group_factors_fixedvalue,
+                           num_factors_may_vary = num_factors_may_vary_fixedvalue) {
   #this is a list (length number of groups) of the product FgLg (which is the groupfactorstructure)
-  lgfg_list = calculate_lgfg(LAMBDA_GROUP, FACTOR_GROUP, number_of_groups, number_of_group_factors, number_of_common_factors, num_factors_may_vary)
+  lgfg_list = calculate_lgfg(lg, fg, number_of_groups, number_of_group_factors, number_of_common_factors, num_factors_may_vary)
 
   if(homogeneous_coefficients | heterogeneous_coefficients_individuals) {
     return(sum(apply(grid,1,function(x) OF_vectorized_helpfunction3(x[1], x[2], x[3], x[4], group_memberships, lgfg_list, number_of_group_factors))))
@@ -1254,11 +1254,11 @@ OF_vectorized3 <- function(group_memberships, beta_est = beta_est,
 #' library(tidyverse)
 #' lambda_group = RCTS::lambda_group_true_dgp3
 #' factor_group = RCTS::factor_group_true_dgp3
-#' calculate_lgfg(lambda_group,factor_group,3,c(3,3,3),0,FALSE)
+#' calculate_lgfg(lambda_group,factor_group, 3,c(3, 3, 3), 0, FALSE)
 #' @importFrom rlang .data
 #' @export
 calculate_lgfg <- function(lambda_group, factor_group, number_of_groups, number_of_group_factors, number_of_common_factors, num_factors_may_vary,
-                           NN = aantal_N, TT = aantal_T) {
+                           NN = number_of_time_series, TT = length_of_time_series) {
   lgfg_list = list()
   #define LgFg for each group (and later on select the correct element (correct group of individual i) of lgfg_list)
   for(k in 1:number_of_groups) {
@@ -1299,17 +1299,19 @@ calculate_lgfg <- function(lambda_group, factor_group, number_of_groups, number_
 
 #' Helpfunction in estimate_beta() for estimating beta_est.
 #'
-#' @param string can have values: "homogeen" (when one beta_est is estimated for all individuals together) or "heterogeen" (when beta_est is estimated either groupwise or elementwise)
+#' @param string can have values: "homogeneous" (when one beta_est is estimated for all individuals together) or "heterogeneous" (when beta_est is estimated either groupwise or elementwise)
 #' @param X_special preprocessed X (observable variables)
 #' @param Y_special preprocessed Y
 #' @param initialisation indicator of being in the initialisation phase
 #' @param indices individuals for which beta_est is being estimated
-#' @param optimize_kappa indicates if kappa has to be optimized or not; defaults to FALSE
+#' @param optimize_kappa indicates if kappa has to be optimized or not (only relevant for the classical algorithm); defaults to FALSE
 #' @importFrom ncvreg ncvreg
 #' @inheritParams generate_Y
 determine_beta <- function(string, X_special, Y_special, initialisation = FALSE, indices = NA, optimize_kappa = FALSE,
-                           TT = aantal_T, NN = aantal_N,
-                           number_of_variables = aantalvars) {
+                           TT = length_of_time_series, NN = number_of_time_series,
+                           number_of_variables = number_of_variables_fixedvalue) {
+  stopifnot(string == "homogeneous" | string == "heterogeneous")
+
   if(!(heterogeneous_coefficients_groups & initialisation == TRUE)) {
 
     Y_special = matrix(Y_special, nrow = length(indices), ncol = TT)
@@ -1365,11 +1367,11 @@ determine_beta <- function(string, X_special, Y_special, initialisation = FALSE,
   }
 
 
-  if(string == "homogeen") {
-    if(class(model) == "lm" | class(model) == "lmrob") return(matrix(rep(model$coefficients, aantalgroepen), nrow = (number_of_variables + 1)))
-    else return(matrix(rep(model$beta[,1], aantalgroepen), nrow = (number_of_variables + 1)))
+  if(string == "homogeneous") {
+    if(class(model) == "lm" | class(model) == "lmrob") return(matrix(rep(model$coefficients, number_of_groups_fixedvalue), nrow = (number_of_variables + 1)))
+    else return(matrix(rep(model$beta[,1], number_of_groups_fixedvalue), nrow = (number_of_variables + 1)))
   }
-  if(string == "heterogeen") {
+  if(string == "heterogeneous") {
     if(class(model) == "lm" | class(model) == "lmrob") {
       if(dgp1_AB) {
         if(dgp1_spread_group_centers) { #=DGP1
@@ -1405,7 +1407,7 @@ determine_beta <- function(string, X_special, Y_special, initialisation = FALSE,
 #'
 #' Update step of algorithm to obtain new estimation for beta. Note that we call it beta_est because beta() exists in base R.
 #' @inheritParams determine_beta
-#' @param eclipz parameter to indicate using real world Eclipzdataset. Defaults to FALSE.
+#' @param use_real_world_data Parameter to indicate using real world dataset. Defaults to FALSE.
 #' @param NN number of individuals
 #' @param TT length of time series
 #' @param number_of_groups number of groups estimated
@@ -1441,23 +1443,23 @@ determine_beta <- function(string, X_special, Y_special, initialisation = FALSE,
 #' dgp1_spread_group_centers = TRUE
 #' use_macropca_instead_of_cz = TRUE
 #' beta_est = estimate_beta(NN = 300, TT = 30,
-#'   number_of_groups = 3, number_of_group_factors = c(3,3,3), number_of_common_factors = 0,
-#'  number_of_variables = 3,number_vars_estimated=3,num_factors_may_vary=FALSE)[[1]]
+#'   number_of_groups = 3, number_of_group_factors = c(3, 3, 3), number_of_common_factors = 0,
+#'  number_of_variables = 3,number_vars_estimated = 3, num_factors_may_vary = FALSE)[[1]]
 #' @importFrom stats filter
 #' @importFrom purrr pmap
 #' @importFrom purrr map2
 #' @importFrom rlang .data
 #' @export
-estimate_beta <- function(NN = aantal_N,
-                           TT = aantal_T,
-                           number_of_groups = aantalgroepen,
-                           number_of_group_factors = aantalfactoren_groups,
-                           number_of_common_factors = aantalfactoren_common,
-                           number_of_variables = aantalvars,
-                           number_vars_estimated = number_variables_estimated,
-                           num_factors_may_vary = aantalfactors_verschillend_per_group,
+estimate_beta <- function(NN = number_of_time_series,
+                           TT = length_of_time_series,
+                           number_of_groups = number_of_groups_fixedvalue,
+                           number_of_group_factors = number_of_group_factors_fixedvalue,
+                           number_of_common_factors = number_of_common_factors_fixedvalue,
+                           number_of_variables = number_of_variables_fixedvalue,
+                           number_vars_estimated = number_vars_estimated_fixedvalue,
+                           num_factors_may_vary = num_factors_may_vary_fixedvalue,
                            use_median_of_individual_beta = exists("USE_MEDIAN_OF_INDIVIDUAL_THETA"),
-                           optimize_kappa = FALSE, eclipz = FALSE) {
+                           optimize_kappa = FALSE, use_real_world_data = FALSE) {
   if(number_vars_estimated > 0) {
 
 
@@ -1483,7 +1485,7 @@ estimate_beta <- function(NN = aantal_N,
         }
       }
 
-      beta_est = determine_beta("homogeen",X_special, Y_special, indices = 1:NN, TT = TT, number_of_variables = number_of_variables)
+      beta_est = determine_beta("homogeneous",X_special, Y_special, indices = 1:NN, TT = TT, number_of_variables = number_of_variables)
 
     }
     if(heterogeneous_coefficients_groups) {
@@ -1498,7 +1500,7 @@ estimate_beta <- function(NN = aantal_N,
 
         #X needs to be in the form of (NN*TT x p matrix)
         X_special = restructure_X_to_order_slowN_fastT(array(X[indices_group,,], dim = c(length(indices_group), TT, number_of_variables)),
-                                                       eclipz,
+                                                       use_real_world_data,
                                                        number_of_variables = number_of_variables,
                                                        number_vars_estimated = number_vars_estimated)
         #define Y* as Y - FcLc - FgLg:
@@ -1514,20 +1516,20 @@ estimate_beta <- function(NN = aantal_N,
         }
 
 
-        beta_est[,group] = determine_beta("heterogeen", X_special, Y_special, indices = indices_group, TT = TT, number_of_variables = number_of_variables)
+        beta_est[,group] = determine_beta("heterogeneous", X_special, Y_special, indices = indices_group, TT = TT, number_of_variables = number_of_variables)
 
       }
     }
     if(heterogeneous_coefficients_individuals) {
 
-      X_local = adapt_X_estimating_less_variables(number_of_variables, number_vars_estimated, eclipz) #makes X smaller when number_vars_estimated < number_of_variables
-      if(eclipz) {
+      X_local = adapt_X_estimating_less_variables(number_of_variables, number_vars_estimated, use_real_world_data) #makes X smaller when number_vars_estimated < number_of_variables
+      if(use_real_world_data) {
         number_of_vars = number_of_variables
       } else {
         number_of_vars = number_vars_estimated
       }
       X_special_list = lapply(1:NN, function(x) restructure_X_to_order_slowN_fastT(matrix(X_local[x,,], ncol = number_of_vars),
-                                                                                   eclipz,
+                                                                                   use_real_world_data,
                                                                                    number_of_variables = number_of_variables,
                                                                                    number_vars_estimated = number_vars_estimated))
       #helpfunction
@@ -1559,16 +1561,16 @@ estimate_beta <- function(NN = aantal_N,
       Y_special_list = lapply(1:NN, function(x) make_Y_special(x) )
 
       if(optimize_kappa) {
-        beta_est = pmap(list(X_special_list, Y_special_list, 1:NN),  function(x,y,z) determine_beta("heterogeen",x, y, indices = z,  TT = TT, number_of_variables = number_of_variables) )
+        beta_est = pmap(list(X_special_list, Y_special_list, 1:NN),  function(x,y,z) determine_beta("heterogeneous",x, y, indices = z,  TT = TT, number_of_variables = number_of_variables) )
       } else {
         #note that mapply isnt faster than map2
-        beta_est = map2(X_special_list, Y_special_list,  function(x,y) determine_beta("heterogeen",x, y, indices = NA,  TT = TT, number_of_variables = number_of_variables) )
+        beta_est = map2(X_special_list, Y_special_list,  function(x,y) determine_beta("heterogeneous",x, y, indices = NA,  TT = TT, number_of_variables = number_of_variables) )
         # print(summary(c( matrix(unlist(beta_est),ncol = NN)  - beta_new)))
         # print(sum(c( matrix(unlist(beta_est),ncol = NN)  - beta_new)))
         #
         # micro = microbenchmark::microbenchmark(
-        #   beta_est = map2(X_special_list, Y_special_list,  function(x,y) determine_beta("heterogeen",x, y, indices = NA,  TT = TT, number_of_variables = number_of_variables) ),
-        #   beta_new = mapply( function(x,y) { determine_beta("heterogeen",x, y, indices = NA,  TT = TT, number_of_variables = number_of_variables) }, x = X_special_list, y = Y_special_list ),
+        #   beta_est = map2(X_special_list, Y_special_list,  function(x,y) determine_beta("heterogeneous",x, y, indices = NA,  TT = TT, number_of_variables = number_of_variables) ),
+        #   beta_new = mapply( function(x,y) { determine_beta("heterogeneous",x, y, indices = NA,  TT = TT, number_of_variables = number_of_variables) }, x = X_special_list, y = Y_special_list ),
         #   times = 15
         # )
         # print(summary(micro))
@@ -1578,10 +1580,10 @@ estimate_beta <- function(NN = aantal_N,
       }
       ########################################################
       #Possible use of future::map2 instead of map2:
-      #(is 2 to 3 times faster (microbenchmark) for (300,30)-system)
+      #(is 2 to 3 times faster (microbenchmark) for (300, 30)-system)
       #BUT:  ERRORS:
       #   Error: 'map2' is not an exported object from 'namespace:future'
-      #beta_est = future::map2(X_special_list, Y_special_list,  function(x,y) determine_beta("heterogeen",x, y, indices = NA,  TT = TT, number_of_variables = number_of_variables) )
+      #beta_est = future::map2(X_special_list, Y_special_list,  function(x,y) determine_beta("heterogeneous",x, y, indices = NA,  TT = TT, number_of_variables = number_of_variables) )
       ########################################################
 
       beta_est = matrix(unlist(beta_est),ncol = NN)
@@ -1614,7 +1616,7 @@ use_median_values_beta <- function(beta_est, g, number_of_groups) {
   return(beta_est)
 }
 
-#' Calculates W = Y - X*beta_est. It is used in the initializationstep of the algorithm, to initialise the factorstructures.
+#' Calculates W = Y - X*beta_est. It is used in the initialization step of the algorithm, to initialise the factorstructures.
 #'
 #' @param beta_est beta_est
 #' @param g vector with group membership
@@ -1622,14 +1624,14 @@ use_median_values_beta <- function(beta_est, g, number_of_groups) {
 #' @return NxT matrix
 #' @export
 calculate_W <- function(beta_est, g ,
-                        NN = aantal_N,
-                        TT = aantal_T,
-                        number_of_variables = aantalvars,
-                        number_vars_estimated = number_variables_estimated, eclipz = FALSE) {
+                        NN = number_of_time_series,
+                        TT = length_of_time_series,
+                        number_of_variables = number_of_variables_fixedvalue,
+                        number_vars_estimated = number_vars_estimated_fixedvalue, use_real_world_data = FALSE) {
   W = matrix(0, nrow = NN, ncol = TT) #T x N-matrix in original paper , but I rather define as NxT
 
   #if number_vars_estimated < number_of_variables the obsoleterows in beta_est were already erased -> do the same in X
-  X = adapt_X_estimating_less_variables(number_of_variables, number_vars_estimated, eclipz)
+  X = adapt_X_estimating_less_variables(number_of_variables, number_vars_estimated, use_real_world_data)
 
   if(number_vars_estimated > 0) {
     if(homogeneous_coefficients) {
@@ -1641,11 +1643,7 @@ calculate_W <- function(beta_est, g ,
     }
     if(heterogeneous_coefficients_individuals) {
       for(i in 1:NN) {
-        # if(aantal_N_fulldata == 3112 & eclipz) { #this combination has issues with format of Y; not clear why
-        #   W[i,] = matrix(unlist(Y[i,]), nrow = 1) - t(cbind(1,X[i,,]) %*% as.matrix(beta_est[,i]))
-        # } else {
           W[i,] = Y[i,] - t(cbind(1,X[i,,]) %*% as.matrix(beta_est[,i]))
-        # }
       }
     }
   } else {
@@ -1670,16 +1668,16 @@ calculate_W <- function(beta_est, g ,
 calculate_Z_common <- function(beta_est, g, lgfg_list,
                                estimate_factors_with_pertMM,
                                initialise = FALSE,
-                               NN = aantal_N,
-                               TT = aantal_T,
-                               number_of_variables = aantalvars,
-                               number_vars_estimated = number_variables_estimated,
-                               number_of_group_factors = aantalfactoren_groups, eclipz = FALSE
+                               NN = number_of_time_series,
+                               TT = length_of_time_series,
+                               number_of_variables = number_of_variables_fixedvalue,
+                               number_vars_estimated = number_vars_estimated_fixedvalue,
+                               number_of_group_factors = number_of_group_factors_fixedvalue, use_real_world_data = FALSE
                                ) {
   Z = matrix(0, nrow = NN, ncol = TT) #T x N-matrix in paper , maar ik definieer liever als NxT
 
   #if number_vars_estimated < number_of_variables the obsolete rows in beta_est were already erased -> do the same in X
-  X = adapt_X_estimating_less_variables(number_of_variables, number_vars_estimated, eclipz)
+  X = adapt_X_estimating_less_variables(number_of_variables, number_vars_estimated, use_real_world_data)
 
   for(i in 1:NN) {
     y = Y[i,] %>% as.numeric
@@ -1727,11 +1725,11 @@ calculate_Z_common <- function(beta_est, g, lgfg_list,
 #' @param initialise boolean
 #' @export
 calculate_Z_group <- function(beta_est, g, lambda, comfactor, group, initialise,
-                              TT = aantal_T,
-                              number_of_variables = aantalvars,
-                              number_vars_estimated = number_variables_estimated,
-                              eclipz = FALSE,
-                              number_of_common_factors = aantalfactoren_common) {
+                              TT = length_of_time_series,
+                              number_of_variables = number_of_variables_fixedvalue,
+                              number_vars_estimated = number_vars_estimated_fixedvalue,
+                              use_real_world_data = FALSE,
+                              number_of_common_factors = number_of_common_factors_fixedvalue) {
 
   indices_group = which(g == group)
   if(length(indices_group) == 0) {
@@ -1741,7 +1739,7 @@ calculate_Z_group <- function(beta_est, g, lambda, comfactor, group, initialise,
 
   Z = matrix(0, nrow = length(indices_group), ncol = TT) #Nj x T matrix
   #if number_vars_estimated < number_of_variables the obsoleterows in beta_est were already erased -> do the same in X
-  X = adapt_X_estimating_less_variables(number_of_variables, number_vars_estimated, eclipz)
+  X = adapt_X_estimating_less_variables(number_of_variables, number_vars_estimated, use_real_world_data)
 
   for(i in 1:length(indices_group)) { #loop over the number of elements in the group
     index = indices_group[i]
@@ -1866,13 +1864,13 @@ handle_macropca_errors <- function(object, temp, KMAX, number_eigenvectors, verb
 #' Contains MacroPCA
 #'
 #' Notes for MACROPCA:
-#' KMAX: Different values for kmax give different factors, but the product lambda*factor stays constant. Note that
-#'  this number needs to be big enough, otherwise eigen() will be used.
-#' Variation in k does give different results for lambda*factor
 #'
-#' NOTE: this function may (not certain) crash (in case of MACROPCA) when ncol(object) >> nrow(object)
+#' Different values for kmax give different factors, but the product lambda*factor stays constant. Note that
+#'  this number needs to be big enough, otherwise eigen() will be used. Variation in k does give different results for lambda*factor
+#'
+#' NOTE: this function may (not certain) crash when ncol(object) >> nrow(object)
 #'   Actually it crashes with specific values of dim(object). For example when dim(object) = c(193,27).
-#'   This is solved with evade_crashes_macropca()
+#'   This is solved with evade_crashes_macropca(), for those problematic dimensions that are already encountered.
 #' @param object input
 #' @param number_eigenvectors number of eigenvectors to extract
 #' @param KMAX The maximal number of principal components to compute. This is a paramater in cellWise::MacroPCA()
@@ -1985,7 +1983,7 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20, verbose_robustpca 
 #'
 #'The estimator for F, see Anderson (1984), is equal to the first r eigenvectors (multiplied by sqrt(T) due to the restriction F'F/T = I)
 #'associated with first r largest eigenvalues of the matrix WW' (which is TxT)
-#'W is called Z in Ando/Bai (2017)
+#'W is called Z in Ando and Bai (2017)
 #' @inheritParams calculate_W
 #' @param lgfg_list This is a list (length number of groups) containing FgLg for every group.
 #' @param initialise boolean
@@ -2001,11 +1999,11 @@ estimate_factor <- function(beta_est, g, lgfg_list,
                             use_macropca_instead_of_cz,
                             estimate_factors_with_pertMM,
                             initialise = FALSE,
-                            NN = aantal_N,
-                            TT = aantal_T,
-                            number_of_common_factors = aantalfactoren_common,
-                            number_of_variables = aantalvars,
-                            number_vars_estimated = number_variables_estimated,
+                            NN = number_of_time_series,
+                            TT = length_of_time_series,
+                            number_of_common_factors = number_of_common_factors_fixedvalue,
+                            number_of_variables = number_of_variables_fixedvalue,
+                            number_vars_estimated = number_vars_estimated_fixedvalue,
                             verbose = FALSE) {
 
   if(!do_we_estimate_common_factors(number_of_common_factors) ) {
@@ -2057,25 +2055,25 @@ estimate_factor <- function(beta_est, g, lgfg_list,
     #CHANGE LOCATION 1/7
     if(use_macropca_instead_of_cz) {
       temp2 = robustpca(temp, number_of_common_factors, verbose_robustpca = verbose)
-      schatterF = t(sqrt(TT) * temp2[[1]])
+      estimatorF = t(sqrt(TT) * temp2[[1]])
       scores = temp2[[2]] #=factor loadings coming out of macropca
       rm(temp2)
     } else {
-      schatterF = t(sqrt(TT) * eigen(temp)$vectors[,1:number_of_common_factors])
+      estimatorF = t(sqrt(TT) * eigen(temp)$vectors[,1:number_of_common_factors])
       scores = NA #because loadings will be calculated later
     }
   } else {
-    schatterF = t(sqrt(TT) * eigen(temp)$vectors[,1:number_of_common_factors])
+    estimatorF = t(sqrt(TT) * eigen(temp)$vectors[,1:number_of_common_factors])
     scores = NA #because loadings will be calculated later
   }
   #OLD:
   # if(!do_we_estimate_common_factors(number_of_common_factors) ) {
-  #   #then schatterF has length TT, which is still an apropriate size to use in this case -> just set values to zero
-  #   schatterF = schatterF - schatterF
+  #   #then estimatorF has length TT, which is still an apropriate size to use in this case -> just set values to zero
+  #   estimatorF = estimatorF - estimatorF
   # }
 
 
-  return(list(schatterF, scores))
+  return(list(estimatorF, scores))
 }
 
 #' Helpfunction: prepares object to perform robust PCA on.
@@ -2085,7 +2083,7 @@ estimate_factor <- function(beta_est, g, lgfg_list,
 #' @param NN N
 #' @param TT T
 #' @param option 1 (robust covmatrix), 2 (classical covmatrix), 3 (no covmatrix)
-prepare_for_robpca <- function(object, NN = aantal_N, TT = aantal_T, option = 3) {
+prepare_for_robpca <- function(object, NN = number_of_time_series, TT = length_of_time_series, option = 3) {
   if(option == 1) {
     message("not used anymore")
     #temp = get_robust_covmatrix(object)
@@ -2106,7 +2104,6 @@ prepare_for_robpca <- function(object, NN = aantal_N, TT = aantal_T, option = 3)
 #' @param lambda common factor loadings
 #' @param comfactor common factors
 #' @param initialise boolean
-#' @param expert_based_initial_factors indicates using a previously defined set of (initial) factors; defaults to FALSE
 #' @inheritParams estimate_beta
 #' @inheritParams calculate_virtual_factor_and_lambda_group
 #' @inheritParams estimate_factor
@@ -2115,84 +2112,81 @@ prepare_for_robpca <- function(object, NN = aantal_N, TT = aantal_T, option = 3)
 estimate_factor_group <- function(beta_est, g, lambda, comfactor,
                                   use_macropca_instead_of_cz,
                                   initialise = FALSE,
-                                  NN = aantal_N,
-                                  TT = aantal_T,
-                                  number_of_groups = aantalgroepen,
-                                  number_of_group_factors = aantalfactoren_groups,
-                                  number_of_common_factors = aantalfactoren_common,
-                                  number_of_variables = aantalvars,
-                                  number_vars_estimated = number_variables_estimated,
-                                  eclipz = eclipz,
-                                  expert_based_initial_factors = FALSE, #=exists("expert_based_initial_factors")
+                                  NN = number_of_time_series,
+                                  TT = length_of_time_series,
+                                  number_of_groups = number_of_groups_fixedvalue,
+                                  number_of_group_factors = number_of_group_factors_fixedvalue,
+                                  number_of_common_factors = number_of_common_factors_fixedvalue,
+                                  number_of_variables = number_of_variables_fixedvalue,
+                                  number_vars_estimated = number_vars_estimated_fixedvalue,
+                                  #use_real_world_data = use_real_world_data,
+                                  #expert_based_initial_factors = FALSE, #=exists("expert_based_initial_factors")
                                   verbose = FALSE
                                   #returnscores = FALSE
                                   ) {
 
-  schatterF = list()
+  estimatorF = list()
   scores = list()
-  if(eclipz & expert_based_initial_factors & iteration == 0) {
-    schatterF = define_expert_based_initial_factors(number_of_groups)
-  } else {
-    for(group in 1:number_of_groups) {
-      print(group)
-      if(number_of_group_factors[group] > 0) {
-        if(TT < number_of_group_factors[group]) {
-          message("-> There are too many factors to be estimated, compared to TT.")
-        }
-        print("***")
 
-        Wj = calculate_Z_group(beta_est, g, lambda, comfactor, group, initialise,
-                               TT = TT,
-                               number_of_variables = number_of_variables,
-                               number_vars_estimated = number_vars_estimated,
-                               number_of_common_factors = number_of_common_factors)
-        print("--1")
+  for(group in 1:number_of_groups) {
+    print(group)
+    if(number_of_group_factors[group] > 0) {
+      if(TT < number_of_group_factors[group]) {
+        message("-> There are too many factors to be estimated, compared to TT.")
+      }
 
-        #use limit on nrow(Wj) due to error in otherwise ("The input data must have at least 3 rows (cases)")
-        #When the number of rows withing the group is bigger than 3, macropca runs, but in some cases can drop columns (when values within this column are equal).
-        #So, in practice it is better to increase the threshold a bit.
-        ROBUST_THRESHOLD = 5
-        if(use_robust & nrow(Wj) > ROBUST_THRESHOLD) {
+      Wj = calculate_Z_group(beta_est, g, lambda, comfactor, group, initialise,
+                             TT = TT,
+                             number_of_variables = number_of_variables,
+                             number_vars_estimated = number_vars_estimated,
+                             number_of_common_factors = number_of_common_factors)
 
 
-          #CHANGE LOCATION 2/7
-          if(use_macropca_instead_of_cz) {
-            ##MACROPCA
-            temp = prepare_for_robpca(Wj)
-            temp2 = robustpca(temp, number_of_group_factors[group], verbose_robustpca = verbose)
-            schatterF[[group]] = t(sqrt(TT) * temp2[[1]]) #robust pca
-            scores[[group]] = temp2[[2]]
-            rm(temp2)
-          } else {
-            ##CZ
-            temp = t(Wj)%*%Wj #dividing by NT does not make any difference for the eigenvectors
-            scores[[group]] = NA #because loadings will be calculated later
-            schatterF[[group]] = t(sqrt(TT) * eigen(temp)$vectors[,1:number_of_group_factors[group]])
-          }
+      #use limit on nrow(Wj) due to error in otherwise ("The input data must have at least 3 rows (cases)")
+      #When the number of rows within the group is bigger than 3, macropca runs, but in some cases can drop columns (when values within this column are equal).
+      #So, in practice it is better to increase the threshold a bit.
+      ROBUST_THRESHOLD = 5
+      if(use_robust & nrow(Wj) > ROBUST_THRESHOLD) {
 
+
+        #CHANGE LOCATION 2/7
+        if(use_macropca_instead_of_cz) {
+          ##MACROPCA
+          temp = prepare_for_robpca(Wj)
+          temp2 = robustpca(temp, number_of_group_factors[group], verbose_robustpca = verbose)
+          estimatorF[[group]] = t(sqrt(TT) * temp2[[1]]) #robust pca
+          scores[[group]] = temp2[[2]]
+          rm(temp2)
         } else {
-          if(nrow(Wj) < ROBUST_THRESHOLD & use_robust) message("This group contains a very small number of elements. -> macropca cannot work -> use non-robust estimation of factors")
-
+          ##CZ
           temp = t(Wj)%*%Wj #dividing by NT does not make any difference for the eigenvectors
           scores[[group]] = NA #because loadings will be calculated later
-          schatterF[[group]] = t(sqrt(TT) * eigen(temp)$vectors[,1:number_of_group_factors[group]])
+          estimatorF[[group]] = t(sqrt(TT) * eigen(temp)$vectors[,1:number_of_group_factors[group]])
         }
 
-
-
       } else {
-        schatterF[[group]] = matrix(0, 1, TT)
+        if(nrow(Wj) < ROBUST_THRESHOLD & use_robust) message("This group contains a very small number of elements. -> macropca cannot work -> use non-robust estimation of factors")
+
+        temp = t(Wj)%*%Wj #dividing by NT does not make any difference for the eigenvectors
         scores[[group]] = NA #because loadings will be calculated later
+        estimatorF[[group]] = t(sqrt(TT) * eigen(temp)$vectors[,1:number_of_group_factors[group]])
       }
+
+
+
+    } else {
+      estimatorF[[group]] = matrix(0, 1, TT)
+      scores[[group]] = NA #because loadings will be calculated later
     }
   }
+
 
 
   #as test:
   # if(returnscores) {
   #   return(scores)
   # }
-  return(schatterF)
+  return(estimatorF)
 }
 
 #' calculates factor loadings of common factors
@@ -2209,13 +2203,13 @@ calculate_lambda <- function(beta_est, comfactor, g, lgfg_list,
                              use_macropca_instead_of_cz,
                              efwp = estimate_factors_with_pertMM,
                              initialise = FALSE,
-                             NN = aantal_N, TT = aantal_T,
-                             number_of_common_factors = aantalfactoren_common,
-                             number_of_variables = aantalvars,
-                             number_vars_estimated = number_variables_estimated) {
+                             NN = number_of_time_series, TT = length_of_time_series,
+                             number_of_common_factors = number_of_common_factors_fixedvalue,
+                             number_of_variables = number_of_variables_fixedvalue,
+                             number_vars_estimated = number_vars_estimated_fixedvalue) {
 
   if(!do_we_estimate_common_factors(number_of_common_factors)) {
-    return(t(matrix(rep(0,300))))
+    return(t(matrix(rep(0, 300))))
   }
   if(initialise) {
     W = calculate_W(beta_est, g,
@@ -2234,8 +2228,9 @@ calculate_lambda <- function(beta_est, comfactor, g, lgfg_list,
   if(use_robust) {
     #CHANGE LOCATION 6/7
     if(use_macropca_instead_of_cz) {
-      lambda = return_robust_lambdaobject(W, NA, type = 2, comfactor_RRN = comfactor, number_of_common_factors_RRN = nrow(comfactor),
-                                          NN_RRN = NN, eclipz_RRN = eclipz,
+      lambda = return_robust_lambdaobject(W, NA, type = 2, comfactor_rrn = comfactor, number_of_common_factors_rrn = nrow(comfactor),
+                                          NN_rrn = NN,
+                                          #use_real_world_data_rrn = use_real_world_data,
                                           application_covid = exists("usecoviddata_cases") | exists("usecoviddata_deaths"))
     } else {
       lambda = t(W %*% t(comfactor) / TT)
@@ -2287,13 +2282,13 @@ calculate_lambda_group <- function(beta_est, factor_group, g, lambda, comfactor,
                                    use_macropca_instead_of_cz,
                                    initialise = FALSE,
                                    UPDATE1 = update1, UPDATE2 = update2,
-                                   NN = aantal_N,
-                                   TT = aantal_T,
-                                   number_of_groups = aantalgroepen,
-                                   number_of_group_factors = aantalfactoren_groups,
-                                   number_of_common_factors = aantalfactoren_common,
-                                   number_of_variables = aantalvars,
-                                   number_vars_estimated = number_variables_estimated) {
+                                   NN = number_of_time_series,
+                                   TT = length_of_time_series,
+                                   number_of_groups = number_of_groups_fixedvalue,
+                                   number_of_group_factors = number_of_group_factors_fixedvalue,
+                                   number_of_common_factors = number_of_common_factors_fixedvalue,
+                                   number_of_variables = number_of_variables_fixedvalue,
+                                   number_vars_estimated = number_vars_estimated_fixedvalue) {
 
 
   lambda_local = list()
@@ -2315,14 +2310,14 @@ calculate_lambda_group <- function(beta_est, factor_group, g, lambda, comfactor,
           #   (lambda_N1 = (F_T1 * Y_N1T1 + F_T2 * Y_N1T2 + ...) / TT)
           #   We replace this mean by an M-estimator in the robust approach.
           if(UPDATE1) {
-            lambda_local[[group]] = return_robust_lambdaobject(Wj, group, type = 3, factor_group_RRN = factor_group,
-                                                               number_of_group_factors_RRN = unlist(lapply(factor_group, nrow)),
-                                                               eclipz_RRN = eclipz,
+            lambda_local[[group]] = return_robust_lambdaobject(Wj, group, type = 3, factor_group_rrn = factor_group,
+                                                               number_of_group_factors_rrn = unlist(lapply(factor_group, nrow)),
+                                                               #use_real_world_data_rrn = use_real_world_data,
                                                                application_covid = exists("usecoviddata_cases") | exists("usecoviddata_deaths"))
           } else {
             lambda_local[[group]] = return_robust_lambdaobject(Wj, group, type = 3,
-                                                               number_of_group_factors_RRN = number_of_group_factors,
-                                                               eclipz_RRN = eclipz,
+                                                               number_of_group_factors_rrn = number_of_group_factors,
+                                                               #use_real_world_data_rrn = use_real_world_data,
                                                                application_covid = exists("usecoviddata_cases") | exists("usecoviddata_deaths"))
           }
         } else {
@@ -2436,11 +2431,11 @@ calculate_lambda_group <- function(beta_est, factor_group, g, lambda, comfactor,
 #' @inheritParams estimate_beta
 #' @export
 grid_add_variables <- function(grid, beta_est, lambda, comfactor,
-                               NN = aantal_N,
-                               TT = aantal_T,
-                               number_of_variables = aantalvars,
-                               number_vars_estimated = number_variables_estimated,
-                               number_of_groups = aantalgroepen) {
+                               NN = number_of_time_series,
+                               TT = length_of_time_series,
+                               number_of_variables = number_of_variables_fixedvalue,
+                               number_vars_estimated = number_vars_estimated_fixedvalue,
+                               number_of_groups = number_of_groups_fixedvalue) {
   if(number_of_variables > 0) {
     #for homogeneous beta_est (1 -> 4 at this moment), we only need 1 column as all columns are the same
     if(homogeneous_coefficients) {
@@ -2571,13 +2566,13 @@ do_we_estimate_group_factors <- function(number_of_group_factors) {
 #' @importFrom rlang .data
 #' @export
 calculate_error_term <- function(no_common_factorstructure = FALSE, no_group_factorstructure = FALSE,
-                                 NN = aantal_N,
-                                 TT = aantal_T,
-                                 number_of_variables = aantalvars,
-                                 number_vars_estimated = number_variables_estimated,
-                                 number_of_groups = aantalgroepen,
-                                 number_of_group_factors = aantalfactoren_groups,
-                                 number_of_common_factors = aantalfactoren_common) {
+                                 NN = number_of_time_series,
+                                 TT = length_of_time_series,
+                                 number_of_variables = number_of_variables_fixedvalue,
+                                 number_vars_estimated = number_vars_estimated_fixedvalue,
+                                 number_of_groups = number_of_groups_fixedvalue,
+                                 number_of_group_factors = number_of_group_factors_fixedvalue,
+                                 number_of_common_factors = number_of_common_factors_fixedvalue) {
   stopifnot(table(lambda_group$groep) == table(g)) #in this case lambda_groep would need to be updated
 
   u = matrix(NA,nrow = NN, ncol = TT)
@@ -2647,19 +2642,19 @@ calculate_error_term <- function(no_common_factorstructure = FALSE, no_group_fac
 #' @return NxT matrix
 #' @importFrom rlang .data
 #' @export
-calculate_error_term_individuals <- function(NN = aantal_N,
-                                             TT = aantal_T,
-                                             number_of_variables = aantalvars,
-                                             number_vars_estimated = number_variables_estimated,
-                                             number_of_groups = aantalgroepen,
-                                             number_of_group_factors = aantalfactoren_groups,
-                                             number_of_common_factors = aantalfactoren_common,
-                                             eclipz = FALSE) {
+calculate_error_term_individuals <- function(NN = number_of_time_series,
+                                             TT = length_of_time_series,
+                                             number_of_variables = number_of_variables_fixedvalue,
+                                             number_vars_estimated = number_vars_estimated_fixedvalue,
+                                             number_of_groups = number_of_groups_fixedvalue,
+                                             number_of_group_factors = number_of_group_factors_fixedvalue,
+                                             number_of_common_factors = number_of_common_factors_fixedvalue,
+                                             use_real_world_data = FALSE) {
   u = matrix(NA,nrow = NN, ncol = TT)
   e = matrix(NA,nrow = NN, ncol = TT)
   lf = t(lambda) %*% comfactor
 
-  X = adapt_X_estimating_less_variables(number_of_variables, number_vars_estimated, eclipz)
+  X = adapt_X_estimating_less_variables(number_of_variables, number_vars_estimated, use_real_world_data)
   if(number_vars_estimated > 0) {
     if(homogeneous_coefficients | heterogeneous_coefficients_groups) {
       xt = sapply(1:NN,
@@ -2726,7 +2721,7 @@ calculate_error_term_individuals <- function(NN = aantal_N,
 #' @param NN N
 #' @param TT T
 #' @export
-calculate_sigma2 <- function(e, NN = aantal_N, TT = aantal_T) {
+calculate_sigma2 <- function(e, NN = number_of_time_series, TT = length_of_time_series) {
   if(anyNA(e)) {
     message("There are NA's in e (calculate_sigma2(). This should not happen. ")
   }
@@ -2777,7 +2772,7 @@ calculate_PIC_term1 <- function(e2) {
 #' @param Nj number of individuals in group j
 #' @param NN N
 #' @param use_alterpic indicates using an alternative version of the PIC (the one of AB2016 instead of AB2017). It weighs the fourth term with an extra factor relative to the size of the groups.
-calculate_PIC_term4 <- function(temp, term4, Nj, NN = aantal_N, use_alterpic = ALTERNATIVE_PIC) {
+calculate_PIC_term4 <- function(temp, term4, Nj, NN = number_of_time_series, use_alterpic = ALTERNATIVE_PIC) {
 
 
   if(exists("ALTERNATIVE_PIC_2")) { #PIC of AB2017-code (includes 3 other changes (see test_alternative_PIC()))
@@ -2813,11 +2808,11 @@ calculate_PIC_term4 <- function(temp, term4, Nj, NN = aantal_N, use_alterpic = A
 #' @param sigma2 scalar: sum of squared error terms, scaled by NT
 #' @export
 calculate_PIC <- function(C, number_of_common_factors, number_of_group_factors, e2, sigma2,
-                          NN = aantal_N,
-                          TT = aantal_T,
-                          number_of_variables = aantalvars,
-                          number_vars_estimated = number_variables_estimated,
-                          number_of_groups = aantalgroepen) {
+                          NN = number_of_time_series,
+                          TT = length_of_time_series,
+                          number_of_variables = number_of_variables_fixedvalue,
+                          number_vars_estimated = number_vars_estimated_fixedvalue,
+                          number_of_groups = number_of_groups_fixedvalue) {
 
 
   term1 = calculate_PIC_term1(e2)
@@ -2871,7 +2866,7 @@ test_alternative_PIC <- function(C, term2, term3, term4) {
   if(exists("ALTERNATIVE_PIC_2")) {
     #message("use PIC of AB-code (4 things are different (part2: 1/C and 2xC)")
     #note that Nj/N was added earlier already
-    term2 = term2 / aantal_T
+    term2 = term2 / length_of_time_series
     term3 = C * term3
     term4 = C * term4
   }
@@ -2895,13 +2890,13 @@ test_alternative_PIC <- function(C, term2, term3, term4) {
 #' Calculates the product of X*beta_true .
 #' @inheritParams estimate_beta
 #' @export
-calculate_XB_true <- function(NN = aantal_N, TT = aantal_T, number_of_variables = aantalvars) {
+calculate_XB_true <- function(NN = number_of_time_series, TT = length_of_time_series, number_of_variables = number_of_variables_fixedvalue) {
   if(homogeneous_coefficients) { #This is only relevant for DGP5 (BramatiCroux)
     XB_true = beta_true[1,] + X[,,1] * beta_true[1,]
     stopifnot(number_of_variables == 1)
   }
   if(heterogeneous_coefficients_groups) {
-    if(number_of_variables > 0 & !eclipz & exists("g")) {
+    if(number_of_variables > 0 & !use_real_world_data & exists("g")) {
       if(!is.na(g)) {
         XB_true = t(sapply(1:NN,
                               function(x) matrix(cbind(1, X[x,,]) %*% beta_true[,g[x]], nrow = 1)))
@@ -2913,9 +2908,9 @@ calculate_XB_true <- function(NN = aantal_N, TT = aantal_T, number_of_variables 
     }
   }
   if(heterogeneous_coefficients_individuals) {
-    if(number_of_variables > 0 & !eclipz ) {
+    if(number_of_variables > 0 & !use_real_world_data ) {
       XB_true = (t(sapply(1:NN,
-                          function(y) sapply(1:TT, function(x) c(1, X[y,x,1:aantalvars]) %*% beta_true[,g_true][,y]))))
+                          function(y) sapply(1:TT, function(x) c(1, X[y,x,1:number_of_variables_fixedvalue]) %*% beta_true[,g_true][,y]))))
     } else {
       XB_true = NA
     }
@@ -2931,9 +2926,9 @@ calculate_XB_true <- function(NN = aantal_N, TT = aantal_T, number_of_variables 
 #' @inheritParams initialise_beta
 adapt_X_estimating_less_variables <- function(number_of_variables,
                                               number_vars_estimated,
-                                              eclipz = FALSE) {
+                                              use_real_world_data = FALSE) {
   #if number_vars_estimated < number_of_variables, then the obsolete rows in beta_est are already erased -> do the same in X
-  if(!eclipz & number_vars_estimated < number_of_variables) {
+  if(!use_real_world_data & number_vars_estimated < number_of_variables) {
     if(number_vars_estimated > 0) {
       X = X[,,1:number_vars_estimated]
     } else {
@@ -2947,12 +2942,12 @@ adapt_X_estimating_less_variables <- function(number_of_variables,
 #'
 #' @inheritParams estimate_beta
 #' @export
-calculate_XB_estimated <- function(NN = aantal_N, TT = aantal_T,
-                                   number_of_variables = aantalvars,
-                                   number_vars_estimated = number_variables_estimated,
-                                   eclipz = FALSE) {
+calculate_XB_estimated <- function(NN = number_of_time_series, TT = length_of_time_series,
+                                   number_of_variables = number_of_variables_fixedvalue,
+                                   number_vars_estimated = number_vars_estimated_fixedvalue,
+                                   use_real_world_data = FALSE) {
   #if number_vars_estimated < number_of_variables, then the obsolete rows in beta_est are already erased -> now do the same in X
-  X = adapt_X_estimating_less_variables(number_of_variables, number_vars_estimated, eclipz)
+  X = adapt_X_estimating_less_variables(number_of_variables, number_vars_estimated, use_real_world_data)
 
   if(number_of_variables > 0 & !is.na(X[1])) {
     if(homogeneous_coefficients) { #only designed for DGP 5 at the moment
@@ -2985,8 +2980,8 @@ calculate_XB_estimated <- function(NN = aantal_N, TT = aantal_T,
 
 #' Calculate true groupfactorstructure.
 #' @return list with NjxT matrices
-#' @param LAMBDA_GROUP_REAL true group factor loadings
-#' @param FACTOR_GROUP_REAL true group factors
+#' @param lgt true group factor loadings
+#' @param fgt true group factors
 #' @param true_number_of_groups true number of groups
 #' @param true_number_of_group_factors true number of group factors for each group
 #' @param true_number_of_common_factors true number of common factors
@@ -2995,13 +2990,13 @@ calculate_XB_estimated <- function(NN = aantal_N, TT = aantal_T,
 #' @inheritParams generate_Y
 #' @param dgp1_AB_local gives information about which DGP we use; TRUE of FALSE
 #' @export
-calculate_FL_group_true <- function(NN = aantal_N, TT = aantal_T,
-                                    LAMBDA_GROUP_REAL = lambda_group_true, FACTOR_GROUP_REAL = factor_group_true,
-                                    true_number_of_groups = aantalgroepen_real,
-                                    true_number_of_group_factors = aantalfactoren_groups_real,
-                                    true_number_of_common_factors = aantalfactoren_common_real,
-                                    num_factors_may_vary = aantalfactors_verschillend_per_group,
-                                    eclipz = FALSE,
+calculate_FL_group_true <- function(NN, TT,
+                                    lgt, fgt,
+                                    true_number_of_groups,
+                                    true_number_of_group_factors,
+                                    true_number_of_common_factors,
+                                    num_factors_may_vary,
+                                    use_real_world_data = FALSE,
                                     dgp1_AB_local = dgp1_AB,
                                     using_bramaticroux = exists("DGP_Bramati_Croux")) {
 
@@ -3009,8 +3004,8 @@ calculate_FL_group_true <- function(NN = aantal_N, TT = aantal_T,
     return(NA)
   }
 
-  if(!eclipz & !dgp1_AB_local) { #not using for DGP 1, because true values are not available given current coding
-    temp = calculate_lgfg(LAMBDA_GROUP_REAL, FACTOR_GROUP_REAL,
+  if(!use_real_world_data & !dgp1_AB_local) { #not using for DGP 1, because true values are not available given current coding
+    temp = calculate_lgfg(lgt, fgt,
                           true_number_of_groups,
                           true_number_of_group_factors,
                           true_number_of_common_factors,
@@ -3024,22 +3019,22 @@ calculate_FL_group_true <- function(NN = aantal_N, TT = aantal_T,
 
 
 #' Returns the estimated groupfactorstructure.
-#' @param LAMBDA_GROUP loadings of group factors
-#' @param FACTOR_GROUP group factors
+#' @param fg estimated group factors
+#' @param lg loadings of estimatd group factors
 #' @inheritParams calculate_FL_group_true
 #' @inheritParams generate_Y
 #' @inheritParams update_g
 #' @return list with NjxT matrices
 #' @export
-calculate_FL_group_estimated <- function(LAMBDA_GROUP = lambda_group, FACTOR_GROUP = factor_group,
-                                         NN = aantal_N,
-                                         TT = aantal_T,
-                                         number_of_groups = aantalgroepen,
-                                         number_of_group_factors = aantalfactoren_groups,
-                                         number_of_common_factors = aantalfactoren_common,
-                                         num_factors_may_vary = aantalfactors_verschillend_per_group) {
-  temp = calculate_lgfg(LAMBDA_GROUP, FACTOR_GROUP, number_of_groups, number_of_group_factors, number_of_common_factors, num_factors_may_vary)
-  #helpfunction to return the groupfactorstructure of x. For elemnts in class zero, for which no factors are estimated, this is set to 0.
+calculate_FL_group_estimated <- function(lg = lambda_group, fg = factor_group,
+                                         NN = number_of_time_series,
+                                         TT = length_of_time_series,
+                                         number_of_groups = number_of_groups_fixedvalue,
+                                         number_of_group_factors = number_of_group_factors_fixedvalue,
+                                         number_of_common_factors = number_of_common_factors_fixedvalue,
+                                         num_factors_may_vary = num_factors_may_vary_fixedvalue) {
+  temp = calculate_lgfg(lg, fg, number_of_groups, number_of_group_factors, number_of_common_factors, num_factors_may_vary)
+  #helpfunction to return the groupfactorstructure of x. For elements in class zero, for which no factors are estimated, this is set to 0.
   FL_helpf <- function(x) {
     if(g[x] != 0) {
       return(temp[[g[x]]][x,])
@@ -3066,13 +3061,13 @@ calculate_FL_group_estimated <- function(LAMBDA_GROUP = lambda_group, FACTOR_GRO
 #' @param beta_est estimated values of beta
 #' @param beta_true true values of beta
 #' @param without_intercept boolean to remove the intercept in the calculation
-#' @param dgp1_spread_group_centers boolean to remove the de facto intercept in the calculation (this is specific for DGP 1 (& old dgp 2), due to how they are defined.)
+#' @param dgp1_spread_group_centers boolean to remove the de facto intercept in the calculation (this is specific for DGP 1, due to how this is defined.)
 #' @inheritParams estimate_beta
 #' @inheritParams calculate_FL_group_true
 #' @export
 calculate_mse_beta <- function(beta_est, beta_true, without_intercept = FALSE, dgp1_spread_group_centers = FALSE,
-                                NN = aantal_N,
-                                number_of_variables = aantalvars,
+                                NN = number_of_time_series,
+                                number_of_variables = number_of_variables_fixedvalue,
                                 dgp1_AB_local = dgp1_AB) {
 
   if(homogeneous_coefficients) { #relevant for DGP05 (Bramati-Croux)
@@ -3155,8 +3150,8 @@ mse_heterogeneous_groups <- function(without_intercept, dgp1_spread_group_center
     }
   }
 
-  pre_mse = rep(NA,aantal_N)
-  for(i in 1:aantal_N) {
+  pre_mse = rep(NA,number_of_time_series)
+  for(i in 1:number_of_time_series) {
 
     afw = beta_est[,g[i]] - (beta_true[,g_true[i]])
     pre_mse[i] = mean(afw^2)
@@ -3178,7 +3173,7 @@ mse_heterogeneous_groups <- function(without_intercept, dgp1_spread_group_center
 #' @importFrom purrr map
 #' @export
 calculate_VCsquared <- function(rcj,rc,C_candidates, UPDATE1 = FALSE, UPDATE2 = FALSE,
-                                number_of_group_factors = aantalfactoren_groups) {
+                                number_of_group_factors = number_of_group_factors_fixedvalue) {
   VC_squared = rep(NA, length(C_candidates))
 
   #vector with max number of groups
@@ -3315,10 +3310,10 @@ LMROB <- function(parameter_y, parameter_x, nointercept = FALSE, nosetting = exi
 #' @param number_of_common_factors number of common factors
 #' @export
 calculate_sigma2maxmodel <- function(optimize_kappa = FALSE, UPDATE1 = update1, UPDATE2 = update2,
-                                     number_of_groups = aantalgroepen,
-                                     number_of_groups_candidates = aantalgroepen_candidates,
-                                     number_of_group_factors = aantalfactoren_groups,
-                                     number_of_common_factors = aantalfactoren_common
+                                     number_of_groups = number_of_groups_fixedvalue,
+                                     number_of_groups_candidates = number_of_groups_candidates_fixedvalue,
+                                     number_of_group_factors = number_of_group_factors_fixedvalue,
+                                     number_of_common_factors = number_of_common_factors_fixedvalue
                                      ) {
   if(!optimize_kappa) {
     if(!UPDATE1 & !UPDATE2 &
@@ -3339,8 +3334,8 @@ calculate_sigma2maxmodel <- function(optimize_kappa = FALSE, UPDATE1 = update1, 
 
 #' Adapts allpic (object that contains PIC for all candidate C's and all subsamples) with sigma2_max_model.
 #'
-#' The PIC was until now calculated with a sigma2 specific to the configuration (in terms of number of groups and factors).
-#' Because the method requires sigma2 to be equal over all configurations (see proofs of different papers of Ando/Bai) we replace sigma2 by sigma2 of the configuration
+#' The PIC is calculated with a sigma2 specific to the configuration (= number of groups and factors).
+#' Because the method requires sigma2 to be equal over all configurations (see proofs of different papers of Ando/Bai) we replace sigma2 by the sigma2 of the configuration
 #' with maximum number of groups and factors (this is the last one that is run).
 #' @param all_pic contains PIC for all candidate C's and all subsamples
 #' @param sigma2_max_model sigma2 of model with maximum number of groups and factors
@@ -3349,12 +3344,12 @@ calculate_sigma2maxmodel <- function(optimize_kappa = FALSE, UPDATE1 = update1, 
 adapt_allpic_with_sigma2maxmodel <- function(all_pic, sigma2_max_model, UPDATE1 = update1, UPDATE2 = update2) {
   if(is.null(all_pic))  message("Warning in adapt_allpic_with_sigma2maxmodel(): all_pic is empty")
   if(!UPDATE1 & !UPDATE2) {
-    message("Use sigma2_max_model in PIC (in object all_pic).")
+    #message("Use sigma2_max_model in PIC (in object all_pic).")
     for(i in 1:nrow(all_pic)) {
-      SIGMA2 = as.numeric(df_results$sigma2[i])
-      all_pic[i,] = (unlist(all_pic[i,]) - SIGMA2) / SIGMA2 * sigma2_max_model + SIGMA2
+      sig2 = as.numeric(df_results$sigma2[i])
+      all_pic[i,] = (unlist(all_pic[i,]) - sig2) / sig2 * sigma2_max_model + sig2
     }
-    message("...done")
+    #message("...done")
   }
   return(all_pic)
 }

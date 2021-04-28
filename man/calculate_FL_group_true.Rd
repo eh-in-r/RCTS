@@ -5,15 +5,15 @@
 \title{Calculate true groupfactorstructure.}
 \usage{
 calculate_FL_group_true(
-  NN = aantal_N,
-  TT = aantal_T,
-  LAMBDA_GROUP_REAL = lambda_group_true,
-  FACTOR_GROUP_REAL = factor_group_true,
-  true_number_of_groups = aantalgroepen_real,
-  true_number_of_group_factors = aantalfactoren_groups_real,
-  true_number_of_common_factors = aantalfactoren_common_real,
-  num_factors_may_vary = aantalfactors_verschillend_per_group,
-  eclipz = FALSE,
+  NN,
+  TT,
+  lgt,
+  fgt,
+  true_number_of_groups,
+  true_number_of_group_factors,
+  true_number_of_common_factors,
+  num_factors_may_vary,
+  use_real_world_data = FALSE,
   dgp1_AB_local = dgp1_AB,
   using_bramaticroux = exists("DGP_Bramati_Croux")
 )
@@ -23,9 +23,9 @@ calculate_FL_group_true(
 
 \item{TT}{length of time series}
 
-\item{LAMBDA_GROUP_REAL}{true group factor loadings}
+\item{lgt}{true group factor loadings}
 
-\item{FACTOR_GROUP_REAL}{true group factors}
+\item{fgt}{true group factors}
 
 \item{true_number_of_groups}{true number of groups}
 
@@ -35,7 +35,7 @@ calculate_FL_group_true(
 
 \item{num_factors_may_vary}{whether or not the number of groupfactors is constant over all groups or not}
 
-\item{eclipz}{parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
+\item{use_real_world_data}{Parameter to indicate using real world dataset. Defaults to FALSE.}
 
 \item{dgp1_AB_local}{gives information about which DGP we use; TRUE of FALSE}
 

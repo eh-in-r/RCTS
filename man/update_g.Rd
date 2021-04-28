@@ -5,15 +5,15 @@
 \title{Function that estimates group membership.}
 \usage{
 update_g(
-  NN = aantal_N,
-  TT = aantal_T,
-  number_of_groups = aantalgroepen,
-  number_of_variables = aantalvars,
-  number_vars_estimated = number_variables_estimated,
-  number_of_group_factors = aantalfactoren_groups,
-  number_of_common_factors = aantalfactoren_common,
+  NN,
+  TT,
+  number_of_groups = number_of_groups_fixedvalue,
+  number_of_variables = number_of_variables_fixedvalue,
+  number_vars_estimated = number_vars_estimated_fixedvalue,
+  number_of_group_factors = number_of_group_factors_fixedvalue,
+  number_of_common_factors = number_of_common_factors_fixedvalue,
   use_class_zero = FALSE,
-  eclipz_inupdateg = eclipz,
+  use_real_world_data_inupdateg = use_real_world_data,
   verbose = FALSE
 )
 }
@@ -34,7 +34,7 @@ update_g(
 
 \item{use_class_zero}{if set to TRUE, then individuals with high distance to all possible groups are put in a separate class zero}
 
-\item{eclipz_inupdateg}{Parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
+\item{use_real_world_data_inupdateg}{Parameter to indicate using real world dataset. Defaults to FALSE.}
 
 \item{verbose}{when TRUE, it prints messages}
 }
@@ -69,16 +69,17 @@ heterogeneous_coefficients_individuals = TRUE
 dgp1_AB = FALSE
 dgp1_spread_group_centers = TRUE
 use_macropca_instead_of_cz = TRUE
-number_variables_estimated = 3
+number_vars_estimated_fixedvalue = 3
 beta_est = estimate_beta(NN = 300, TT = 30,
-  number_of_groups = 3, number_of_group_factors = c(3,3,3), number_of_common_factors = 0,
-  number_of_variables = 3, number_vars_estimated = number_variables_estimated,
+  number_of_groups = 3, number_of_group_factors = c(3, 3, 3), number_of_common_factors = 0,
+  number_of_variables = 3, number_vars_estimated = number_vars_estimated_fixedvalue,
   num_factors_may_vary = FALSE)[[1]]
 grid = grid_add_variables(grid,beta_est, lambda, comfactor, NN = 300, TT = 30,
-  number_of_variables = 3, number_vars_estimated = number_variables_estimated, number_of_groups = 3)
-eclipz = FALSE
+  number_of_variables = 3, number_vars_estimated = number_vars_estimated_fixedvalue,
+  number_of_groups = 3)
+use_real_world_data = FALSE
 g_new = update_g(NN = 300, TT = 30, number_of_groups = 3, number_of_variables = 3,
-  number_vars_estimated = number_variables_estimated,
-  number_of_group_factors = c(3,3,3),
+  number_vars_estimated = number_vars_estimated_fixedvalue,
+  number_of_group_factors = c(3, 3, 3),
   number_of_common_factors = 0)[[1]]
 }

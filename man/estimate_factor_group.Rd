@@ -11,15 +11,13 @@ estimate_factor_group(
   comfactor,
   use_macropca_instead_of_cz,
   initialise = FALSE,
-  NN = aantal_N,
-  TT = aantal_T,
-  number_of_groups = aantalgroepen,
-  number_of_group_factors = aantalfactoren_groups,
-  number_of_common_factors = aantalfactoren_common,
-  number_of_variables = aantalvars,
-  number_vars_estimated = number_variables_estimated,
-  eclipz = eclipz,
-  expert_based_initial_factors = FALSE,
+  NN = number_of_time_series,
+  TT = length_of_time_series,
+  number_of_groups = number_of_groups_fixedvalue,
+  number_of_group_factors = number_of_group_factors_fixedvalue,
+  number_of_common_factors = number_of_common_factors_fixedvalue,
+  number_of_variables = number_of_variables_fixedvalue,
+  number_vars_estimated = number_vars_estimated_fixedvalue,
   verbose = FALSE
 )
 }
@@ -49,10 +47,6 @@ estimate_factor_group(
 \item{number_of_variables}{number of observable variables}
 
 \item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
-
-\item{eclipz}{parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
-
-\item{expert_based_initial_factors}{indicates using a previously defined set of (initial) factors; defaults to FALSE}
 
 \item{verbose}{when TRUE, it prints messages}
 }

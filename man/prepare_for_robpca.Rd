@@ -4,7 +4,12 @@
 \alias{prepare_for_robpca}
 \title{Helpfunction: prepares object to perform robust PCA on.}
 \usage{
-prepare_for_robpca(object, NN = aantal_N, TT = aantal_T, option = 3)
+prepare_for_robpca(
+  object,
+  NN = number_of_time_series,
+  TT = length_of_time_series,
+  option = 3
+)
 }
 \arguments{
 \item{object}{this is the object of which we may take the covariance matrix and then to perform robust PCA on}

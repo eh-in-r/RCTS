@@ -13,4 +13,7 @@ g_true_dgp3
 \description{
 g_true_dgp3 contains the true group memberships of the elements of Y_dgp3
 }
+\examples{
+table(g_true_dgp3)
+}
 \keyword{datasets}

@@ -8,11 +8,11 @@ calculate_FL_group_estimated2(
   f,
   l,
   j,
-  number_of_groups = aantalgroepen,
-  number_of_common_factors = aantalfactoren_common,
-  num_factors_may_vary = aantalfactors_verschillend_per_group,
-  NN = aantal_N,
-  TT = aantal_T
+  number_of_groups = number_of_groups_fixedvalue,
+  number_of_common_factors = number_of_common_factors_fixedvalue,
+  num_factors_may_vary = num_factors_may_vary_fixedvalue,
+  NN = number_of_time_series,
+  TT = length_of_time_series
 )
 }
 \arguments{

@@ -4,7 +4,7 @@
 \alias{initialise_X}
 \title{Creates X (the observable variables) to use in simulations.}
 \usage{
-initialise_X(NN, TT, number_of_variables = aantalvars)
+initialise_X(NN, TT, number_of_variables = number_of_variables_fixedvalue)
 }
 \arguments{
 \item{NN}{number of individuals}

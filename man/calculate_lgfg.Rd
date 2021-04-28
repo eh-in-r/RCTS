@@ -12,8 +12,8 @@ calculate_lgfg(
   number_of_group_factors,
   number_of_common_factors,
   num_factors_may_vary,
-  NN = aantal_N,
-  TT = aantal_T
+  NN = number_of_time_series,
+  TT = length_of_time_series
 )
 }
 \arguments{
@@ -40,5 +40,5 @@ This function is used to speed up code.
 library(tidyverse)
 lambda_group = RCTS::lambda_group_true_dgp3
 factor_group = RCTS::factor_group_true_dgp3
-calculate_lgfg(lambda_group,factor_group,3,c(3,3,3),0,FALSE)
+calculate_lgfg(lambda_group,factor_group, 3,c(3, 3, 3), 0, FALSE)
 }

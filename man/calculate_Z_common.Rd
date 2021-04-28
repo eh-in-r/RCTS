@@ -10,12 +10,12 @@ calculate_Z_common(
   lgfg_list,
   estimate_factors_with_pertMM,
   initialise = FALSE,
-  NN = aantal_N,
-  TT = aantal_T,
-  number_of_variables = aantalvars,
-  number_vars_estimated = number_variables_estimated,
-  number_of_group_factors = aantalfactoren_groups,
-  eclipz = FALSE
+  NN = number_of_time_series,
+  TT = length_of_time_series,
+  number_of_variables = number_of_variables_fixedvalue,
+  number_vars_estimated = number_vars_estimated_fixedvalue,
+  number_of_group_factors = number_of_group_factors_fixedvalue,
+  use_real_world_data = FALSE
 )
 }
 \arguments{
@@ -39,7 +39,7 @@ calculate_Z_common(
 
 \item{number_of_group_factors}{number of groupfactors to be estimated}
 
-\item{eclipz}{parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
+\item{use_real_world_data}{Parameter to indicate using real world dataset. Defaults to FALSE.}
 }
 \description{
 Calculates Z = Y - X*beta_est - LgFg. It is used in the estimate of the common factorstructure.

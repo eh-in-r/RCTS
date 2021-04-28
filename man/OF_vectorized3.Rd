@@ -7,29 +7,29 @@
 OF_vectorized3(
   group_memberships,
   beta_est = beta_est,
-  LAMBDA = lambda,
-  FACTOR = comfactor,
-  LAMBDA_GROUP = lambda_group,
-  FACTOR_GROUP = factor_group,
-  NN = aantal_N,
-  number_of_groups = aantalgroepen,
-  number_of_common_factors = aantalfactoren_common,
-  number_of_group_factors = aantalfactoren_groups,
-  num_factors_may_vary = aantalfactors_verschillend_per_group
+  lc = lambda,
+  fc = comfactor,
+  lg = lambda_group,
+  fg = factor_group,
+  NN = number_of_time_series,
+  number_of_groups = number_of_groups_fixedvalue,
+  number_of_common_factors = number_of_common_factors_fixedvalue,
+  number_of_group_factors = number_of_group_factors_fixedvalue,
+  num_factors_may_vary = num_factors_may_vary_fixedvalue
 )
 }
 \arguments{
-\item{group_memberships}{Vector containing groupmembership for all individuals.}
+\item{group_memberships}{Vector containing the group membership for all individuals.}
 
 \item{beta_est}{beta_est}
 
-\item{LAMBDA}{loadings of common factors}
+\item{lc}{loadings of estimated common factors}
 
-\item{FACTOR}{common factors}
+\item{fc}{estimated common factors}
 
-\item{LAMBDA_GROUP}{grouploadings}
+\item{lg}{estimated grouploadings}
 
-\item{FACTOR_GROUP}{groupfactors}
+\item{fg}{estimated groupfactors}
 
 \item{NN}{number of individuals}
 

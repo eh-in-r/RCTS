@@ -8,7 +8,7 @@ calculate_PIC_term4(
   temp,
   term4,
   Nj,
-  NN = aantal_N,
+  NN = number_of_time_series,
   use_alterpic = ALTERNATIVE_PIC
 )
 }

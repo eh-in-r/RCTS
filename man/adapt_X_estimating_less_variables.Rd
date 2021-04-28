@@ -7,7 +7,7 @@
 adapt_X_estimating_less_variables(
   number_of_variables,
   number_vars_estimated,
-  eclipz = FALSE
+  use_real_world_data = FALSE
 )
 }
 \arguments{
@@ -15,7 +15,7 @@ adapt_X_estimating_less_variables(
 
 \item{number_vars_estimated}{number of variables from which the coefficients are estimated}
 
-\item{eclipz}{boolean to indicate using eClipzdatabase; defaults to FALSE}
+\item{use_real_world_data}{indicates using realworld data; defaults to FALSE}
 }
 \description{
 When we run the algorithm with a different number of observable variables then the number we actually have, we need to reformat X.

@@ -5,20 +5,20 @@
 \title{Returns the estimated groupfactorstructure.}
 \usage{
 calculate_FL_group_estimated(
-  LAMBDA_GROUP = lambda_group,
-  FACTOR_GROUP = factor_group,
-  NN = aantal_N,
-  TT = aantal_T,
-  number_of_groups = aantalgroepen,
-  number_of_group_factors = aantalfactoren_groups,
-  number_of_common_factors = aantalfactoren_common,
-  num_factors_may_vary = aantalfactors_verschillend_per_group
+  lg = lambda_group,
+  fg = factor_group,
+  NN = number_of_time_series,
+  TT = length_of_time_series,
+  number_of_groups = number_of_groups_fixedvalue,
+  number_of_group_factors = number_of_group_factors_fixedvalue,
+  number_of_common_factors = number_of_common_factors_fixedvalue,
+  num_factors_may_vary = num_factors_may_vary_fixedvalue
 )
 }
 \arguments{
-\item{LAMBDA_GROUP}{loadings of group factors}
+\item{lg}{loadings of estimatd group factors}
 
-\item{FACTOR_GROUP}{group factors}
+\item{fg}{estimated group factors}
 
 \item{NN}{number of individuals}
 

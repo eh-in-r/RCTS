@@ -9,8 +9,8 @@ calculate_mse_beta(
   beta_true,
   without_intercept = FALSE,
   dgp1_spread_group_centers = FALSE,
-  NN = aantal_N,
-  number_of_variables = aantalvars,
+  NN = number_of_time_series,
+  number_of_variables = number_of_variables_fixedvalue,
   dgp1_AB_local = dgp1_AB
 )
 }
@@ -21,7 +21,7 @@ calculate_mse_beta(
 
 \item{without_intercept}{boolean to remove the intercept in the calculation}
 
-\item{dgp1_spread_group_centers}{boolean to remove the de facto intercept in the calculation (this is specific for DGP 1 (& old dgp 2), due to how they are defined.)}
+\item{dgp1_spread_group_centers}{boolean to remove the de facto intercept in the calculation (this is specific for DGP 1, due to how this is defined.)}
 
 \item{NN}{number of individuals}
 

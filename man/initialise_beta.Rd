@@ -5,17 +5,15 @@
 \title{Initialisation of estimation of beta (the coefficients with the observable variables)}
 \usage{
 initialise_beta(
-  eclipz = FALSE,
-  NN = aantal_N,
-  TT = aantal_T,
-  number_of_variables = aantalvars,
-  number_vars_estimated = number_variables_estimated,
-  number_of_groups = aantalgroepen
+  NN,
+  TT,
+  number_of_variables,
+  number_vars_estimated,
+  number_of_groups,
+  use_real_world_data = FALSE
 )
 }
 \arguments{
-\item{eclipz}{parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
-
 \item{NN}{number of individuals}
 
 \item{TT}{length of time series}
@@ -25,6 +23,8 @@ initialise_beta(
 \item{number_vars_estimated}{number of variables from which the coefficients are estimated}
 
 \item{number_of_groups}{number of groups}
+
+\item{use_real_world_data}{Parameter to indicate using real world dataset. Defaults to FALSE.}
 }
 \description{
 Note: this needs to be called before the definition of grid.

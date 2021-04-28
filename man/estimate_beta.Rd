@@ -5,17 +5,17 @@
 \title{Estimates beta.}
 \usage{
 estimate_beta(
-  NN = aantal_N,
-  TT = aantal_T,
-  number_of_groups = aantalgroepen,
-  number_of_group_factors = aantalfactoren_groups,
-  number_of_common_factors = aantalfactoren_common,
-  number_of_variables = aantalvars,
-  number_vars_estimated = number_variables_estimated,
-  num_factors_may_vary = aantalfactors_verschillend_per_group,
+  NN = number_of_time_series,
+  TT = length_of_time_series,
+  number_of_groups = number_of_groups_fixedvalue,
+  number_of_group_factors = number_of_group_factors_fixedvalue,
+  number_of_common_factors = number_of_common_factors_fixedvalue,
+  number_of_variables = number_of_variables_fixedvalue,
+  number_vars_estimated = number_vars_estimated_fixedvalue,
+  num_factors_may_vary = num_factors_may_vary_fixedvalue,
   use_median_of_individual_beta = exists("USE_MEDIAN_OF_INDIVIDUAL_THETA"),
   optimize_kappa = FALSE,
-  eclipz = FALSE
+  use_real_world_data = FALSE
 )
 }
 \arguments{
@@ -37,9 +37,9 @@ estimate_beta(
 
 \item{use_median_of_individual_beta}{for testing purposes}
 
-\item{optimize_kappa}{indicates if kappa has to be optimized or not; defaults to FALSE}
+\item{optimize_kappa}{indicates if kappa has to be optimized or not (only relevant for the classical algorithm); defaults to FALSE}
 
-\item{eclipz}{parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
+\item{use_real_world_data}{Parameter to indicate using real world dataset. Defaults to FALSE.}
 }
 \value{
 list: 1st element contains matrix (N columns: 1 for each element of the panel data) with estimated beta_est's.
@@ -71,6 +71,6 @@ dgp1_AB = FALSE
 dgp1_spread_group_centers = TRUE
 use_macropca_instead_of_cz = TRUE
 beta_est = estimate_beta(NN = 300, TT = 30,
-  number_of_groups = 3, number_of_group_factors = c(3,3,3), number_of_common_factors = 0,
- number_of_variables = 3,number_vars_estimated=3,num_factors_may_vary=FALSE)[[1]]
+  number_of_groups = 3, number_of_group_factors = c(3, 3, 3), number_of_common_factors = 0,
+ number_of_variables = 3,number_vars_estimated = 3, num_factors_may_vary = FALSE)[[1]]
 }

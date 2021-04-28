@@ -2,16 +2,16 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{calculate_W}
 \alias{calculate_W}
-\title{Calculates W = Y - X*beta_est. It is used in the initializationstep of the algorithm, to initialise the factorstructures.}
+\title{Calculates W = Y - X*beta_est. It is used in the initialization step of the algorithm, to initialise the factorstructures.}
 \usage{
 calculate_W(
   beta_est,
   g,
-  NN = aantal_N,
-  TT = aantal_T,
-  number_of_variables = aantalvars,
-  number_vars_estimated = number_variables_estimated,
-  eclipz = FALSE
+  NN = number_of_time_series,
+  TT = length_of_time_series,
+  number_of_variables = number_of_variables_fixedvalue,
+  number_vars_estimated = number_vars_estimated_fixedvalue,
+  use_real_world_data = FALSE
 )
 }
 \arguments{
@@ -27,11 +27,11 @@ calculate_W(
 
 \item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
 
-\item{eclipz}{parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
+\item{use_real_world_data}{Parameter to indicate using real world dataset. Defaults to FALSE.}
 }
 \value{
 NxT matrix
 }
 \description{
-Calculates W = Y - X*beta_est. It is used in the initializationstep of the algorithm, to initialise the factorstructures.
+Calculates W = Y - X*beta_est. It is used in the initialization step of the algorithm, to initialise the factorstructures.
 }

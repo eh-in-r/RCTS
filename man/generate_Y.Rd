@@ -18,8 +18,8 @@ generate_Y(
   epsilon,
   ando_bai = FALSE,
   ando_bai_2017 = FALSE,
-  eclipz = FALSE,
-  number_of_variables = aantalvars
+  use_real_world_data = FALSE,
+  number_of_variables = number_of_variables_fixedvalue
 )
 }
 \arguments{
@@ -49,7 +49,7 @@ generate_Y(
 
 \item{ando_bai_2017}{loads Ando/Bai-dataset; only for testing purposes. Defaults to FALSE.}
 
-\item{eclipz}{parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
+\item{use_real_world_data}{Parameter to indicate using real world dataset. Defaults to FALSE.}
 
 \item{number_of_variables}{number of observable variables}
 }

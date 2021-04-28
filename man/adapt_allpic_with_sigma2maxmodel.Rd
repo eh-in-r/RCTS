@@ -21,7 +21,7 @@ adapt_allpic_with_sigma2maxmodel(
 \item{UPDATE2}{option to indicate the number of common factors is updated during the algorithm; defaults to FALSE}
 }
 \description{
-The PIC was until now calculated with a sigma2 specific to the configuration (in terms of number of groups and factors).
-Because the method requires sigma2 to be equal over all configurations (see proofs of different papers of Ando/Bai) we replace sigma2 by sigma2 of the configuration
+The PIC is calculated with a sigma2 specific to the configuration (= number of groups and factors).
+Because the method requires sigma2 to be equal over all configurations (see proofs of different papers of Ando/Bai) we replace sigma2 by the sigma2 of the configuration
 with maximum number of groups and factors (this is the last one that is run).
 }

@@ -8,14 +8,14 @@ calculate_sigma2maxmodel(
   optimize_kappa = FALSE,
   UPDATE1 = update1,
   UPDATE2 = update2,
-  number_of_groups = aantalgroepen,
-  number_of_groups_candidates = aantalgroepen_candidates,
-  number_of_group_factors = aantalfactoren_groups,
-  number_of_common_factors = aantalfactoren_common
+  number_of_groups = number_of_groups_fixedvalue,
+  number_of_groups_candidates = number_of_groups_candidates_fixedvalue,
+  number_of_group_factors = number_of_group_factors_fixedvalue,
+  number_of_common_factors = number_of_common_factors_fixedvalue
 )
 }
 \arguments{
-\item{optimize_kappa}{indicates if kappa has to be optimized or not; defaults to FALSE}
+\item{optimize_kappa}{indicates if kappa has to be optimized or not (only relevant for the classical algorithm); defaults to FALSE}
 
 \item{UPDATE1}{option to indicate the number of groupfactors is updated during the algorithm; defaults to FALSE}
 

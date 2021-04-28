@@ -7,7 +7,7 @@
 generate_grouped_factorstructure(
   S,
   true_number_of_group_factors,
-  TT = aantal_T_fulldata
+  TT = length_of_time_series_fulldata
 )
 }
 \arguments{
@@ -29,5 +29,5 @@ factors ~ N(j * FGR_FACTOR, FGR_FACTOR_sd) -> default case will be N(j,1)
 library(tidyverse)
 #For 3 groups, each with 3 groupfactors:
 g_true = ceiling(runif(300) * 3)
-generate_grouped_factorstructure(3,c(3,3,3), TT = 30)
+generate_grouped_factorstructure(3, c(3, 3, 3), TT = 30)
 }

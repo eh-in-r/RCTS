@@ -5,14 +5,14 @@
 \title{Calculates the error term Y - X*beta_est - LF - LgFg.}
 \usage{
 calculate_error_term_individuals(
-  NN = aantal_N,
-  TT = aantal_T,
-  number_of_variables = aantalvars,
-  number_vars_estimated = number_variables_estimated,
-  number_of_groups = aantalgroepen,
-  number_of_group_factors = aantalfactoren_groups,
-  number_of_common_factors = aantalfactoren_common,
-  eclipz = FALSE
+  NN = number_of_time_series,
+  TT = length_of_time_series,
+  number_of_variables = number_of_variables_fixedvalue,
+  number_vars_estimated = number_vars_estimated_fixedvalue,
+  number_of_groups = number_of_groups_fixedvalue,
+  number_of_group_factors = number_of_group_factors_fixedvalue,
+  number_of_common_factors = number_of_common_factors_fixedvalue,
+  use_real_world_data = FALSE
 )
 }
 \arguments{
@@ -30,7 +30,7 @@ calculate_error_term_individuals(
 
 \item{number_of_common_factors}{number of common factors to be estimated}
 
-\item{eclipz}{parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
+\item{use_real_world_data}{Parameter to indicate using real world dataset. Defaults to FALSE.}
 }
 \value{
 NxT matrix

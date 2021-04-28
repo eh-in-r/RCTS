@@ -3,7 +3,7 @@
 \docType{data}
 \name{X_dgp3}
 \alias{X_dgp3}
-\title{X_dgp3 contains the values of the observable variables on which Y_dgp3 is based}
+\title{The dataset X_dgp3 contains the values of the 3 observable variables on which Y_dgp3 is based.}
 \format{
 array with 300 x 30 x 3 elements
 }
@@ -11,6 +11,10 @@ array with 300 x 30 x 3 elements
 X_dgp3
 }
 \description{
-X_dgp3 contains the values of the observable variables on which Y_dgp3 is based
+The dataset X_dgp3 contains the values of the 3 observable variables on which Y_dgp3 is based.
+}
+\examples{
+head(X_dgp3[,,1])
+hist(X_dgp3[,,1])
 }
 \keyword{datasets}

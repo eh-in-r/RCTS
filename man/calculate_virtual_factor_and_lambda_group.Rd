@@ -10,11 +10,11 @@ calculate_virtual_factor_and_lambda_group(
   NN_local,
   TT_local,
   use_macropca_instead_of_cz_local,
-  number_of_variables_local = aantalvars,
-  number_vars_estimated_local = number_variables_estimated,
-  number_of_group_factors_local = aantalfactoren_groups,
-  number_of_common_factors_local = aantalfactoren_common,
-  eclipz_local = eclipz,
+  number_of_variables_local = number_of_variables_fixedvalue,
+  number_vars_estimated_local = number_vars_estimated_fixedvalue,
+  number_of_group_factors_local = number_of_group_factors_fixedvalue,
+  number_of_common_factors_local = number_of_common_factors_fixedvalue,
+  use_real_world_data_local = use_real_world_data,
   verbose = FALSE
 )
 }
@@ -37,7 +37,7 @@ calculate_virtual_factor_and_lambda_group(
 
 \item{number_of_common_factors_local}{number of common factors to be estimated}
 
-\item{eclipz_local}{Parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
+\item{use_real_world_data_local}{Parameter to indicate using real world data. Defaults to FALSE.}
 
 \item{verbose}{when TRUE, it prints messages}
 }

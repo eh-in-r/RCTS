@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{calculate_errors_virtual_groups}
 \alias{calculate_errors_virtual_groups}
-\title{Helpfunction for update_g(). Calculates the errors for every virtual group.}
+\title{Helpfunction for update_g(). Calculates the errors for one of the possible groups time series can be placed in.}
 \usage{
 calculate_errors_virtual_groups(
   k,
@@ -13,8 +13,8 @@ calculate_errors_virtual_groups(
   number_of_variables,
   number_of_common_factors,
   number_of_group_factors,
-  number_vars_estimated = number_variables_estimated,
-  eclipz = eclipz
+  number_vars_estimated = number_vars_estimated_fixedvalue,
+  use_real_world_data = use_real_world_data
 )
 }
 \arguments{
@@ -36,10 +36,10 @@ calculate_errors_virtual_groups(
 
 \item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
 
-\item{eclipz}{parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
+\item{use_real_world_data}{Parameter to indicate using real world dataset. Defaults to FALSE.}
 }
 \value{
-NxT matrix with errors (=Y - XB - FgLg - FL)
+NxT matrix with the errorterms (=dataset minus the estimated factorstructure and minus X*beta)
 }
 \description{
 As we are updating group membership, we use the errorterm as objective function to estimate the group. We assume group membership equals 1,...,NG

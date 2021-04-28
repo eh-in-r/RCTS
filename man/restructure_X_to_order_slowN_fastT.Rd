@@ -6,15 +6,15 @@
 \usage{
 restructure_X_to_order_slowN_fastT(
   X,
-  eclipz,
-  number_of_variables = aantalvars,
-  number_vars_estimated = number_variables_estimated
+  use_real_world_data,
+  number_of_variables = number_of_variables_fixedvalue,
+  number_vars_estimated = number_vars_estimated_fixedvalue
 )
 }
 \arguments{
 \item{X}{input}
 
-\item{eclipz}{boolean to indicate using eClipzdatabase; defaults to FALSE}
+\item{use_real_world_data}{indicates using realworld data; defaults to FALSE}
 
 \item{number_of_variables}{number of observable variables}
 
@@ -24,7 +24,7 @@ restructure_X_to_order_slowN_fastT(
 This 2D-matrix is what Ando/Bai worked with.
 }
 \examples{
-X = initialise_X(300,30, number_of_variables = 3)
+X = initialise_X(300, 30, number_of_variables = 3)
 X_restructured = restructure_X_to_order_slowN_fastT(X, FALSE,
   number_of_variables = 3, number_vars_estimated = 3)
 }

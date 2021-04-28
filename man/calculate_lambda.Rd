@@ -12,11 +12,11 @@ calculate_lambda(
   use_macropca_instead_of_cz,
   efwp = estimate_factors_with_pertMM,
   initialise = FALSE,
-  NN = aantal_N,
-  TT = aantal_T,
-  number_of_common_factors = aantalfactoren_common,
-  number_of_variables = aantalvars,
-  number_vars_estimated = number_variables_estimated
+  NN = number_of_time_series,
+  TT = length_of_time_series,
+  number_of_common_factors = number_of_common_factors_fixedvalue,
+  number_of_variables = number_of_variables_fixedvalue,
+  number_vars_estimated = number_vars_estimated_fixedvalue
 )
 }
 \arguments{

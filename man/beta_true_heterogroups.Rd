@@ -7,8 +7,8 @@
 beta_true_heterogroups(
   number_of_variables,
   true_number_of_groups,
-  EXTRA_BETA_FACTOR = 1,
-  limit_true_groups_BTH = LIMIT_TRUE_GROUPS
+  extra_beta_factor_bth = 1,
+  limit_true_groups_bth = LIMIT_TRUE_GROUPS
 )
 }
 \arguments{
@@ -16,9 +16,9 @@ beta_true_heterogroups(
 
 \item{true_number_of_groups}{true number of groups}
 
-\item{EXTRA_BETA_FACTOR}{option to multiply the coefficients in true beta; default = 1}
+\item{extra_beta_factor_bth}{option to multiply the coefficients in true beta; default = 1}
 
-\item{limit_true_groups_BTH}{Maximum number of true groups in a simulation-DGP for which the code in this package is implemented. Currently equals 12. For application on realworld data this parameter is not relevant.}
+\item{limit_true_groups_bth}{Maximum number of true groups in a simulation-DGP for which the code in this package is implemented. Currently equals 12. For application on realworld data this parameter is not relevant.}
 }
 \description{
 Helpfunction in create_true_beta() for the option beta_true_heterogeen_groups. (This is the default option.)

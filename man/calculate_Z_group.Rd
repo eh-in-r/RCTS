@@ -11,11 +11,11 @@ calculate_Z_group(
   comfactor,
   group,
   initialise,
-  TT = aantal_T,
-  number_of_variables = aantalvars,
-  number_vars_estimated = number_variables_estimated,
-  eclipz = FALSE,
-  number_of_common_factors = aantalfactoren_common
+  TT = length_of_time_series,
+  number_of_variables = number_of_variables_fixedvalue,
+  number_vars_estimated = number_vars_estimated_fixedvalue,
+  use_real_world_data = FALSE,
+  number_of_common_factors = number_of_common_factors_fixedvalue
 )
 }
 \arguments{
@@ -37,7 +37,7 @@ calculate_Z_group(
 
 \item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
 
-\item{eclipz}{parameter to indicate using real world Eclipzdataset. Defaults to FALSE.}
+\item{use_real_world_data}{Parameter to indicate using real world dataset. Defaults to FALSE.}
 
 \item{number_of_common_factors}{number of common factors to be estimated}
 }
