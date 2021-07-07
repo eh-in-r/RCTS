@@ -1778,6 +1778,7 @@ calculate_Z_group <- function(beta_est, g, lambda, comfactor, group, initialise,
 #' No information is added by this, so no influence on end result,
 #' but crashes of Rstudio are evaded.
 #' @param object input
+#' @param verbose prints messages
 evade_crashes_macropca <- function(object, verbose = FALSE) {
   #--------------------MacroPCA seems to make Rstudio crash when the dimension of object = (27,193) -----------------
   size_with_crashes1 = c( 27,  27,  25,  43,  66,  24)#,  44,  41)

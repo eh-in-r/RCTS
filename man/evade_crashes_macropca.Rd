@@ -4,10 +4,12 @@
 \alias{evade_crashes_macropca}
 \title{Solves a very specific issue with MacroPCA.}
 \usage{
-evade_crashes_macropca(object)
+evade_crashes_macropca(object, verbose = FALSE)
 }
 \arguments{
 \item{object}{input}
+
+\item{verbose}{prints messages}
 }
 \description{
 MacroPCA crashes Rstudio with certain dimensions of the input. Solve this by doubling every row.

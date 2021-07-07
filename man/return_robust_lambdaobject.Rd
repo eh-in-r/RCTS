@@ -34,7 +34,7 @@ return_robust_lambdaobject(
 
 \item{number_of_common_factors_rrn}{number of common factors}
 
-\item{application_covid}{indicator of using the coviddataset}
+\item{application_covid}{indicator of using the coviddataset (this parameter is passed to determine_robust_lambda() in which nlm() fails to find a minimum for this dataset)}
 
 \item{verbose}{when TRUE, it prints messages}
 }
