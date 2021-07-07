@@ -10,7 +10,7 @@
 #' @param almost_classical_lambda matrix where the mean of each row is equal to the classical lambda
 #' @param fastoption Uses nlm() instead of optim(). This is faster.
 #' @param fastoption2 experimental parameter: can speed nlm() up (10%), but loses accuracy. May benefit from finetuning.
-#' @param application_covid_drl indicator of using the coviddataset
+#' @param application_covid_drl indicator of using the coviddataset (because nlm() fails here to find a minimum)
 #' @importFrom stats optim
 #' @importFrom stats nlm
 #' @return M-estimator of location of the parameter, by minimizing sum of rho()
@@ -85,7 +85,7 @@ determine_robust_lambda <- function(almost_classical_lambda, fastoption = TRUE, 
 #' @param comfactor_rrn estimation of common factors
 #' @param number_of_common_factors_rrn number of common factors
 #' @param NN_rrn number of time series
-#' @param application_covid indicator of using the coviddataset
+#' @param application_covid indicator of using the coviddataset (this parameter is passed to determine_robust_lambda() in which nlm() fails to find a minimum for this dataset)
 #' @param verbose when TRUE, it prints messages
 #' @return Nxk dataframe
 #' @export

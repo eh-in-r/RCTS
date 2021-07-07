@@ -1698,13 +1698,11 @@ calculate_Z_common <- function(beta_est, g, lgfg_list,
     }
 
     if(number_vars_estimated > 0) {
-      if(homogeneous_coefficients | heterogeneous_coefficients_groups) beta_est = as.matrix(beta_est[,g[i]])
-      if(heterogeneous_coefficients_individuals) beta_est = as.matrix(beta_est[,i])
-      Z[i,] = y - t(cbind(1,X[i,,]) %*% beta_est) -
-        LF_GROUP
+      if(homogeneous_coefficients | heterogeneous_coefficients_groups) BETA = as.matrix(beta_est[,g[i]])
+      if(heterogeneous_coefficients_individuals) BETA = as.matrix(beta_est[,i])
+      Z[i,] = y - t(cbind(1,X[i,,]) %*% BETA) - LF_GROUP
     } else {
-      Z[i,] = y -
-        LF_GROUP
+      Z[i,] = y - LF_GROUP
     }
   }
 
@@ -2008,6 +2006,7 @@ estimate_factor <- function(beta_est, g, lgfg_list,
                             number_vars_estimated = number_vars_estimated_fixedvalue,
                             verbose = FALSE) {
 
+
   if(!do_we_estimate_common_factors(number_of_common_factors) ) {
     #return matrix with only zero's
     return(list(t(matrix(rep(0, TT))), NA))
@@ -2026,7 +2025,7 @@ estimate_factor <- function(beta_est, g, lgfg_list,
                            number_of_variables = number_of_variables,
                            number_vars_estimated = number_vars_estimated) #this is a "rows_without_NA x T - matrix"
   }
-
+  if(verbose) message("W is constructed")
   #if there are individuals in "class zero", then they are considered outliers
   #  and need to be excluded in the estimation of the common factors as well
   message("remove class zero individuals from estimation of common factors")
@@ -2052,8 +2051,8 @@ estimate_factor <- function(beta_est, g, lgfg_list,
   #first r eigenvectors * sqrt(T)
 
   #take number_of_common_factors eigenvectors
+  message(str_c("Estimate ",number_of_common_factors," common factors"))
   if(use_robust) {
-    message(str_c("Estimate ",number_of_common_factors," common factors"))
     #CHANGE LOCATION 1/7
     if(use_macropca_instead_of_cz) {
       temp2 = robustpca(temp, number_of_common_factors, verbose_robustpca = verbose)
