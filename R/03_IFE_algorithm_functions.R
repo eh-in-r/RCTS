@@ -30,7 +30,8 @@ utils::globalVariables(c("use_robust",
                          "rows_with_NA", "rows_without_NA",
                          "grid",
                          "v1", "v2", "v3",
-                         "usecoviddata_cases","usecoviddata_deaths"
+                         "usecoviddata_cases","usecoviddata_deaths",
+                         "method_estimate_beta"
 
 
 ))
@@ -132,7 +133,7 @@ beta_true_heterogroups <- function(number_of_variables, true_number_of_groups, e
 #' beta_true_heterogeen_groups is the default case
 #' @inheritParams estimate_beta
 #' @param true_number_of_groups number of groups
-#' @param use_real_world_data indicates using realworld data; defaults to FALSE
+# @param use_real_world_data indicates using realworld data; defaults to FALSE
 #' @param extra_beta_factor multiplies coefficients in beta_est; default = 1
 #' @param beta_true_homogeneous whether true beta is equal for all individuals
 #' @param beta_true_heterogeneous_groups whether true beta is equal within groups, and different between groups
@@ -156,7 +157,6 @@ create_true_beta <- function(number_of_variables,
                              beta_true_heterogeneous_groups,
                              beta_true_heterogeneous_individuals,
                              limit_true_groups = LIMIT_TRUE_GROUPS,
-                             #use_real_world_data = FALSE,
                              extra_beta_factor = 1) {
   stopifnot((beta_true_homogeneous + beta_true_heterogeneous_groups + beta_true_heterogeneous_individuals) == 1)
   #real world data: beta_true does not exist -> return NA
@@ -205,7 +205,7 @@ initialise_X <- function(NN,TT, number_of_variables = number_of_variables_fixedv
         }
       }
     }
-    X = scaling_X(X, firsttime = TRUE, use_real_world_data = FALSE, number_of_variables = number_of_variables)
+    X = scaling_X(X, firsttime = TRUE, number_of_variables = number_of_variables)
 
 
     return(X)
@@ -220,7 +220,7 @@ initialise_X <- function(NN,TT, number_of_variables = number_of_variables_fixedv
 #' @param X input
 #' @param firsttime Scaling before generating Y and before adding outliers: this is always with mean and sd. If this is FALSE, it indicates that
 #' we are using the function for a second time, after adding the outliers. In the robust case it uses median and MAD, otherwise again mean and sd.
-#' @param use_real_world_data Parameter to indicate using real world data. Defaults to FALSE.
+# @param use_real_world_data Parameter to indicate using real world data. Defaults to FALSE.
 #' @inheritParams create_true_beta
 #' @examples
 #' X = initialise_X(300,30, number_of_variables = 3)
@@ -228,7 +228,7 @@ initialise_X <- function(NN,TT, number_of_variables = number_of_variables_fixedv
 #' scaling_X(X,TRUE, number_of_variables = 3)
 #' @importFrom stats sd
 #' @export
-scaling_X <- function(X, firsttime, use_real_world_data = FALSE, number_of_variables = number_of_variables_fixedvalue) {
+scaling_X <- function(X, firsttime, number_of_variables = number_of_variables_fixedvalue) {
   #
   # replaced this codeblock by a less concise but more clear codeblock
   #
@@ -255,14 +255,15 @@ scaling_X <- function(X, firsttime, use_real_world_data = FALSE, number_of_varia
       #print(paste("sd of variable",k,": Before:",sd(X[,,k])))
       if(mad(X[,,k]) != 0) {
         if(firsttime) {
-          if(use_real_world_data) {
-            #message("Scale with mean and sd of NxT-matrix")
-            X[,,k] = (X[,,k] - mean(X[,,k])) / sd(X[,,k]) #for eclipzdata, we cannot use scale(),
-            #  since there are variables (for example age) that have constant columns, so scale() (which is columnbased) would produce errors
-          } else {
+          # if(use_real_world_data) {
+          # #for eclipzdata, we cannot use scale(),
+          #   #  since there are variables (for example age) that have constant columns, so scale() (which is columnbased) would produce errors
+          #   #message("Scale with mean and sd of NxT-matrix")
+          #   X[,,k] = (X[,,k] - mean(X[,,k])) / sd(X[,,k])
+          # } else {
             #message("Scale with mean and sd (for each t separate)")
             X[,,k] = scale(X[,,k])      #Note that this is column-based (timeindex) scaling!
-          }
+          # }
         } else {
           if(use_robust) {
             #message("Scale with median and mad")
@@ -271,14 +272,15 @@ scaling_X <- function(X, firsttime, use_real_world_data = FALSE, number_of_varia
 
             X[,,k] = (X[,,k] - med) / mad #Note that this is NOT column-based (timeindex) scaling!
           } else {
-            if(use_real_world_data) {
-              #message("Scale with mean and sd of NxT-matrix")
-              X[,,k] = (X[,,k] - mean(X[,,k])) / sd(X[,,k]) #for eclipzdata, we cannot use scale(),
-              #  since there are variables (for example age) that have constant columns, so scale() (which is columnbased) would produce errors
-            } else {
+            # if(use_real_world_data) {
+            #   #for eclipzdata, we cannot use scale(),
+            #   #  since there are variables (for example age) that have constant columns, so scale() (which is columnbased) would produce errors
+            #   #message("Scale with mean and sd of NxT-matrix")
+            #   X[,,k] = (X[,,k] - mean(X[,,k])) / sd(X[,,k])
+            # } else {
               #message("Scale with mean and sd (for each t separate)")
               X[,,k] = scale(X[,,k])      #Note that this is column-based (timeindex) scaling!
-            }
+            # }
           }
         }
 
@@ -301,7 +303,7 @@ scaling_X <- function(X, firsttime, use_real_world_data = FALSE, number_of_varia
 #' X_restructured = restructure_X_to_order_slowN_fastT(X, FALSE,
 #'   number_of_variables = 3, number_vars_estimated = 3)
 #' @export
-restructure_X_to_order_slowN_fastT <- function(X, use_real_world_data,
+restructure_X_to_order_slowN_fastT <- function(X,
                                                number_of_variables = number_of_variables_fixedvalue,
                                                number_vars_estimated = number_vars_estimated_fixedvalue) {
 
@@ -310,11 +312,11 @@ restructure_X_to_order_slowN_fastT <- function(X, use_real_world_data,
       #occurs when only one element in group
       X = array(X, dim=c(1,nrow(X),ncol(X)))
     }
-    if(use_real_world_data) {
-      number_of_vars = number_of_variables
-    } else {
+    # if(use_real_world_data) {
+    #   number_of_vars = number_of_variables
+    # } else {
       number_of_vars = number_vars_estimated
-    }
+    # }
     X_local = matrix(NA, nrow = nrow(X)*ncol(X), ncol = number_of_vars)
     for(k in 1:number_of_vars) {
       X_local[,k] = c(t(X[,,k]))
@@ -531,15 +533,14 @@ initialise_beta <- function(NN,
                             number_of_variables,
                             number_vars_estimated,
                             number_of_groups,
-                            use_real_world_data = FALSE, method_estimate_beta = "individual") {
+                            method_estimate_beta = "individual") {
 
-  #(should be obsolete)stopifnot((homogeneous_coefficients + heterogeneous_coefficients_groups + heterogeneous_coefficients_individuals) == 1)
 
-  if(use_real_world_data) {
-    number_of_vars = number_of_variables
-  } else {
+  # if(use_real_world_data) {
+  #   number_of_vars = number_of_variables
+  # } else {
     number_of_vars = number_vars_estimated
-  }
+  # }
 
   if(number_of_vars > 0) {
     beta_est = matrix(NA, nrow = (number_of_vars + 1), ncol = number_of_groups)
@@ -567,7 +568,6 @@ initialise_beta <- function(NN,
 
         #X needs to be in the form of (NN*TT x p matrix)
         X_special = restructure_X_to_order_slowN_fastT(array(X[indices_group,,], dim = c(length(indices_group), TT, number_of_vars)),
-                                                       use_real_world_data,
                                                        number_of_variables = number_of_variables,
                                                        number_vars_estimated = number_vars_estimated)
 
@@ -584,7 +584,6 @@ initialise_beta <- function(NN,
       #Initialisation in classical case: use of lm instead of ncvreg (as in AndoBai-code)
       for(i in 1:NN) {
         X_special = restructure_X_to_order_slowN_fastT(matrix(X[i,,], ncol = dim(X)[3]),
-                                                       use_real_world_data,
                                                        number_of_variables = number_of_variables,
                                                        number_vars_estimated = number_vars_estimated)
         Y_special = as.vector(t(Y[i,]))
@@ -790,13 +789,13 @@ calculate_errors_virtual_groups <- function(k, LF, virtual_grouped_factor_struct
                                             number_of_variables,
                                             number_of_common_factors,
                                             number_of_group_factors,
-                                            number_vars_estimated = number_vars_estimated_fixedvalue,
-                                            use_real_world_data = use_real_world_data) {
+                                            number_vars_estimated = number_vars_estimated_fixedvalue
+                                            ) {
   E_prep = matrix(NA, nrow = NN, ncol = TT)
 
   a = do_we_estimate_common_factors(number_of_common_factors)
   b = do_we_estimate_group_factors(number_of_group_factors)
-  X = adapt_X_estimating_less_variables(number_of_variables, number_vars_estimated, use_real_world_data)
+  X = adapt_X_estimating_less_variables(number_of_variables, number_vars_estimated)
 
   for(i in 1:NN) {
     #calculate lambda_group for one individual, based on an hypothetical groupmembership
@@ -920,7 +919,7 @@ solveFG <- function(TT, number_of_groups, number_of_group_factors){
 #' @return list: 1st element contains group membership and second element contains the values which are used to determine group membership
 #' @inheritParams estimate_beta
 #' @param use_class_zero if set to TRUE, then individuals with high distance to all possible groups are put in a separate class zero
-#' @param use_real_world_data_inupdateg Parameter to indicate using real world dataset. Defaults to FALSE.
+# @param use_real_world_data_inupdateg Parameter to indicate using real world dataset. Defaults to FALSE.
 #' @param verbose when TRUE, it prints messages
 #' @examples
 #' #This function needs several initial parameters to be initialized in order to work on itself
@@ -954,7 +953,6 @@ solveFG <- function(TT, number_of_groups, number_of_group_factors){
 #' grid = grid_add_variables(grid,beta_est, lambda, comfactor, NN = 300, TT = 30,
 #'   number_of_variables = 3, number_vars_estimated = number_vars_estimated_fixedvalue,
 #'   number_of_groups = 3)
-#' use_real_world_data = FALSE
 #' g_new = update_g(NN = 300, TT = 30, number_of_groups = 3, number_of_variables = 3,
 #'   number_vars_estimated = number_vars_estimated_fixedvalue,
 #'   number_of_group_factors = c(3, 3, 3),
@@ -1005,8 +1003,8 @@ update_g <- function(NN, TT,
                                                                                           number_of_variables,
                                                                                           number_of_common_factors,
                                                                                           number_of_group_factors,
-                                                                                          number_vars_estimated = number_vars_estimated,
-                                                                                          use_real_world_data_inupdateg))
+                                                                                          number_vars_estimated = number_vars_estimated
+                                                                                          ))
   if(verbose) message("ERRORS_VIRTUAL is created")
 
 
@@ -1395,7 +1393,7 @@ determine_beta <- function(string, X_special, Y_special, initialisation = FALSE,
 #'
 #' Update step of algorithm to obtain new estimation for beta. Note that we call it beta_est because beta() exists in base R.
 #' @inheritParams determine_beta
-#' @param use_real_world_data Parameter to indicate using real world dataset. Defaults to FALSE.
+# @param use_real_world_data Parameter to indicate using real world dataset. Defaults to FALSE.
 #' @param NN number of individuals
 #' @param TT length of time series
 #' @param number_of_groups number of groups estimated
@@ -1404,7 +1402,6 @@ determine_beta <- function(string, X_special, Y_special, initialisation = FALSE,
 #' @param number_of_variables number of observable variables
 #' @param number_vars_estimated number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.
 #' @param num_factors_may_vary whether or not the number of groupfactors is constant over all groups or not
-#' @param use_median_of_individual_beta for testing purposes
 #' @return list: 1st element contains matrix (N columns: 1 for each element of the panel data) with estimated beta_est's.
 #' @examples
 #' #This function needs several initial parameters to be initialized in order to work on itself.
@@ -1444,8 +1441,7 @@ estimate_beta <- function(NN = number_of_time_series,
                            number_of_variables = number_of_variables_fixedvalue,
                            number_vars_estimated = number_vars_estimated_fixedvalue,
                            num_factors_may_vary = num_factors_may_vary_fixedvalue,
-                           use_median_of_individual_beta = exists("USE_MEDIAN_OF_INDIVIDUAL_THETA"),
-                           optimize_kappa = FALSE, use_real_world_data = FALSE) {
+                           optimize_kappa = FALSE) {
   if(number_vars_estimated > 0) {
 
 
@@ -1486,7 +1482,6 @@ estimate_beta <- function(NN = number_of_time_series,
 
         #X needs to be in the form of (NN*TT x p matrix)
         X_special = restructure_X_to_order_slowN_fastT(array(X[indices_group,,], dim = c(length(indices_group), TT, number_of_variables)),
-                                                       use_real_world_data,
                                                        number_of_variables = number_of_variables,
                                                        number_vars_estimated = number_vars_estimated)
         #define Y* as Y - FcLc - FgLg:
@@ -1508,14 +1503,13 @@ estimate_beta <- function(NN = number_of_time_series,
     }
     if(method_estimate_beta == "individual") {
 
-      X_local = adapt_X_estimating_less_variables(number_of_variables, number_vars_estimated, use_real_world_data) #makes X smaller when number_vars_estimated < number_of_variables
-      if(use_real_world_data) {
-        number_of_vars = number_of_variables
-      } else {
+      X_local = adapt_X_estimating_less_variables(number_of_variables, number_vars_estimated) #makes X smaller when number_vars_estimated < number_of_variables
+      # if(use_real_world_data) {
+      #   number_of_vars = number_of_variables
+      # } else {
         number_of_vars = number_vars_estimated
-      }
+      # }
       X_special_list = lapply(1:NN, function(x) restructure_X_to_order_slowN_fastT(matrix(X_local[x,,], ncol = number_of_vars),
-                                                                                   use_real_world_data,
                                                                                    number_of_variables = number_of_variables,
                                                                                    number_vars_estimated = number_vars_estimated))
       #helpfunction
@@ -1574,9 +1568,7 @@ estimate_beta <- function(NN = number_of_time_series,
 
       beta_est = matrix(unlist(beta_est),ncol = NN)
 
-      if(use_median_of_individual_beta) {
-        beta_est = use_median_values_beta(beta_est, g, number_of_groups)
-      }
+
 
     }
 
@@ -1587,20 +1579,6 @@ estimate_beta <- function(NN = number_of_time_series,
   }
 }
 
-#' Replace individually estimated values for beta_est by the median value within the estimated group
-#' @param beta_est estimated values of beta
-#' @param g vector with group membership
-#' @inheritParams estimate_beta
-#' @return Updated estimation of beta_est. The format is 1 column for each individual.
-#' @export
-use_median_values_beta <- function(beta_est, g, number_of_groups) {
-  for(group in 1:number_of_groups) {
-    #replace values by the median value within the estimated group
-    medianvalues = apply(beta_est[,g==group], 1, median)
-    beta_est[,g==group] = medianvalues
-  }
-  return(beta_est)
-}
 
 #' Calculates W = Y - X*beta_est. It is used in the initialization step of the algorithm, to initialise the factorstructures.
 #'
@@ -1613,11 +1591,11 @@ calculate_W <- function(beta_est, g ,
                         NN = number_of_time_series,
                         TT = length_of_time_series,
                         number_of_variables = number_of_variables_fixedvalue,
-                        number_vars_estimated = number_vars_estimated_fixedvalue, use_real_world_data = FALSE) {
+                        number_vars_estimated = number_vars_estimated_fixedvalue) {
   W = matrix(0, nrow = NN, ncol = TT) #T x N-matrix in original paper , but I rather define as NxT
 
   #if number_vars_estimated < number_of_variables the obsoleterows in beta_est were already erased -> do the same in X
-  X = adapt_X_estimating_less_variables(number_of_variables, number_vars_estimated, use_real_world_data)
+  X = adapt_X_estimating_less_variables(number_of_variables, number_vars_estimated)
 
   if(number_vars_estimated > 0) {
     if(method_estimate_beta == "homogeneous") {
@@ -1658,12 +1636,12 @@ calculate_Z_common <- function(beta_est, g, lgfg_list,
                                TT = length_of_time_series,
                                number_of_variables = number_of_variables_fixedvalue,
                                number_vars_estimated = number_vars_estimated_fixedvalue,
-                               number_of_group_factors = number_of_group_factors_fixedvalue, use_real_world_data = FALSE
+                               number_of_group_factors = number_of_group_factors_fixedvalue
                                ) {
   Z = matrix(0, nrow = NN, ncol = TT) #T x N-matrix in paper , maar ik definieer liever als NxT
 
   #if number_vars_estimated < number_of_variables the obsolete rows in beta_est were already erased -> do the same in X
-  X = adapt_X_estimating_less_variables(number_of_variables, number_vars_estimated, use_real_world_data)
+  X = adapt_X_estimating_less_variables(number_of_variables, number_vars_estimated)
 
   for(i in 1:NN) {
     y = Y[i,] %>% as.numeric
@@ -1712,7 +1690,6 @@ calculate_Z_group <- function(beta_est, g, lambda, comfactor, group, initialise,
                               TT = length_of_time_series,
                               number_of_variables = number_of_variables_fixedvalue,
                               number_vars_estimated = number_vars_estimated_fixedvalue,
-                              use_real_world_data = FALSE,
                               number_of_common_factors = number_of_common_factors_fixedvalue) {
 
   indices_group = which(g == group)
@@ -1723,7 +1700,7 @@ calculate_Z_group <- function(beta_est, g, lambda, comfactor, group, initialise,
 
   Z = matrix(0, nrow = length(indices_group), ncol = TT) #Nj x T matrix
   #if number_vars_estimated < number_of_variables the obsoleterows in beta_est were already erased -> do the same in X
-  X = adapt_X_estimating_less_variables(number_of_variables, number_vars_estimated, use_real_world_data)
+  X = adapt_X_estimating_less_variables(number_of_variables, number_vars_estimated)
 
   for(i in 1:length(indices_group)) { #loop over the number of elements in the group
     index = indices_group[i]
@@ -2633,13 +2610,12 @@ calculate_error_term_individuals <- function(NN = number_of_time_series,
                                              number_vars_estimated = number_vars_estimated_fixedvalue,
                                              number_of_groups = number_of_groups_fixedvalue,
                                              number_of_group_factors = number_of_group_factors_fixedvalue,
-                                             number_of_common_factors = number_of_common_factors_fixedvalue,
-                                             use_real_world_data = FALSE) {
+                                             number_of_common_factors = number_of_common_factors_fixedvalue) {
   u = matrix(NA,nrow = NN, ncol = TT)
   e = matrix(NA,nrow = NN, ncol = TT)
   lf = t(lambda) %*% comfactor
 
-  X = adapt_X_estimating_less_variables(number_of_variables, number_vars_estimated, use_real_world_data)
+  X = adapt_X_estimating_less_variables(number_of_variables, number_vars_estimated)
   if(number_vars_estimated > 0) {
     if((method_estimate_beta == "homogeneous") | (method_estimate_beta == "group")) {
       xt = sapply(1:NN,
@@ -2875,13 +2851,13 @@ test_alternative_PIC <- function(C, term2, term3, term4) {
 #' Calculates the product of X*beta_true .
 #' @inheritParams estimate_beta
 #' @export
-calculate_XB_true <- function(NN = number_of_time_series, TT = length_of_time_series, number_of_variables = number_of_variables_fixedvalue) {
+calculate_XB_true <- function(NN = number_of_time_series, TT = length_of_time_series, number_of_variables = number_of_variables_fixedvalue, g = g) {
   if(method_estimate_beta == "homogeneous") { #This is only relevant for DGP5 (BramatiCroux)
     XB_true = beta_true[1,] + X[,,1] * beta_true[1,]
     stopifnot(number_of_variables == 1)
   }
   if(method_estimate_beta == "group") {
-    if(number_of_variables > 0 & !use_real_world_data & exists("g")) {
+    if(number_of_variables > 0 & exists("g")) {
       if(!is.na(g)) {
         XB_true = t(sapply(1:NN,
                               function(x) matrix(cbind(1, X[x,,]) %*% beta_true[,g[x]], nrow = 1)))
@@ -2893,7 +2869,7 @@ calculate_XB_true <- function(NN = number_of_time_series, TT = length_of_time_se
     }
   }
   if(method_estimate_beta == "individual") {
-    if(number_of_variables > 0 & !use_real_world_data ) {
+    if(number_of_variables > 0 ) {
       XB_true = (t(sapply(1:NN,
                           function(y) sapply(1:TT, function(x) c(1, X[y,x,1:number_of_variables_fixedvalue]) %*% beta_true[,g_true][,y]))))
     } else {
