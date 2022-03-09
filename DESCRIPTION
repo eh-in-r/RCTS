@@ -35,6 +35,9 @@ Imports:
   robustbase,
   cellWise,
   tsqn,
-  rlang
+  rlang,
+  Rdpack
+RdMacros: 
+  Rdpack
 Depends: 
     R (>= 3.6.0)
