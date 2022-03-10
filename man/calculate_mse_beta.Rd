@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{calculate_mse_beta}
 \alias{calculate_mse_beta}
-\title{Function to calculate MSE of beta_est.}
+\title{Function to calculate the mean squared error of beta_est.}
 \usage{
 calculate_mse_beta(
   beta_est,
@@ -30,7 +30,6 @@ calculate_mse_beta(
 \item{dgp1_AB_local}{gives information about which DGP we use; TRUE of FALSE}
 }
 \description{
-It is calculated with the formula of AndoBai2017: supplementary: p19.
-Heterogeneous_coefficients_individuals is the default case.
+It is calculated with the formula on p19 of the supplement of \insertCite{Ando2017;textual}{RCTS}.
 For DGP 1 & 2: When the true number of variables in X is not equal to the standard of 3 it currently returns NA.
 }

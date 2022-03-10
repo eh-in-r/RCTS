@@ -13,9 +13,7 @@ estimate_beta(
   number_of_variables = number_of_variables_fixedvalue,
   number_vars_estimated = number_vars_estimated_fixedvalue,
   num_factors_may_vary = num_factors_may_vary_fixedvalue,
-  use_median_of_individual_beta = exists("USE_MEDIAN_OF_INDIVIDUAL_THETA"),
-  optimize_kappa = FALSE,
-  use_real_world_data = FALSE
+  optimize_kappa = FALSE
 )
 }
 \arguments{
@@ -35,11 +33,7 @@ estimate_beta(
 
 \item{num_factors_may_vary}{whether or not the number of groupfactors is constant over all groups or not}
 
-\item{use_median_of_individual_beta}{for testing purposes}
-
 \item{optimize_kappa}{indicates if kappa has to be optimized or not (only relevant for the classical algorithm); defaults to FALSE}
-
-\item{use_real_world_data}{Parameter to indicate using real world dataset. Defaults to FALSE.}
 }
 \value{
 list: 1st element contains matrix (N columns: 1 for each element of the panel data) with estimated beta_est's.
@@ -64,12 +58,10 @@ lambda = matrix(0,nrow=1,ncol=300)
 comfactor = matrix(0,nrow=1,ncol=30)
 use_robust = TRUE
 #Choose how coefficients of the observable variables are estimated
-homogeneous_coefficients = FALSE
-heterogeneous_coefficients_groups = FALSE
-heterogeneous_coefficients_individuals = TRUE
+method_estimate_beta = "individual"
 dgp1_AB = FALSE
 dgp1_spread_group_centers = TRUE
-use_macropca_instead_of_cz = TRUE
+method_estimate_factors = "macro"
 beta_est = estimate_beta(NN = 300, TT = 30,
   number_of_groups = 3, number_of_group_factors = c(3, 3, 3), number_of_common_factors = 0,
  number_of_variables = 3,number_vars_estimated = 3, num_factors_may_vary = FALSE)[[1]]

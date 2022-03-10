@@ -7,7 +7,8 @@
 calculate_XB_true(
   NN = number_of_time_series,
   TT = length_of_time_series,
-  number_of_variables = number_of_variables_fixedvalue
+  number_of_variables = number_of_variables_fixedvalue,
+  g = g
 )
 }
 \arguments{
@@ -16,6 +17,8 @@ calculate_XB_true(
 \item{TT}{length of time series}
 
 \item{number_of_variables}{number of observable variables}
+
+\item{g}{estimated group membership}
 }
 \description{
 Calculates the product of X*beta_true .

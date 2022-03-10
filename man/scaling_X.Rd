@@ -4,20 +4,13 @@
 \alias{scaling_X}
 \title{Scaling of X.}
 \usage{
-scaling_X(
-  X,
-  firsttime,
-  use_real_world_data = FALSE,
-  number_of_variables = number_of_variables_fixedvalue
-)
+scaling_X(X, firsttime, number_of_variables = number_of_variables_fixedvalue)
 }
 \arguments{
 \item{X}{input}
 
 \item{firsttime}{Scaling before generating Y and before adding outliers: this is always with mean and sd. If this is FALSE, it indicates that
 we are using the function for a second time, after adding the outliers. In the robust case it uses median and MAD, otherwise again mean and sd.}
-
-\item{use_real_world_data}{Parameter to indicate using real world data. Defaults to FALSE.}
 
 \item{number_of_variables}{number of observable variables}
 }

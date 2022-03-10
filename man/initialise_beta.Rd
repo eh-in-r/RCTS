@@ -10,7 +10,7 @@ initialise_beta(
   number_of_variables,
   number_vars_estimated,
   number_of_groups,
-  use_real_world_data = FALSE
+  method_estimate_beta = "individual"
 )
 }
 \arguments{
@@ -24,7 +24,7 @@ initialise_beta(
 
 \item{number_of_groups}{number of groups}
 
-\item{use_real_world_data}{Parameter to indicate using real world dataset. Defaults to FALSE.}
+\item{method_estimate_beta}{"individual" #can be "homogeneous", "group" or "individual"}
 }
 \description{
 Note: this needs to be called before the definition of grid.
@@ -46,9 +46,7 @@ comfactor = matrix(0,nrow=1,ncol=30)
 
 use_robust = TRUE
 #Choose how coefficients of the observable are estimated
-homogeneous_coefficients = FALSE
-heterogeneous_coefficients_groups = FALSE
-heterogeneous_coefficients_individuals = TRUE #estimating beta_i for every individual
+method_estimate_beta = "individual" #estimating beta_i for every individual
 dgp1_AB = FALSE
 dgp1_spread_group_centers = TRUE #this value is only relevant if dgp1_AB ise set to TRUE
 beta_init = initialise_beta(NN = 300, TT = 30,

@@ -8,8 +8,7 @@ estimate_factor(
   beta_est,
   g,
   lgfg_list,
-  use_macropca_instead_of_cz,
-  estimate_factors_with_pertMM,
+  method_estimate_factors,
   initialise = FALSE,
   NN = number_of_time_series,
   TT = length_of_time_series,
@@ -20,15 +19,13 @@ estimate_factor(
 )
 }
 \arguments{
-\item{beta_est}{beta_est}
+\item{beta_est}{estimated values of beta}
 
 \item{g}{vector with group membership}
 
 \item{lgfg_list}{This is a list (length number of groups) containing FgLg for every group.}
 
-\item{use_macropca_instead_of_cz}{If TRUE, then factors are estimated robustly with macropca (or pertMM), else with class-zero-method.}
-
-\item{estimate_factors_with_pertMM}{indicates that factors are estimated with pertMM}
+\item{method_estimate_factors}{defines method of robust estimaton of the factors: "macro", "pertmm" or "cz"}
 
 \item{initialise}{boolean}
 

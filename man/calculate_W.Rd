@@ -10,12 +10,11 @@ calculate_W(
   NN = number_of_time_series,
   TT = length_of_time_series,
   number_of_variables = number_of_variables_fixedvalue,
-  number_vars_estimated = number_vars_estimated_fixedvalue,
-  use_real_world_data = FALSE
+  number_vars_estimated = number_vars_estimated_fixedvalue
 )
 }
 \arguments{
-\item{beta_est}{beta_est}
+\item{beta_est}{estimated values of beta}
 
 \item{g}{vector with group membership}
 
@@ -26,8 +25,6 @@ calculate_W(
 \item{number_of_variables}{number of observable variables}
 
 \item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
-
-\item{use_real_world_data}{Parameter to indicate using real world dataset. Defaults to FALSE.}
 }
 \value{
 NxT matrix

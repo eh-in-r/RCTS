@@ -9,12 +9,11 @@ calculate_virtual_factor_and_lambda_group(
   solve_FG_FG_times_FG,
   NN_local,
   TT_local,
-  use_macropca_instead_of_cz_local,
+  method_estimate_factors_local,
   number_of_variables_local = number_of_variables_fixedvalue,
   number_vars_estimated_local = number_vars_estimated_fixedvalue,
   number_of_group_factors_local = number_of_group_factors_fixedvalue,
   number_of_common_factors_local = number_of_common_factors_fixedvalue,
-  use_real_world_data_local = use_real_world_data,
   verbose = FALSE
 )
 }
@@ -27,7 +26,7 @@ calculate_virtual_factor_and_lambda_group(
 
 \item{TT_local}{T}
 
-\item{use_macropca_instead_of_cz_local}{If TRUE, then factors are estimated robustly with macropca (or pertMM), else with class-zero-method.}
+\item{method_estimate_factors_local}{specifies the robust algorithm to estimate factors: default is "macro".}
 
 \item{number_of_variables_local}{number of observable variables}
 
@@ -36,8 +35,6 @@ calculate_virtual_factor_and_lambda_group(
 \item{number_of_group_factors_local}{number of group factors to be estimated}
 
 \item{number_of_common_factors_local}{number of common factors to be estimated}
-
-\item{use_real_world_data_local}{Parameter to indicate using real world data. Defaults to FALSE.}
 
 \item{verbose}{when TRUE, it prints messages}
 }

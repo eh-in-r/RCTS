@@ -8,24 +8,23 @@ calculate_Z_common(
   beta_est,
   g,
   lgfg_list,
-  estimate_factors_with_pertMM,
+  method_estimate_factors,
   initialise = FALSE,
   NN = number_of_time_series,
   TT = length_of_time_series,
   number_of_variables = number_of_variables_fixedvalue,
   number_vars_estimated = number_vars_estimated_fixedvalue,
-  number_of_group_factors = number_of_group_factors_fixedvalue,
-  use_real_world_data = FALSE
+  number_of_group_factors = number_of_group_factors_fixedvalue
 )
 }
 \arguments{
-\item{beta_est}{beta_est}
+\item{beta_est}{estimated values of beta}
 
 \item{g}{vector with group membership}
 
 \item{lgfg_list}{This is a list (length number of groups) containing FgLg for every group.}
 
-\item{estimate_factors_with_pertMM}{indicates that factors are estimated with pertMM}
+\item{method_estimate_factors}{defines method of robust estimaton of the factors: "macro", "pertmm" or "cz"}
 
 \item{initialise}{boolean}
 
@@ -38,8 +37,6 @@ calculate_Z_common(
 \item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
 
 \item{number_of_group_factors}{number of groupfactors to be estimated}
-
-\item{use_real_world_data}{Parameter to indicate using real world dataset. Defaults to FALSE.}
 }
 \description{
 Calculates Z = Y - X*beta_est - LgFg. It is used in the estimate of the common factorstructure.

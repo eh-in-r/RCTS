@@ -10,7 +10,7 @@ calculate_lambda_group(
   g,
   lambda,
   comfactor,
-  use_macropca_instead_of_cz,
+  method_estimate_factors,
   initialise = FALSE,
   UPDATE1 = update1,
   UPDATE2 = update2,
@@ -24,7 +24,7 @@ calculate_lambda_group(
 )
 }
 \arguments{
-\item{beta_est}{beta_est}
+\item{beta_est}{estimated values of beta}
 
 \item{factor_group}{group factors}
 
@@ -34,7 +34,7 @@ calculate_lambda_group(
 
 \item{comfactor}{common factors}
 
-\item{use_macropca_instead_of_cz}{If TRUE, then factors are estimated robustly with macropca (or pertMM), else with class-zero-method.}
+\item{method_estimate_factors}{defines method of robust estimaton of the factors: "macro", "pertmm" or "cz"}
 
 \item{initialise}{boolean}
 

@@ -21,7 +21,7 @@ OF_vectorized3(
 \arguments{
 \item{group_memberships}{Vector containing the group membership for all individuals.}
 
-\item{beta_est}{beta_est}
+\item{beta_est}{estimated values of beta}
 
 \item{lc}{loadings of estimated common factors}
 

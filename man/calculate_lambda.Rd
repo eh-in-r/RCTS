@@ -9,8 +9,7 @@ calculate_lambda(
   comfactor,
   g,
   lgfg_list,
-  use_macropca_instead_of_cz,
-  efwp = estimate_factors_with_pertMM,
+  method_estimate_factors,
   initialise = FALSE,
   NN = number_of_time_series,
   TT = length_of_time_series,
@@ -20,7 +19,7 @@ calculate_lambda(
 )
 }
 \arguments{
-\item{beta_est}{beta_est}
+\item{beta_est}{estimated values of beta}
 
 \item{comfactor}{common factors}
 
@@ -28,9 +27,7 @@ calculate_lambda(
 
 \item{lgfg_list}{This is a list (length number of groups) containing FgLg for every group.}
 
-\item{use_macropca_instead_of_cz}{If TRUE, then factors are estimated robustly with macropca (or pertMM), else with class-zero-method.}
-
-\item{efwp}{indicates that factors are estimated with pertMM}
+\item{method_estimate_factors}{defines method of robust estimaton of the factors: "macro", "pertmm" or "cz"}
 
 \item{initialise}{boolean}
 

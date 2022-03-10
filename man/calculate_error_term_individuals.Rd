@@ -11,8 +11,7 @@ calculate_error_term_individuals(
   number_vars_estimated = number_vars_estimated_fixedvalue,
   number_of_groups = number_of_groups_fixedvalue,
   number_of_group_factors = number_of_group_factors_fixedvalue,
-  number_of_common_factors = number_of_common_factors_fixedvalue,
-  use_real_world_data = FALSE
+  number_of_common_factors = number_of_common_factors_fixedvalue
 )
 }
 \arguments{
@@ -29,8 +28,6 @@ calculate_error_term_individuals(
 \item{number_of_group_factors}{number of groupfactors to be estimated}
 
 \item{number_of_common_factors}{number of common factors to be estimated}
-
-\item{use_real_world_data}{Parameter to indicate using real world dataset. Defaults to FALSE.}
 }
 \value{
 NxT matrix

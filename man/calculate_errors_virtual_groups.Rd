@@ -13,8 +13,7 @@ calculate_errors_virtual_groups(
   number_of_variables,
   number_of_common_factors,
   number_of_group_factors,
-  number_vars_estimated = number_vars_estimated_fixedvalue,
-  use_real_world_data = use_real_world_data
+  number_vars_estimated = number_vars_estimated_fixedvalue
 )
 }
 \arguments{
@@ -35,8 +34,6 @@ calculate_errors_virtual_groups(
 \item{number_of_group_factors}{number of groupfactors to be estimated}
 
 \item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
-
-\item{use_real_world_data}{Parameter to indicate using real world dataset. Defaults to FALSE.}
 }
 \value{
 NxT matrix with the errorterms (=dataset minus the estimated factorstructure and minus X*beta)

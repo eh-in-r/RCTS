@@ -16,9 +16,7 @@ generate_Y(
   lambda_true,
   comfactor_true,
   epsilon,
-  ando_bai = FALSE,
-  ando_bai_2017 = FALSE,
-  use_real_world_data = FALSE,
+  X,
   number_of_variables = number_of_variables_fixedvalue
 )
 }
@@ -45,11 +43,7 @@ generate_Y(
 
 \item{epsilon}{NN x TT-matrix containing the error term}
 
-\item{ando_bai}{loads Ando/Bai-dataset; only for testing purposes. Defaults to FALSE.}
-
-\item{ando_bai_2017}{loads Ando/Bai-dataset; only for testing purposes. Defaults to FALSE.}
-
-\item{use_real_world_data}{Parameter to indicate using real world dataset. Defaults to FALSE.}
+\item{X}{dataframe with the observed variables}
 
 \item{number_of_variables}{number of observable variables}
 }

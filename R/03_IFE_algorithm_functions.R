@@ -300,7 +300,7 @@ scaling_X <- function(X, firsttime, number_of_variables = number_of_variables_fi
 #' @inheritParams estimate_beta
 #' @examples
 #' X = initialise_X(300, 30, number_of_variables = 3)
-#' X_restructured = restructure_X_to_order_slowN_fastT(X, FALSE,
+#' X_restructured = restructure_X_to_order_slowN_fastT(X,
 #'   number_of_variables = 3, number_vars_estimated = 3)
 #' @export
 restructure_X_to_order_slowN_fastT <- function(X,
@@ -340,6 +340,7 @@ restructure_X_to_order_slowN_fastT <- function(X,
 #' @param S true number of groups
 #' @param true_number_of_group_factors vector with as length the number of groups, where each element is the true number of groupfactors of that group.
 #' @inheritParams estimate_beta
+#' @param g_true true group membership
 #' @return list: first element contains true groupfactors and second element contains true groupfactor loadings
 #' @importFrom dplyr mutate
 #' @examples
@@ -423,8 +424,9 @@ generate_grouped_factorstructure <- function(S, true_number_of_group_factors, TT
 #' @param lambda_true loadings of the common factors
 #' @param comfactor_true common factors
 #' @param epsilon NN x TT-matrix containing the error term
-#' @param ando_bai loads Ando/Bai-dataset; only for testing purposes. Defaults to FALSE.
-#' @param ando_bai_2017 loads Ando/Bai-dataset; only for testing purposes. Defaults to FALSE.
+#' @param X dataframe with the observed variables
+# @param ando_bai loads Ando/Bai-dataset; only for testing purposes. Defaults to FALSE.
+# @param ando_bai_2017 loads Ando/Bai-dataset; only for testing purposes. Defaults to FALSE.
 #' @inheritParams create_true_beta
 #' @return N x T matrix
 #' @export
@@ -663,7 +665,7 @@ initialise_beta <- function(NN,
 #' these are robust.
 #' @param group number of groups
 #' @param solve_FG_FG_times_FG This is the same as groupfactor / T. It is only used in the Classical approach
-#' @param method_estimate_factors_local If TRUE, then factors are estimated robustly with macropca (or pertMM), else with class-zero-method.
+#' @param method_estimate_factors_local specifies the robust algorithm to estimate factors: default is "macro".
 #' @param NN_local N
 #' @param TT_local T
 #' @param number_of_variables_local number of observable variables
@@ -918,8 +920,9 @@ solveFG <- function(TT, number_of_groups, number_of_group_factors){
 #'
 #' @return list: 1st element contains group membership and second element contains the values which are used to determine group membership
 #' @inheritParams estimate_beta
-#' @param use_class_zero if set to TRUE, then individuals with high distance to all possible groups are put in a separate class zero
+# @param use_class_zero if set to TRUE, then individuals with high distance to all possible groups are put in a separate class zero
 # @param use_real_world_data_inupdateg Parameter to indicate using real world dataset. Defaults to FALSE.
+#' @inheritParams estimate_factor
 #' @param verbose when TRUE, it prints messages
 #' @examples
 #' #This function needs several initial parameters to be initialized in order to work on itself
@@ -944,12 +947,12 @@ solveFG <- function(TT, number_of_groups, number_of_group_factors){
 #' method_estimate_beta = "individual"
 #' dgp1_AB = FALSE
 #' dgp1_spread_group_centers = TRUE
-#' use_macropca_instead_of_cz = TRUE
+#' method_estimate_factors = "macro"
 #' number_vars_estimated_fixedvalue = 3
 #' beta_est = estimate_beta(NN = 300, TT = 30,
 #'   number_of_groups = 3, number_of_group_factors = c(3, 3, 3), number_of_common_factors = 0,
 #'   number_of_variables = 3, number_vars_estimated = number_vars_estimated_fixedvalue,
-#'   num_factors_may_vary = FALSE)[[1]]
+#'   num_factors_may_vary = TRUE)[[1]]
 #' grid = grid_add_variables(grid,beta_est, lambda, comfactor, NN = 300, TT = 30,
 #'   number_of_variables = 3, number_vars_estimated = number_vars_estimated_fixedvalue,
 #'   number_of_groups = 3)
@@ -976,12 +979,11 @@ update_g <- function(NN, TT,
 
     #we calculate FgLg (groupfactors times grouploadings) for all the possible groups to which individual i could end up:
 
-    virtual_grouped_factor_structure = lapply(1:number_of_groups, function(y) calculate_virtual_factor_and_lambda_group(y, solve_FG_FG_times_FG, NN, TT,
+    virtual_grouped_factor_structure = lapply(1:number_of_groups, function(y) calculate_virtual_factor_and_lambda_group(y, solve_FG_FG_times_FG, NN, TT, method_estimate_factors,
                                                                                                                         number_of_variables_local = number_of_variables,
                                                                                                                         number_vars_estimated_local = number_vars_estimated,
                                                                                                                         number_of_group_factors_local = number_of_group_factors,
-                                                                                                                        number_of_common_factors_local = number_of_common_factors,
-                                                                                                                        method_estimate_factors_local = method_estimate_factors #,
+                                                                                                                        number_of_common_factors_local = number_of_common_factors #,
                                                                                                                         #use_real_world_data_local = use_real_world_data_inupdateg
                                                                                                                         ))
     if(verbose) message("virtual_grouped_factor_structure is created")
@@ -1424,7 +1426,7 @@ determine_beta <- function(string, X_special, Y_special, initialisation = FALSE,
 #' method_estimate_beta = "individual"
 #' dgp1_AB = FALSE
 #' dgp1_spread_group_centers = TRUE
-#' use_macropca_instead_of_cz = TRUE
+#' method_estimate_factors = "macro"
 #' beta_est = estimate_beta(NN = 300, TT = 30,
 #'   number_of_groups = 3, number_of_group_factors = c(3, 3, 3), number_of_common_factors = 0,
 #'  number_of_variables = 3,number_vars_estimated = 3, num_factors_may_vary = FALSE)[[1]]
@@ -1624,8 +1626,8 @@ calculate_W <- function(beta_est, g ,
 
 #' Calculates Z = Y - X*beta_est - LgFg. It is used in the estimate of the common factorstructure.
 #' @inheritParams calculate_W
+#' @inheritParams estimate_factor
 #' @param lgfg_list This is a list (length number of groups) containing FgLg for every group.
-#' @param method_estimate_factors indicates that factors are estimated with pertMM
 #' @param initialise boolean
 #' @inheritParams estimate_beta
 #' @export
@@ -1953,7 +1955,7 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20, verbose_robustpca 
 #' @inheritParams calculate_W
 #' @param lgfg_list This is a list (length number of groups) containing FgLg for every group.
 #' @param initialise boolean
-#' @param method_estimate_factors macro, pertmm or cz
+#' @param method_estimate_factors defines method of robust estimaton of the factors: "macro", "pertmm" or "cz"
 #' @inheritParams estimate_beta
 #' @inheritParams calculate_virtual_factor_and_lambda_group
 #' @inheritParams calculate_Z_common
@@ -2850,6 +2852,7 @@ test_alternative_PIC <- function(C, term2, term3, term4) {
 
 #' Calculates the product of X*beta_true .
 #' @inheritParams estimate_beta
+#' @param g estimated group membership
 #' @export
 calculate_XB_true <- function(NN = number_of_time_series, TT = length_of_time_series, number_of_variables = number_of_variables_fixedvalue, g = g) {
   if(method_estimate_beta == "homogeneous") { #This is only relevant for DGP5 (BramatiCroux)
@@ -2945,7 +2948,7 @@ calculate_XB_estimated <- function(NN = number_of_time_series, TT = length_of_ti
 #' @param true_number_of_groups true number of groups
 #' @param true_number_of_group_factors true number of group factors for each group
 #' @param true_number_of_common_factors true number of common factors
-#' @param using_bramaticroux parameter to indicate that we are using data generated with dgp 5
+# @param using_bramaticroux parameter to indicate that we are using data generated with dgp 5
 #' @inheritParams estimate_beta
 #' @inheritParams generate_Y
 #' @param dgp1_AB_local gives information about which DGP we use; TRUE of FALSE
@@ -3011,7 +3014,7 @@ calculate_FL_group_estimated <- function(lg = lambda_group, fg = factor_group,
 
 #' Function to calculate the mean squared error of beta_est.
 #'
-#' It is calculated with the formula on p19 of the supplement of \insertCite{Ando2017;textual}{Rdpack}.
+#' It is calculated with the formula on p19 of the supplement of \insertCite{Ando2017;textual}{RCTS}.
 #' For DGP 1 & 2: When the true number of variables in X is not equal to the standard of 3 it currently returns NA.
 #' @param beta_est estimated values of beta
 #' @param beta_true true values of beta
@@ -3309,10 +3312,16 @@ adapt_allpic_with_sigma2maxmodel <- function(all_pic, sigma2_max_model, UPDATE1 
   return(all_pic)
 }
 
-#' This function creates an instance of DGP 2, as defined in \insertCite{BoudtHeyndels2021;textual}{Rdpack}.
+#' This function creates an instance of DGP 2, as defined in \insertCite{BoudtHeyndels2021;textual}{RCTS}.
 #'
 #' The output is a dataframe with N (amount of time series) rows and T (length of time series) columns.
 #' @importFrom Rdpack reprompt
+#' @param N number of time series
+#' @param TT length of time series
+#' @param true_number_of_groups true number of groups
+#' @param number_external_variables number of available observed variables
+#' @param true_number_of_common_factors true number of common_factors
+#' @param true_number_of_group_factors true number of group factors
 #' @export
 create_data_dgp2 <- function(N, TT, true_number_of_groups = 3, number_external_variables = 3, true_number_of_common_factors = 0, true_number_of_group_factors = c(3,3,3)) {
   #true group membership
@@ -3395,7 +3404,7 @@ make_subsamples <- function(Y, X, number_of_time_series_fulldata, length_of_time
 #' @param beta_est estimated values of beta
 #' @param use_robust TRUE or FALSE: defines using the classical, or one of the robust algorithms
 #' @param method_estimate_beta defines how beta is estimated. Default case is an estimated beta for each individual.
-#' @param method_estimate_factors specifies the robust algorithm: default is "macro". The value is not used when use_robust is set to FALSE.
+#' @param method_estimate_factors specifies the robust algorithm to estimate factors: default is "macro". The value is not used when use_robust is set to FALSE.
 #' @export
 define_object_for_initial_clustering_macropca <- function(Y, beta_est, use_robust = TRUE, method_estimate_beta = "individual", method_estimate_factors = "macro") {
   length_of_time_series = ncol(Y)
@@ -3433,6 +3442,8 @@ define_object_for_initial_clustering_macropca <- function(Y, beta_est, use_robus
 #' @param df dataframe to cluster
 #' @param k the desired number of groups
 #' @param max_percent_outliers_tkmeans The proportion of observations to be trimmed.
+#' @importFrom stats kmeans
+#' @importFrom tclust tkmeans
 #' @export
 initialise_clustering <- function(df, use_robust, k, max_percent_outliers_tkmeans = 0) {
   #in the kmeans-call NA's are not allowed:
@@ -3494,20 +3505,23 @@ initialise_clustering <- function(df, use_robust, k, max_percent_outliers_tkmean
 #' This is a short version of initialise_commonfactorstructure() which only contains implementations for robust macropca case and classical case.
 #'
 #' @inheritParams define_object_for_initial_clustering_macropca
+#' @inheritParams generate_Y
+#' @param g estimated group membership
+#' @param NCF_est number of estimated common factors
 #' @export
-initialise_commonfactorstructure_macropca <- function(Y, beta_est, g, method_estimate_beta, method_estimate_factors, number_of_common_factors_fixedvalue) {
+initialise_commonfactorstructure_macropca <- function(Y, beta_est, g, method_estimate_beta, method_estimate_factors, NCF_est) {
 
   stopifnot(method_estimate_beta == "individual")
   stopifnot(method_estimate_factors == "macro")
   number_of_time_series = nrow(Y)
   length_of_time_series = ncol(Y)
   if((method_estimate_beta == "individual")) {
-    if(number_of_common_factors_fixedvalue == 0) {
+    if(NCF_est == 0) {
       comfactor = t(matrix(rep(0, length_of_time_series)))
       lambda = t(matrix(rep(0, number_of_time_series)))
     } else {
-      comfactor = estimate_factor(beta_est, g, NA, use_macropca_instead_of_cz, estimate_factors_with_pertMM, initialise = TRUE)[[1]][1:number_of_common_factors_fixedvalue,, drop=FALSE]
-      lambda = calculate_lambda(beta_est, comfactor, g, NA, use_macropca_instead_of_cz, initialise = TRUE)[1:number_of_common_factors_fixedvalue,, drop=FALSE]
+      comfactor = estimate_factor(beta_est, g, NA, method_estimate_factors, initialise = TRUE)[[1]][1:NCF_est,, drop=FALSE]
+      lambda = calculate_lambda(beta_est, comfactor, g, NA, method_estimate_factors, initialise = TRUE)[1:NCF_est,, drop=FALSE]
 
     }
   }

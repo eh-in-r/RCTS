@@ -12,8 +12,7 @@ update_g(
   number_vars_estimated = number_vars_estimated_fixedvalue,
   number_of_group_factors = number_of_group_factors_fixedvalue,
   number_of_common_factors = number_of_common_factors_fixedvalue,
-  use_class_zero = FALSE,
-  use_real_world_data_inupdateg = use_real_world_data,
+  method_estimate_factors,
   verbose = FALSE
 )
 }
@@ -32,9 +31,7 @@ update_g(
 
 \item{number_of_common_factors}{number of common factors to be estimated}
 
-\item{use_class_zero}{if set to TRUE, then individuals with high distance to all possible groups are put in a separate class zero}
-
-\item{use_real_world_data_inupdateg}{Parameter to indicate using real world dataset. Defaults to FALSE.}
+\item{method_estimate_factors}{defines method of robust estimaton of the factors: "macro", "pertmm" or "cz"}
 
 \item{verbose}{when TRUE, it prints messages}
 }
@@ -63,21 +60,18 @@ comfactor = matrix(0,nrow=1,ncol=30)
 use_robust = TRUE
 grid = expand.grid(1:300,1:30)
 #Choose how coefficients of the observable are estimated
-homogeneous_coefficients = FALSE
-heterogeneous_coefficients_groups = FALSE
-heterogeneous_coefficients_individuals = TRUE
+method_estimate_beta = "individual"
 dgp1_AB = FALSE
 dgp1_spread_group_centers = TRUE
-use_macropca_instead_of_cz = TRUE
+method_estimate_factors = "macro"
 number_vars_estimated_fixedvalue = 3
 beta_est = estimate_beta(NN = 300, TT = 30,
   number_of_groups = 3, number_of_group_factors = c(3, 3, 3), number_of_common_factors = 0,
   number_of_variables = 3, number_vars_estimated = number_vars_estimated_fixedvalue,
-  num_factors_may_vary = FALSE)[[1]]
+  num_factors_may_vary = TRUE)[[1]]
 grid = grid_add_variables(grid,beta_est, lambda, comfactor, NN = 300, TT = 30,
   number_of_variables = 3, number_vars_estimated = number_vars_estimated_fixedvalue,
   number_of_groups = 3)
-use_real_world_data = FALSE
 g_new = update_g(NN = 300, TT = 30, number_of_groups = 3, number_of_variables = 3,
   number_vars_estimated = number_vars_estimated_fixedvalue,
   number_of_group_factors = c(3, 3, 3),

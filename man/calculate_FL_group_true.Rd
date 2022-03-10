@@ -13,9 +13,7 @@ calculate_FL_group_true(
   true_number_of_group_factors,
   true_number_of_common_factors,
   num_factors_may_vary,
-  use_real_world_data = FALSE,
-  dgp1_AB_local = dgp1_AB,
-  using_bramaticroux = exists("DGP_Bramati_Croux")
+  dgp1_AB_local = dgp1_AB
 )
 }
 \arguments{
@@ -35,11 +33,7 @@ calculate_FL_group_true(
 
 \item{num_factors_may_vary}{whether or not the number of groupfactors is constant over all groups or not}
 
-\item{use_real_world_data}{Parameter to indicate using real world dataset. Defaults to FALSE.}
-
 \item{dgp1_AB_local}{gives information about which DGP we use; TRUE of FALSE}
-
-\item{using_bramaticroux}{parameter to indicate that we are using data generated with dgp 5}
 }
 \value{
 list with NjxT matrices

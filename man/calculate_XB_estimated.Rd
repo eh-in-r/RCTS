@@ -8,8 +8,7 @@ calculate_XB_estimated(
   NN = number_of_time_series,
   TT = length_of_time_series,
   number_of_variables = number_of_variables_fixedvalue,
-  number_vars_estimated = number_vars_estimated_fixedvalue,
-  use_real_world_data = FALSE
+  number_vars_estimated = number_vars_estimated_fixedvalue
 )
 }
 \arguments{
@@ -20,8 +19,6 @@ calculate_XB_estimated(
 \item{number_of_variables}{number of observable variables}
 
 \item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
-
-\item{use_real_world_data}{Parameter to indicate using real world dataset. Defaults to FALSE.}
 }
 \description{
 Calculates (the estimated value of) the matrix X*beta_est.

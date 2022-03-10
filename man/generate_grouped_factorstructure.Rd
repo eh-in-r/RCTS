@@ -7,7 +7,8 @@
 generate_grouped_factorstructure(
   S,
   true_number_of_group_factors,
-  TT = length_of_time_series_fulldata
+  TT = length_of_time_series_fulldata,
+  g_true
 )
 }
 \arguments{
@@ -16,6 +17,8 @@ generate_grouped_factorstructure(
 \item{true_number_of_group_factors}{vector with as length the number of groups, where each element is the true number of groupfactors of that group.}
 
 \item{TT}{length of time series}
+
+\item{g_true}{true group membership}
 }
 \value{
 list: first element contains true groupfactors and second element contains true groupfactor loadings
@@ -29,5 +32,5 @@ factors ~ N(j * FGR_FACTOR, FGR_FACTOR_sd) -> default case will be N(j,1)
 library(tidyverse)
 #For 3 groups, each with 3 groupfactors:
 g_true = ceiling(runif(300) * 3)
-generate_grouped_factorstructure(3, c(3, 3, 3), TT = 30)
+generate_grouped_factorstructure(3, c(3, 3, 3), TT = 30, g_true)
 }
