@@ -1,15 +1,16 @@
 Package: RCTS 
 Title: RCTS (Robust Clustering of Time Series) contains functions to cluster time series while resisting outliers
-Version: 0.1
+Version: 0.2
 Authors@R: 
     person(given = "Ewoud",
            family = "Heyndels",
            role = c("aut", "cre"),
            email = "ewoud.heyndels@vub.be",
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: RCTS has the functionality to cluster time series using the classical and robust interactive fixed effects framework from Ando and Bai (Clustering huge number of financial time series: A panel data approach with high-dimensional predictors and factor structures (2017)) and Boudt and Heyndels (Robust interactive fixed effects (2021).
-  The method iteratively updates beta (coefficients of the observable variables), group membership, and the latent factors (which can be common and group-specific) along
-  with their loadings. 
+Description: RCTS has the functionality to cluster time series using the classical and robust interactive fixed effects framework. 
+  The classical framework is based on Ando & Bai (2017) (Clustering huge number of financial time series: A panel data approach with high-dimensional predictors and factor structures) and Boudt & Heyndels (2022) (Robust interactive fixed effects).
+  The method iteratively updates beta (the coefficients of the observable variables), group membership, and the latent factors (which can be common and group-specific) along
+  with their loadings. The number of groups and factors can be estimated if they are unknown.
 License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: true
@@ -23,6 +24,7 @@ Imports:
   purrr,
   stringr,
   tidyr,
+  broom,
   magrittr,
   tidyselect,
   ggplot2,

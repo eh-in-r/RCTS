@@ -9,6 +9,7 @@ calculate_obj_for_g(
   k,
   ERRORS_VIRTUAL,
   rho_parameters,
+  use_robust,
   TT = length_of_time_series
 )
 }
@@ -20,6 +21,8 @@ calculate_obj_for_g(
 \item{ERRORS_VIRTUAL}{list with errors for each possible group}
 
 \item{rho_parameters}{median and madn of the calculated error term}
+
+\item{use_robust}{robust or classical estimation}
 
 \item{TT}{T}
 }

@@ -7,8 +7,8 @@
 adapt_allpic_with_sigma2maxmodel(
   all_pic,
   sigma2_max_model,
-  UPDATE1 = update1,
-  UPDATE2 = update2
+  UPDATE1 = FALSE,
+  UPDATE2 = FALSE
 )
 }
 \arguments{

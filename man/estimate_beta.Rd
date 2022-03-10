@@ -5,18 +5,40 @@
 \title{Estimates beta.}
 \usage{
 estimate_beta(
-  NN = number_of_time_series,
-  TT = length_of_time_series,
+  use_robust,
+  Y,
+  X,
+  lambda_group,
+  factor_group,
+  lambda,
+  comfactor,
+  NN = nrow(Y),
+  TT = ncol(Y),
   number_of_groups = number_of_groups_fixedvalue,
   number_of_group_factors = number_of_group_factors_fixedvalue,
   number_of_common_factors = number_of_common_factors_fixedvalue,
   number_of_variables = number_of_variables_fixedvalue,
   number_vars_estimated = number_vars_estimated_fixedvalue,
   num_factors_may_vary = num_factors_may_vary_fixedvalue,
-  optimize_kappa = FALSE
+  optimize_kappa = FALSE,
+  nosetting = FALSE
 )
 }
 \arguments{
+\item{use_robust}{TRUE or FALSE: defines using the classical, robust algorithm to estimate beta}
+
+\item{Y}{Y}
+
+\item{X}{X}
+
+\item{lambda_group}{loadings of the group specific factors}
+
+\item{factor_group}{estimated group specific factors}
+
+\item{lambda}{loadings of the common factors}
+
+\item{comfactor}{estimated common factors}
+
 \item{NN}{number of individuals}
 
 \item{TT}{length of time series}
@@ -34,6 +56,8 @@ estimate_beta(
 \item{num_factors_may_vary}{whether or not the number of groupfactors is constant over all groups or not}
 
 \item{optimize_kappa}{indicates if kappa has to be optimized or not (only relevant for the classical algorithm); defaults to FALSE}
+
+\item{nosetting}{option to remove the recommended setting in lmrob(). It is much faster. Defaults to FALSE.}
 }
 \value{
 list: 1st element contains matrix (N columns: 1 for each element of the panel data) with estimated beta_est's.
@@ -56,13 +80,13 @@ g = RCTS::g_true_dgp3
 #There are no common factors to be estimated  -> but needs placeholder
 lambda = matrix(0,nrow=1,ncol=300)
 comfactor = matrix(0,nrow=1,ncol=30)
-use_robust = TRUE
 #Choose how coefficients of the observable variables are estimated
 method_estimate_beta = "individual"
 dgp1_AB = FALSE
 dgp1_spread_group_centers = TRUE
 method_estimate_factors = "macro"
-beta_est = estimate_beta(NN = 300, TT = 30,
+beta_est = estimate_beta(use_robust = TRUE, Y, X, lambda_group, factor_group,
+  lambda, comfactor, NN = 300, TT = 30,
   number_of_groups = 3, number_of_group_factors = c(3, 3, 3), number_of_common_factors = 0,
- number_of_variables = 3,number_vars_estimated = 3, num_factors_may_vary = FALSE)[[1]]
+  number_of_variables = 3,number_vars_estimated = 3, num_factors_may_vary = FALSE)[[1]]
 }

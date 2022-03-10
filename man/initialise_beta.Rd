@@ -10,7 +10,8 @@ initialise_beta(
   number_of_variables,
   number_vars_estimated,
   number_of_groups,
-  method_estimate_beta = "individual"
+  method_estimate_beta = "individual",
+  nosetting_lmrob = FALSE
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ initialise_beta(
 \item{number_of_groups}{number of groups}
 
 \item{method_estimate_beta}{"individual" #can be "homogeneous", "group" or "individual"}
+
+\item{nosetting_lmrob}{option to remove the recommended setting in lmrob(). It is much faster. Defaults to FALSE.}
 }
 \description{
 Note: this needs to be called before the definition of grid.

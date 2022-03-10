@@ -6,6 +6,7 @@
 \usage{
 OF_vectorized3(
   group_memberships,
+  grid,
   beta_est = beta_est,
   lc = lambda,
   fc = comfactor,
@@ -20,6 +21,8 @@ OF_vectorized3(
 }
 \arguments{
 \item{group_memberships}{Vector containing the group membership for all individuals.}
+
+\item{grid}{dataframe containing XB, FgLg and FL}
 
 \item{beta_est}{estimated values of beta}
 

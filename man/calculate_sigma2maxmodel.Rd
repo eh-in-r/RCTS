@@ -6,8 +6,8 @@
 \usage{
 calculate_sigma2maxmodel(
   optimize_kappa = FALSE,
-  UPDATE1 = update1,
-  UPDATE2 = update2,
+  UPDATE1 = FALSE,
+  UPDATE2 = FALSE,
   number_of_groups = number_of_groups_fixedvalue,
   number_of_groups_candidates = number_of_groups_candidates_fixedvalue,
   number_of_group_factors = number_of_group_factors_fixedvalue,

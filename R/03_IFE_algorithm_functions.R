@@ -19,15 +19,14 @@ utils::globalVariables(c("use_robust",
                          "LIMIT_TRUE_GROUPS",
                          "iteration",
                          "beta_true_heterogeen_groups", "beta_true_heterogeen_individueel", "beta_true_homogeen",
-                         "update1", "update2",
+                         #"update1", "update2",
                          "method_estimate_factors",
-                         "ERR", "Smax", "X", "Y", "XG", "XL", "X_restructured",
+                         "Smax", "X", "Y",
                          "percent_outliers",
-                         "define_expert_based_initial_factors",
                          "df_results", "sigma2_max_model",
-                         "indices_subset", "factor_for_grouping",
+                         "indices_subset",
                          "kappa_candidates",
-                         "rows_with_NA", "rows_without_NA",
+                         #"rows_with_NA", "rows_without_NA",
                          "grid",
                          "v1", "v2", "v3",
                          "usecoviddata_cases","usecoviddata_deaths",
@@ -506,6 +505,7 @@ generate_Y <- function(NN, TT, true_number_of_common_factors,true_number_of_grou
 #' @param number_vars_estimated number of variables from which the coefficients are estimated
 #' @param number_of_groups number of groups
 #' @param method_estimate_beta "individual" #can be "homogeneous", "group" or "individual"
+#' @param nosetting_lmrob option to remove the recommended setting in lmrob(). It is much faster. Defaults to FALSE.
 #' @examples
 #' library(RCTS)
 #' library(tidyverse)
@@ -535,7 +535,8 @@ initialise_beta <- function(NN,
                             number_of_variables,
                             number_vars_estimated,
                             number_of_groups,
-                            method_estimate_beta = "individual") {
+                            method_estimate_beta = "individual",
+                            nosetting_lmrob = FALSE) {
 
 
   # if(use_real_world_data) {
@@ -554,10 +555,10 @@ initialise_beta <- function(NN,
     #X needs to be in the form of (NN*TT x p matrix)
 
     if(method_estimate_beta == "homogeneous") { #also used in DGP05: BramatiCroux
-      X_special = X_restructured
+      X_special = restructure_X_to_order_slowN_fastT(X)
       Y_special = Y
       #this includes robust estimation of beta_est:
-      beta_est = determine_beta("homogeneous", X_special, Y_special, initialisation = TRUE, indices = 1:NN,  TT = TT, number_of_variables = number_of_variables)
+      beta_est = determine_beta("homogeneous", X_special, Y_special, use_robust, initialisation = TRUE, indices = 1:NN,  TT = TT, number_of_variables = number_of_variables, nosetting_local = nosetting)
 
     }
     if(method_estimate_beta == "group") {
@@ -575,7 +576,7 @@ initialise_beta <- function(NN,
 
         Y_special = as.vector(t(Y[indices_group,])) #order: N1T1, N1T2,N1T3,...N2T1,...N_endT_end
 
-        beta_est[,group] = determine_beta("heterogeneous", X_special, Y_special, initialisation = TRUE, indices = indices_group,  TT = TT, number_of_variables = number_of_variables)
+        beta_est[,group] = determine_beta("heterogeneous", X_special, Y_special, use_robust, initialisation = TRUE, indices = indices_group,  TT = TT, number_of_variables = number_of_variables, nosetting_local = nosetting)
 
       }
 
@@ -603,14 +604,14 @@ initialise_beta <- function(NN,
               if(dgp1_spread_group_centers) { #split in two if statements, so dgp1_spread_group_centers does not have to exists for RCTS-examples.
                 #This is DGP 1
                 #no intercept, because dgp1_spread_group_centers defines the first variable in X as an intercept
-                model <- LMROB(Y_special, X_special, nointercept = TRUE)  #-> lmrob(Y_special ~ X_special + 0,setting="KS2014)
+                model <- LMROB(Y_special, X_special, nointercept = TRUE, nosetting = nosetting_lmrob)  #-> lmrob(Y_special ~ X_special + 0,setting="KS2014)
               } else {
                 #This is the old dgp 2.
-                model <- LMROB(Y_special, X_special)
+                model <- LMROB(Y_special, X_special, nosetting = nosetting_lmrob)
               }
             } else {
               #This is for the old dgp 3 (currently called dgp 2) and old dgp 4.
-              model <- LMROB(Y_special, X_special)
+              model <- LMROB(Y_special, X_special, nosetting = nosetting_lmrob)
             }
           # }
         } else {  #classical -> lm
@@ -675,7 +676,7 @@ initialise_beta <- function(NN,
 #' @inheritParams update_g
 #' @return NxT matrix containing the product of virtual groupfactors and virtual loadings
 
-calculate_virtual_factor_and_lambda_group <- function(group, solve_FG_FG_times_FG,
+calculate_virtual_factor_and_lambda_group <- function(group, solve_FG_FG_times_FG, use_robust,
                                                       NN_local, TT_local,
                                                       method_estimate_factors_local,
                                                       number_of_variables_local = number_of_variables_fixedvalue,
@@ -701,7 +702,7 @@ calculate_virtual_factor_and_lambda_group <- function(group, solve_FG_FG_times_F
   #robust grouplambda:
   if(use_robust) {
     #CHANGE LOCATION 5/7
-    if(method_estimate_factors_local %in% c("macro","pertmm")) {
+    if(method_estimate_factors_local %in% c("macro", "pertmm")) {
       #we need a robust version of the virtual factorstructure:
       LG_local = return_robust_lambdaobject(Y_ster, group, type = 1,
                                             NN_rrn = NN_local,
@@ -750,29 +751,18 @@ evade_floating_point_errors <- function(A, LIMIT = 1e-13) {
 #' @importFrom stats median
 define_rho_parameters <- function(object = NULL) {
   if(is.null(object)) {
-    message("This part is probably obsolete (define_rho_parameters). Sleep if encountered.")
-    Sys.sleep(108000)
-    # e = calculate_error_term()
-    # all_norms = apply(e, 1, function(x) matrixnorm(x))
-    #
-    # #use median and madn in the rho-function:
-    # rho_loc = c(median(all_norms[g==1]),
-    #             median(all_norms[g==2]),
-    #             median(all_norms[g==3])
-    #             )
-    # rho_scale = c(mad(all_norms[g==1]),
-    #             mad(all_norms[g==2]),
-    #             mad(all_norms[g==3]))  #this is actually 1.4826 * mad (or mad / 0.675), so this is madn (normalized mad)
+    stop("This part should be obsolete (define_rho_parameters()). Sleep if encountered.")
+
   } else {
-    rho_loc =  apply(data.frame(object),1, function(x) median(x)) #=median over T elements
-    rho_scale = apply(data.frame(object),1, function(x) mad(x)) #=normalized mad over T elements
+    rho_loc =  apply(data.frame(object), 1, function(x) median(x)) #=median over T elements
+    rho_scale = apply(data.frame(object), 1, function(x) mad(x)) #=normalized mad over T elements
 
 
     #print(median(unlist(lapply(list(rho_loc,rho_scale),function(x) x[[1]][1]))))
 
   }
 
-  return(list(rho_loc,rho_scale))
+  return(list(rho_loc, rho_scale))
 }
 
 #' Helpfunction for update_g(). Calculates the errors for one of the possible groups time series can be placed in.
@@ -844,8 +834,9 @@ calculate_errors_virtual_groups <- function(k, LF, virtual_grouped_factor_struct
 #' @param k group
 #' @param ERRORS_VIRTUAL list with errors for each possible group
 #' @param rho_parameters median and madn of the calculated error term
+#' @param use_robust robust or classical estimation
 #' @param TT T
-calculate_obj_for_g <- function(i, k, ERRORS_VIRTUAL, rho_parameters, TT = length_of_time_series) {
+calculate_obj_for_g <- function(i, k, ERRORS_VIRTUAL, rho_parameters, use_robust, TT = length_of_time_series) {
 
   totalsum = 0
 
@@ -863,7 +854,10 @@ calculate_obj_for_g <- function(i, k, ERRORS_VIRTUAL, rho_parameters, TT = lengt
 
     location = median(location) #median over groups
     scaling = median(scaling) #median over groups
-    if(scaling == 0) scaling = 0.000001 #make sure no 0/0 will occur
+    if(scaling == 0) { #This should be rare.
+      warning("scaling equals 0 and is changed to 0.000001, to evade division by zero")
+      scaling = 0.000001 #make sure no 0/0 will occur
+    }
   }
 
   for(t in 1:TT) {
@@ -880,9 +874,8 @@ calculate_obj_for_g <- function(i, k, ERRORS_VIRTUAL, rho_parameters, TT = lengt
     } else { #classical version:
       E = E_prep^2
     }
-    # print("***")
-    # print(E)
-    # print(class(E))
+
+
     E = evade_floating_point_errors(E) #evading floating point errors -> set to zero when values are really small
 
     totalsum = totalsum + as.numeric(E)
@@ -923,6 +916,7 @@ solveFG <- function(TT, number_of_groups, number_of_group_factors){
 # @param use_class_zero if set to TRUE, then individuals with high distance to all possible groups are put in a separate class zero
 # @param use_real_world_data_inupdateg Parameter to indicate using real world dataset. Defaults to FALSE.
 #' @inheritParams estimate_factor
+#' @param use_robust robust or classical estimation of group membership
 #' @param verbose when TRUE, it prints messages
 #' @examples
 #' #This function needs several initial parameters to be initialized in order to work on itself
@@ -941,7 +935,6 @@ solveFG <- function(TT, number_of_groups, number_of_group_factors){
 #' lambda = matrix(0,nrow=1,ncol=300)
 #' comfactor = matrix(0,nrow=1,ncol=30)
 #
-#' use_robust = TRUE
 #' grid = expand.grid(1:300,1:30)
 #' #Choose how coefficients of the observable are estimated
 #' method_estimate_beta = "individual"
@@ -949,26 +942,27 @@ solveFG <- function(TT, number_of_groups, number_of_group_factors){
 #' dgp1_spread_group_centers = TRUE
 #' method_estimate_factors = "macro"
 #' number_vars_estimated_fixedvalue = 3
-#' beta_est = estimate_beta(NN = 300, TT = 30,
+#' beta_est = estimate_beta(use_robust = TRUE, Y, X, lambda_group, factor_group,
+#' lambda, comfactor, NN = 300, TT = 30,
 #'   number_of_groups = 3, number_of_group_factors = c(3, 3, 3), number_of_common_factors = 0,
 #'   number_of_variables = 3, number_vars_estimated = number_vars_estimated_fixedvalue,
 #'   num_factors_may_vary = TRUE)[[1]]
-#' grid = grid_add_variables(grid,beta_est, lambda, comfactor, NN = 300, TT = 30,
+#' grid = grid_add_variables(grid, beta_est, lambda, comfactor, NN = 300, TT = 30,
 #'   number_of_variables = 3, number_vars_estimated = number_vars_estimated_fixedvalue,
 #'   number_of_groups = 3)
-#' g_new = update_g(NN = 300, TT = 30, number_of_groups = 3, number_of_variables = 3,
+#' g_new = update_g(use_robust = TRUE, NN = 300, TT = 30, method_estimate_factors,
+#'   number_of_groups = 3, number_of_variables = 3,
 #'   number_vars_estimated = number_vars_estimated_fixedvalue,
 #'   number_of_group_factors = c(3, 3, 3),
 #'   number_of_common_factors = 0)[[1]]
 #' @importFrom purrr map_dbl
 #' @export
-update_g <- function(NN, TT,
+update_g <- function(use_robust, NN, TT, method_estimate_factors,
                      number_of_groups = number_of_groups_fixedvalue,
                      number_of_variables = number_of_variables_fixedvalue,
                      number_vars_estimated = number_vars_estimated_fixedvalue,
                      number_of_group_factors = number_of_group_factors_fixedvalue,
                      number_of_common_factors = number_of_common_factors_fixedvalue,
-                     method_estimate_factors,
                      #use_real_world_data_inupdateg = use_real_world_data,
                      verbose = FALSE) {
 
@@ -977,9 +971,9 @@ update_g <- function(NN, TT,
   if(do_we_estimate_group_factors(number_of_group_factors)) { #if there are groupfactors estimated
     solve_FG_FG_times_FG = solveFG(TT, number_of_groups, number_of_group_factors)
 
-    #we calculate FgLg (groupfactors times grouploadings) for all the possible groups to which individual i could end up:
+    #we calculate FgLg (groupfactors times grouploadings) for all the possible groups in which individual i could end up:
 
-    virtual_grouped_factor_structure = lapply(1:number_of_groups, function(y) calculate_virtual_factor_and_lambda_group(y, solve_FG_FG_times_FG, NN, TT, method_estimate_factors,
+    virtual_grouped_factor_structure = lapply(1:number_of_groups, function(y) calculate_virtual_factor_and_lambda_group(y, solve_FG_FG_times_FG, use_robust, NN, TT, method_estimate_factors,
                                                                                                                         number_of_variables_local = number_of_variables,
                                                                                                                         number_vars_estimated_local = number_vars_estimated,
                                                                                                                         number_of_group_factors_local = number_of_group_factors,
@@ -995,9 +989,6 @@ update_g <- function(NN, TT,
 
 
   LF = (t(lambda) %*% comfactor)
-
-  #init matrix with objectivefunctionvalues for all groups
-  matrix_obj_values = matrix(NA, nrow = NN, ncol = number_of_groups)
 
 
   #calculate errors for each possible group
@@ -1017,11 +1008,13 @@ update_g <- function(NN, TT,
   }
   if(verbose) message("rho_parameters is created")
 
+  #init matrix with objectivefunctionvalues for all groups
+  matrix_obj_values = matrix(NA, nrow = NN, ncol = number_of_groups)
   for(i in 1:NN) {
-    obj_values = map_dbl(1:number_of_groups, function(x) calculate_obj_for_g(i, x, ERRORS_VIRTUAL, rho_parameters, TT = TT))
+    obj_values = map_dbl(1:number_of_groups, function(x) calculate_obj_for_g(i, x, ERRORS_VIRTUAL, rho_parameters, use_robust, TT = TT))
     g[i] = which.min(obj_values)
     matrix_obj_values[i,] = obj_values
-  } #vectorizing is not faster: g = sapply(1:NN, function(z) which.min(map_dbl(1:number_of_groups, function(x) calculate_obj_for_g(z, x, ERRORS_VIRTUAL, rho_parameters))))
+  } #Note: vectorizing is not faster: g = sapply(1:NN, function(z) which.min(map_dbl(1:number_of_groups, function(x) calculate_obj_for_g(z, x, ERRORS_VIRTUAL, rho_parameters, use_robust))))
 
   if(verbose) {
     print("current g-table is:")
@@ -1037,11 +1030,35 @@ update_g <- function(NN, TT,
     g = clustering_with_robust_distances(g, number_of_groups)
   }
 
+  g = reassign_if_empty_groups(g, number_of_groups, TT)
+
   return(list(g, matrix_obj_values, g_before_class_zero))
 
 }
 
+#' Randomly reassign individual(s) if there are empty groups. This can happen if the total number of time series is low compared to the number of desired groups.
+#'
+#' @param g Vector of group membership for all individuals.
+#' @param S_true true number of groups
+#' @param TT length of time series
+reassign_if_empty_groups <- function(g, S_true, TT) {
+  empty_groups = c()
+  while(length(table(g[g != 0])) != S_true) { #class zero (individuals too far from all groups) should not be counted here
+    #reassign one individual to empty groups
+    for(i in 1:S_true) {
+      if(i %in% broom::tidy(table(g))$g) {
+      } else {
+        empty_groups = c(empty_groups, i)
+      }
+    }
 
+    for(i in 1:length(empty_groups)) {
+      randomindex = ceiling(runif(1) * TT)
+      g[randomindex] = empty_groups[i]
+    }
+  }
+  return(g)
+}
 
 
 #' Function that puts individuals in a separate "class zero", when their distance to all possible groups is bigger then a threshold.
@@ -1189,6 +1206,7 @@ OF_vectorized_helpfunction3 <- function(i,t,XBETA,LF,
 #' Calculates objective function: used in local_search + to determine "best_result".
 #'
 #' @param group_memberships Vector containing the group membership for all individuals.
+#' @param grid dataframe containing XB, FgLg and FL
 #' @param beta_est estimated values of beta
 #' @param fc estimated common factors
 #' @param lc loadings of estimated common factors
@@ -1197,7 +1215,7 @@ OF_vectorized_helpfunction3 <- function(i,t,XBETA,LF,
 #' @inheritParams estimate_beta
 #' @importFrom tidyselect starts_with
 #' @export
-OF_vectorized3 <- function(group_memberships, beta_est = beta_est,
+OF_vectorized3 <- function(group_memberships, grid, beta_est = beta_est,
                            lc = lambda, fc = comfactor,
                            lg = lambda_group, fg = factor_group,
                            NN = number_of_time_series,
@@ -1290,14 +1308,17 @@ calculate_lgfg <- function(lambda_group, factor_group, number_of_groups, number_
 #' @param string can have values: "homogeneous" (when one beta_est is estimated for all individuals together) or "heterogeneous" (when beta_est is estimated either groupwise or elementwise)
 #' @param X_special preprocessed X (observable variables)
 #' @param Y_special preprocessed Y
+#' @param use_robust robust or classical estimation
 #' @param initialisation indicator of being in the initialisation phase
 #' @param indices individuals for which beta_est is being estimated
 #' @param optimize_kappa indicates if kappa has to be optimized or not (only relevant for the classical algorithm); defaults to FALSE
+#' @param nosetting_local option to remove the recommended setting in lmrob(). It is much faster. Defaults to FALSE.
 #' @importFrom ncvreg ncvreg
 #' @inheritParams generate_Y
-determine_beta <- function(string, X_special, Y_special, initialisation = FALSE, indices = NA, optimize_kappa = FALSE,
+#' @inheritParams LMROB
+determine_beta <- function(string, X_special, Y_special, use_robust, initialisation = FALSE, indices = NA, optimize_kappa = FALSE,
                            TT = length_of_time_series, NN = number_of_time_series,
-                           number_of_variables = number_of_variables_fixedvalue) {
+                           number_of_variables = number_of_variables_fixedvalue, nosetting_local = FALSE) {
   stopifnot(string == "homogeneous" | string == "heterogeneous")
 
   if(!(method_estimate_beta == "group" & initialisation == TRUE)) {
@@ -1325,29 +1346,29 @@ determine_beta <- function(string, X_special, Y_special, initialisation = FALSE,
     # if(exists("use_bramaticroux")) {
     #   model = RpanFE(Y_special, X_special, TT, 0.20, 20, number_of_variables, length(Y_special)/TT)[[1]]
     # } else {
-      model <- LMROB(Y_special, X_special) #-> lmrob(Y_special ~ X_special, setting="KS2014")
+      model <- LMROB(Y_special, X_special, nosetting = nosetting_local) #-> lmrob(Y_special ~ X_special, setting = "KS2014")
     # }
   } else {
 
 
     #ncvreg, without weights
-    model <- ncvreg(X_special, Y_special, family="gaussian", penalty="SCAD",lambda=(kappa_candidates))
+    model <- ncvreg(X_special, Y_special, family = "gaussian", penalty = "SCAD", lambda = (kappa_candidates))
     if(optimize_kappa) {
       minBIC <- 10^10
       best_lami = 0
       #print("indices")
       #print(indices)
       for(LAMi in 1:length(kappa_candidates)){
-        beta_temp <- model$beta[,LAMi] #c(0,model$beta)[-2,LAMi]
-        BIC <- sum( (Y[indices,]-cbind(1,X[indices,,]) %*% beta_temp )^2 )/(TT) + C * sigma2_max_model * log(TT)*sum(beta_temp!=0)/(TT)
+        beta_temp <- model$beta[, LAMi] #c(0,model$beta)[-2,LAMi]
+        BIC <- sum( (Y[indices,] - cbind(1, X[indices,,]) %*% beta_temp )^2 )/(TT) + C * sigma2_max_model * log(TT) * sum(beta_temp != 0)/(TT)
 
-        if(BIC<=minBIC){
+        if(BIC <= minBIC){
           best_lami = LAMi
           minBIC <- BIC
-          beta_temp <- model$beta[,LAMi] #c(0,model$beta)[-2,LAMi]
+          beta_temp <- model$beta[, LAMi] #c(0,model$beta)[-2,LAMi]
         }
       }
-      #print(kappa_candidates[best_lami]) #-> so this is kappa[i]
+      #print(kappa_candidates[best_lami]) #-> this is kappa[i]
       #Sys.sleep(0.1)
       return(beta_temp)
     }
@@ -1395,7 +1416,14 @@ determine_beta <- function(string, X_special, Y_special, initialisation = FALSE,
 #'
 #' Update step of algorithm to obtain new estimation for beta. Note that we call it beta_est because beta() exists in base R.
 #' @inheritParams determine_beta
-# @param use_real_world_data Parameter to indicate using real world dataset. Defaults to FALSE.
+# @param use_real_world_data Parameter to indicate using real world dataset. Defaults to FALSE.#' @param lambda_group_true loadings of the group factors
+#' @param use_robust TRUE or FALSE: defines using the classical, robust algorithm to estimate beta
+#' @param Y Y
+#' @param X X
+#' @param factor_group estimated group specific factors
+#' @param lambda_group loadings of the group specific factors
+#' @param comfactor estimated common factors
+#' @param lambda loadings of the common factors
 #' @param NN number of individuals
 #' @param TT length of time series
 #' @param number_of_groups number of groups estimated
@@ -1404,6 +1432,7 @@ determine_beta <- function(string, X_special, Y_special, initialisation = FALSE,
 #' @param number_of_variables number of observable variables
 #' @param number_vars_estimated number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.
 #' @param num_factors_may_vary whether or not the number of groupfactors is constant over all groups or not
+#' @param nosetting option to remove the recommended setting in lmrob(). It is much faster. Defaults to FALSE.
 #' @return list: 1st element contains matrix (N columns: 1 for each element of the panel data) with estimated beta_est's.
 #' @examples
 #' #This function needs several initial parameters to be initialized in order to work on itself.
@@ -1421,35 +1450,35 @@ determine_beta <- function(string, X_special, Y_special, initialisation = FALSE,
 #' lambda = matrix(0,nrow=1,ncol=300)
 #' comfactor = matrix(0,nrow=1,ncol=30)
 #
-#' use_robust = TRUE
 #' #Choose how coefficients of the observable variables are estimated
 #' method_estimate_beta = "individual"
 #' dgp1_AB = FALSE
 #' dgp1_spread_group_centers = TRUE
 #' method_estimate_factors = "macro"
-#' beta_est = estimate_beta(NN = 300, TT = 30,
+#' beta_est = estimate_beta(use_robust = TRUE, Y, X, lambda_group, factor_group,
+#'   lambda, comfactor, NN = 300, TT = 30,
 #'   number_of_groups = 3, number_of_group_factors = c(3, 3, 3), number_of_common_factors = 0,
-#'  number_of_variables = 3,number_vars_estimated = 3, num_factors_may_vary = FALSE)[[1]]
+#'   number_of_variables = 3,number_vars_estimated = 3, num_factors_may_vary = FALSE)[[1]]
 #' @importFrom stats filter
 #' @importFrom purrr pmap
 #' @importFrom purrr map2
 #' @importFrom rlang .data
 #' @export
-estimate_beta <- function(NN = number_of_time_series,
-                           TT = length_of_time_series,
+estimate_beta <- function(use_robust, Y, X, lambda_group, factor_group, lambda, comfactor, NN = nrow(Y),
+                           TT = ncol(Y),
                            number_of_groups = number_of_groups_fixedvalue,
                            number_of_group_factors = number_of_group_factors_fixedvalue,
                            number_of_common_factors = number_of_common_factors_fixedvalue,
                            number_of_variables = number_of_variables_fixedvalue,
                            number_vars_estimated = number_vars_estimated_fixedvalue,
                            num_factors_may_vary = num_factors_may_vary_fixedvalue,
-                           optimize_kappa = FALSE) {
+                           optimize_kappa = FALSE, nosetting = FALSE) {
   if(number_vars_estimated > 0) {
 
 
     if(method_estimate_beta == "homogeneous") {
       #X needs to be in the form of (NN*TT x p matrix)
-      X_special = X_restructured
+      X_special = restructure_X_to_order_slowN_fastT(X)
       #define Y* as Y - FcLc - FgLg:
       #and get LgFg out of the loop to speed up:
       lgfg_list = calculate_lgfg(lambda_group, factor_group, number_of_groups, number_of_group_factors, number_of_common_factors, num_factors_may_vary)
@@ -1469,7 +1498,7 @@ estimate_beta <- function(NN = number_of_time_series,
         }
       }
 
-      beta_est = determine_beta("homogeneous",X_special, Y_special, indices = 1:NN, TT = TT, number_of_variables = number_of_variables)
+      beta_est = determine_beta("homogeneous", X_special, Y_special, use_robust, indices = 1:NN, TT = TT, number_of_variables = number_of_variables, nosetting_local = nosetting)
 
     }
     if(method_estimate_beta == "group") {
@@ -1478,8 +1507,7 @@ estimate_beta <- function(NN = number_of_time_series,
         #select parts of X and Y of this group
         indices_group = which(g == group)
         if(length(indices_group) == 0) {
-          message("Empty groep! This should never be seen.")
-          Sys.sleep(15)
+          warning("Empty group! This message should never be seen.")
         }
 
         #X needs to be in the form of (NN*TT x p matrix)
@@ -1492,18 +1520,21 @@ estimate_beta <- function(NN = number_of_time_series,
 
         for(i in 1:length(indices_group)) {
           index = indices_group[i]
-          LAMBDAGROUP = as.matrix(lambda_group %>% dplyr::filter(.data$id %in% index) %>% dplyr::select(-.data$groep,-.data$id))
+          LAMBDAGROUP = as.matrix(lambda_group %>% dplyr::filter(.data$id %in% index) %>% dplyr::select(-.data$groep, -.data$id))
           Y_special[i,] = Y_special[i,] -
             t(lambda[,index]) %*% comfactor[,] -
             LAMBDAGROUP %*% factor_group[[g[index]]]
         }
 
 
-        beta_est[,group] = determine_beta("heterogeneous", X_special, Y_special, indices = indices_group, TT = TT, number_of_variables = number_of_variables)
+        beta_est[,group] = determine_beta("heterogeneous", X_special, Y_special, use_robust, indices = indices_group, TT = TT, number_of_variables = number_of_variables, nosetting_local = nosetting)
 
       }
     }
     if(method_estimate_beta == "individual") {
+      #######################################################################
+      #first, X and Y need to be restructured: made into list with N elements.
+      #######################################################################
 
       X_local = adapt_X_estimating_less_variables(number_of_variables, number_vars_estimated) #makes X smaller when number_vars_estimated < number_of_variables
       # if(use_real_world_data) {
@@ -1514,7 +1545,8 @@ estimate_beta <- function(NN = number_of_time_series,
       X_special_list = lapply(1:NN, function(x) restructure_X_to_order_slowN_fastT(matrix(X_local[x,,], ncol = number_of_vars),
                                                                                    number_of_variables = number_of_variables,
                                                                                    number_vars_estimated = number_vars_estimated))
-      #helpfunction
+      #helpfunction: calculates Y - factorstructures. This is equal to XB + errorterm.
+      #The result is a list with number of elements equal to number of time series in Y.
       make_Y_special <- function(i) {
         Y_special = unlist(matrix(Y[i,], nrow = 1))
         if(dim(t(Y_special))[2] == TT) {
@@ -1542,17 +1574,20 @@ estimate_beta <- function(NN = number_of_time_series,
 
       Y_special_list = lapply(1:NN, function(x) make_Y_special(x) )
 
+      #######################################################################
+      #secondly, beta_i is estimated for all i
+      #######################################################################
       if(optimize_kappa) {
-        beta_est = pmap(list(X_special_list, Y_special_list, 1:NN),  function(x,y,z) determine_beta("heterogeneous",x, y, indices = z,  TT = TT, number_of_variables = number_of_variables) )
+        beta_est = pmap(list(X_special_list, Y_special_list, 1:NN),  function(x,y,z) determine_beta("heterogeneous", x, y, use_robust, indices = z,  TT = TT, number_of_variables = number_of_variables, nosetting_local = nosetting) )
       } else {
         #note that mapply isnt faster than map2
-        beta_est = map2(X_special_list, Y_special_list,  function(x,y) determine_beta("heterogeneous",x, y, indices = NA,  TT = TT, number_of_variables = number_of_variables) )
-        # print(summary(c( matrix(unlist(beta_est),ncol = NN)  - beta_new)))
-        # print(sum(c( matrix(unlist(beta_est),ncol = NN)  - beta_new)))
+        beta_est = map2(X_special_list, Y_special_list,  function(x,y) determine_beta("heterogeneous", x, y, use_robust, indices = NA,  TT = TT, number_of_variables = number_of_variables, nosetting_local = nosetting) )
+        # print(summary(c( matrix(unlist(beta_est), ncol = NN)  - beta_new)))
+        # print(sum(c( matrix(unlist(beta_est), ncol = NN)  - beta_new)))
         #
         # micro = microbenchmark::microbenchmark(
-        #   beta_est = map2(X_special_list, Y_special_list,  function(x,y) determine_beta("heterogeneous",x, y, indices = NA,  TT = TT, number_of_variables = number_of_variables) ),
-        #   beta_new = mapply( function(x,y) { determine_beta("heterogeneous",x, y, indices = NA,  TT = TT, number_of_variables = number_of_variables) }, x = X_special_list, y = Y_special_list ),
+        #   beta_est = map2(X_special_list, Y_special_list,  function(x,y) determine_beta("heterogeneous", x, y, use_robust, indices = NA,  TT = TT, number_of_variables = number_of_variables, nosetting_local = nosetting) ),
+        #   beta_new = mapply( function(x,y) { determine_beta("heterogeneous", x, y, use_robust, indices = NA,  TT = TT, number_of_variables = number_of_variables, nosetting_local = nosetting) }, x = X_special_list, y = Y_special_list ),
         #   times = 15
         # )
         # print(summary(micro))
@@ -1565,12 +1600,10 @@ estimate_beta <- function(NN = number_of_time_series,
       #(is 2 to 3 times faster (microbenchmark) for (300, 30)-system)
       #BUT:  ERRORS:
       #   Error: 'map2' is not an exported object from 'namespace:future'
-      #beta_est = future::map2(X_special_list, Y_special_list,  function(x,y) determine_beta("heterogeneous",x, y, indices = NA,  TT = TT, number_of_variables = number_of_variables) )
+      #beta_est = future::map2(X_special_list, Y_special_list,  function(x,y) determine_beta("heterogeneous", x, y, use_robust, indices = NA,  TT = TT, number_of_variables = number_of_variables, nosetting_local = nosetting) )
       ########################################################
 
-      beta_est = matrix(unlist(beta_est),ncol = NN)
-
-
+      beta_est = matrix(unlist(beta_est), ncol = NN)
 
     }
 
@@ -2245,7 +2278,7 @@ calculate_lambda <- function(beta_est, comfactor, g, lgfg_list,
 calculate_lambda_group <- function(beta_est, factor_group, g, lambda, comfactor,
                                    method_estimate_factors,
                                    initialise = FALSE,
-                                   UPDATE1 = update1, UPDATE2 = update2,
+                                   UPDATE1 = FALSE, UPDATE2 = FALSE,
                                    NN = number_of_time_series,
                                    TT = length_of_time_series,
                                    number_of_groups = number_of_groups_fixedvalue,
@@ -2387,7 +2420,7 @@ calculate_lambda_group <- function(beta_est, factor_group, g, lambda, comfactor,
 
 #' Function which is used to have a dataframe (called "grid") with data (individualindex, timeindex, XT and LF) available.
 #'
-#' The dataframe "grid" is required in update_g(), via OF_vectorized3().
+#' (The dataframe "grid" used to be required in update_g(), via OF_vectorized3(), but not anymore.)
 #' @param grid dataframe containing values for X*beta_est and LF (product of common factor and its loadings)
 #' @param beta_est estimated values of beta
 #' @param lambda loadings of the common factors
@@ -3197,7 +3230,7 @@ calculate_VCsquared <- function(rcj,rc,C_candidates, UPDATE1 = FALSE, UPDATE2 = 
 #' @param nosetting option to remove the recommended setting in lmrob(). It is much faster. Defaults to FALSE.
 #' @importFrom robustbase lmrob
 #' @export
-LMROB <- function(parameter_y, parameter_x, nointercept = FALSE, nosetting = exists("run_lmrob_without_setting")) {
+LMROB <- function(parameter_y, parameter_x, nointercept = FALSE, nosetting = FALSE) {
 
 
   if(is.na(parameter_x)[1]) { #when there are no independent variables
@@ -3206,7 +3239,7 @@ LMROB <- function(parameter_y, parameter_x, nointercept = FALSE, nosetting = exi
         if(nosetting) {
           result = lmrob(parameter_y ~ 1)
         } else {
-          result = lmrob(parameter_y ~ 1, setting="KS2014")
+          result = lmrob(parameter_y ~ 1, setting = "KS2014")
         }
       },
       error=function(e) {
@@ -3229,14 +3262,14 @@ LMROB <- function(parameter_y, parameter_x, nointercept = FALSE, nosetting = exi
     } else {
       if(nointercept) {
 
-          result2 = lmrob(parameter_y ~ parameter_x + 0, setting="KS2014")
+          result2 = lmrob(parameter_y ~ parameter_x + 0, setting = "KS2014")
 
       } else {
         #sometimes Error in if (init$scale == 0) happens. In that case: run without setting = KS2014.
 
           result2 = tryCatch(
             {
-              lmrob(parameter_y ~ parameter_x, setting="KS2014")
+              lmrob(parameter_y ~ parameter_x, setting = "KS2014")
             },
             error=function(e) {
               message(e)
@@ -3267,7 +3300,7 @@ LMROB <- function(parameter_y, parameter_x, nointercept = FALSE, nosetting = exi
 #' @param number_of_groups_candidates vector with candidate values for the number of groups
 #' @param number_of_common_factors number of common factors
 #' @export
-calculate_sigma2maxmodel <- function(optimize_kappa = FALSE, UPDATE1 = update1, UPDATE2 = update2,
+calculate_sigma2maxmodel <- function(optimize_kappa = FALSE, UPDATE1 = FALSE, UPDATE2 = FALSE,
                                      number_of_groups = number_of_groups_fixedvalue,
                                      number_of_groups_candidates = number_of_groups_candidates_fixedvalue,
                                      number_of_group_factors = number_of_group_factors_fixedvalue,
@@ -3275,7 +3308,7 @@ calculate_sigma2maxmodel <- function(optimize_kappa = FALSE, UPDATE1 = update1, 
                                      ) {
   if(!optimize_kappa) {
     if(!UPDATE1 & !UPDATE2 &
-       mean(number_of_group_factors,na.rm=T) == k_max &
+       mean(number_of_group_factors, na.rm=T) == k_max &
        number_of_groups == max(number_of_groups_candidates) &
        number_of_common_factors == max(k_common_candidates) ) {
       sigma2_max_model = calculate_sigma2(calculate_error_term())
@@ -3299,7 +3332,7 @@ calculate_sigma2maxmodel <- function(optimize_kappa = FALSE, UPDATE1 = update1, 
 #' @param sigma2_max_model sigma2 of model with maximum number of groups and factors
 #' @inheritParams calculate_lambda_group
 #' @export
-adapt_allpic_with_sigma2maxmodel <- function(all_pic, sigma2_max_model, UPDATE1 = update1, UPDATE2 = update2) {
+adapt_allpic_with_sigma2maxmodel <- function(all_pic, sigma2_max_model, UPDATE1 = FALSE, UPDATE2 = FALSE) {
   if(is.null(all_pic))  message("Warning in adapt_allpic_with_sigma2maxmodel(): all_pic is empty")
   if(!UPDATE1 & !UPDATE2) {
     #message("Use sigma2_max_model in PIC (in object all_pic).")

@@ -36,5 +36,5 @@ grid_add_variables(
 \item{number_of_groups}{number of groups estimated}
 }
 \description{
-The dataframe "grid" is required in update_g(), via OF_vectorized3().
+(The dataframe "grid" used to be required in update_g(), via OF_vectorized3(), but not anymore.)
 }

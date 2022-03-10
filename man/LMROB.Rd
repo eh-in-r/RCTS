@@ -4,12 +4,7 @@
 \alias{LMROB}
 \title{Wrapper around lmrob.}
 \usage{
-LMROB(
-  parameter_y,
-  parameter_x,
-  nointercept = FALSE,
-  nosetting = exists("run_lmrob_without_setting")
-)
+LMROB(parameter_y, parameter_x, nointercept = FALSE, nosetting = FALSE)
 }
 \arguments{
 \item{parameter_y}{dependent variable in regression}

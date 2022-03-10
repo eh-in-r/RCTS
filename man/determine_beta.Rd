@@ -8,12 +8,14 @@ determine_beta(
   string,
   X_special,
   Y_special,
+  use_robust,
   initialisation = FALSE,
   indices = NA,
   optimize_kappa = FALSE,
   TT = length_of_time_series,
   NN = number_of_time_series,
-  number_of_variables = number_of_variables_fixedvalue
+  number_of_variables = number_of_variables_fixedvalue,
+  nosetting_local = FALSE
 )
 }
 \arguments{
@@ -22,6 +24,8 @@ determine_beta(
 \item{X_special}{preprocessed X (observable variables)}
 
 \item{Y_special}{preprocessed Y}
+
+\item{use_robust}{robust or classical estimation}
 
 \item{initialisation}{indicator of being in the initialisation phase}
 
@@ -34,6 +38,8 @@ determine_beta(
 \item{NN}{number of individuals}
 
 \item{number_of_variables}{number of observable variables}
+
+\item{nosetting_local}{option to remove the recommended setting in lmrob(). It is much faster. Defaults to FALSE.}
 }
 \description{
 Helpfunction in estimate_beta() for estimating beta_est.
