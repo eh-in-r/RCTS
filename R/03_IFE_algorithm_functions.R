@@ -424,7 +424,7 @@ generate_grouped_factorstructure <- function(S, true_number_of_group_factors, TT
 #' @inheritParams create_true_beta
 #' @return N x T matrix
 #' @export
-generate_Y <- function(NN, TT, true_number_of_common_factors,true_number_of_group_factors,
+generate_Y <- function(NN, TT, true_number_of_common_factors, true_number_of_group_factors,
                        g_true, beta_true, lambda_group_true, factor_group_true,
                        lambda_true, comfactor_true, epsilon, X,
                        # ando_bai = FALSE,
@@ -3415,11 +3415,14 @@ create_data_dgp2 <- function(N, TT, true_number_of_groups = 3, number_external_v
 #' @param stepsize_N size of the decrease in N; multiplied with stepsize
 #' @param stepsize_T size of the decrease in T; multiplied with stepsize
 #' @param stepsize index of the subsample: this defines how many times stepsize_N is subtracted from the original N time series. Similar for stepsize_T.
+#' @param k true number of common factors
+#' @param kg vector with for each group the true number of group specific factors
+#' @inheritParams generate_Y
 #' @export
-make_subsamples <- function(Y, X, #sampleN, sampleT,
+make_subsamples <- function(Y, X, factor_true, lambda_true, factor_group_true, lambda_group_true,
                             number_of_time_series_fulldata, length_of_time_series_fulldata, stepsize,
                             stepsize_N = round(number_of_time_series_fulldata / 10),
-                            stepsize_T = round(length_of_time_series_fulldata / 30)) {
+                            stepsize_T = round(length_of_time_series_fulldata / 30), k, kg) {
 
   #-> take subsample
   subN = number_of_time_series_fulldata - stepsize * stepsize_N
@@ -3445,7 +3448,19 @@ make_subsamples <- function(Y, X, #sampleN, sampleT,
 
   #subsample of true group membership
   g_true = g_true[sampleN]
-  return(list(Y, X, g_true, sampleN, sampleT))
+
+  #subsample of the factors and their loadings
+  if(k > 0) {
+    factor_true = matrix(factor_true[, sampleT], nrow = k)
+    lambda_true = matrix(lambda_true[, sampleN], nrow = k)
+  }
+  if(max(kg) > 0) {
+    for(ii in 1:aantalgroepen_real) {
+      factor_group_true[[ii]] = matrix(factor_group_true[[ii]][, sampleT], nrow = kg[ii])
+      lambda_group_true = lambda_group_true %>% filter(id %in% sampleN)
+    }
+  }
+  return(list(Y, X, g_true, factor_true, lambda_true, factor_group_true, lambda_group_true))
 }
 
 #' Defines the object that will be used to define a initial clustering.
