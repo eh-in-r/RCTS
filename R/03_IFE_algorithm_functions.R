@@ -2128,7 +2128,7 @@ estimate_factor_group <- function(use_robust, beta_est, g, lambda, comfactor,
     if(verbose) print(paste("Estimate factors for group", group))
     if(number_of_group_factors[group] > 0) {
       if(TT < number_of_group_factors[group]) {
-        message("-> There are too many factors to be estimated, compared to TT.")
+        warning("There are too many factors to be estimated, compared to TT.")
       }
 
       Wj = calculate_Z_group(beta_est, g, lambda, comfactor, group, initialise,
@@ -3451,16 +3451,23 @@ make_subsamples <- function(Y, X, factor_true, lambda_true, factor_group_true, l
   #subsample of true group membership
   g_true = g_true[sampleN]
 
-  #subsample of the factors and their loadings
-  if(k > 0) {
-    factor_true = matrix(factor_true[, sampleT], nrow = k)
-    lambda_true = matrix(lambda_true[, sampleN], nrow = k)
-  }
-  if(max(kg) > 0) {
-    for(ii in 1:aantalgroepen_real) {
-      factor_group_true[[ii]] = matrix(factor_group_true[[ii]][, sampleT], nrow = kg[ii])
-      lambda_group_true = lambda_group_true %>% filter(id %in% sampleN)
+  if(subsamples_factors) {
+    #subsample of the factors and their loadings
+    if(k > 0) {
+      factor_true = matrix(factor_true[, sampleT], nrow = k)
+      lambda_true = matrix(lambda_true[, sampleN], nrow = k)
     }
+    if(max(kg) > 0) {
+      for(ii in 1:aantalgroepen_real) {
+        factor_group_true[[ii]] = matrix(factor_group_true[[ii]][, sampleT], nrow = kg[ii])
+        lambda_group_true = lambda_group_true %>% filter(id %in% sampleN)
+      }
+    }
+  } else {
+    factor_true = NA
+    lambda_true = NA
+    factor_group_true = NA
+    lambda_group_true = NA
   }
   return(list(Y, X, g_true, factor_true, lambda_true, factor_group_true, lambda_group_true))
 }
@@ -3475,6 +3482,7 @@ make_subsamples <- function(Y, X, factor_true, lambda_true, factor_group_true, l
 #' @param method_estimate_factors specifies the robust algorithm to estimate factors: default is "macro". The value is not used when use_robust is set to FALSE.
 #' @export
 define_object_for_initial_clustering_macropca <- function(Y, beta_est, use_robust = TRUE, method_estimate_beta = "individual", method_estimate_factors = "macro") {
+
   length_of_time_series = ncol(Y)
   number_of_initial_factors = 10
   stopifnot(method_estimate_beta == "individual")
