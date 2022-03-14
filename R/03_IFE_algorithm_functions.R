@@ -2202,7 +2202,7 @@ calculate_lambda <- function(use_robust, beta_est, comfactor, g, lgfg_list,
                              number_vars_estimated = number_vars_estimated_fixedvalue) {
 
   if(!do_we_estimate_common_factors(number_of_common_factors)) {
-    return(t(matrix(rep(0, 300))))
+    return(t(matrix(rep(0, NN))))
   }
   if(initialise) {
     W = calculate_W(beta_est, g,
