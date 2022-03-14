@@ -63,8 +63,6 @@ comfactor = matrix(0,nrow=1,ncol=30)
 grid = expand.grid(1:300,1:30)
 #Choose how coefficients of the observable are estimated
 method_estimate_beta = "individual"
-dgp1_AB = FALSE
-dgp1_spread_group_centers = TRUE
 method_estimate_factors = "macro"
 number_vars_estimated_fixedvalue = 3
 beta_est = estimate_beta(use_robust = TRUE, Y, X, lambda_group, factor_group,
@@ -72,7 +70,8 @@ lambda, comfactor, NN = 300, TT = 30,
   number_of_groups = 3, number_of_group_factors = c(3, 3, 3), number_of_common_factors = 0,
   number_of_variables = 3, number_vars_estimated = number_vars_estimated_fixedvalue,
   num_factors_may_vary = TRUE)[[1]]
-grid = grid_add_variables(grid, beta_est, lambda, comfactor, NN = 300, TT = 30,
+grid = grid_add_variables(grid, beta_est, lambda, comfactor, method_estimate_beta,
+  NN = 300, TT = 30,
   number_of_variables = 3, number_vars_estimated = number_vars_estimated_fixedvalue,
   number_of_groups = 3)
 g_new = update_g(use_robust = TRUE, NN = 300, TT = 30, method_estimate_factors,

@@ -9,8 +9,6 @@ mse_heterogeneous_groups(without_intercept, dgp1_spread_group_centers)
 }
 \arguments{
 \item{without_intercept}{boolean to remove the intercept in the calculation}
-
-\item{dgp1_spread_group_centers}{boolean to remove the de facto intercept in the calculation (this is specific for DGP 1, due to how this is defined.)}
 }
 \description{
 Helpfunction in calculate_mse_beta, when method_estimate_beta == "group".

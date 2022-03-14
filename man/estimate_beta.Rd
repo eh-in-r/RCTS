@@ -12,6 +12,7 @@ estimate_beta(
   factor_group,
   lambda,
   comfactor,
+  method_estimate_beta = "individual",
   NN = nrow(Y),
   TT = ncol(Y),
   number_of_groups = number_of_groups_fixedvalue,
@@ -21,7 +22,8 @@ estimate_beta(
   number_vars_estimated = number_vars_estimated_fixedvalue,
   num_factors_may_vary = num_factors_may_vary_fixedvalue,
   optimize_kappa = FALSE,
-  nosetting = FALSE
+  nosetting = FALSE,
+  special_case_dgp1 = FALSE
 )
 }
 \arguments{
@@ -38,6 +40,8 @@ estimate_beta(
 \item{lambda}{loadings of the common factors}
 
 \item{comfactor}{estimated common factors}
+
+\item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 
 \item{NN}{number of individuals}
 
@@ -58,6 +62,8 @@ estimate_beta(
 \item{optimize_kappa}{indicates if kappa has to be optimized or not (only relevant for the classical algorithm); defaults to FALSE}
 
 \item{nosetting}{option to remove the recommended setting in lmrob(). It is much faster. Defaults to FALSE.}
+
+\item{special_case_dgp1}{special case for data generated according to dgp 1: it changes the 1st variable in X to 1 (-> intercept). Consequently the estimation of beta needs to be restructured slightly.}
 }
 \value{
 list: 1st element contains matrix (N columns: 1 for each element of the panel data) with estimated beta_est's.
@@ -82,8 +88,6 @@ lambda = matrix(0,nrow=1,ncol=300)
 comfactor = matrix(0,nrow=1,ncol=30)
 #Choose how coefficients of the observable variables are estimated
 method_estimate_beta = "individual"
-dgp1_AB = FALSE
-dgp1_spread_group_centers = TRUE
 method_estimate_factors = "macro"
 beta_est = estimate_beta(use_robust = TRUE, Y, X, lambda_group, factor_group,
   lambda, comfactor, NN = 300, TT = 30,

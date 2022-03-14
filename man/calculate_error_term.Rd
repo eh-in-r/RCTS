@@ -5,21 +5,44 @@
 \title{Calculates the error term Y - X*beta_est - LF - LgFg.}
 \usage{
 calculate_error_term(
-  no_common_factorstructure = FALSE,
-  no_group_factorstructure = FALSE,
+  Y,
+  X,
+  beta_est,
+  g,
+  factor_group,
+  lambda_group,
+  comfactor,
+  lambda,
+  method_estimate_beta,
   NN = number_of_time_series,
   TT = length_of_time_series,
   number_of_variables = number_of_variables_fixedvalue,
   number_vars_estimated = number_vars_estimated_fixedvalue,
   number_of_groups = number_of_groups_fixedvalue,
   number_of_group_factors = number_of_group_factors_fixedvalue,
-  number_of_common_factors = number_of_common_factors_fixedvalue
+  number_of_common_factors = number_of_common_factors_fixedvalue,
+  no_common_factorstructure = FALSE,
+  no_group_factorstructure = FALSE
 )
 }
 \arguments{
-\item{no_common_factorstructure}{if there is a common factorstructure being estimated}
+\item{Y}{Y}
 
-\item{no_group_factorstructure}{if there is a group factorstructure being estimated}
+\item{X}{X}
+
+\item{beta_est}{estimated values of beta}
+
+\item{g}{vector with group memberships}
+
+\item{factor_group}{estimated group specific factors}
+
+\item{lambda_group}{loadings of the group specific factors}
+
+\item{comfactor}{common factors}
+
+\item{lambda}{loadings of the common factors}
+
+\item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 
 \item{NN}{number of individuals}
 
@@ -34,9 +57,13 @@ calculate_error_term(
 \item{number_of_group_factors}{number of groupfactors to be estimated}
 
 \item{number_of_common_factors}{number of common factors to be estimated}
+
+\item{no_common_factorstructure}{if there is a common factorstructure being estimated}
+
+\item{no_group_factorstructure}{if there is a group factorstructure being estimated}
 }
 \value{
-NxT matrix
+NxT matrix#'
 }
 \description{
 Calculates the error term Y - X*beta_est - LF - LgFg.

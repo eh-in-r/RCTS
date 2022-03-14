@@ -40,5 +40,5 @@ This function is used to speed up code.
 library(tidyverse)
 lambda_group = RCTS::lambda_group_true_dgp3
 factor_group = RCTS::factor_group_true_dgp3
-calculate_lgfg(lambda_group,factor_group, 3,c(3, 3, 3), 0, FALSE)
+calculate_lgfg(lambda_group,factor_group, 3, c(3, 3, 3), 0, FALSE)
 }

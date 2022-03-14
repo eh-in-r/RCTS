@@ -5,6 +5,7 @@
 \title{calculates factor loadings of common factors}
 \usage{
 calculate_lambda(
+  use_robust,
   beta_est,
   comfactor,
   g,
@@ -19,6 +20,8 @@ calculate_lambda(
 )
 }
 \arguments{
+\item{use_robust}{TRUE or FALSE: defines using the classical, robust algorithm to estimate beta}
+
 \item{beta_est}{estimated values of beta}
 
 \item{comfactor}{common factors}

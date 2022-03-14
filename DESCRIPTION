@@ -24,7 +24,7 @@ Imports:
   purrr,
   stringr,
   tidyr,
-  broom,
+  tibble,
   magrittr,
   tidyselect,
   ggplot2,

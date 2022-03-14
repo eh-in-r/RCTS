@@ -8,7 +8,7 @@ beta_true_heterogroups(
   number_of_variables,
   true_number_of_groups,
   extra_beta_factor_bth = 1,
-  limit_true_groups_bth = LIMIT_TRUE_GROUPS
+  limit_true_groups_bth = limit_true_groups
 )
 }
 \arguments{

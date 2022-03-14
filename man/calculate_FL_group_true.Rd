@@ -13,7 +13,7 @@ calculate_FL_group_true(
   true_number_of_group_factors,
   true_number_of_common_factors,
   num_factors_may_vary,
-  dgp1_AB_local = dgp1_AB
+  dgp1_AB_local = FALSE
 )
 }
 \arguments{

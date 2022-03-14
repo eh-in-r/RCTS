@@ -5,6 +5,7 @@
 \title{This is a short version of initialise_commonfactorstructure() which only contains implementations for robust macropca case and classical case.}
 \usage{
 initialise_commonfactorstructure_macropca(
+  use_robust,
   Y,
   beta_est,
   g,
@@ -14,13 +15,15 @@ initialise_commonfactorstructure_macropca(
 )
 }
 \arguments{
+\item{use_robust}{TRUE or FALSE: defines using the classical, or one of the robust algorithms}
+
 \item{Y}{Y}
 
 \item{beta_est}{estimated values of beta}
 
 \item{g}{estimated group membership}
 
-\item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual.}
+\item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 
 \item{method_estimate_factors}{specifies the robust algorithm to estimate factors: default is "macro". The value is not used when use_robust is set to FALSE.}
 

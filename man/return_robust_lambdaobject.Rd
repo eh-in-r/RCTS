@@ -8,12 +8,12 @@ return_robust_lambdaobject(
   Y_like_object,
   group,
   type,
+  g,
   NN_rrn = number_of_time_series,
   factor_group_rrn = factor_group,
   number_of_group_factors_rrn = number_of_group_factors_fixedvalue,
   comfactor_rrn = comfactor,
   number_of_common_factors_rrn = number_of_common_factors_fixedvalue,
-  application_covid = FALSE,
   verbose = FALSE
 )
 }
@@ -24,6 +24,8 @@ return_robust_lambdaobject(
 
 \item{type}{scalar which shows in which setting this function is used}
 
+\item{g}{vector with group memberships}
+
 \item{NN_rrn}{number of time series}
 
 \item{factor_group_rrn}{estimation of groupfactors}
@@ -33,8 +35,6 @@ return_robust_lambdaobject(
 \item{comfactor_rrn}{estimation of common factors}
 
 \item{number_of_common_factors_rrn}{number of common factors}
-
-\item{application_covid}{indicator of using the coviddataset (this parameter is passed to determine_robust_lambda() in which nlm() fails to find a minimum for this dataset)}
 
 \item{verbose}{when TRUE, it prints messages}
 }

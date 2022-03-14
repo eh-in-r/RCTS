@@ -5,16 +5,20 @@
 \title{Initialisation of estimation of beta (the coefficients with the observable variables)}
 \usage{
 initialise_beta(
+  use_robust,
   NN,
   TT,
   number_of_variables,
   number_vars_estimated,
   number_of_groups,
   method_estimate_beta = "individual",
-  nosetting_lmrob = FALSE
+  nosetting_lmrob = FALSE,
+  special_case_dgp1 = FALSE
 )
 }
 \arguments{
+\item{use_robust}{robust or classical estimation}
+
 \item{NN}{number of individuals}
 
 \item{TT}{length of time series}
@@ -25,9 +29,11 @@ initialise_beta(
 
 \item{number_of_groups}{number of groups}
 
-\item{method_estimate_beta}{"individual" #can be "homogeneous", "group" or "individual"}
+\item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 
 \item{nosetting_lmrob}{option to remove the recommended setting in lmrob(). It is much faster. Defaults to FALSE.}
+
+\item{special_case_dgp1}{special case for data generated according to dgp 1: it changes the 1st variable in X to 1 (-> intercept). Consequently the estimation of beta needs to be restructured slightly.}
 }
 \description{
 Note: this needs to be called before the definition of grid.
@@ -47,11 +53,8 @@ g = RCTS::g_true_dgp3
 lambda = matrix(0,nrow=1,ncol=300)
 comfactor = matrix(0,nrow=1,ncol=30)
 
-use_robust = TRUE
 #Choose how coefficients of the observable are estimated
 method_estimate_beta = "individual" #estimating beta_i for every individual
-dgp1_AB = FALSE
-dgp1_spread_group_centers = TRUE #this value is only relevant if dgp1_AB ise set to TRUE
-beta_init = initialise_beta(NN = 300, TT = 30,
+beta_init = initialise_beta(use_robust = TRUE, NN = 300, TT = 30,
   number_of_variables = 3, number_vars_estimated = 3, number_of_groups = 3)
 }

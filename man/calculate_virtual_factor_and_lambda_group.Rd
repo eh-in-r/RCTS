@@ -11,6 +11,7 @@ calculate_virtual_factor_and_lambda_group(
   NN_local,
   TT_local,
   method_estimate_factors_local,
+  g,
   number_of_variables_local = number_of_variables_fixedvalue,
   number_vars_estimated_local = number_vars_estimated_fixedvalue,
   number_of_group_factors_local = number_of_group_factors_fixedvalue,
@@ -30,6 +31,8 @@ calculate_virtual_factor_and_lambda_group(
 \item{TT_local}{T}
 
 \item{method_estimate_factors_local}{specifies the robust algorithm to estimate factors: default is "macro".}
+
+\item{g}{vector with group memberships}
 
 \item{number_of_variables_local}{number of observable variables}
 

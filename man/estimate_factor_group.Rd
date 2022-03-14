@@ -5,6 +5,7 @@
 \title{Estimates group factors}
 \usage{
 estimate_factor_group(
+  use_robust,
   beta_est,
   g,
   lambda,
@@ -22,6 +23,8 @@ estimate_factor_group(
 )
 }
 \arguments{
+\item{use_robust}{TRUE or FALSE: defines using the classical, robust algorithm to estimate beta}
+
 \item{beta_est}{estimated values of beta}
 
 \item{g}{vector with group membership}

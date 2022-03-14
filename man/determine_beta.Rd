@@ -15,7 +15,9 @@ determine_beta(
   TT = length_of_time_series,
   NN = number_of_time_series,
   number_of_variables = number_of_variables_fixedvalue,
-  nosetting_local = FALSE
+  nosetting_local = FALSE,
+  kappa_candidates = c(0.1),
+  special_case_dgp1 = FALSE
 )
 }
 \arguments{
@@ -40,6 +42,10 @@ determine_beta(
 \item{number_of_variables}{number of observable variables}
 
 \item{nosetting_local}{option to remove the recommended setting in lmrob(). It is much faster. Defaults to FALSE.}
+
+\item{kappa_candidates}{defines the size of the SCAD-penalty used in the classical algorithm}
+
+\item{special_case_dgp1}{special case for data generated according to dgp 1: it changes the 1st variable in X to 1 (-> intercept). Consequently the estimation of beta needs to be restructured slightly.}
 }
 \description{
 Helpfunction in estimate_beta() for estimating beta_est.

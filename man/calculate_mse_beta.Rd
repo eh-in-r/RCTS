@@ -8,10 +8,9 @@ calculate_mse_beta(
   beta_est,
   beta_true,
   without_intercept = FALSE,
-  dgp1_spread_group_centers = FALSE,
   NN = number_of_time_series,
   number_of_variables = number_of_variables_fixedvalue,
-  dgp1_AB_local = dgp1_AB
+  special_case_dgp1 = FALSE
 )
 }
 \arguments{
@@ -19,15 +18,13 @@ calculate_mse_beta(
 
 \item{beta_true}{true values of beta}
 
-\item{without_intercept}{boolean to remove the intercept in the calculation}
-
-\item{dgp1_spread_group_centers}{boolean to remove the de facto intercept in the calculation (this is specific for DGP 1, due to how this is defined.)}
+\item{without_intercept}{TRUE of FALSE: to remove the intercept in the calculation of the MSE}
 
 \item{NN}{number of individuals}
 
 \item{number_of_variables}{number of observable variables}
 
-\item{dgp1_AB_local}{gives information about which DGP we use; TRUE of FALSE}
+\item{special_case_dgp1}{special case for data generated according to dgp 1: it changes the 1st variable in X to 1 (-> intercept). Consequently the estimation of beta needs to be restructured slightly.}
 }
 \description{
 It is calculated with the formula on p19 of the supplement of \insertCite{Ando2017;textual}{RCTS}.

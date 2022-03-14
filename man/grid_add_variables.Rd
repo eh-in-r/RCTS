@@ -9,11 +9,13 @@ grid_add_variables(
   beta_est,
   lambda,
   comfactor,
+  method_estimate_beta,
   NN = number_of_time_series,
   TT = length_of_time_series,
   number_of_variables = number_of_variables_fixedvalue,
   number_vars_estimated = number_vars_estimated_fixedvalue,
-  number_of_groups = number_of_groups_fixedvalue
+  number_of_groups = number_of_groups_fixedvalue,
+  limit_est_groups_heterogroups = 15
 )
 }
 \arguments{
@@ -25,6 +27,8 @@ grid_add_variables(
 
 \item{comfactor}{common factors}
 
+\item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
+
 \item{NN}{number of individuals}
 
 \item{TT}{length of time series}
@@ -34,6 +38,8 @@ grid_add_variables(
 \item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
 
 \item{number_of_groups}{number of groups estimated}
+
+\item{limit_est_groups_heterogroups}{maximum amount of groups that can be estimated when method_estimate_beta is set to "group"}
 }
 \description{
 (The dataframe "grid" used to be required in update_g(), via OF_vectorized3(), but not anymore.)

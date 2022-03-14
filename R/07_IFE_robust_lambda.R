@@ -80,23 +80,24 @@ determine_robust_lambda <- function(almost_classical_lambda, fastoption = TRUE, 
 #' @param Y_like_object this is Y_ster or W or W_j
 #' @param group index of group
 #' @param type scalar which shows in which setting this function is used
+#' @param g vector with group memberships
 #' @param factor_group_rrn estimation of groupfactors
 #' @param number_of_group_factors_rrn number of group factors
 #' @param comfactor_rrn estimation of common factors
 #' @param number_of_common_factors_rrn number of common factors
 #' @param NN_rrn number of time series
-#' @param application_covid indicator of using the coviddataset (this parameter is passed to determine_robust_lambda() in which nlm() fails to find a minimum for this dataset)
+# @param application_covid indicator of using the coviddataset (this parameter is passed to determine_robust_lambda() in which nlm() fails to find a minimum for this dataset)
 #' @param verbose when TRUE, it prints messages
 #' @return Nxk dataframe
 #' @export
-return_robust_lambdaobject <- function(Y_like_object, group, type,
+return_robust_lambdaobject <- function(Y_like_object, group, type, g,
                                        NN_rrn = number_of_time_series,
                                        factor_group_rrn = factor_group,
                                        number_of_group_factors_rrn = number_of_group_factors_fixedvalue,
                                        comfactor_rrn = comfactor,
                                        number_of_common_factors_rrn = number_of_common_factors_fixedvalue,
                                        #use_real_world_data_rrn = FALSE,
-                                       application_covid = FALSE,
+                                       #application_covid = FALSE,
                                        verbose = FALSE) {
 
   if(verbose) message(paste("type =", type))
@@ -156,7 +157,9 @@ return_robust_lambdaobject <- function(Y_like_object, group, type,
   if(type == 3) { #used in calculate_lambda_group()
     lambda_local = data.frame(matrix(NA,nrow = length(which(g == group)), ncol = number_of_group_factors_rrn[group]))
 
+
     for(ii in 1:length(which(g == group))) {
+
       for(rr in 1:number_of_group_factors_rrn[group]) {
         almost_classical_lambda = (Y_like_object[ii,] * t(factor_group_rrn[[group]])[,rr])  #the mean of this is equal to classical lambda
 

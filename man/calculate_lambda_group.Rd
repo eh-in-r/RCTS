@@ -5,6 +5,7 @@
 \title{calculates factor loadings of groupfactors}
 \usage{
 calculate_lambda_group(
+  use_robust,
   beta_est,
   factor_group,
   g,
@@ -24,6 +25,8 @@ calculate_lambda_group(
 )
 }
 \arguments{
+\item{use_robust}{TRUE or FALSE: defines using the classical, robust algorithm to estimate beta}
+
 \item{beta_est}{estimated values of beta}
 
 \item{factor_group}{group factors}

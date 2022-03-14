@@ -19,7 +19,7 @@ define_object_for_initial_clustering_macropca(
 
 \item{use_robust}{TRUE or FALSE: defines using the classical, or one of the robust algorithms}
 
-\item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual.}
+\item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 
 \item{method_estimate_factors}{specifies the robust algorithm to estimate factors: default is "macro". The value is not used when use_robust is set to FALSE.}
 }

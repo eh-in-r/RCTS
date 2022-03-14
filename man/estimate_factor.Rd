@@ -5,6 +5,7 @@
 \title{Estimates common factor F}
 \usage{
 estimate_factor(
+  use_robust,
   beta_est,
   g,
   lgfg_list,
@@ -19,6 +20,8 @@ estimate_factor(
 )
 }
 \arguments{
+\item{use_robust}{TRUE or FALSE: defines using the classical, robust algorithm to estimate beta}
+
 \item{beta_est}{estimated values of beta}
 
 \item{g}{vector with group membership}
