@@ -411,12 +411,12 @@ generate_grouped_factorstructure <- function(S, true_number_of_group_factors, TT
 #' @inheritParams estimate_beta
 #' @param true_number_of_common_factors true number of common factors
 #' @param true_number_of_group_factors Vector of length the number of groups. Each element contains the true number of group factors for that group.
-#' @param g_true vector of length N with true group memberships
+#' @param g_true vector of length NN with true group memberships
 #' @param beta_true true coefficients with the observable variables
-#' @param lambda_group_true loadings of the group factors
-#' @param factor_group_true groupfactors
-#' @param lambda_true loadings of the common factors
-#' @param comfactor_true common factors
+#' @param factor_group_true true group specific factors
+#' @param lambda_group_true loadings of the true group specific factors
+#' @param comfactor_true true common factors
+#' @param lambda_true loadings of the true common factors
 #' @param epsilon NN x TT-matrix containing the error term
 #' @param X dataframe with the observed variables
 # @param ando_bai loads Ando/Bai-dataset; only for testing purposes. Defaults to FALSE.
@@ -2748,9 +2748,10 @@ matrixnorm <- function(A) {
 #'
 #' This is used in calculate_PIC()
 #' @param e2 NxT matrix with the error terms
+#' @inheritParams initialise_beta
 #' @importFrom robustbase Mpsi
 #' @export
-calculate_PIC_term1 <- function(e2) {
+calculate_PIC_term1 <- function(e2, use_robust) {
   if(use_robust) {
     #This replaces the classical sum(z^2) by sum(rho(z)) with rho the bisquare function.
 
@@ -3415,15 +3416,17 @@ create_data_dgp2 <- function(N, TT, true_number_of_groups = 3, number_external_v
 #' @param stepsize_N size of the decrease in N; multiplied with stepsize
 #' @param stepsize_T size of the decrease in T; multiplied with stepsize
 #' @param stepsize index of the subsample: this defines how many times stepsize_N is subtracted from the original N time series. Similar for stepsize_T.
+#' @param S true number of groups
 #' @param k true number of common factors
 #' @param kg vector with for each group the true number of group specific factors
 #' @inheritParams generate_Y
+#' @inheritParams update_g
 #' @param subsamples_factors determines whether subsamples of the (unobservable) factors and loadings also need to be constructed. This cannot be done for real world data. Default is TRUE.
 #' @export
-make_subsamples <- function(Y, X, factor_true, lambda_true, factor_group_true, lambda_group_true,
+make_subsamples <- function(Y, X, comfactor_true, lambda_true, factor_group_true, lambda_group_true,
                             number_of_time_series_fulldata, length_of_time_series_fulldata, stepsize,
                             stepsize_N = round(number_of_time_series_fulldata / 10),
-                            stepsize_T = round(length_of_time_series_fulldata / 30), k, kg, subsamples_factors = TRUE,
+                            stepsize_T = round(length_of_time_series_fulldata / 30), S, k, kg, subsamples_factors = TRUE,
                             verbose = TRUE) {
 
   #define size of the subsample
@@ -3454,22 +3457,22 @@ make_subsamples <- function(Y, X, factor_true, lambda_true, factor_group_true, l
   if(subsamples_factors) {
     #subsample of the factors and their loadings
     if(k > 0) {
-      factor_true = matrix(factor_true[, sampleT], nrow = k)
+      comfactor_true = matrix(comfactor_true[, sampleT], nrow = k)
       lambda_true = matrix(lambda_true[, sampleN], nrow = k)
     }
     if(max(kg) > 0) {
-      for(ii in 1:aantalgroepen_real) {
+      for(ii in 1:S) {
         factor_group_true[[ii]] = matrix(factor_group_true[[ii]][, sampleT], nrow = kg[ii])
-        lambda_group_true = lambda_group_true %>% filter(id %in% sampleN)
+        lambda_group_true = lambda_group_true %>% filter(.data$id %in% sampleN)
       }
     }
   } else {
-    factor_true = NA
+    comfactor_true = NA
     lambda_true = NA
     factor_group_true = NA
     lambda_group_true = NA
   }
-  return(list(Y, X, g_true, factor_true, lambda_true, factor_group_true, lambda_group_true))
+  return(list(Y, X, g_true, comfactor_true, lambda_true, factor_group_true, lambda_group_true))
 }
 
 #' Defines the object that will be used to define a initial clustering.
@@ -3661,7 +3664,18 @@ iterate <- function(use_robust, Y, X, lambda_group, factor_group, lambda, comfac
                              number_of_variables = vars, number_vars_estimated = vars_est)
 
   #value to minimize:
-  value = OF_vectorized3(g, grid,
+  if(use_robust) {
+    #robust: sum of "rho-functioned" (in context of M-estimators) errors / NT
+    value = calculate_PIC_term1(calculate_error_term(Y, X, beta_est,
+                                                     g,
+                                                     factor_group,
+                                                     lambda_group,
+                                                     comfactor,
+                                                     lambda,
+                                                     method_estimate_beta)) * nrow(Y) * ncol(Y)
+  } else {
+    #classical: sum of squared errors / NT
+    value = OF_vectorized3(g, grid,
                          beta_est = beta,
                          lc = lambda, fc = comfactor,
                          lg = lambda_group, fg = factor_group,
@@ -3670,6 +3684,43 @@ iterate <- function(use_robust, Y, X, lambda_group, factor_group, lambda, comfac
                          number_of_common_factors = k,
                          number_of_group_factors = kg,
                          num_factors_may_vary = TRUE)
+  }
   if(verbose) print(value)
   return(list(beta, g, comfactor, lambda, factor_group, lambda_group, value))
+}
+
+#' This function defines the convergence speed.
+#'
+#' @param iteration number of iteration
+#' @inheritParams initialise_beta
+#' @param of objective function
+#' @param verbose when TRUE, it prints more information
+get_convergence_speed <- function(iteration, use_robust, of, verbose = FALSE) {
+  if(iteration > 3) {
+    if(use_robust) {
+      evo_min = min(of[(iteration - 3):iteration], na.rm = T)
+      evo_max = max(of[(iteration - 3):iteration], na.rm = T)
+      if(verbose) print(paste("Range:",round(evo_min, 2), " -> ", round(evo_max, 2)))
+      speed = round((evo_max - evo_min), 4)
+      if(verbose) message(paste("Speed (robust): ", speed))
+    } else {
+      evo_min = min(of[(iteration - 3):iteration], na.rm = T)
+      evo_max = max(of[(iteration - 3):iteration], na.rm = T)
+      if(verbose) print(paste("Range:", round(evo_min), " -> ", round(evo_max)))
+      speed = round((evo_max - evo_min), 4)
+      if(verbose) message(paste("Speed (non-robust): ", speed))
+    }
+  } else {
+    speed = NA
+  }
+
+  return(speed)
+}
+
+#' This function checks the rules for stopping the algorithm, based on its convergence speed.
+#'
+#' @param speed convergence speed
+#' @param speedlimit if speed falls under this limit the algorithm stops
+check_stopping_rules <- function(speed, speedlimit = 0.0001) {
+  return(speed < speedlimit)
 }

@@ -8,17 +8,34 @@ It also returns the corresponding subsamples X and the group membership.}
 make_subsamples(
   Y,
   X,
+  comfactor_true,
+  lambda_true,
+  factor_group_true,
+  lambda_group_true,
   number_of_time_series_fulldata,
   length_of_time_series_fulldata,
   stepsize,
   stepsize_N = round(number_of_time_series_fulldata/10),
-  stepsize_T = round(length_of_time_series_fulldata/30)
+  stepsize_T = round(length_of_time_series_fulldata/30),
+  S,
+  k,
+  kg,
+  subsamples_factors = TRUE,
+  verbose = TRUE
 )
 }
 \arguments{
 \item{Y}{input Y}
 
 \item{X}{input X}
+
+\item{comfactor_true}{true common factors}
+
+\item{lambda_true}{loadings of the true common factors}
+
+\item{factor_group_true}{true group specific factors}
+
+\item{lambda_group_true}{loadings of the true group specific factors}
 
 \item{number_of_time_series_fulldata}{number of time series of the original dataset}
 
@@ -29,6 +46,16 @@ make_subsamples(
 \item{stepsize_N}{size of the decrease in N; multiplied with stepsize}
 
 \item{stepsize_T}{size of the decrease in T; multiplied with stepsize}
+
+\item{S}{true number of groups}
+
+\item{k}{true number of common factors}
+
+\item{kg}{vector with for each group the true number of group specific factors}
+
+\item{subsamples_factors}{determines whether subsamples of the (unobservable) factors and loadings also need to be constructed. This cannot be done for real world data. Default is TRUE.}
+
+\item{verbose}{when TRUE, it prints messages}
 }
 \description{
 This function selects a subsample of the time series, and of the length of the time series. Based on this it returns a subsample of Y.

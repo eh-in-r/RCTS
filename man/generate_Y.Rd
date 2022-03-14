@@ -29,17 +29,17 @@ generate_Y(
 
 \item{true_number_of_group_factors}{Vector of length the number of groups. Each element contains the true number of group factors for that group.}
 
-\item{g_true}{vector of length N with true group memberships}
+\item{g_true}{vector of length NN with true group memberships}
 
 \item{beta_true}{true coefficients with the observable variables}
 
-\item{lambda_group_true}{loadings of the group factors}
+\item{lambda_group_true}{loadings of the true group specific factors}
 
-\item{factor_group_true}{groupfactors}
+\item{factor_group_true}{true group specific factors}
 
-\item{lambda_true}{loadings of the common factors}
+\item{lambda_true}{loadings of the true common factors}
 
-\item{comfactor_true}{common factors}
+\item{comfactor_true}{true common factors}
 
 \item{epsilon}{NN x TT-matrix containing the error term}
 

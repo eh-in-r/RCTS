@@ -5,10 +5,12 @@
 \title{Helpfunction in calculate_mse_beta, when method_estimate_beta == "group".
 (beta is estimated for each group separately).}
 \usage{
-mse_heterogeneous_groups(without_intercept, dgp1_spread_group_centers)
+mse_heterogeneous_groups(without_intercept, special_case_dgp1)
 }
 \arguments{
 \item{without_intercept}{boolean to remove the intercept in the calculation}
+
+\item{special_case_dgp1}{special case for data generated according to dgp 1: it changes the 1st variable in X to 1 (-> intercept). Consequently the estimation of beta needs to be restructured slightly.}
 }
 \description{
 Helpfunction in calculate_mse_beta, when method_estimate_beta == "group".
