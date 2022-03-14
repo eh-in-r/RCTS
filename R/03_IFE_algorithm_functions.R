@@ -3408,13 +3408,16 @@ create_data_dgp2 <- function(N, TT, true_number_of_groups = 3, number_external_v
 #' It also returns the corresponding subsamples X and the group membership.
 #' @param Y input Y
 #' @param X input X
+# @param sampleN subsample of time series
+# @param sampleT subsample of time moments
 #' @param number_of_time_series_fulldata number of time series of the original dataset
 #' @param length_of_time_series_fulldata length of time series of the original dataset
 #' @param stepsize_N size of the decrease in N; multiplied with stepsize
 #' @param stepsize_T size of the decrease in T; multiplied with stepsize
 #' @param stepsize index of the subsample: this defines how many times stepsize_N is subtracted from the original N time series. Similar for stepsize_T.
 #' @export
-make_subsamples <- function(Y, X, number_of_time_series_fulldata, length_of_time_series_fulldata, stepsize,
+make_subsamples <- function(Y, X, #sampleN, sampleT,
+                            number_of_time_series_fulldata, length_of_time_series_fulldata, stepsize,
                             stepsize_N = round(number_of_time_series_fulldata / 10),
                             stepsize_T = round(length_of_time_series_fulldata / 30)) {
 
@@ -3422,7 +3425,7 @@ make_subsamples <- function(Y, X, number_of_time_series_fulldata, length_of_time
   subN = number_of_time_series_fulldata - stepsize * stepsize_N
   subT = length_of_time_series_fulldata - stepsize * stepsize_T
   if(!(subN > 0 & subT > 0)) {
-    stop("subN of subT < 0 -> stop")
+    stop("subN or subT < 0 -> stop")
   }
 
   #take subsample of Y and X and g
@@ -3442,7 +3445,7 @@ make_subsamples <- function(Y, X, number_of_time_series_fulldata, length_of_time
 
   #subsample of true group membership
   g_true = g_true[sampleN]
-  return(list(Y, X, g_true))
+  return(list(Y, X, g_true, sampleN, sampleT))
 }
 
 #' Defines the object that will be used to define a initial clustering.
