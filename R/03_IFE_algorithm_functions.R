@@ -3418,28 +3418,30 @@ create_data_dgp2 <- function(N, TT, true_number_of_groups = 3, number_external_v
 #' @param k true number of common factors
 #' @param kg vector with for each group the true number of group specific factors
 #' @inheritParams generate_Y
+#' @param subsamples_factors determines whether subsamples of the (unobservable) factors and loadings also need to be constructed. This cannot be done for real world data. Default is TRUE.
 #' @export
 make_subsamples <- function(Y, X, factor_true, lambda_true, factor_group_true, lambda_group_true,
                             number_of_time_series_fulldata, length_of_time_series_fulldata, stepsize,
                             stepsize_N = round(number_of_time_series_fulldata / 10),
-                            stepsize_T = round(length_of_time_series_fulldata / 30), k, kg) {
+                            stepsize_T = round(length_of_time_series_fulldata / 30), k, kg, subsamples_factors = TRUE,
+                            verbose = TRUE) {
 
-  #-> take subsample
+  #define size of the subsample
   subN = number_of_time_series_fulldata - stepsize * stepsize_N
   subT = length_of_time_series_fulldata - stepsize * stepsize_T
   if(!(subN > 0 & subT > 0)) {
     stop("subN or subT < 0 -> stop")
   }
 
-  #take subsample of Y and X and g
+  #define which N and T are in the subsample
   sampleN = sort(sample(1:number_of_time_series_fulldata, subN))
   sampleT = sort(sample(1:length_of_time_series_fulldata, subT))
 
-
+  #subsample of Y
   Y = Y[sampleN, sampleT]
 
   #subsample of X
-  if(number_of_variables_fixedvalue > 0) {
+  if(dim(X)[3] > 0) {
     X_temp = array(NA, dim = c(subN, subT, dim(X)[3]))   #subT*T_FACTOR
     X_temp[,,] = X[sampleN, sampleT,]
     X = X_temp
