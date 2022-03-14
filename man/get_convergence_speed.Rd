@@ -4,14 +4,12 @@
 \alias{get_convergence_speed}
 \title{This function defines the convergence speed.}
 \usage{
-get_convergence_speed(
-  iteration,
-  use_robust,
-  of,
-  length_of_time_series = nrow(Y),
-  number_of_time_series = ncol(Y),
-  verbose = FALSE
-)
+get_convergence_speed(iteration, of)
+}
+\arguments{
+\item{iteration}{number of iteration}
+
+\item{of}{objective function}
 }
 \description{
 This function defines the convergence speed.

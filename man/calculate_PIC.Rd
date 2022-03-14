@@ -6,6 +6,7 @@
 \usage{
 calculate_PIC(
   C,
+  use_robust,
   number_of_common_factors,
   number_of_group_factors,
   e2,
@@ -19,6 +20,8 @@ calculate_PIC(
 }
 \arguments{
 \item{C}{determines relative contribution of the penamlty terms}
+
+\item{use_robust}{TRUE or FALSE: defines using the classical, robust algorithm to estimate beta}
 
 \item{number_of_common_factors}{number of common factors to be estimated}
 

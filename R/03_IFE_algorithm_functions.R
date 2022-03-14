@@ -2811,7 +2811,7 @@ calculate_PIC_term4 <- function(temp, term4, Nj, NN = number_of_time_series, use
 #' @param e2 matrix with error terms
 #' @param sigma2 scalar: sum of squared error terms, scaled by NT
 #' @export
-calculate_PIC <- function(C, number_of_common_factors, number_of_group_factors, e2, sigma2,
+calculate_PIC <- function(C, use_robust, number_of_common_factors, number_of_group_factors, e2, sigma2,
                           NN = number_of_time_series,
                           TT = length_of_time_series,
                           number_of_variables = number_of_variables_fixedvalue,
@@ -2819,7 +2819,7 @@ calculate_PIC <- function(C, number_of_common_factors, number_of_group_factors, 
                           number_of_groups = number_of_groups_fixedvalue) {
 
 
-  term1 = calculate_PIC_term1(e2)
+  term1 = calculate_PIC_term1(e2, use_robust)
 
   if(number_vars_estimated > 0) {
     if((method_estimate_beta == "homogeneous") | (method_estimate_beta == "group")) {
@@ -3618,6 +3618,7 @@ initialise_commonfactorstructure_macropca <- function(use_robust, Y, beta_est, g
 #' @param vars number of variables available (in X)
 #' @param vars_est number of variables for which a beta is estimated. Usually equal to vars.
 #' @inheritParams update_g
+#' @export
 iterate <- function(use_robust, Y, X, lambda_group, factor_group, lambda, comfactor, S, k, kg, method_estimate_beta,
                     vars = 3, vars_est = 3, special_case_dgp1 = FALSE, verbose = FALSE) {
   if(verbose) message("update beta")
@@ -3694,22 +3695,20 @@ iterate <- function(use_robust, Y, X, lambda_group, factor_group, lambda, comfac
 #' @param iteration number of iteration
 #' @inheritParams initialise_beta
 #' @param of objective function
-#' @param verbose when TRUE, it prints more information
-get_convergence_speed <- function(iteration, use_robust, of, verbose = FALSE) {
+# @param verbose when TRUE, it prints more information
+#' @export
+get_convergence_speed <- function(iteration, of) { #, verbose = FALSE) {
   if(iteration > 3) {
-    if(use_robust) {
-      evo_min = min(of[(iteration - 3):iteration], na.rm = T)
-      evo_max = max(of[(iteration - 3):iteration], na.rm = T)
-      if(verbose) print(paste("Range:",round(evo_min, 2), " -> ", round(evo_max, 2)))
-      speed = round((evo_max - evo_min), 4)
-      if(verbose) message(paste("Speed (robust): ", speed))
-    } else {
-      evo_min = min(of[(iteration - 3):iteration], na.rm = T)
-      evo_max = max(of[(iteration - 3):iteration], na.rm = T)
-      if(verbose) print(paste("Range:", round(evo_min), " -> ", round(evo_max)))
-      speed = round((evo_max - evo_min), 4)
-      if(verbose) message(paste("Speed (non-robust): ", speed))
-    }
+    evo_min = min(of[(iteration - 3):iteration], na.rm = T)
+    evo_max = max(of[(iteration - 3):iteration], na.rm = T)
+    speed = round((evo_max - evo_min), 4)
+    # if(use_robust) {
+    #   if(verbose) print(paste("Range:",round(evo_min, 2), " -> ", round(evo_max, 2)))
+    #   if(verbose) message(paste("Speed (robust): ", speed))
+    # } else {
+    #   if(verbose) print(paste("Range:", round(evo_min), " -> ", round(evo_max)))
+    #   if(verbose) message(paste("Speed (non-robust): ", speed))
+    # }
   } else {
     speed = NA
   }
@@ -3721,6 +3720,7 @@ get_convergence_speed <- function(iteration, use_robust, of, verbose = FALSE) {
 #'
 #' @param speed convergence speed
 #' @param speedlimit if speed falls under this limit the algorithm stops
+#' @export
 check_stopping_rules <- function(speed, speedlimit = 0.0001) {
   return(speed < speedlimit)
 }
