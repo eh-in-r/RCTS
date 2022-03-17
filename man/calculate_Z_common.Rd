@@ -5,38 +5,41 @@
 \title{Calculates Z = Y - X*beta_est - LgFg. It is used in the estimate of the common factorstructure.}
 \usage{
 calculate_Z_common(
+  Y,
+  X,
   beta_est,
   g,
   lgfg_list,
+  number_of_variables,
+  number_vars_estimated,
+  number_of_group_factors,
+  method_estimate_beta,
   method_estimate_factors,
-  initialise = FALSE,
-  NN = number_of_time_series,
-  TT = length_of_time_series,
-  number_of_variables = number_of_variables_fixedvalue,
-  number_vars_estimated = number_vars_estimated_fixedvalue,
-  number_of_group_factors = number_of_group_factors_fixedvalue
+  initialise = FALSE
 )
 }
 \arguments{
+\item{Y}{Y}
+
+\item{X}{X}
+
 \item{beta_est}{estimated values of beta}
 
 \item{g}{vector with group membership}
 
 \item{lgfg_list}{This is a list (length number of groups) containing FgLg for every group.}
 
-\item{method_estimate_factors}{defines method of robust estimaton of the factors: "macro", "pertmm" or "cz"}
-
-\item{initialise}{boolean}
-
-\item{NN}{number of individuals}
-
-\item{TT}{length of time series}
-
 \item{number_of_variables}{number of observable variables}
 
 \item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
 
 \item{number_of_group_factors}{number of groupfactors to be estimated}
+
+\item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
+
+\item{method_estimate_factors}{defines method of robust estimaton of the factors: "macro", "pertmm" or "cz"}
+
+\item{initialise}{boolean}
 }
 \description{
 Calculates Z = Y - X*beta_est - LgFg. It is used in the estimate of the common factorstructure.

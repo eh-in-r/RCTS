@@ -5,10 +5,11 @@
 \title{Calculates (the estimated value of) the matrix X*beta_est.}
 \usage{
 calculate_XB_estimated(
-  NN = number_of_time_series,
-  TT = length_of_time_series,
-  number_of_variables = number_of_variables_fixedvalue,
-  number_vars_estimated = number_vars_estimated_fixedvalue
+  NN,
+  TT,
+  number_of_variables,
+  number_vars_estimated,
+  method_estimate_beta
 )
 }
 \arguments{
@@ -19,6 +20,8 @@ calculate_XB_estimated(
 \item{number_of_variables}{number of observable variables}
 
 \item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
+
+\item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 }
 \description{
 Calculates (the estimated value of) the matrix X*beta_est.

@@ -11,23 +11,26 @@ calculate_PIC(
   number_of_group_factors,
   e2,
   sigma2,
-  NN = number_of_time_series,
-  TT = length_of_time_series,
-  number_of_variables = number_of_variables_fixedvalue,
-  number_vars_estimated = number_vars_estimated_fixedvalue,
-  number_of_groups = number_of_groups_fixedvalue
+  NN,
+  TT,
+  number_of_variables,
+  number_vars_estimated,
+  number_of_groups,
+  method_estimate_beta,
+  alternative_pic = FALSE,
+  alternative_pic_2 = FALSE
 )
 }
 \arguments{
-\item{C}{determines relative contribution of the penamlty terms}
+\item{C}{determines relative contribution of the penalty terms compared to the estimation error term}
 
-\item{use_robust}{TRUE or FALSE: defines using the classical, robust algorithm to estimate beta}
+\item{use_robust}{TRUE or FALSE: defines using the classical or robust algorithm to estimate beta}
 
 \item{number_of_common_factors}{number of common factors to be estimated}
 
 \item{number_of_group_factors}{number of groupfactors to be estimated}
 
-\item{e2}{matrix with error terms}
+\item{e2}{NxT matrix with error terms}
 
 \item{sigma2}{scalar: sum of squared error terms, scaled by NT}
 
@@ -40,6 +43,12 @@ calculate_PIC(
 \item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
 
 \item{number_of_groups}{number of groups estimated}
+
+\item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
+
+\item{alternative_pic}{uses alternative PIC: for testing purposes}
+
+\item{alternative_pic_2}{modifies PIC: for testing purposes}
 }
 \description{
 This depends on kappa1 -> kappaN, through p (=number of nonzero elements of beta_est).

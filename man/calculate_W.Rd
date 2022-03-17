@@ -5,15 +5,22 @@
 \title{Calculates W = Y - X*beta_est. It is used in the initialization step of the algorithm, to initialise the factorstructures.}
 \usage{
 calculate_W(
+  Y,
+  X,
   beta_est,
   g,
-  NN = number_of_time_series,
-  TT = length_of_time_series,
-  number_of_variables = number_of_variables_fixedvalue,
-  number_vars_estimated = number_vars_estimated_fixedvalue
+  NN = nrow(Y),
+  TT = ncol(Y),
+  number_of_variables,
+  number_vars_estimated,
+  method_estimate_beta
 )
 }
 \arguments{
+\item{Y}{Y}
+
+\item{X}{X}
+
 \item{beta_est}{estimated values of beta}
 
 \item{g}{vector with group membership}
@@ -25,6 +32,8 @@ calculate_W(
 \item{number_of_variables}{number of observable variables}
 
 \item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
+
+\item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 }
 \value{
 NxT matrix

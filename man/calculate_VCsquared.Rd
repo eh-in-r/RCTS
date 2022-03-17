@@ -10,7 +10,8 @@ calculate_VCsquared(
   C_candidates,
   UPDATE1 = FALSE,
   UPDATE2 = FALSE,
-  number_of_group_factors = number_of_group_factors_fixedvalue
+  number_of_group_factors,
+  Smax
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ calculate_VCsquared(
 \item{UPDATE2}{option to indicate the number of common factors is updated during the algorithm; defaults to FALSE}
 
 \item{number_of_group_factors}{number of groupfactors to be estimated}
+
+\item{Smax}{maximum allowed number of estimated groups}
 }
 \description{
 VC² depends on C (this is the scale parameter in PIC). When VC² is equal to zero, the found number of groups and factors

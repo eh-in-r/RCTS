@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{calculate_FL_group_true}
 \alias{calculate_FL_group_true}
-\title{Calculate true groupfactorstructure.}
+\title{Calculate the true groupfactorstructure.}
 \usage{
 calculate_FL_group_true(
   NN,
@@ -39,5 +39,5 @@ calculate_FL_group_true(
 list with NjxT matrices
 }
 \description{
-Calculate true groupfactorstructure.
+Calculate the true groupfactorstructure.
 }
