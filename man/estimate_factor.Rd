@@ -6,21 +6,27 @@
 \usage{
 estimate_factor(
   use_robust,
+  Y,
+  X,
   beta_est,
   g,
   lgfg_list,
   method_estimate_factors,
+  method_estimate_beta,
+  number_of_common_factors,
+  number_of_variables,
+  number_vars_estimated,
+  number_of_group_factors,
   initialise = FALSE,
-  NN = number_of_time_series,
-  TT = length_of_time_series,
-  number_of_common_factors = number_of_common_factors_fixedvalue,
-  number_of_variables = number_of_variables_fixedvalue,
-  number_vars_estimated = number_vars_estimated_fixedvalue,
   verbose = FALSE
 )
 }
 \arguments{
-\item{use_robust}{TRUE or FALSE: defines using the classical, robust algorithm to estimate beta}
+\item{use_robust}{TRUE or FALSE: defines using the classical or robust algorithm to estimate beta}
+
+\item{Y}{Y}
+
+\item{X}{X}
 
 \item{beta_est}{estimated values of beta}
 
@@ -30,17 +36,17 @@ estimate_factor(
 
 \item{method_estimate_factors}{defines method of robust estimaton of the factors: "macro", "pertmm" or "cz"}
 
-\item{initialise}{boolean}
-
-\item{NN}{number of individuals}
-
-\item{TT}{length of time series}
+\item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 
 \item{number_of_common_factors}{number of common factors to be estimated}
 
 \item{number_of_variables}{number of observable variables}
 
 \item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
+
+\item{number_of_group_factors}{number of groupfactors to be estimated}
+
+\item{initialise}{boolean}
 
 \item{verbose}{when TRUE, it prints messages}
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{initialise_commonfactorstructure_macropca}
 \alias{initialise_commonfactorstructure_macropca}
-\title{This is a short version of initialise_commonfactorstructure() which only contains implementations for robust macropca case and classical case.}
+\title{This function initialises the estimation of the common factors and their loadings.}
 \usage{
 initialise_commonfactorstructure_macropca(
   use_robust,
@@ -11,7 +11,10 @@ initialise_commonfactorstructure_macropca(
   g,
   method_estimate_beta,
   method_estimate_factors,
-  NCF_est
+  k,
+  kg,
+  vars,
+  vars_est
 )
 }
 \arguments{
@@ -27,8 +30,14 @@ initialise_commonfactorstructure_macropca(
 
 \item{method_estimate_factors}{specifies the robust algorithm to estimate factors: default is "macro". The value is not used when use_robust is set to FALSE.}
 
-\item{NCF_est}{number of estimated common factors}
+\item{k}{number of estimated common factors}
+
+\item{kg}{vector with the number of estimated group specific factors}
+
+\item{vars}{number of available observed variables}
+
+\item{vars_est}{number of available observed variables for which a coefficient will be estimated}
 }
 \description{
-This is a short version of initialise_commonfactorstructure() which only contains implementations for robust macropca case and classical case.
+This is a short version of initialise_commonfactorstructure() which only contains implementations for the robust macropca case and the classical case.
 }

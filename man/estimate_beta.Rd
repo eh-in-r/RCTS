@@ -15,19 +15,19 @@ estimate_beta(
   method_estimate_beta = "individual",
   NN = nrow(Y),
   TT = ncol(Y),
-  number_of_groups = number_of_groups_fixedvalue,
-  number_of_group_factors = number_of_group_factors_fixedvalue,
-  number_of_common_factors = number_of_common_factors_fixedvalue,
-  number_of_variables = number_of_variables_fixedvalue,
-  number_vars_estimated = number_vars_estimated_fixedvalue,
-  num_factors_may_vary = num_factors_may_vary_fixedvalue,
+  number_of_groups,
+  number_of_group_factors,
+  number_of_common_factors,
+  number_of_variables,
+  number_vars_estimated,
+  num_factors_may_vary,
   optimize_kappa = FALSE,
   nosetting = FALSE,
   special_case_dgp1 = FALSE
 )
 }
 \arguments{
-\item{use_robust}{TRUE or FALSE: defines using the classical, robust algorithm to estimate beta}
+\item{use_robust}{TRUE or FALSE: defines using the classical or robust algorithm to estimate beta}
 
 \item{Y}{Y}
 
@@ -84,13 +84,13 @@ lambda_group = RCTS::lambda_group_true_dgp3
 factor_group = RCTS::factor_group_true_dgp3
 g = RCTS::g_true_dgp3
 #There are no common factors to be estimated  -> but needs placeholder
-lambda = matrix(0,nrow=1,ncol=300)
-comfactor = matrix(0,nrow=1,ncol=30)
+lambda = matrix(0, nrow = 1, ncol = 300)
+comfactor = matrix(0, nrow = 1, ncol=30)
 #Choose how coefficients of the observable variables are estimated
 method_estimate_beta = "individual"
 method_estimate_factors = "macro"
 beta_est = estimate_beta(use_robust = TRUE, Y, X, lambda_group, factor_group,
-  lambda, comfactor, NN = 300, TT = 30,
+  lambda, comfactor,
   number_of_groups = 3, number_of_group_factors = c(3, 3, 3), number_of_common_factors = 0,
   number_of_variables = 3,number_vars_estimated = 3, num_factors_may_vary = FALSE)[[1]]
 }

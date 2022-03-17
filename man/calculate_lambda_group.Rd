@@ -6,26 +6,31 @@
 \usage{
 calculate_lambda_group(
   use_robust,
+  Y,
+  X,
   beta_est,
   factor_group,
   g,
   lambda,
   comfactor,
   method_estimate_factors,
+  method_estimate_beta,
+  number_of_groups,
+  number_of_group_factors,
+  number_of_common_factors,
+  number_of_variables,
+  number_vars_estimated,
   initialise = FALSE,
   UPDATE1 = FALSE,
-  UPDATE2 = FALSE,
-  NN = number_of_time_series,
-  TT = length_of_time_series,
-  number_of_groups = number_of_groups_fixedvalue,
-  number_of_group_factors = number_of_group_factors_fixedvalue,
-  number_of_common_factors = number_of_common_factors_fixedvalue,
-  number_of_variables = number_of_variables_fixedvalue,
-  number_vars_estimated = number_vars_estimated_fixedvalue
+  UPDATE2 = FALSE
 )
 }
 \arguments{
-\item{use_robust}{TRUE or FALSE: defines using the classical, robust algorithm to estimate beta}
+\item{use_robust}{TRUE or FALSE: defines using the classical or robust algorithm to estimate beta}
+
+\item{Y}{Y}
+
+\item{X}{X}
 
 \item{beta_est}{estimated values of beta}
 
@@ -39,15 +44,7 @@ calculate_lambda_group(
 
 \item{method_estimate_factors}{defines method of robust estimaton of the factors: "macro", "pertmm" or "cz"}
 
-\item{initialise}{boolean}
-
-\item{UPDATE1}{option to indicate the number of groupfactors is updated during the algorithm; defaults to FALSE}
-
-\item{UPDATE2}{option to indicate the number of common factors is updated during the algorithm; defaults to FALSE}
-
-\item{NN}{number of individuals}
-
-\item{TT}{length of time series}
+\item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 
 \item{number_of_groups}{number of groups estimated}
 
@@ -58,6 +55,12 @@ calculate_lambda_group(
 \item{number_of_variables}{number of observable variables}
 
 \item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
+
+\item{initialise}{boolean}
+
+\item{UPDATE1}{option to indicate the number of groupfactors is updated during the algorithm; defaults to FALSE}
+
+\item{UPDATE2}{option to indicate the number of common factors is updated during the algorithm; defaults to FALSE}
 }
 \description{
 returns object which includes group and id of the individuals

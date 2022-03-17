@@ -5,29 +5,44 @@
 \title{Calculates sigma2maxmodel}
 \usage{
 calculate_sigma2maxmodel(
+  e,
+  NN,
+  TT,
+  kg_max,
+  S,
+  S_cand,
+  kg,
+  k,
+  k_cand,
   optimize_kappa = FALSE,
   UPDATE1 = FALSE,
-  UPDATE2 = FALSE,
-  number_of_groups = number_of_groups_fixedvalue,
-  number_of_groups_candidates = number_of_groups_candidates_fixedvalue,
-  number_of_group_factors = number_of_group_factors_fixedvalue,
-  number_of_common_factors = number_of_common_factors_fixedvalue
+  UPDATE2 = FALSE
 )
 }
 \arguments{
+\item{e}{NxT-matrix containing the error term}
+
+\item{NN}{number of individuals}
+
+\item{TT}{length of time series}
+
+\item{kg_max}{scalar: maximum allowed number of estimated factors for any group}
+
+\item{S}{estimated number of groups}
+
+\item{S_cand}{vector with candidate values for the number of groups}
+
+\item{kg}{vector with the estimated number of group specific factors for each group}
+
+\item{k}{estimated number of common factors}
+
+\item{k_cand}{vector with candidate value for the number of common factors}
+
 \item{optimize_kappa}{indicates if kappa has to be optimized or not (only relevant for the classical algorithm); defaults to FALSE}
 
 \item{UPDATE1}{option to indicate the number of groupfactors is updated during the algorithm; defaults to FALSE}
 
 \item{UPDATE2}{option to indicate the number of common factors is updated during the algorithm; defaults to FALSE}
-
-\item{number_of_groups}{number of groups estimated}
-
-\item{number_of_groups_candidates}{vector with candidate values for the number of groups}
-
-\item{number_of_group_factors}{number of groupfactors to be estimated}
-
-\item{number_of_common_factors}{number of common factors}
 }
 \description{
 Sigma2 is the sum of the squared errors, divided by NT. We need the sigma2 of the maxmodel to use (in term 2,3,4 of the PIC) instead of the configuration-dependent sigma2. (See text in paper AndoBai 2016).

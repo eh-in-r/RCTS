@@ -4,27 +4,20 @@
 \alias{calculate_obj_for_g}
 \title{Calculates objective function for individual i and group k in order to estimate group membership.}
 \usage{
-calculate_obj_for_g(
-  i,
-  k,
-  ERRORS_VIRTUAL,
-  rho_parameters,
-  use_robust,
-  TT = length_of_time_series
-)
+calculate_obj_for_g(i, k, errors_virtual, rho_parameters, use_robust, TT)
 }
 \arguments{
 \item{i}{individual}
 
 \item{k}{group}
 
-\item{ERRORS_VIRTUAL}{list with errors for each possible group}
+\item{errors_virtual}{list with errors for each possible group}
 
 \item{rho_parameters}{median and madn of the calculated error term}
 
 \item{use_robust}{robust or classical estimation}
 
-\item{TT}{T}
+\item{TT}{length of time series}
 }
 \description{
 Helpfunction in update_g().

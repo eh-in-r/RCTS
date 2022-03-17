@@ -16,6 +16,7 @@ iterate(
   k,
   kg,
   method_estimate_beta,
+  method_estimate_factors,
   vars = 3,
   vars_est = 3,
   special_case_dgp1 = FALSE,
@@ -23,7 +24,7 @@ iterate(
 )
 }
 \arguments{
-\item{use_robust}{TRUE or FALSE: defines using the classical, robust algorithm to estimate beta}
+\item{use_robust}{TRUE or FALSE: defines using the classical or robust algorithm to estimate beta}
 
 \item{Y}{Y}
 
@@ -44,6 +45,8 @@ iterate(
 \item{kg}{vector with length S. Each element contains the number of group specific factors to estimate.}
 
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
+
+\item{method_estimate_factors}{specifies the robust algorithm to estimate factors: default is "macro". The value is not used when use_robust is set to FALSE.}
 
 \item{vars}{number of variables available (in X)}
 

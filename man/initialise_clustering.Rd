@@ -4,14 +4,14 @@
 \alias{initialise_clustering}
 \title{Function that clusters time series in a dataframe with kmeans (classical algorithm) or trimmed kmeans(robust algorithms).}
 \usage{
-initialise_clustering(df, use_robust, k, max_percent_outliers_tkmeans = 0)
+initialise_clustering(df, use_robust, cl, max_percent_outliers_tkmeans = 0)
 }
 \arguments{
 \item{df}{dataframe to cluster}
 
 \item{use_robust}{TRUE or FALSE: defines using the classical, or one of the robust algorithms}
 
-\item{k}{the desired number of groups}
+\item{cl}{the desired number of groups}
 
 \item{max_percent_outliers_tkmeans}{The proportion of observations to be trimmed.}
 }

@@ -8,9 +8,9 @@ create_true_beta(
   number_of_variables,
   NN,
   true_number_of_groups,
-  beta_true_homogeneous,
-  beta_true_heterogeneous_groups,
-  beta_true_heterogeneous_individuals,
+  beta_true_homogeneous = FALSE,
+  beta_true_heterogeneous_groups = TRUE,
+  beta_true_heterogeneous_individuals = FALSE,
   limit_true_groups = 12,
   extra_beta_factor = 1
 )
@@ -41,8 +41,5 @@ beta_true_heterogeen_groups is the default case
 }
 \examples{
 library(tidyverse)
-#Decide if beta_est is common, or specific to groups or individuals: Choose 1 of the following 3.
-create_true_beta(3, NN = 300, true_number_of_groups = 3,
-  beta_true_homogeneous = FALSE, beta_true_heterogeneous_groups = TRUE,
-  beta_true_heterogeneous_individuals = FALSE)
+create_true_beta(number_of_variables = 3, NN = 300, true_number_of_groups = 3)
 }

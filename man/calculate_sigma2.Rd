@@ -4,7 +4,7 @@
 \alias{calculate_sigma2}
 \title{Calculates sum of squared errors, divided by NT}
 \usage{
-calculate_sigma2(e, NN = number_of_time_series, TT = length_of_time_series)
+calculate_sigma2(e, NN = nrow(e), TT = ncol(e))
 }
 \arguments{
 \item{e}{matrix with error terms}

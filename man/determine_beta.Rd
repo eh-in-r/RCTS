@@ -9,12 +9,13 @@ determine_beta(
   X_special,
   Y_special,
   use_robust,
+  NN,
+  TT,
+  number_of_groups,
+  method_estimate_beta,
   initialisation = FALSE,
   indices = NA,
-  optimize_kappa = FALSE,
-  TT = length_of_time_series,
-  NN = number_of_time_series,
-  number_of_variables = number_of_variables_fixedvalue,
+  number_of_variables,
   nosetting_local = FALSE,
   kappa_candidates = c(0.1),
   special_case_dgp1 = FALSE
@@ -29,15 +30,17 @@ determine_beta(
 
 \item{use_robust}{robust or classical estimation}
 
-\item{initialisation}{indicator of being in the initialisation phase}
-
-\item{indices}{individuals for which beta_est is being estimated}
-
-\item{optimize_kappa}{indicates if kappa has to be optimized or not (only relevant for the classical algorithm); defaults to FALSE}
+\item{NN}{number of individuals}
 
 \item{TT}{length of time series}
 
-\item{NN}{number of individuals}
+\item{number_of_groups}{number of groups}
+
+\item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
+
+\item{initialisation}{indicator of being in the initialisation phase}
+
+\item{indices}{individuals for which beta_est is being estimated}
 
 \item{number_of_variables}{number of observable variables}
 

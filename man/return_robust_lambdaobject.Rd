@@ -9,11 +9,11 @@ return_robust_lambdaobject(
   group,
   type,
   g,
-  NN_rrn = number_of_time_series,
+  NN,
   factor_group_rrn = factor_group,
-  number_of_group_factors_rrn = number_of_group_factors_fixedvalue,
+  number_of_group_factors_rrn,
   comfactor_rrn = comfactor,
-  number_of_common_factors_rrn = number_of_common_factors_fixedvalue,
+  number_of_common_factors_rrn,
   verbose = FALSE
 )
 }
@@ -26,7 +26,7 @@ return_robust_lambdaobject(
 
 \item{g}{vector with group memberships}
 
-\item{NN_rrn}{number of time series}
+\item{NN}{number of time series}
 
 \item{factor_group_rrn}{estimation of groupfactors}
 

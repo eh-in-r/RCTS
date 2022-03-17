@@ -4,16 +4,20 @@
 \alias{test_alternative_PIC}
 \title{This function tests alternative PIC's.}
 \usage{
-test_alternative_PIC(C, term2, term3, term4)
+test_alternative_PIC(C, term2, term3, term4, TT, alternative_pic_2 = FALSE)
 }
 \arguments{
-\item{C}{determines relative contribution of the penamlty terms}
+\item{C}{determines relative contribution of the penalty terms compared to the estimation error term}
 
 \item{term2}{term2 of PIC}
 
 \item{term3}{term3 of PIC}
 
 \item{term4}{term4 of PIC}
+
+\item{TT}{length of time series}
+
+\item{alternative_pic_2}{modifies PIC: for testing purposes}
 }
 \description{
 This function tests alternative PIC's.

@@ -14,13 +14,11 @@ calculate_error_term(
   comfactor,
   lambda,
   method_estimate_beta,
-  NN = number_of_time_series,
-  TT = length_of_time_series,
-  number_of_variables = number_of_variables_fixedvalue,
-  number_vars_estimated = number_vars_estimated_fixedvalue,
-  number_of_groups = number_of_groups_fixedvalue,
-  number_of_group_factors = number_of_group_factors_fixedvalue,
-  number_of_common_factors = number_of_common_factors_fixedvalue,
+  number_of_variables,
+  number_vars_estimated,
+  number_of_groups,
+  number_of_group_factors,
+  number_of_common_factors,
   no_common_factorstructure = FALSE,
   no_group_factorstructure = FALSE
 )
@@ -43,10 +41,6 @@ calculate_error_term(
 \item{lambda}{loadings of the common factors}
 
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
-
-\item{NN}{number of individuals}
-
-\item{TT}{length of time series}
 
 \item{number_of_variables}{number of observable variables}
 

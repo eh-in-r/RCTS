@@ -4,7 +4,7 @@
 \alias{initialise_X}
 \title{Creates X (the observable variables) to use in simulations.}
 \usage{
-initialise_X(NN, TT, number_of_variables = number_of_variables_fixedvalue)
+initialise_X(NN, TT, number_of_variables, use_robust = TRUE)
 }
 \arguments{
 \item{NN}{number of individuals}
@@ -12,6 +12,8 @@ initialise_X(NN, TT, number_of_variables = number_of_variables_fixedvalue)
 \item{TT}{length of time series}
 
 \item{number_of_variables}{number of observable variables}
+
+\item{use_robust}{logical, defines if X will be scaled with robust metrics}
 }
 \value{
 array with dimensions N x T x number of observable variables

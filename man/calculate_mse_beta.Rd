@@ -7,9 +7,11 @@
 calculate_mse_beta(
   beta_est,
   beta_true,
+  NN,
+  TT,
+  method_estimate_beta,
   without_intercept = FALSE,
-  NN = number_of_time_series,
-  number_of_variables = number_of_variables_fixedvalue,
+  number_of_variables,
   special_case_dgp1 = FALSE
 )
 }
@@ -18,9 +20,13 @@ calculate_mse_beta(
 
 \item{beta_true}{true values of beta}
 
-\item{without_intercept}{TRUE of FALSE: to remove the intercept in the calculation of the MSE}
-
 \item{NN}{number of individuals}
+
+\item{TT}{length of time series}
+
+\item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
+
+\item{without_intercept}{TRUE of FALSE: to remove the intercept in the calculation of the MSE}
 
 \item{number_of_variables}{number of observable variables}
 

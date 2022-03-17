@@ -17,7 +17,7 @@ generate_Y(
   comfactor_true,
   epsilon,
   X,
-  number_of_variables = number_of_variables_fixedvalue
+  number_of_variables
 )
 }
 \arguments{

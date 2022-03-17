@@ -10,10 +10,11 @@ calculate_errors_virtual_groups(
   virtual_grouped_factor_structure,
   NN,
   TT,
-  number_of_variables,
   number_of_common_factors,
   number_of_group_factors,
-  number_vars_estimated = number_vars_estimated_fixedvalue
+  number_of_variables,
+  number_vars_estimated,
+  method_estimate_beta
 )
 }
 \arguments{
@@ -27,13 +28,15 @@ calculate_errors_virtual_groups(
 
 \item{TT}{length of time series}
 
-\item{number_of_variables}{number of observable variables}
-
 \item{number_of_common_factors}{number of common factors to be estimated}
 
 \item{number_of_group_factors}{number of groupfactors to be estimated}
 
+\item{number_of_variables}{number of observable variables}
+
 \item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
+
+\item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 }
 \value{
 NxT matrix with the errorterms (=dataset minus the estimated factorstructure and minus X*beta)

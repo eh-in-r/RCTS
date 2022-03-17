@@ -12,10 +12,11 @@ calculate_virtual_factor_and_lambda_group(
   TT_local,
   method_estimate_factors_local,
   g,
-  number_of_variables_local = number_of_variables_fixedvalue,
-  number_vars_estimated_local = number_vars_estimated_fixedvalue,
-  number_of_group_factors_local = number_of_group_factors_fixedvalue,
-  number_of_common_factors_local = number_of_common_factors_fixedvalue,
+  number_of_variables_local,
+  number_vars_estimated_local,
+  number_of_group_factors_local,
+  number_of_common_factors_local,
+  method_estimate_beta,
   verbose = FALSE
 )
 }
@@ -26,9 +27,9 @@ calculate_virtual_factor_and_lambda_group(
 
 \item{use_robust}{robust or classical estimation of group membership}
 
-\item{NN_local}{N}
+\item{NN_local}{number of time series}
 
-\item{TT_local}{T}
+\item{TT_local}{length of time series}
 
 \item{method_estimate_factors_local}{specifies the robust algorithm to estimate factors: default is "macro".}
 
@@ -41,6 +42,8 @@ calculate_virtual_factor_and_lambda_group(
 \item{number_of_group_factors_local}{number of group factors to be estimated}
 
 \item{number_of_common_factors_local}{number of common factors to be estimated}
+
+\item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 
 \item{verbose}{when TRUE, it prints messages}
 }

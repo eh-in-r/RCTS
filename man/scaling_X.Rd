@@ -4,7 +4,7 @@
 \alias{scaling_X}
 \title{Scaling of X.}
 \usage{
-scaling_X(X, firsttime, number_of_variables = number_of_variables_fixedvalue)
+scaling_X(X, firsttime, use_robust, number_of_variables)
 }
 \arguments{
 \item{X}{input}
@@ -12,13 +12,15 @@ scaling_X(X, firsttime, number_of_variables = number_of_variables_fixedvalue)
 \item{firsttime}{Scaling before generating Y and before adding outliers: this is always with mean and sd. If this is FALSE, it indicates that
 we are using the function for a second time, after adding the outliers. In the robust case it uses median and MAD, otherwise again mean and sd.}
 
+\item{use_robust}{logical, scaling with robust metrics instead of with non-robust measures}
+
 \item{number_of_variables}{number of observable variables}
 }
 \description{
 Scaling of X.
 }
 \examples{
-X = initialise_X(300,30, number_of_variables = 3)
 use_robust = TRUE
-scaling_X(X,TRUE, number_of_variables = 3)
+X = initialise_X(300, 30, number_of_variables = 3)
+scaling_X(X,TRUE, use_robust, number_of_variables = 3)
 }

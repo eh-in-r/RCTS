@@ -6,8 +6,8 @@
 \usage{
 restructure_X_to_order_slowN_fastT(
   X,
-  number_of_variables = number_of_variables_fixedvalue,
-  number_vars_estimated = number_vars_estimated_fixedvalue
+  number_of_variables,
+  number_vars_estimated
 )
 }
 \arguments{
