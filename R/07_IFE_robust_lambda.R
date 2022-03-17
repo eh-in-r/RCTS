@@ -85,17 +85,17 @@ determine_robust_lambda <- function(almost_classical_lambda, fastoption = TRUE, 
 #' @param number_of_group_factors_rrn number of group factors
 #' @param comfactor_rrn estimation of common factors
 #' @param number_of_common_factors_rrn number of common factors
-#' @param NN_rrn number of time series
+#' @param NN number of time series
 # @param application_covid indicator of using the coviddataset (this parameter is passed to determine_robust_lambda() in which nlm() fails to find a minimum for this dataset)
 #' @param verbose when TRUE, it prints messages
 #' @return Nxk dataframe
 #' @export
 return_robust_lambdaobject <- function(Y_like_object, group, type, g,
-                                       NN_rrn = number_of_time_series,
+                                       NN,
                                        factor_group_rrn = factor_group,
-                                       number_of_group_factors_rrn = number_of_group_factors_fixedvalue,
+                                       number_of_group_factors_rrn, # = number_of_group_factors_fixedvalue,
                                        comfactor_rrn = comfactor,
-                                       number_of_common_factors_rrn = number_of_common_factors_fixedvalue,
+                                       number_of_common_factors_rrn, # = number_of_common_factors_fixedvalue,
                                        #use_real_world_data_rrn = FALSE,
                                        #application_covid = FALSE,
                                        verbose = FALSE) {
@@ -103,10 +103,10 @@ return_robust_lambdaobject <- function(Y_like_object, group, type, g,
   if(verbose) message(paste("type =", type))
   if(type == 1) {  #used in calculate_virtual_factor_and_lambda_group()
     if(number_of_group_factors_rrn[group] > 0) { #this can be zero when updating the number of factors
-      LG_local = data.frame(matrix(NA, nrow = NN_rrn, ncol = number_of_group_factors_rrn[group]))
+      LG_local = data.frame(matrix(NA, nrow = NN, ncol = number_of_group_factors_rrn[group]))
 
 
-      for(ii in 1:NN_rrn) {
+      for(ii in 1:NN) {
         #if(verbose) message(ii)
         for(rr in 1:number_of_group_factors_rrn[group]) {
           #if(verbose) message(rr)
@@ -125,7 +125,7 @@ return_robust_lambdaobject <- function(Y_like_object, group, type, g,
         }
       }
     } else { #otherwise set all to zero
-      LG_local = data.frame(matrix(0, nrow = NN_rrn, ncol = 1))
+      LG_local = data.frame(matrix(0, nrow = NN, ncol = 1))
     }
 
 
@@ -135,9 +135,9 @@ return_robust_lambdaobject <- function(Y_like_object, group, type, g,
 
   if(type == 2) { #used in calculate_lambda()
     if(number_of_common_factors_rrn > 0) {
-      lambda = matrix(NA, nrow = number_of_common_factors_rrn, ncol = NN_rrn)
+      lambda = matrix(NA, nrow = number_of_common_factors_rrn, ncol = NN)
 
-      for(ii in 1:NN_rrn) {
+      for(ii in 1:NN) {
         for(rr in 1:number_of_common_factors_rrn) {
 
           almost_classical_lambda = (Y_like_object[ii,] * t(comfactor_rrn)[,rr]) #the mean of this is equal to the classical lambda
@@ -147,7 +147,7 @@ return_robust_lambdaobject <- function(Y_like_object, group, type, g,
         }
       }
     } else {
-      lambda = matrix(rep(0,NN_rrn), nrow = 1) #all zero's
+      lambda = matrix(rep(0, NN), nrow = 1) #all zero's
     }
     return(lambda)
   }

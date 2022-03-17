@@ -7,16 +7,16 @@
 calculate_FL_group_estimated(
   lg = lambda_group,
   fg = factor_group,
-  NN = number_of_time_series,
-  TT = length_of_time_series,
-  number_of_groups = number_of_groups_fixedvalue,
-  number_of_group_factors = number_of_group_factors_fixedvalue,
-  number_of_common_factors = number_of_common_factors_fixedvalue,
-  num_factors_may_vary = num_factors_may_vary_fixedvalue
+  NN,
+  TT,
+  number_of_groups,
+  number_of_group_factors,
+  number_of_common_factors,
+  num_factors_may_vary
 )
 }
 \arguments{
-\item{lg}{loadings of estimatd group factors}
+\item{lg}{loadings of estimated group factors}
 
 \item{fg}{estimated group factors}
 

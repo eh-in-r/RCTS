@@ -5,19 +5,26 @@
 \title{Calculates Z = Y - X*beta_est - LF. It is used to estimate the groupfactorstructure.}
 \usage{
 calculate_Z_group(
+  Y,
+  X,
   beta_est,
   g,
   lambda,
   comfactor,
   group,
-  initialise,
-  TT = length_of_time_series,
-  number_of_variables = number_of_variables_fixedvalue,
-  number_vars_estimated = number_vars_estimated_fixedvalue,
-  number_of_common_factors = number_of_common_factors_fixedvalue
+  TT = ncol(Y),
+  number_of_variables,
+  number_vars_estimated,
+  number_of_common_factors,
+  method_estimate_beta,
+  initialise
 )
 }
 \arguments{
+\item{Y}{Y}
+
+\item{X}{X}
+
 \item{beta_est}{estimated values of beta}
 
 \item{g}{vector with group membership}
@@ -28,8 +35,6 @@ calculate_Z_group(
 
 \item{group}{the number of the group}
 
-\item{initialise}{boolean}
-
 \item{TT}{length of time series}
 
 \item{number_of_variables}{number of observable variables}
@@ -37,6 +42,10 @@ calculate_Z_group(
 \item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
 
 \item{number_of_common_factors}{number of common factors to be estimated}
+
+\item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
+
+\item{initialise}{boolean}
 }
 \description{
 Calculates Z = Y - X*beta_est - LF. It is used to estimate the groupfactorstructure.

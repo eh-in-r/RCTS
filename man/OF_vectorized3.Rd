@@ -5,6 +5,8 @@
 \title{Calculates objective function: used in local_search + to determine "best_result".}
 \usage{
 OF_vectorized3(
+  NN,
+  TT,
   group_memberships,
   grid,
   beta_est = beta_est,
@@ -12,14 +14,18 @@ OF_vectorized3(
   fc = comfactor,
   lg = lambda_group,
   fg = factor_group,
-  NN = number_of_time_series,
-  number_of_groups = number_of_groups_fixedvalue,
-  number_of_common_factors = number_of_common_factors_fixedvalue,
-  number_of_group_factors = number_of_group_factors_fixedvalue,
-  num_factors_may_vary = num_factors_may_vary_fixedvalue
+  number_of_groups,
+  number_of_common_factors,
+  number_of_group_factors,
+  method_estimate_beta,
+  num_factors_may_vary
 )
 }
 \arguments{
+\item{NN}{number of individuals}
+
+\item{TT}{length of time series}
+
 \item{group_memberships}{Vector containing the group membership for all individuals.}
 
 \item{grid}{dataframe containing XB, FgLg and FL}
@@ -34,13 +40,13 @@ OF_vectorized3(
 
 \item{fg}{estimated groupfactors}
 
-\item{NN}{number of individuals}
-
 \item{number_of_groups}{number of groups estimated}
 
 \item{number_of_common_factors}{number of common factors to be estimated}
 
 \item{number_of_group_factors}{number of groupfactors to be estimated}
+
+\item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 
 \item{num_factors_may_vary}{whether or not the number of groupfactors is constant over all groups or not}
 }

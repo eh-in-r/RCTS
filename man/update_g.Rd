@@ -9,11 +9,12 @@ update_g(
   NN,
   TT,
   method_estimate_factors,
-  number_of_groups = number_of_groups_fixedvalue,
-  number_of_variables = number_of_variables_fixedvalue,
-  number_vars_estimated = number_vars_estimated_fixedvalue,
-  number_of_group_factors = number_of_group_factors_fixedvalue,
-  number_of_common_factors = number_of_common_factors_fixedvalue,
+  method_estimate_beta,
+  number_of_groups,
+  number_of_variables,
+  number_vars_estimated,
+  number_of_group_factors,
+  number_of_common_factors,
   verbose = FALSE
 )
 }
@@ -25,6 +26,8 @@ update_g(
 \item{TT}{length of time series}
 
 \item{method_estimate_factors}{defines method of robust estimaton of the factors: "macro", "pertmm" or "cz"}
+
+\item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 
 \item{number_of_groups}{number of groups estimated}
 
@@ -58,25 +61,23 @@ factor_group = RCTS::factor_group_true_dgp3
 g_true = RCTS::g_true_dgp3 #true values of group membership
 g = g_true #estimated values of group membership; set in this example to be equal to true values
 #There are no common factors to be estimated  ->  use placeholder with values set to zero
-lambda = matrix(0,nrow=1,ncol=300)
-comfactor = matrix(0,nrow=1,ncol=30)
+lambda = matrix(0, nrow = 1, ncol = 300)
+comfactor = matrix(0, nrow = 1, ncol = 30)
 grid = expand.grid(1:300,1:30)
 #Choose how coefficients of the observable are estimated
 method_estimate_beta = "individual"
 method_estimate_factors = "macro"
-number_vars_estimated_fixedvalue = 3
 beta_est = estimate_beta(use_robust = TRUE, Y, X, lambda_group, factor_group,
-lambda, comfactor, NN = 300, TT = 30,
+  lambda, comfactor,
   number_of_groups = 3, number_of_group_factors = c(3, 3, 3), number_of_common_factors = 0,
-  number_of_variables = 3, number_vars_estimated = number_vars_estimated_fixedvalue,
+  number_of_variables = 3, number_vars_estimated = 3,
   num_factors_may_vary = TRUE)[[1]]
-grid = grid_add_variables(grid, beta_est, lambda, comfactor, method_estimate_beta,
-  NN = 300, TT = 30,
-  number_of_variables = 3, number_vars_estimated = number_vars_estimated_fixedvalue,
-  number_of_groups = 3)
-g_new = update_g(use_robust = TRUE, NN = 300, TT = 30, method_estimate_factors,
+grid = grid_add_variables(grid, Y, X, beta_est, lambda, comfactor, method_estimate_beta,
+number_of_variables = 3, number_vars_estimated = 3, number_of_groups = 3)
+g_new = update_g(use_robust = TRUE, NN = 300, TT = 30,
+  method_estimate_factors, method_estimate_beta,
   number_of_groups = 3, number_of_variables = 3,
-  number_vars_estimated = number_vars_estimated_fixedvalue,
+  number_vars_estimated = 3,
   number_of_group_factors = c(3, 3, 3),
   number_of_common_factors = 0)[[1]]
 }
