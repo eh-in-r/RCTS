@@ -9,41 +9,38 @@ grid_add_variables(
   Y,
   X,
   beta_est,
+  g,
   lambda,
   comfactor,
   method_estimate_beta,
-  number_of_variables,
-  number_vars_estimated,
-  number_of_groups,
-  NN = nrow(Y),
-  TT = ncol(Y),
+  vars,
+  vars_est,
+  S,
   limit_est_groups_heterogroups = 15
 )
 }
 \arguments{
 \item{grid}{dataframe containing values for X*beta_est and LF (product of common factor and its loadings)}
 
-\item{Y}{Y}
+\item{Y}{Y: the panel data of interest}
 
 \item{X}{X}
 
 \item{beta_est}{estimated values of beta}
 
-\item{lambda}{loadings of the common factors}
+\item{g}{Vector with estimated group membership for all individuals}
 
-\item{comfactor}{common factors}
+\item{lambda}{loadings of the estimated common factors}
+
+\item{comfactor}{estimated common factors}
 
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 
-\item{number_of_variables}{number of observable variables}
+\item{vars}{number of observable variables}
 
-\item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
+\item{vars_est}{number of variables that will be included in the algorithm and have their coefficient estimated. This is usually equal to vars}
 
-\item{number_of_groups}{number of groups estimated}
-
-\item{NN}{number of individuals}
-
-\item{TT}{length of time series}
+\item{S}{number of estimated groups}
 
 \item{limit_est_groups_heterogroups}{maximum amount of groups that can be estimated when method_estimate_beta is set to "group"}
 }

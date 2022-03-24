@@ -9,7 +9,7 @@ initialise_clustering(df, use_robust, cl, max_percent_outliers_tkmeans = 0)
 \arguments{
 \item{df}{dataframe to cluster}
 
-\item{use_robust}{TRUE or FALSE: defines using the classical, or one of the robust algorithms}
+\item{use_robust}{TRUE or FALSE: defines using the classical or robust algorithm to estimate beta}
 
 \item{cl}{the desired number of groups}
 

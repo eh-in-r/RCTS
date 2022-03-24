@@ -4,24 +4,21 @@
 \alias{restructure_X_to_order_slowN_fastT}
 \title{This function restructures X (which is an 3D-array of dimensions (N,T,p) to a 2D-matrix of dimension (NxT,p).}
 \usage{
-restructure_X_to_order_slowN_fastT(
-  X,
-  number_of_variables,
-  number_vars_estimated
-)
+restructure_X_to_order_slowN_fastT(X, vars, vars_est)
 }
 \arguments{
 \item{X}{input}
 
-\item{number_of_variables}{number of observable variables}
+\item{vars}{number of observable variables}
 
-\item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
+\item{vars_est}{number of variables that will be included in the algorithm and have their coefficient estimated. This is usually equal to vars}
 }
 \description{
-This 2D-matrix is what Ando/Bai worked with.
+This function restructures X (which is an 3D-array of dimensions (N,T,p) to a 2D-matrix of dimension (NxT,p).
 }
 \examples{
-X = initialise_X(300, 30, number_of_variables = 3)
-X_restructured = restructure_X_to_order_slowN_fastT(X,
-  number_of_variables = 3, number_vars_estimated = 3)
+X <- initialise_X(300, 30, vars = 3)
+X_restructured <- restructure_X_to_order_slowN_fastT(X,
+  vars = 3, vars_est = 3
+)
 }

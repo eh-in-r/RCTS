@@ -7,7 +7,7 @@
 reassign_if_empty_groups(g, S_true, TT)
 }
 \arguments{
-\item{g}{Vector of group membership for all individuals.}
+\item{g}{Vector with group membership for all individuals}
 
 \item{S_true}{true number of groups}
 

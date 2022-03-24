@@ -4,7 +4,7 @@
 \alias{scaling_X}
 \title{Scaling of X.}
 \usage{
-scaling_X(X, firsttime, use_robust, number_of_variables)
+scaling_X(X, firsttime, use_robust, vars)
 }
 \arguments{
 \item{X}{input}
@@ -14,13 +14,13 @@ we are using the function for a second time, after adding the outliers. In the r
 
 \item{use_robust}{logical, scaling with robust metrics instead of with non-robust measures}
 
-\item{number_of_variables}{number of observable variables}
+\item{vars}{number of observable variables}
 }
 \description{
 Scaling of X.
 }
 \examples{
-use_robust = TRUE
-X = initialise_X(300, 30, number_of_variables = 3)
-scaling_X(X,TRUE, use_robust, number_of_variables = 3)
+use_robust <- TRUE
+X <- initialise_X(300, 30, vars = 3)
+scaling_X(X, TRUE, use_robust, vars = 3)
 }

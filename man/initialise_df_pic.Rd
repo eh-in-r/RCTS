@@ -4,7 +4,10 @@
 \alias{initialise_df_pic}
 \title{This function initialises a dataframe which will contain the PIC for each configuration and for each value of C.}
 \usage{
-initialise_df_pic()
+initialise_df_pic(C_candidates)
+}
+\arguments{
+\item{C_candidates}{candidates for C (parameter in PIC)}
 }
 \description{
 This function initialises a dataframe which will contain the PIC for each configuration and for each value of C.

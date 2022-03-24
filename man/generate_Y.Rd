@@ -7,31 +7,31 @@
 generate_Y(
   NN,
   TT,
-  true_number_of_common_factors,
-  true_number_of_group_factors,
+  k_true,
+  kg_true,
   g_true,
   beta_true,
   lambda_group_true,
   factor_group_true,
   lambda_true,
   comfactor_true,
-  epsilon,
+  eps,
   X,
-  number_of_variables
+  vars
 )
 }
 \arguments{
-\item{NN}{number of individuals}
+\item{NN}{number of time series}
 
 \item{TT}{length of time series}
 
-\item{true_number_of_common_factors}{true number of common factors}
+\item{k_true}{true number of common factors}
 
-\item{true_number_of_group_factors}{Vector of length the number of groups. Each element contains the true number of group factors for that group.}
+\item{kg_true}{Vector of length the number of groups. Each element contains the true number of group factors for that group.}
 
 \item{g_true}{vector of length NN with true group memberships}
 
-\item{beta_true}{true coefficients with the observable variables}
+\item{beta_true}{true coefficients of the observable variables}
 
 \item{lambda_group_true}{loadings of the true group specific factors}
 
@@ -41,11 +41,11 @@ generate_Y(
 
 \item{comfactor_true}{true common factors}
 
-\item{epsilon}{NN x TT-matrix containing the error term}
+\item{eps}{NN x TT-matrix containing the error term}
 
 \item{X}{dataframe with the observed variables}
 
-\item{number_of_variables}{number of observable variables}
+\item{vars}{number of observable variables}
 }
 \value{
 N x T matrix

@@ -6,11 +6,12 @@
 \usage{
 initialise_beta(
   use_robust,
-  NN,
-  TT,
-  number_of_variables,
-  number_vars_estimated,
-  number_of_groups,
+  Y,
+  X,
+  vars,
+  vars_est,
+  S,
+  g,
   method_estimate_beta = "individual",
   nosetting_lmrob = FALSE,
   special_case_dgp1 = FALSE
@@ -19,15 +20,17 @@ initialise_beta(
 \arguments{
 \item{use_robust}{robust or classical estimation}
 
-\item{NN}{number of individuals}
+\item{Y}{Y: the panel data of interest}
 
-\item{TT}{length of time series}
+\item{X}{dataframe with the observed variables}
 
-\item{number_of_variables}{number of observable variables}
+\item{vars}{number of observable variables}
 
-\item{number_vars_estimated}{number of variables from which the coefficients are estimated}
+\item{vars_est}{number of variables from which the coefficients are estimated}
 
-\item{number_of_groups}{number of groups}
+\item{S}{estimated number of groups}
+
+\item{g}{Vector with estimated group membership for all individuals}
 
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 
@@ -39,22 +42,23 @@ initialise_beta(
 Note: this needs to be called before the definition of grid.
 }
 \examples{
-library(RCTS)
-library(tidyverse)
-library(robustbase)
+library("RCTS")
+library("tidyverse")
+library("robustbase")
 
-X = RCTS::X_dgp3
-Y = RCTS::Y_dgp3
-#Set estimations for group factors and its loadings, and group membership to the true value
-lambda_group = RCTS::lambda_group_true_dgp3
-factor_group = RCTS::factor_group_true_dgp3
-g = RCTS::g_true_dgp3
-#There are no common factors to be estimated  -> but needs placeholder
-lambda = matrix(0,nrow=1,ncol=300)
-comfactor = matrix(0,nrow=1,ncol=30)
+X <- RCTS::X_dgp3
+Y <- RCTS::Y_dgp3
+# Set estimations for group factors and its loadings, and group membership to the true value
+lambda_group <- lambda_group_true_dgp3
+factor_group <- RCTS::factor_group_true_dgp3
+g <- RCTS::g_true_dgp3
+# There are no common factors to be estimated  -> but needs placeholder
+lambda <- matrix(0, nrow = 1, ncol = 300)
+comfactor <- matrix(0, nrow = 1, ncol = 30)
 
-#Choose how coefficients of the observable are estimated
-method_estimate_beta = "individual" #estimating beta_i for every individual
-beta_init = initialise_beta(use_robust = TRUE, NN = 300, TT = 30,
-  number_of_variables = 3, number_vars_estimated = 3, number_of_groups = 3)
+# Choose how coefficients of the observable are estimated
+method_estimate_beta <- "individual" # estimating beta_i for every individual
+beta_init <- initialise_beta(TRUE, Y, X,
+  vars = 3, vars_est = 3, S = 3, g
+)
 }

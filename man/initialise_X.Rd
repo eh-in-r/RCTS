@@ -4,16 +4,16 @@
 \alias{initialise_X}
 \title{Creates X (the observable variables) to use in simulations.}
 \usage{
-initialise_X(NN, TT, number_of_variables, use_robust = TRUE)
+initialise_X(NN, TT, vars, scale_robust = TRUE)
 }
 \arguments{
-\item{NN}{number of individuals}
+\item{NN}{number of time series}
 
 \item{TT}{length of time series}
 
-\item{number_of_variables}{number of observable variables}
+\item{vars}{number of observable variables}
 
-\item{use_robust}{logical, defines if X will be scaled with robust metrics}
+\item{scale_robust}{logical, defines if X will be scaled with robust metrics instead of with non-robust metrics}
 }
 \value{
 array with dimensions N x T x number of observable variables
@@ -23,5 +23,5 @@ X is an array with dimensions N, T and number of observable variables.
 The variables are randomly generated with mean 0 and sd 1.
 }
 \examples{
-initialise_X(300,30, number_of_variables = 3)
+initialise_X(300, 30, vars = 3)
 }

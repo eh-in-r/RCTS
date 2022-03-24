@@ -7,8 +7,10 @@
 initialise_commonfactorstructure_macropca(
   use_robust,
   Y,
+  X,
   beta_est,
   g,
+  factor_group,
   method_estimate_beta,
   method_estimate_factors,
   k,
@@ -18,13 +20,17 @@ initialise_commonfactorstructure_macropca(
 )
 }
 \arguments{
-\item{use_robust}{TRUE or FALSE: defines using the classical, or one of the robust algorithms}
+\item{use_robust}{robust or classical estimation}
 
-\item{Y}{Y}
+\item{Y}{Y: the panel data of interest}
+
+\item{X}{dataframe with the observed variables}
 
 \item{beta_est}{estimated values of beta}
 
-\item{g}{estimated group membership}
+\item{g}{Vector with estimated group membership for all individuals}
+
+\item{factor_group}{estimated group specific factors}
 
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 

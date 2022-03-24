@@ -6,7 +6,7 @@
 \usage{
 generate_grouped_factorstructure(
   S,
-  true_number_of_group_factors,
+  kg_true,
   TT,
   g_true,
   lgr_factor_mean = 0,
@@ -18,11 +18,11 @@ generate_grouped_factorstructure(
 \arguments{
 \item{S}{true number of groups}
 
-\item{true_number_of_group_factors}{vector with as length the number of groups, where each element is the true number of groupfactors of that group.}
+\item{kg_true}{vector with as length the number of groups, where each element is the true number of groupfactors of that group.}
 
 \item{TT}{length of time series}
 
-\item{g_true}{true group membership}
+\item{g_true}{vector of length NN with true group memberships}
 
 \item{lgr_factor_mean}{mean of the normal distribution from which the loadings are generated}
 
@@ -41,8 +41,8 @@ factors ~ N(j * fgr_factor_mean, fgr_factor_sd) -> default case will be N(j, 1)
 loadings ~ N(lgr_factor_mean, j * lgr_factor_sd) -> default case will be N(0, j)
 }
 \examples{
-library(tidyverse)
-#For 3 groups, each with 3 groupfactors:
-g_true = ceiling(runif(300) * 3)
+library("tidyverse")
+# For 3 groups, each with 3 groupfactors:
+g_true <- ceiling(runif(300) * 3)
 generate_grouped_factorstructure(3, c(3, 3, 3), TT = 30, g_true)
 }

@@ -6,38 +6,53 @@
 \usage{
 update_g(
   use_robust,
-  NN,
-  TT,
+  Y,
+  X,
+  beta_est,
+  g,
   method_estimate_factors,
   method_estimate_beta,
-  number_of_groups,
-  number_of_variables,
-  number_vars_estimated,
-  number_of_group_factors,
-  number_of_common_factors,
+  factor_group,
+  lambda,
+  comfactor,
+  S,
+  k,
+  kg,
+  vars,
+  vars_est,
   verbose = FALSE
 )
 }
 \arguments{
 \item{use_robust}{robust or classical estimation of group membership}
 
-\item{NN}{number of individuals}
+\item{Y}{Y: the panel data of interest}
 
-\item{TT}{length of time series}
+\item{X}{X}
+
+\item{beta_est}{estimated values of beta}
+
+\item{g}{Vector with estimated group membership for all individuals}
 
 \item{method_estimate_factors}{defines method of robust estimaton of the factors: "macro", "pertmm" or "cz"}
 
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 
-\item{number_of_groups}{number of groups estimated}
+\item{factor_group}{estimated group specific factors}
 
-\item{number_of_variables}{number of observable variables}
+\item{lambda}{loadings of the estimated common factors}
 
-\item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
+\item{comfactor}{estimated common factors}
 
-\item{number_of_group_factors}{number of groupfactors to be estimated}
+\item{S}{number of estimated groups}
 
-\item{number_of_common_factors}{number of common factors to be estimated}
+\item{k}{number of common factors to be estimated}
+
+\item{kg}{number of group specific factors to be estimated}
+
+\item{vars}{number of observable variables}
+
+\item{vars_est}{number of variables that will be included in the algorithm and have their coefficient estimated. This is usually equal to vars}
 
 \item{verbose}{when TRUE, it prints messages}
 }
@@ -48,36 +63,38 @@ list: 1st element contains group membership and second element contains the valu
 Function that estimates group membership.
 }
 \examples{
-#This function needs several initial parameters to be initialized in order to work on itself
-library(RCTS)
-library(tidyverse)
-library(robustbase)
+# This function needs several initial parameters to be initialized in order to work on itself
+library("RCTS")
+library("tidyverse")
+library("robustbase")
 
-X = RCTS::X_dgp3
-Y = RCTS::Y_dgp3
-#Set estimations for group factors and its loadings, and group membership to the true value
-lambda_group = RCTS::lambda_group_true_dgp3
-factor_group = RCTS::factor_group_true_dgp3
-g_true = RCTS::g_true_dgp3 #true values of group membership
-g = g_true #estimated values of group membership; set in this example to be equal to true values
-#There are no common factors to be estimated  ->  use placeholder with values set to zero
-lambda = matrix(0, nrow = 1, ncol = 300)
-comfactor = matrix(0, nrow = 1, ncol = 30)
-grid = expand.grid(1:300,1:30)
-#Choose how coefficients of the observable are estimated
-method_estimate_beta = "individual"
-method_estimate_factors = "macro"
-beta_est = estimate_beta(use_robust = TRUE, Y, X, lambda_group, factor_group,
+X <- RCTS::X_dgp3
+Y <- RCTS::Y_dgp3
+# Set estimations for group factors and its loadings, and group membership to the true value
+lambda_group <- lambda_group_true_dgp3
+factor_group <- RCTS::factor_group_true_dgp3
+g_true <- RCTS::g_true_dgp3 # true values of group membership
+g <- g_true # estimated values of group membership; set in this example to be equal to true values
+# There are no common factors to be estimated  ->  use placeholder with values set to zero
+lambda <- matrix(0, nrow = 1, ncol = 300)
+comfactor <- matrix(0, nrow = 1, ncol = 30)
+# Choose how coefficients of the observable are estimated
+method_estimate_beta <- "individual"
+method_estimate_factors <- "macro"
+beta_est <- estimate_beta(
+  use_robust = TRUE, Y, X, g, lambda_group, factor_group,
   lambda, comfactor,
-  number_of_groups = 3, number_of_group_factors = c(3, 3, 3), number_of_common_factors = 0,
-  number_of_variables = 3, number_vars_estimated = 3,
-  num_factors_may_vary = TRUE)[[1]]
-grid = grid_add_variables(grid, Y, X, beta_est, lambda, comfactor, method_estimate_beta,
-number_of_variables = 3, number_vars_estimated = 3, number_of_groups = 3)
-g_new = update_g(use_robust = TRUE, NN = 300, TT = 30,
-  method_estimate_factors, method_estimate_beta,
-  number_of_groups = 3, number_of_variables = 3,
-  number_vars_estimated = 3,
-  number_of_group_factors = c(3, 3, 3),
-  number_of_common_factors = 0)[[1]]
+  S = 3, k = 0, kg = c(3, 3, 3),
+  vars = 3, vars_est = 3,
+  num_factors_may_vary = TRUE
+)[[1]]
+g_new <- update_g(
+  use_robust = TRUE, Y, X, beta_est, g,
+  method_estimate_factors, method_estimate_beta, factor_group, lambda, comfactor,
+  S = 3,
+  k = 0,
+  kg = c(3, 3, 3),
+  vars = 3,
+  vars_est = 3,
+)[[1]]
 }

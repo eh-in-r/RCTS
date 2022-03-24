@@ -4,14 +4,16 @@
 \alias{solveFG}
 \title{Helpfunction in update_g(), to calculate solve(FG x t(FG)) x FG}
 \usage{
-solveFG(TT, number_of_groups, number_of_group_factors)
+solveFG(TT, S, kg, factor_group)
 }
 \arguments{
 \item{TT}{length of time series}
 
-\item{number_of_groups}{number of groups}
+\item{S}{number of groups}
 
-\item{number_of_group_factors}{number of group factors to be estimated}
+\item{kg}{vector with the estimated number of group specific factors for each group}
+
+\item{factor_group}{estimated group specific factors}
 }
 \description{
 Helpfunction in update_g(), to calculate solve(FG x t(FG)) x FG

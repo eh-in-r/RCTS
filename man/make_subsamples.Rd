@@ -6,54 +6,21 @@
 It also returns the corresponding subsamples X and the group membership.}
 \usage{
 make_subsamples(
-  Y,
-  X,
-  comfactor_true,
-  lambda_true,
-  factor_group_true,
-  lambda_group_true,
-  number_of_time_series_fulldata,
-  length_of_time_series_fulldata,
-  stepsize,
-  stepsize_N = round(number_of_time_series_fulldata/10),
-  stepsize_T = round(length_of_time_series_fulldata/30),
-  S,
-  k,
-  kg,
+  original_data,
+  subset,
   subsamples_factors = TRUE,
+  use_real_world_data = FALSE,
   verbose = TRUE
 )
 }
 \arguments{
-\item{Y}{input Y}
+\item{original_data}{list containing the true data: Y, X, g_true, beta_true, factor_group_true, lambda_group_true, comfactor_true, lambda_true}
 
-\item{X}{input X}
-
-\item{comfactor_true}{true common factors}
-
-\item{lambda_true}{loadings of the true common factors}
-
-\item{factor_group_true}{true group specific factors}
-
-\item{lambda_group_true}{loadings of the true group specific factors}
-
-\item{number_of_time_series_fulldata}{number of time series of the original dataset}
-
-\item{length_of_time_series_fulldata}{length of time series of the original dataset}
-
-\item{stepsize}{index of the subsample: this defines how many times stepsize_N is subtracted from the original N time series. Similar for stepsize_T.}
-
-\item{stepsize_N}{size of the decrease in N; multiplied with stepsize}
-
-\item{stepsize_T}{size of the decrease in T; multiplied with stepsize}
-
-\item{S}{true number of groups}
-
-\item{k}{true number of common factors}
-
-\item{kg}{vector with for each group the true number of group specific factors}
+\item{subset}{index of the subsample: this defines how many times stepsize_N is subtracted from the original N time series. Similar for stepsize_T.}
 
 \item{subsamples_factors}{determines whether subsamples of the (unobservable) factors and loadings also need to be constructed. This cannot be done for real world data. Default is TRUE.}
+
+\item{use_real_world_data}{indicates using real world data; defaults to FALSE}
 
 \item{verbose}{when TRUE, it prints messages}
 }
