@@ -13,10 +13,10 @@ estimate_factor(
   lgfg_list,
   method_estimate_factors,
   method_estimate_beta,
-  number_of_common_factors,
-  number_of_variables,
-  number_vars_estimated,
-  number_of_group_factors,
+  k,
+  kg,
+  vars,
+  vars_est,
   initialise = FALSE,
   verbose = FALSE
 )
@@ -24,13 +24,13 @@ estimate_factor(
 \arguments{
 \item{use_robust}{TRUE or FALSE: defines using the classical or robust algorithm to estimate beta}
 
-\item{Y}{Y}
+\item{Y}{Y: the panel data of interest}
 
 \item{X}{X}
 
 \item{beta_est}{estimated values of beta}
 
-\item{g}{vector with group membership}
+\item{g}{Vector with group membership for all individuals}
 
 \item{lgfg_list}{This is a list (length number of groups) containing FgLg for every group.}
 
@@ -38,15 +38,15 @@ estimate_factor(
 
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 
-\item{number_of_common_factors}{number of common factors to be estimated}
+\item{k}{number of common factors to be estimated}
 
-\item{number_of_variables}{number of observable variables}
+\item{kg}{number of group specific factors to be estimated}
 
-\item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
+\item{vars}{number of observable variables}
 
-\item{number_of_group_factors}{number of groupfactors to be estimated}
+\item{vars_est}{number of variables that will be included in the algorithm and have their coefficient estimated. This is usually equal to vars}
 
-\item{initialise}{boolean}
+\item{initialise}{indicator of being in the initialisation phase}
 
 \item{verbose}{when TRUE, it prints messages}
 }

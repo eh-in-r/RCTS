@@ -4,12 +4,14 @@
 \alias{clustering_with_robust_distances}
 \title{Function that puts individuals in a separate "class zero", when their distance to all possible groups is bigger then a threshold.}
 \usage{
-clustering_with_robust_distances(g, number_of_groups)
+clustering_with_robust_distances(g, number_of_groups, Y)
 }
 \arguments{
-\item{g}{vector with group membership}
+\item{g}{Vector with group membership for all individuals}
 
-\item{number_of_groups}{number of groups
+\item{number_of_groups}{number of groups}
+
+\item{Y}{Y: the panel data of interest
 It starts with defining a robust location and scatter (based on Ma & Genton (2000): Highly robust estimation of the autocovariance function)}
 }
 \value{

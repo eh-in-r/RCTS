@@ -4,28 +4,22 @@
 \alias{create_data_dgp2}
 \title{This function creates an instance of DGP 2, as defined in \insertCite{BoudtHeyndels2021;textual}{RCTS}.}
 \usage{
-create_data_dgp2(
-  N,
-  TT,
-  true_number_of_groups = 3,
-  vars = 3,
-  true_number_of_common_factors = 0,
-  true_number_of_group_factors = c(3, 3, 3)
-)
+create_data_dgp2(N, TT, S_true = 3, vars = 3, k_true = 0, kg_true = c(3, 3, 3))
 }
 \arguments{
 \item{N}{number of time series}
 
 \item{TT}{length of time series}
 
-\item{true_number_of_groups}{true number of groups}
+\item{S_true}{true number of groups}
 
 \item{vars}{number of available observed variables}
 
-\item{true_number_of_common_factors}{true number of common_factors}
+\item{k_true}{true number of common_factors}
 
-\item{true_number_of_group_factors}{vector with the true number of group factors for each group}
+\item{kg_true}{vector with the true number of group factors for each group}
 }
 \description{
+The default has 3 groups with each 3 group specific factors. Further it contains 0 common factors and 3 observed variables.
 The output is a dataframe with N (amount of time series) rows and T (length of time series) columns.
 }

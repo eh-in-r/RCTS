@@ -5,28 +5,23 @@
 \title{Creates beta_true, which contains the true values of beta (= the coefficients of X)}
 \usage{
 create_true_beta(
-  number_of_variables,
+  vars,
   NN,
-  true_number_of_groups,
-  beta_true_homogeneous = FALSE,
-  beta_true_heterogeneous_groups = TRUE,
-  beta_true_heterogeneous_individuals = FALSE,
+  S_true,
+  method_true_beta = "heterogeneous_groups",
   limit_true_groups = 12,
   extra_beta_factor = 1
 )
 }
 \arguments{
-\item{number_of_variables}{number of observable variables}
+\item{vars}{number of observable variables}
 
-\item{NN}{number of individuals}
+\item{NN}{number of time series}
 
-\item{true_number_of_groups}{number of groups}
+\item{S_true}{number of groups}
 
-\item{beta_true_homogeneous}{whether true beta is equal for all individuals}
-
-\item{beta_true_heterogeneous_groups}{whether true beta is equal within groups, and different between groups}
-
-\item{beta_true_heterogeneous_individuals}{whether true beta is different for all individuals}
+\item{method_true_beta}{how the true values of beta are defined: "homogeneous" (equal for all individuals),
+"heterogeneous_groups" (equal within groups, and different between groups) or heterogeneous_individuals (different for all individuals)}
 
 \item{limit_true_groups}{Maximum number of true groups in a simulation-DGP for which the code in this package is implemented. Currently equals 12. For application on realworld data this parameter is not relevant.}
 
@@ -37,9 +32,9 @@ matrix with number of rows equal to number of observable variables + 1 (the firs
 equal to the true number of groups.
 }
 \description{
-beta_true_heterogeen_groups is the default case
+Creates beta_true, which contains the true values of beta (= the coefficients of X)
 }
 \examples{
-library(tidyverse)
-create_true_beta(number_of_variables = 3, NN = 300, true_number_of_groups = 3)
+library("tidyverse")
+create_true_beta(vars = 3, NN = 300, S_true = 3)
 }

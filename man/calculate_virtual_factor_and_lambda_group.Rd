@@ -9,14 +9,19 @@ calculate_virtual_factor_and_lambda_group(
   solve_FG_FG_times_FG,
   use_robust,
   NN_local,
-  TT_local,
   method_estimate_factors_local,
   g,
-  number_of_variables_local,
-  number_vars_estimated_local,
+  vars,
+  vars_est,
   number_of_group_factors_local,
   number_of_common_factors_local,
   method_estimate_beta,
+  factor_group,
+  lambda,
+  comfactor,
+  Y,
+  X,
+  beta_est,
   verbose = FALSE
 )
 }
@@ -29,21 +34,31 @@ calculate_virtual_factor_and_lambda_group(
 
 \item{NN_local}{number of time series}
 
-\item{TT_local}{length of time series}
-
 \item{method_estimate_factors_local}{specifies the robust algorithm to estimate factors: default is "macro".}
 
-\item{g}{vector with group memberships}
+\item{g}{vector with group memberships for all individuals}
 
-\item{number_of_variables_local}{number of observable variables}
+\item{vars}{number of observable variables}
 
-\item{number_vars_estimated_local}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
+\item{vars_est}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to vars.}
 
 \item{number_of_group_factors_local}{number of group factors to be estimated}
 
 \item{number_of_common_factors_local}{number of common factors to be estimated}
 
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
+
+\item{factor_group}{estimated group specific factors}
+
+\item{lambda}{loadings of the estimated common factors}
+
+\item{comfactor}{estimated common factors}
+
+\item{Y}{Y: the panel data of interest}
+
+\item{X}{X}
+
+\item{beta_est}{estimated values of beta}
 
 \item{verbose}{when TRUE, it prints messages}
 }

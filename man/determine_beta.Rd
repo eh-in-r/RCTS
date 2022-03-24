@@ -11,11 +11,11 @@ determine_beta(
   use_robust,
   NN,
   TT,
-  number_of_groups,
+  S,
   method_estimate_beta,
   initialisation = FALSE,
   indices = NA,
-  number_of_variables,
+  vars,
   nosetting_local = FALSE,
   kappa_candidates = c(0.1),
   special_case_dgp1 = FALSE
@@ -30,11 +30,11 @@ determine_beta(
 
 \item{use_robust}{robust or classical estimation}
 
-\item{NN}{number of individuals}
+\item{NN}{number of time series}
 
 \item{TT}{length of time series}
 
-\item{number_of_groups}{number of groups}
+\item{S}{estimated number of groups}
 
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 
@@ -42,7 +42,7 @@ determine_beta(
 
 \item{indices}{individuals for which beta_est is being estimated}
 
-\item{number_of_variables}{number of observable variables}
+\item{vars}{number of observable variables}
 
 \item{nosetting_local}{option to remove the recommended setting in lmrob(). It is much faster. Defaults to FALSE.}
 

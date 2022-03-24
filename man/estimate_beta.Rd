@@ -8,18 +8,17 @@ estimate_beta(
   use_robust,
   Y,
   X,
+  g,
   lambda_group,
   factor_group,
   lambda,
   comfactor,
   method_estimate_beta = "individual",
-  NN = nrow(Y),
-  TT = ncol(Y),
-  number_of_groups,
-  number_of_group_factors,
-  number_of_common_factors,
-  number_of_variables,
-  number_vars_estimated,
+  S,
+  k,
+  kg,
+  vars,
+  vars_est,
   num_factors_may_vary,
   optimize_kappa = FALSE,
   nosetting = FALSE,
@@ -29,33 +28,31 @@ estimate_beta(
 \arguments{
 \item{use_robust}{TRUE or FALSE: defines using the classical or robust algorithm to estimate beta}
 
-\item{Y}{Y}
+\item{Y}{Y: the panel data of interest}
 
 \item{X}{X}
 
-\item{lambda_group}{loadings of the group specific factors}
+\item{g}{Vector with estimated group membership for all individuals}
+
+\item{lambda_group}{loadings of the estimated group specific factors}
 
 \item{factor_group}{estimated group specific factors}
 
-\item{lambda}{loadings of the common factors}
+\item{lambda}{loadings of the estimated common factors}
 
 \item{comfactor}{estimated common factors}
 
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 
-\item{NN}{number of individuals}
+\item{S}{number of estimated groups}
 
-\item{TT}{length of time series}
+\item{k}{number of common factors to be estimated}
 
-\item{number_of_groups}{number of groups estimated}
+\item{kg}{number of group specific factors to be estimated}
 
-\item{number_of_group_factors}{number of groupfactors to be estimated}
+\item{vars}{number of observable variables}
 
-\item{number_of_common_factors}{number of common factors to be estimated}
-
-\item{number_of_variables}{number of observable variables}
-
-\item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
+\item{vars_est}{number of variables that will be included in the algorithm and have their coefficient estimated. This is usually equal to vars}
 
 \item{num_factors_may_vary}{whether or not the number of groupfactors is constant over all groups or not}
 
@@ -72,25 +69,28 @@ list: 1st element contains matrix (N columns: 1 for each element of the panel da
 Update step of algorithm to obtain new estimation for beta. Note that we call it beta_est because beta() exists in base R.
 }
 \examples{
-#This function needs several initial parameters to be initialized in order to work on itself.
-library(RCTS)
-library(tidyverse)
-library(robustbase)
+# This function needs several initial parameters to be initialized in order to work on itself.
+library("RCTS")
+library("tidyverse")
+library("robustbase")
 
-X = RCTS::X_dgp3
-Y = RCTS::Y_dgp3
-#Set estimations for group factors and its loadings, and group membership to the true value
-lambda_group = RCTS::lambda_group_true_dgp3
-factor_group = RCTS::factor_group_true_dgp3
-g = RCTS::g_true_dgp3
-#There are no common factors to be estimated  -> but needs placeholder
-lambda = matrix(0, nrow = 1, ncol = 300)
-comfactor = matrix(0, nrow = 1, ncol=30)
-#Choose how coefficients of the observable variables are estimated
-method_estimate_beta = "individual"
-method_estimate_factors = "macro"
-beta_est = estimate_beta(use_robust = TRUE, Y, X, lambda_group, factor_group,
+X <- RCTS::X_dgp3
+Y <- RCTS::Y_dgp3
+# Set estimations for group factors and its loadings, and group membership to the true value
+lambda_group <- lambda_group_true_dgp3
+factor_group <- RCTS::factor_group_true_dgp3
+g <- RCTS::g_true_dgp3
+# There are no common factors to be estimated  -> but needs placeholder
+lambda <- matrix(0, nrow = 1, ncol = 300)
+comfactor <- matrix(0, nrow = 1, ncol = 30)
+#
+# Choose how coefficients of the observable variables are estimated
+method_estimate_beta <- "individual"
+method_estimate_factors <- "macro"
+beta_est <- estimate_beta(
+  use_robust = TRUE, Y, X, g, lambda_group, factor_group,
   lambda, comfactor,
-  number_of_groups = 3, number_of_group_factors = c(3, 3, 3), number_of_common_factors = 0,
-  number_of_variables = 3,number_vars_estimated = 3, num_factors_may_vary = FALSE)[[1]]
+  S = 3, k = 0, kg = c(3, 3, 3),
+  vars = 3, vars_est = 3, num_factors_may_vary = FALSE
+)[[1]]
 }

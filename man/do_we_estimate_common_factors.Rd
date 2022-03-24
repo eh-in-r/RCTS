@@ -4,10 +4,10 @@
 \alias{do_we_estimate_common_factors}
 \title{Helpfunction to shorten code: use a and b}
 \usage{
-do_we_estimate_common_factors(number_of_common_factors)
+do_we_estimate_common_factors(k)
 }
 \arguments{
-\item{number_of_common_factors}{number of common factors}
+\item{k}{number of common factors}
 }
 \description{
 Helpfunction to shorten code: use a and b

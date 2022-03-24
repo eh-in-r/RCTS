@@ -6,8 +6,6 @@
 \usage{
 calculate_sigma2maxmodel(
   e,
-  NN,
-  TT,
   kg_max,
   S,
   S_cand,
@@ -21,10 +19,6 @@ calculate_sigma2maxmodel(
 }
 \arguments{
 \item{e}{NxT-matrix containing the error term}
-
-\item{NN}{number of individuals}
-
-\item{TT}{length of time series}
 
 \item{kg_max}{scalar: maximum allowed number of estimated factors for any group}
 
@@ -45,6 +39,6 @@ calculate_sigma2maxmodel(
 \item{UPDATE2}{option to indicate the number of common factors is updated during the algorithm; defaults to FALSE}
 }
 \description{
-Sigma2 is the sum of the squared errors, divided by NT. We need the sigma2 of the maxmodel to use (in term 2,3,4 of the PIC) instead of the configuration-dependent sigma2. (See text in paper AndoBai 2016).
+Sigma2 is the sum of the squared errors, divided by NT. We need the sigma2 of the maxmodel to use (in term 2,3,4 of the PIC) instead of the configuration-dependent sigma2. (See paper AndoBai 2016).
 sigma2_max_model could actually be set to 1 as well, as it can be absorbed in parameter C of the PIC.
 }

@@ -8,6 +8,8 @@ iterate(
   use_robust,
   Y,
   X,
+  beta_est,
+  g,
   lambda_group,
   factor_group,
   lambda,
@@ -26,15 +28,19 @@ iterate(
 \arguments{
 \item{use_robust}{TRUE or FALSE: defines using the classical or robust algorithm to estimate beta}
 
-\item{Y}{Y}
+\item{Y}{Y: the panel data of interest}
 
 \item{X}{X}
 
-\item{lambda_group}{loadings of the group specific factors}
+\item{beta_est}{estimated values of beta}
+
+\item{g}{Vector with estimated group membership for all individuals}
+
+\item{lambda_group}{loadings of the estimated group specific factors}
 
 \item{factor_group}{estimated group specific factors}
 
-\item{lambda}{loadings of the common factors}
+\item{lambda}{loadings of the estimated common factors}
 
 \item{comfactor}{estimated common factors}
 

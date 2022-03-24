@@ -13,6 +13,6 @@ evade_crashes_macropca(object, verbose = FALSE)
 }
 \description{
 MacroPCA crashes Rstudio with certain dimensions of the input. Solve this by doubling every row.
-No information is added by this, so no influence on end result,
+No information is added by this, so there is no influence on the end result,
 but crashes of Rstudio are evaded.
 }
