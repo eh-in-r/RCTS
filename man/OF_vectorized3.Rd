@@ -7,28 +7,31 @@
 OF_vectorized3(
   NN,
   TT,
-  group_memberships,
+  g,
   grid,
-  beta_est = beta_est,
-  lc = lambda,
-  fc = comfactor,
-  lg = lambda_group,
-  fg = factor_group,
-  number_of_groups,
-  number_of_common_factors,
-  number_of_group_factors,
+  Y,
+  beta_est,
+  lc,
+  fc,
+  lg,
+  fg,
+  S,
+  k,
+  kg,
   method_estimate_beta,
   num_factors_may_vary
 )
 }
 \arguments{
-\item{NN}{number of individuals}
+\item{NN}{number of time series}
 
 \item{TT}{length of time series}
 
-\item{group_memberships}{Vector containing the group membership for all individuals.}
+\item{g}{Vector with group membership for all individuals}
 
 \item{grid}{dataframe containing XB, FgLg and FL}
+
+\item{Y}{Y: the panel data of interest}
 
 \item{beta_est}{estimated values of beta}
 
@@ -40,11 +43,11 @@ OF_vectorized3(
 
 \item{fg}{estimated groupfactors}
 
-\item{number_of_groups}{number of groups estimated}
+\item{S}{number of estimated groups}
 
-\item{number_of_common_factors}{number of common factors to be estimated}
+\item{k}{number of common factors to be estimated}
 
-\item{number_of_group_factors}{number of groupfactors to be estimated}
+\item{kg}{number of group specific factors to be estimated}
 
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 

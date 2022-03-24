@@ -15,11 +15,11 @@ calculate_lambda_group(
   comfactor,
   method_estimate_factors,
   method_estimate_beta,
-  number_of_groups,
-  number_of_group_factors,
-  number_of_common_factors,
-  number_of_variables,
-  number_vars_estimated,
+  S,
+  k,
+  kg,
+  vars,
+  vars_est,
   initialise = FALSE,
   UPDATE1 = FALSE,
   UPDATE2 = FALSE
@@ -28,35 +28,35 @@ calculate_lambda_group(
 \arguments{
 \item{use_robust}{TRUE or FALSE: defines using the classical or robust algorithm to estimate beta}
 
-\item{Y}{Y}
+\item{Y}{Y: the panel data of interest}
 
 \item{X}{X}
 
 \item{beta_est}{estimated values of beta}
 
-\item{factor_group}{group factors}
+\item{factor_group}{estimated group specific factors}
 
-\item{g}{vector with group membership}
+\item{g}{Vector with estimated group membership for all individuals}
 
-\item{lambda}{loadings}
+\item{lambda}{loadings of the estimated common factors}
 
-\item{comfactor}{common factors}
+\item{comfactor}{estimated common factors}
 
 \item{method_estimate_factors}{defines method of robust estimaton of the factors: "macro", "pertmm" or "cz"}
 
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 
-\item{number_of_groups}{number of groups estimated}
+\item{S}{number of estimated groups}
 
-\item{number_of_group_factors}{number of groupfactors to be estimated}
+\item{k}{number of common factors to be estimated}
 
-\item{number_of_common_factors}{number of common factors to be estimated}
+\item{kg}{number of group specific factors to be estimated}
 
-\item{number_of_variables}{number of observable variables}
+\item{vars}{number of observable variables}
 
-\item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
+\item{vars_est}{number of variables that will be included in the algorithm and have their coefficient estimated. This is usually equal to vars}
 
-\item{initialise}{boolean}
+\item{initialise}{indicator of being in the initialisation phase}
 
 \item{UPDATE1}{option to indicate the number of groupfactors is updated during the algorithm; defaults to FALSE}
 

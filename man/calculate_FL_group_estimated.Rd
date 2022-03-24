@@ -4,31 +4,24 @@
 \alias{calculate_FL_group_estimated}
 \title{Returns the estimated groupfactorstructure.}
 \usage{
-calculate_FL_group_estimated(
-  lg = lambda_group,
-  fg = factor_group,
-  NN,
-  TT,
-  number_of_groups,
-  number_of_group_factors,
-  number_of_common_factors,
-  num_factors_may_vary
-)
+calculate_FL_group_estimated(lg, fg, g, NN, TT, S, k, kg, num_factors_may_vary)
 }
 \arguments{
 \item{lg}{loadings of estimated group factors}
 
 \item{fg}{estimated group factors}
 
-\item{NN}{number of individuals}
+\item{g}{Vector with estimated group membership for all individuals}
+
+\item{NN}{number of time series}
 
 \item{TT}{length of time series}
 
-\item{number_of_groups}{number of groups estimated}
+\item{S}{number of estimated groups}
 
-\item{number_of_group_factors}{number of groupfactors to be estimated}
+\item{k}{number of common factors to be estimated}
 
-\item{number_of_common_factors}{number of common factors to be estimated}
+\item{kg}{number of group specific factors to be estimated}
 
 \item{num_factors_may_vary}{whether or not the number of groupfactors is constant over all groups or not}
 }

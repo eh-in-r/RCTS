@@ -7,16 +7,17 @@
 calculate_PIC(
   C,
   use_robust,
-  number_of_common_factors,
-  number_of_group_factors,
+  S,
+  k,
+  kg,
   e2,
   sigma2,
   NN,
   TT,
-  number_of_variables,
-  number_vars_estimated,
-  number_of_groups,
+  vars_est,
   method_estimate_beta,
+  beta_est,
+  g,
   alternative_pic = FALSE,
   alternative_pic_2 = FALSE
 )
@@ -26,25 +27,27 @@ calculate_PIC(
 
 \item{use_robust}{TRUE or FALSE: defines using the classical or robust algorithm to estimate beta}
 
-\item{number_of_common_factors}{number of common factors to be estimated}
+\item{S}{number of estimated groups}
 
-\item{number_of_group_factors}{number of groupfactors to be estimated}
+\item{k}{number of common factors to be estimated}
+
+\item{kg}{number of group specific factors to be estimated}
 
 \item{e2}{NxT matrix with error terms}
 
 \item{sigma2}{scalar: sum of squared error terms, scaled by NT}
 
-\item{NN}{number of individuals}
+\item{NN}{number of time series}
 
 \item{TT}{length of time series}
 
-\item{number_of_variables}{number of observable variables}
-
-\item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
-
-\item{number_of_groups}{number of groups estimated}
+\item{vars_est}{number of variables that will be included in the algorithm and have their coefficient estimated. This is usually equal to vars}
 
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
+
+\item{beta_est}{estimated values of beta}
+
+\item{g}{Vector with estimated group membership for all individuals}
 
 \item{alternative_pic}{uses alternative PIC: for testing purposes}
 

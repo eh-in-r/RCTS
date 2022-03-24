@@ -2,19 +2,22 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{add_pic}
 \alias{add_pic}
-\title{This function fills in all_pic with the calculated PIC for the current configuration.}
+\title{This function fills in df_pic with the calculated PIC for the current configuration.}
 \usage{
 add_pic(
   df,
   index_configuration,
   use_robust,
+  Y,
+  beta_est,
+  g,
   S,
   k,
   kg,
-  number_of_variables,
-  number_vars_estimated,
+  vars_est,
   method_estimate_beta,
-  pic_e2
+  pic_e2,
+  C_candidates
 )
 }
 \arguments{
@@ -24,20 +27,26 @@ add_pic(
 
 \item{use_robust}{robust or classical estimation}
 
+\item{Y}{Y: the panel data of interest}
+
+\item{beta_est}{estimated values of beta}
+
+\item{g}{Vector with estimated group membership for all individuals}
+
 \item{S}{number of estimated groups}
 
 \item{k}{estimated number of common factors}
 
 \item{kg}{vector with the estimated number of group specific factors for each group}
 
-\item{number_of_variables}{number of observable variables}
-
-\item{number_vars_estimated}{number of variables from which the coefficients are estimated}
+\item{vars_est}{number of variables from which the coefficients are estimated}
 
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 
 \item{pic_e2}{NxT matrix with the error terms}
+
+\item{C_candidates}{candidates for C (parameter in PIC)}
 }
 \description{
-This function fills in all_pic with the calculated PIC for the current configuration.
+This function fills in df_pic with the calculated PIC for the current configuration.
 }

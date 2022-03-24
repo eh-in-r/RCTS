@@ -12,40 +12,37 @@ calculate_Z_group(
   lambda,
   comfactor,
   group,
-  TT = ncol(Y),
-  number_of_variables,
-  number_vars_estimated,
-  number_of_common_factors,
+  vars,
+  vars_est,
+  k,
   method_estimate_beta,
   initialise
 )
 }
 \arguments{
-\item{Y}{Y}
+\item{Y}{Y: the panel data of interest}
 
 \item{X}{X}
 
 \item{beta_est}{estimated values of beta}
 
-\item{g}{vector with group membership}
+\item{g}{Vector with group membership for all individuals}
 
-\item{lambda}{common factor loadings}
+\item{lambda}{loadings of the estimated common factors}
 
-\item{comfactor}{common factors}
+\item{comfactor}{estimated common factors}
 
-\item{group}{the number of the group}
+\item{group}{indexnumber of the group}
 
-\item{TT}{length of time series}
+\item{vars}{number of observable variables}
 
-\item{number_of_variables}{number of observable variables}
+\item{vars_est}{number of variables that will be included in the algorithm and have their coefficient estimated. This is usually equal to vars}
 
-\item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
-
-\item{number_of_common_factors}{number of common factors to be estimated}
+\item{k}{number of common factors to be estimated}
 
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 
-\item{initialise}{boolean}
+\item{initialise}{indicator of being in the initialisation phase}
 }
 \description{
 Calculates Z = Y - X*beta_est - LF. It is used to estimate the groupfactorstructure.

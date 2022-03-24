@@ -4,22 +4,18 @@
 \alias{calculate_XB_estimated}
 \title{Calculates (the estimated value of) the matrix X*beta_est.}
 \usage{
-calculate_XB_estimated(
-  NN,
-  TT,
-  number_of_variables,
-  number_vars_estimated,
-  method_estimate_beta
-)
+calculate_XB_estimated(X, beta_est, g, vars, vars_est, method_estimate_beta)
 }
 \arguments{
-\item{NN}{number of individuals}
+\item{X}{X}
 
-\item{TT}{length of time series}
+\item{beta_est}{estimated values of beta}
 
-\item{number_of_variables}{number of observable variables}
+\item{g}{Vector with estimated group membership for all individuals}
 
-\item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
+\item{vars}{number of observable variables}
+
+\item{vars_est}{number of variables that will be included in the algorithm and have their coefficient estimated. This is usually equal to vars}
 
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 }

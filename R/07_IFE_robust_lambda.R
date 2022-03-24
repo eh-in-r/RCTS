@@ -92,10 +92,10 @@ determine_robust_lambda <- function(almost_classical_lambda, fastoption = TRUE, 
 #' @export
 return_robust_lambdaobject <- function(Y_like_object, group, type, g,
                                        NN,
-                                       factor_group_rrn = factor_group,
-                                       number_of_group_factors_rrn, # = number_of_group_factors_fixedvalue,
-                                       comfactor_rrn = comfactor,
                                        number_of_common_factors_rrn, # = number_of_common_factors_fixedvalue,
+                                       number_of_group_factors_rrn, # = number_of_group_factors_fixedvalue,
+                                       comfactor_rrn,
+                                       factor_group_rrn,
                                        #use_real_world_data_rrn = FALSE,
                                        #application_covid = FALSE,
                                        verbose = FALSE) {

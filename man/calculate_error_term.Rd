@@ -14,50 +14,50 @@ calculate_error_term(
   comfactor,
   lambda,
   method_estimate_beta,
-  number_of_variables,
-  number_vars_estimated,
-  number_of_groups,
-  number_of_group_factors,
-  number_of_common_factors,
+  vars,
+  vars_est,
+  S,
+  k,
+  kg,
   no_common_factorstructure = FALSE,
   no_group_factorstructure = FALSE
 )
 }
 \arguments{
-\item{Y}{Y}
+\item{Y}{Y: the panel data of interest}
 
 \item{X}{X}
 
 \item{beta_est}{estimated values of beta}
 
-\item{g}{vector with group memberships}
+\item{g}{Vector with group membership for all individuals}
 
 \item{factor_group}{estimated group specific factors}
 
-\item{lambda_group}{loadings of the group specific factors}
+\item{lambda_group}{loadings of the estimated group specific factors}
 
-\item{comfactor}{common factors}
+\item{comfactor}{estimated common factors}
 
-\item{lambda}{loadings of the common factors}
+\item{lambda}{loadings of the estimated common factors}
 
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 
-\item{number_of_variables}{number of observable variables}
+\item{vars}{number of observable variables}
 
-\item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
+\item{vars_est}{number of variables that will be included in the algorithm and have their coefficient estimated. This is usually equal to vars}
 
-\item{number_of_groups}{number of groups estimated}
+\item{S}{number of estimated groups}
 
-\item{number_of_group_factors}{number of groupfactors to be estimated}
+\item{k}{number of common factors to be estimated}
 
-\item{number_of_common_factors}{number of common factors to be estimated}
+\item{kg}{number of group specific factors to be estimated}
 
 \item{no_common_factorstructure}{if there is a common factorstructure being estimated}
 
 \item{no_group_factorstructure}{if there is a group factorstructure being estimated}
 }
 \value{
-NxT matrix#'
+NxT matrix
 }
 \description{
 Calculates the error term Y - X*beta_est - LF - LgFg.

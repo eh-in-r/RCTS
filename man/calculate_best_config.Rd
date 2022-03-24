@@ -4,10 +4,14 @@
 \alias{calculate_best_config}
 \title{Function that returns for each candidate C the best number of groups and factors, based on the PIC.}
 \usage{
-calculate_best_config(df_results, limit_est_groups = 20)
+calculate_best_config(df_results, df_pic, C_candidates, limit_est_groups = 20)
 }
 \arguments{
 \item{df_results}{dataframe with results for each estimated configuration}
+
+\item{df_pic}{dataframe with the PIC for each configuration and for each candidate C}
+
+\item{C_candidates}{candidates for C (parameter in PIC)}
 
 \item{limit_est_groups}{maximum allowed number of groups that can be estimated}
 }

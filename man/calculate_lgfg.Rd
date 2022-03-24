@@ -8,28 +8,28 @@ Each element of the list with the assumption that all individuals are in the sam
 calculate_lgfg(
   lambda_group,
   factor_group,
-  number_of_groups,
-  number_of_group_factors,
-  number_of_common_factors,
+  S,
+  k,
+  kg,
   num_factors_may_vary,
   NN,
   TT
 )
 }
 \arguments{
-\item{lambda_group}{grouploadings}
+\item{lambda_group}{loadings of the estimated group specific factors}
 
-\item{factor_group}{groupfactors}
+\item{factor_group}{estimated group specific factors}
 
-\item{number_of_groups}{number of groups estimated}
+\item{S}{number of groups}
 
-\item{number_of_group_factors}{number of groupfactors to be estimated}
+\item{k}{number of common factors}
 
-\item{number_of_common_factors}{number of common factors to be estimated}
+\item{kg}{vector with the number of group specific factors for each group}
 
 \item{num_factors_may_vary}{whether or not the number of groupfactors is constant over all groups or not}
 
-\item{NN}{number of individuals}
+\item{NN}{number of time series}
 
 \item{TT}{length of time series}
 }
@@ -37,8 +37,8 @@ calculate_lgfg(
 This function is used to speed up code.
 }
 \examples{
-library(tidyverse)
-lambda_group = RCTS::lambda_group_true_dgp3
-factor_group = RCTS::factor_group_true_dgp3
-calculate_lgfg(lambda_group,factor_group, 3, c(3, 3, 3), 0, FALSE, 300, 30)
+library("tidyverse")
+lambda_group <- lambda_group_true_dgp3
+factor_group <- RCTS::factor_group_true_dgp3
+calculate_lgfg(lambda_group, factor_group, 3, 0, c(3, 3, 3), FALSE, 300, 30)
 }

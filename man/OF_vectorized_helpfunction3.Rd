@@ -11,7 +11,8 @@ OF_vectorized_helpfunction3(
   LF,
   group_memberships,
   lgfg_list,
-  number_of_group_factors
+  Y,
+  kg
 )
 }
 \arguments{
@@ -23,11 +24,13 @@ OF_vectorized_helpfunction3(
 
 \item{LF}{matrixproduct of common factors and its loadings}
 
-\item{group_memberships}{vector with group memberships}
+\item{group_memberships}{Vector with group membership for all individuals}
 
 \item{lgfg_list}{product of groupfactors and their loadings; list with length the number of groups}
 
-\item{number_of_group_factors}{vector containing the number of group factors to be estimated for all groups}
+\item{Y}{Y: the panel data of interest}
+
+\item{kg}{vector containing the number of group factors to be estimated for all groups}
 }
 \description{
 Helpfunction in OF_vectorized3()

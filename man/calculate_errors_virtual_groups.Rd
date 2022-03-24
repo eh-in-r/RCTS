@@ -5,38 +5,47 @@
 \title{Helpfunction for update_g(). Calculates the errors for one of the possible groups time series can be placed in.}
 \usage{
 calculate_errors_virtual_groups(
-  k,
+  group,
   LF,
   virtual_grouped_factor_structure,
   NN,
   TT,
-  number_of_common_factors,
-  number_of_group_factors,
-  number_of_variables,
-  number_vars_estimated,
-  method_estimate_beta
+  k,
+  kg,
+  vars,
+  vars_est,
+  method_estimate_beta,
+  Y,
+  beta_est,
+  g
 )
 }
 \arguments{
-\item{k}{group}
+\item{group}{group}
 
 \item{LF}{NxT-matrix of the commonfactorstructure}
 
 \item{virtual_grouped_factor_structure}{list with length the number of groups; every element of the list contains NxT-matrix}
 
-\item{NN}{number of individuals}
+\item{NN}{number of time series}
 
 \item{TT}{length of time series}
 
-\item{number_of_common_factors}{number of common factors to be estimated}
+\item{k}{number of common factors to be estimated}
 
-\item{number_of_group_factors}{number of groupfactors to be estimated}
+\item{kg}{number of group specific factors to be estimated}
 
-\item{number_of_variables}{number of observable variables}
+\item{vars}{number of observable variables}
 
-\item{number_vars_estimated}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to number_of_variables.}
+\item{vars_est}{number of variables that will be included in the algorithm and have their coefficient estimated. This is usually equal to vars}
 
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
+
+\item{Y}{Y: the panel data of interest}
+
+\item{beta_est}{estimated values of beta}
+
+\item{g}{Vector with estimated group membership for all individuals}
 }
 \value{
 NxT matrix with the errorterms (=dataset minus the estimated factorstructure and minus X*beta)

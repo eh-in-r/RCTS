@@ -8,10 +8,11 @@ calculate_VCsquared(
   rcj,
   rc,
   C_candidates,
+  indices_subset,
+  Smax,
   UPDATE1 = FALSE,
   UPDATE2 = FALSE,
-  number_of_group_factors,
-  Smax
+  limit_est_groups = 20
 )
 }
 \arguments{
@@ -21,13 +22,15 @@ calculate_VCsquared(
 
 \item{C_candidates}{candidates for C (parameter in PIC)}
 
+\item{indices_subset}{all indices of the subsets}
+
+\item{Smax}{maximum allowed number of estimated groups}
+
 \item{UPDATE1}{option to indicate the number of groupfactors is updated during the algorithm; defaults to FALSE}
 
 \item{UPDATE2}{option to indicate the number of common factors is updated during the algorithm; defaults to FALSE}
 
-\item{number_of_group_factors}{number of groupfactors to be estimated}
-
-\item{Smax}{maximum allowed number of estimated groups}
+\item{limit_est_groups}{maximum allowed number of groups that can be estimated}
 }
 \description{
 VC² depends on C (this is the scale parameter in PIC). When VC² is equal to zero, the found number of groups and factors

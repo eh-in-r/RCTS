@@ -2,24 +2,24 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{beta_true_heterogroups}
 \alias{beta_true_heterogroups}
-\title{Helpfunction in create_true_beta() for the option beta_true_heterogeen_groups. (This is the default option.)}
+\title{Helpfunction in create_true_beta() for the option beta_true_heterogeneous_groups. (This is the default option.)}
 \usage{
 beta_true_heterogroups(
-  number_of_variables,
-  true_number_of_groups,
-  extra_beta_factor_bth = 1,
-  limit_true_groups_bth = 12
+  vars,
+  S_true,
+  extra_beta_factor = 1,
+  limit_true_groups = 12
 )
 }
 \arguments{
-\item{number_of_variables}{number of observable variables}
+\item{vars}{number of observable variables}
 
-\item{true_number_of_groups}{true number of groups}
+\item{S_true}{true number of groups}
 
-\item{extra_beta_factor_bth}{option to multiply the coefficients in true beta; default = 1}
+\item{extra_beta_factor}{option to multiply the coefficients in true beta; default = 1}
 
-\item{limit_true_groups_bth}{Maximum number of true groups in a simulation-DGP for which the code in this package is implemented. Currently equals 12. For application on realworld data this parameter is not relevant.}
+\item{limit_true_groups}{Maximum number of true groups in a simulation-DGP for which the code in this package is implemented. Currently equals 12. For application on realworld data this parameter is not relevant.}
 }
 \description{
-Helpfunction in create_true_beta() for the option beta_true_heterogeen_groups. (This is the default option.)
+Helpfunction in create_true_beta() for the option beta_true_heterogeneous_groups. (This is the default option.)
 }

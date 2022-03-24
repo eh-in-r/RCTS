@@ -5,31 +5,34 @@
 \title{Calculate the true groupfactorstructure.}
 \usage{
 calculate_FL_group_true(
-  NN,
-  TT,
   lgt,
   fgt,
-  true_number_of_groups,
-  true_number_of_group_factors,
-  true_number_of_common_factors,
+  g_true,
+  NN,
+  TT,
+  S_true,
+  kg_true,
+  k_true,
   num_factors_may_vary,
   dgp1_AB_local = FALSE
 )
 }
 \arguments{
-\item{NN}{number of individuals}
-
-\item{TT}{length of time series}
-
 \item{lgt}{true group factor loadings}
 
 \item{fgt}{true group factors}
 
-\item{true_number_of_groups}{true number of groups}
+\item{g_true}{vector of length NN with true group memberships}
 
-\item{true_number_of_group_factors}{true number of group factors for each group}
+\item{NN}{number of time series}
 
-\item{true_number_of_common_factors}{true number of common factors}
+\item{TT}{length of time series}
+
+\item{S_true}{true number of groups}
+
+\item{kg_true}{true number of group factors for each group}
+
+\item{k_true}{true number of common factors}
 
 \item{num_factors_may_vary}{whether or not the number of groupfactors is constant over all groups or not}
 

@@ -4,16 +4,18 @@
 \alias{calculate_XB_true}
 \title{Calculates the product of X*beta_true .}
 \usage{
-calculate_XB_true(NN, TT, number_of_variables, g = g, method_estimate_beta)
+calculate_XB_true(X, beta_true, vars, g, g_true, method_estimate_beta)
 }
 \arguments{
-\item{NN}{number of individuals}
+\item{X}{X}
 
-\item{TT}{length of time series}
+\item{beta_true}{true coefficients of the observable variables}
 
-\item{number_of_variables}{number of observable variables}
+\item{vars}{number of observable variables}
 
-\item{g}{estimated group membership}
+\item{g}{Vector with estimated group membership for all individuals}
+
+\item{g_true}{true group membership}
 
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 }

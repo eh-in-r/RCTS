@@ -9,26 +9,26 @@ calculate_mse_beta(
   beta_true,
   NN,
   TT,
+  g_true,
   method_estimate_beta,
   without_intercept = FALSE,
-  number_of_variables,
   special_case_dgp1 = FALSE
 )
 }
 \arguments{
 \item{beta_est}{estimated values of beta}
 
-\item{beta_true}{true values of beta}
+\item{beta_true}{true coefficients of the observable variables}
 
-\item{NN}{number of individuals}
+\item{NN}{number of time series}
 
 \item{TT}{length of time series}
+
+\item{g_true}{vector of length NN with true group memberships}
 
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 
 \item{without_intercept}{TRUE of FALSE: to remove the intercept in the calculation of the MSE}
-
-\item{number_of_variables}{number of observable variables}
 
 \item{special_case_dgp1}{special case for data generated according to dgp 1: it changes the 1st variable in X to 1 (-> intercept). Consequently the estimation of beta needs to be restructured slightly.}
 }

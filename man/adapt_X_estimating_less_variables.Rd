@@ -4,12 +4,14 @@
 \alias{adapt_X_estimating_less_variables}
 \title{When we run the algorithm with a different number of observable variables then the number we actually have, we need to reformat X.}
 \usage{
-adapt_X_estimating_less_variables(number_of_variables, number_vars_estimated)
+adapt_X_estimating_less_variables(X, vars, vars_est)
 }
 \arguments{
-\item{number_of_variables}{number of observable variables}
+\item{X}{dataframe with the observed variables}
 
-\item{number_vars_estimated}{number of variables from which the coefficients are estimated}
+\item{vars}{number of observable variables}
+
+\item{vars_est}{number of variables from which the coefficients are estimated}
 }
 \description{
 When we run the algorithm with a different number of observable variables then the number we actually have, we need to reformat X.
