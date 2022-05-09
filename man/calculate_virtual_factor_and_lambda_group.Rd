@@ -11,7 +11,6 @@ calculate_virtual_factor_and_lambda_group(
   NN_local,
   method_estimate_factors_local,
   g,
-  vars,
   vars_est,
   number_of_group_factors_local,
   number_of_common_factors_local,
@@ -37,8 +36,6 @@ calculate_virtual_factor_and_lambda_group(
 \item{method_estimate_factors_local}{specifies the robust algorithm to estimate factors: default is "macro".}
 
 \item{g}{vector with group memberships for all individuals}
-
-\item{vars}{number of observable variables}
 
 \item{vars_est}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to vars.}
 

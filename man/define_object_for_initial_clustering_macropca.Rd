@@ -13,7 +13,8 @@ define_object_for_initial_clustering_macropca(
   kg,
   comfactor,
   method_estimate_beta = "individual",
-  method_estimate_factors = "macro"
+  method_estimate_factors = "macro",
+  verbose = FALSE
 )
 }
 \arguments{
@@ -34,6 +35,8 @@ define_object_for_initial_clustering_macropca(
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 
 \item{method_estimate_factors}{specifies the robust algorithm to estimate factors: default is "macro". The value is not used when use_robust is set to FALSE.}
+
+\item{verbose}{when TRUE, it prints messages}
 }
 \description{
 This is a short version of define_object_for_initial_clustering() which only contains implementations for robust macropca case and classical case.

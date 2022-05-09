@@ -17,9 +17,8 @@ estimate_beta(
   S,
   k,
   kg,
-  vars,
   vars_est,
-  num_factors_may_vary,
+  num_factors_may_vary = TRUE,
   optimize_kappa = FALSE,
   nosetting = FALSE,
   special_case_dgp1 = FALSE
@@ -50,9 +49,7 @@ estimate_beta(
 
 \item{kg}{number of group specific factors to be estimated}
 
-\item{vars}{number of observable variables}
-
-\item{vars_est}{number of variables that will be included in the algorithm and have their coefficient estimated. This is usually equal to vars}
+\item{vars_est}{number of variables that will be included in the algorithm and have their coefficient estimated. This is usually equal to the number of observable variables.}
 
 \item{num_factors_may_vary}{whether or not the number of groupfactors is constant over all groups or not}
 
@@ -77,7 +74,7 @@ library("robustbase")
 X <- RCTS::X_dgp3
 Y <- RCTS::Y_dgp3
 # Set estimations for group factors and its loadings, and group membership to the true value
-lambda_group <- lambda_group_true_dgp3
+lambda_group <- RCTS::lambda_group_true_dgp3
 factor_group <- RCTS::factor_group_true_dgp3
 g <- RCTS::g_true_dgp3
 # There are no common factors to be estimated  -> but needs placeholder
@@ -91,6 +88,6 @@ beta_est <- estimate_beta(
   use_robust = TRUE, Y, X, g, lambda_group, factor_group,
   lambda, comfactor,
   S = 3, k = 0, kg = c(3, 3, 3),
-  vars = 3, vars_est = 3, num_factors_may_vary = FALSE
+  vars_est = 3
 )[[1]]
 }

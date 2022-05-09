@@ -15,7 +15,7 @@ determine_beta(
   method_estimate_beta,
   initialisation = FALSE,
   indices = NA,
-  vars,
+  vars_est,
   nosetting_local = FALSE,
   kappa_candidates = c(0.1),
   special_case_dgp1 = FALSE
@@ -24,7 +24,7 @@ determine_beta(
 \arguments{
 \item{string}{can have values: "homogeneous" (when one beta_est is estimated for all individuals together) or "heterogeneous" (when beta_est is estimated either groupwise or elementwise)}
 
-\item{X_special}{preprocessed X (observable variables)}
+\item{X_special}{preprocessed X (2-dimensional matrix with 'var_est' observable variables)}
 
 \item{Y_special}{preprocessed Y}
 
@@ -42,7 +42,7 @@ determine_beta(
 
 \item{indices}{individuals for which beta_est is being estimated}
 
-\item{vars}{number of observable variables}
+\item{vars_est}{number of variables from which the coefficients are estimated}
 
 \item{nosetting_local}{option to remove the recommended setting in lmrob(). It is much faster. Defaults to FALSE.}
 

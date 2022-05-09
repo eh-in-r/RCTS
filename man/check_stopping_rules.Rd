@@ -4,12 +4,12 @@
 \alias{check_stopping_rules}
 \title{This function checks the rules for stopping the algorithm, based on its convergence speed.}
 \usage{
-check_stopping_rules(speed, speedlimit = 1e-04)
+check_stopping_rules(speed, speedlimit = 0.01)
 }
 \arguments{
 \item{speed}{convergence speed}
 
-\item{speedlimit}{if speed falls under this limit the algorithm stops}
+\item{speedlimit}{if the convergence speed falls under this limit the algorithm stops}
 }
 \description{
 This function checks the rules for stopping the algorithm, based on its convergence speed.

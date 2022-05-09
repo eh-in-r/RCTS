@@ -21,5 +21,5 @@ determine_robust_lambda(
 M-estimator of location of the parameter, by minimizing sum of rho()
 }
 \description{
-Uses the almost classical lambda to create a robust lambda by using M estimation.
+Uses the "almost classical lambda" (=matrix where the mean of each row is equal to the classical lambda) to create a robust lambda by using M estimation.
 }

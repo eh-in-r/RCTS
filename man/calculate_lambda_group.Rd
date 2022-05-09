@@ -13,16 +13,14 @@ calculate_lambda_group(
   g,
   lambda,
   comfactor,
-  method_estimate_factors,
-  method_estimate_beta,
   S,
   k,
   kg,
-  vars,
-  vars_est,
-  initialise = FALSE,
-  UPDATE1 = FALSE,
-  UPDATE2 = FALSE
+  method_estimate_beta = "individual",
+  method_estimate_factors = "macro",
+  vars_est = dim(X)[3],
+  verbose = FALSE,
+  initialise = FALSE
 )
 }
 \arguments{
@@ -42,25 +40,21 @@ calculate_lambda_group(
 
 \item{comfactor}{estimated common factors}
 
-\item{method_estimate_factors}{defines method of robust estimaton of the factors: "macro", "pertmm" or "cz"}
-
-\item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
-
 \item{S}{number of estimated groups}
 
 \item{k}{number of common factors to be estimated}
 
 \item{kg}{number of group specific factors to be estimated}
 
-\item{vars}{number of observable variables}
+\item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 
-\item{vars_est}{number of variables that will be included in the algorithm and have their coefficient estimated. This is usually equal to vars}
+\item{method_estimate_factors}{defines method of robust estimaton of the factors: "macro", "pertmm" or "cz"}
+
+\item{vars_est}{number of variables that will be included in the algorithm and have their coefficient estimated. This is usually equal to the number of observable variables.}
+
+\item{verbose}{when TRUE, it prints messages}
 
 \item{initialise}{indicator of being in the initialisation phase}
-
-\item{UPDATE1}{option to indicate the number of groupfactors is updated during the algorithm; defaults to FALSE}
-
-\item{UPDATE2}{option to indicate the number of common factors is updated during the algorithm; defaults to FALSE}
 }
 \description{
 returns object which includes group and id of the individuals

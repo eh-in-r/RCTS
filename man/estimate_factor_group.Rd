@@ -12,13 +12,13 @@ estimate_factor_group(
   g,
   lambda,
   comfactor,
-  method_estimate_factors,
-  method_estimate_beta,
+  factor_group,
   S,
   k,
   kg,
-  vars,
-  vars_est,
+  method_estimate_beta = "individual",
+  method_estimate_factors = "macro",
+  vars_est = dim(X)[3],
   initialise = FALSE,
   verbose = FALSE
 )
@@ -38,9 +38,7 @@ estimate_factor_group(
 
 \item{comfactor}{estimated common factors}
 
-\item{method_estimate_factors}{defines method of robust estimaton of the factors: "macro", "pertmm" or "cz"}
-
-\item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
+\item{factor_group}{estimated group specific factors}
 
 \item{S}{number of estimated groups}
 
@@ -48,9 +46,11 @@ estimate_factor_group(
 
 \item{kg}{number of group specific factors to be estimated}
 
-\item{vars}{number of observable variables}
+\item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 
-\item{vars_est}{number of variables that will be included in the algorithm and have their coefficient estimated. This is usually equal to vars}
+\item{method_estimate_factors}{defines method of robust estimaton of the factors: "macro", "pertmm" or "cz"}
+
+\item{vars_est}{number of variables that will be included in the algorithm and have their coefficient estimated. This is usually equal to the number of observable variables.}
 
 \item{initialise}{indicator of being in the initialisation phase}
 

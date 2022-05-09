@@ -2,8 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{calculate_lgfg}
 \alias{calculate_lgfg}
-\title{Returns list (with as length the number of groups) with lgfg (product of grouploadings a&nd groupfactors).
-Each element of the list with the assumption that all individuals are in the same group k.}
+\title{Calculates the group factor structure: the matrix product of the group factors and their loadings.}
 \usage{
 calculate_lgfg(
   lambda_group,
@@ -34,11 +33,13 @@ calculate_lgfg(
 \item{TT}{length of time series}
 }
 \description{
+Returns list (with as length the number of groups) with lgfg (product of grouploadings and groupfactors).
+Each element of the list with the assumption that all individuals are in the same group k.
 This function is used to speed up code.
 }
 \examples{
 library("tidyverse")
-lambda_group <- lambda_group_true_dgp3
+lambda_group <- RCTS::lambda_group_true_dgp3
 factor_group <- RCTS::factor_group_true_dgp3
 calculate_lgfg(lambda_group, factor_group, 3, 0, c(3, 3, 3), FALSE, 300, 30)
 }
