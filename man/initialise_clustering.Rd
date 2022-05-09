@@ -4,14 +4,34 @@
 \alias{initialise_clustering}
 \title{Function that clusters time series in a dataframe with kmeans (classical algorithm) or trimmed kmeans(robust algorithms).}
 \usage{
-initialise_clustering(df, use_robust, cl, max_percent_outliers_tkmeans = 0)
+initialise_clustering(
+  use_robust,
+  Y,
+  g,
+  beta_est,
+  S,
+  k,
+  kg,
+  comfactor,
+  max_percent_outliers_tkmeans = 0
+)
 }
 \arguments{
-\item{df}{dataframe to cluster}
-
 \item{use_robust}{TRUE or FALSE: defines using the classical or robust algorithm to estimate beta}
 
-\item{cl}{the desired number of groups}
+\item{Y}{Y: the panel data of interest}
+
+\item{g}{Vector with estimated group membership for all individuals}
+
+\item{beta_est}{estimated values of beta}
+
+\item{S}{the desired number of groups}
+
+\item{k}{number of common factors to be estimated}
+
+\item{kg}{number of group specific factors to be estimated}
+
+\item{comfactor}{estimated common factors}
 
 \item{max_percent_outliers_tkmeans}{The proportion of observations to be trimmed.}
 }

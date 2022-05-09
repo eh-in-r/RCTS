@@ -11,7 +11,7 @@ initialise_X(NN, TT, vars, scale_robust = TRUE)
 
 \item{TT}{length of time series}
 
-\item{vars}{number of observable variables}
+\item{vars}{number of available observable variables}
 
 \item{scale_robust}{logical, defines if X will be scaled with robust metrics instead of with non-robust metrics}
 }

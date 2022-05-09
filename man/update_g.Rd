@@ -10,16 +10,15 @@ update_g(
   X,
   beta_est,
   g,
-  method_estimate_factors,
-  method_estimate_beta,
   factor_group,
   lambda,
   comfactor,
   S,
   k,
   kg,
-  vars,
   vars_est,
+  method_estimate_factors,
+  method_estimate_beta,
   verbose = FALSE
 )
 }
@@ -34,10 +33,6 @@ update_g(
 
 \item{g}{Vector with estimated group membership for all individuals}
 
-\item{method_estimate_factors}{defines method of robust estimaton of the factors: "macro", "pertmm" or "cz"}
-
-\item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
-
 \item{factor_group}{estimated group specific factors}
 
 \item{lambda}{loadings of the estimated common factors}
@@ -50,9 +45,11 @@ update_g(
 
 \item{kg}{number of group specific factors to be estimated}
 
-\item{vars}{number of observable variables}
+\item{vars_est}{number of variables that will be included in the algorithm and have their coefficient estimated. This is usually equal to the number of observable variables.}
 
-\item{vars_est}{number of variables that will be included in the algorithm and have their coefficient estimated. This is usually equal to vars}
+\item{method_estimate_factors}{defines method of robust estimaton of the factors: "macro", "pertmm" or "cz"}
+
+\item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 
 \item{verbose}{when TRUE, it prints messages}
 }
@@ -63,7 +60,6 @@ list: 1st element contains group membership and second element contains the valu
 Function that estimates group membership.
 }
 \examples{
-# This function needs several initial parameters to be initialized in order to work on itself
 library("RCTS")
 library("tidyverse")
 library("robustbase")
@@ -71,7 +67,7 @@ library("robustbase")
 X <- RCTS::X_dgp3
 Y <- RCTS::Y_dgp3
 # Set estimations for group factors and its loadings, and group membership to the true value
-lambda_group <- lambda_group_true_dgp3
+lambda_group <- RCTS::lambda_group_true_dgp3
 factor_group <- RCTS::factor_group_true_dgp3
 g_true <- RCTS::g_true_dgp3 # true values of group membership
 g <- g_true # estimated values of group membership; set in this example to be equal to true values
@@ -79,22 +75,19 @@ g <- g_true # estimated values of group membership; set in this example to be eq
 lambda <- matrix(0, nrow = 1, ncol = 300)
 comfactor <- matrix(0, nrow = 1, ncol = 30)
 # Choose how coefficients of the observable are estimated
-method_estimate_beta <- "individual"
-method_estimate_factors <- "macro"
 beta_est <- estimate_beta(
   use_robust = TRUE, Y, X, g, lambda_group, factor_group,
   lambda, comfactor,
   S = 3, k = 0, kg = c(3, 3, 3),
-  vars = 3, vars_est = 3,
-  num_factors_may_vary = TRUE
+  vars_est = 3
 )[[1]]
 g_new <- update_g(
   use_robust = TRUE, Y, X, beta_est, g,
-  method_estimate_factors, method_estimate_beta, factor_group, lambda, comfactor,
+  factor_group, lambda, comfactor,
   S = 3,
   k = 0,
   kg = c(3, 3, 3),
-  vars = 3,
   vars_est = 3,
+  "macro", "individual"
 )[[1]]
 }

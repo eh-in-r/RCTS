@@ -4,14 +4,12 @@
 \alias{restructure_X_to_order_slowN_fastT}
 \title{This function restructures X (which is an 3D-array of dimensions (N,T,p) to a 2D-matrix of dimension (NxT,p).}
 \usage{
-restructure_X_to_order_slowN_fastT(X, vars, vars_est)
+restructure_X_to_order_slowN_fastT(X, vars_est)
 }
 \arguments{
 \item{X}{input}
 
-\item{vars}{number of observable variables}
-
-\item{vars_est}{number of variables that will be included in the algorithm and have their coefficient estimated. This is usually equal to vars}
+\item{vars_est}{number of variables that will be included in the algorithm and have their coefficient estimated. This is usually equal to the number of observable variables.}
 }
 \description{
 This function restructures X (which is an 3D-array of dimensions (N,T,p) to a 2D-matrix of dimension (NxT,p).
@@ -19,6 +17,6 @@ This function restructures X (which is an 3D-array of dimensions (N,T,p) to a 2D
 \examples{
 X <- initialise_X(300, 30, vars = 3)
 X_restructured <- restructure_X_to_order_slowN_fastT(X,
-  vars = 3, vars_est = 3
+  vars_est = 3
 )
 }

@@ -4,9 +4,11 @@
 \alias{initialise_df_results}
 \title{This functions initialises a dataframe that will contain an overview of metrics for each estimated configuration (for example adjusted randindex).}
 \usage{
-initialise_df_results(limit_est_groups = 20)
+initialise_df_results(use_robust, limit_est_groups = 20)
 }
 \arguments{
+\item{use_robust}{robust or classical estimation}
+
 \item{limit_est_groups}{maximum allowed number of groups that can be estimated}
 }
 \description{

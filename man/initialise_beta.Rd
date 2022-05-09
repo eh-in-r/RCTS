@@ -8,11 +8,10 @@ initialise_beta(
   use_robust,
   Y,
   X,
-  vars,
-  vars_est,
   S,
   g,
   method_estimate_beta = "individual",
+  vars_est = dim(X)[3],
   nosetting_lmrob = FALSE,
   special_case_dgp1 = FALSE
 )
@@ -24,15 +23,13 @@ initialise_beta(
 
 \item{X}{dataframe with the observed variables}
 
-\item{vars}{number of observable variables}
-
-\item{vars_est}{number of variables from which the coefficients are estimated}
-
 \item{S}{estimated number of groups}
 
 \item{g}{Vector with estimated group membership for all individuals}
 
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
+
+\item{vars_est}{number of variables from which the coefficients are estimated}
 
 \item{nosetting_lmrob}{option to remove the recommended setting in lmrob(). It is much faster. Defaults to FALSE.}
 
@@ -49,7 +46,7 @@ library("robustbase")
 X <- RCTS::X_dgp3
 Y <- RCTS::Y_dgp3
 # Set estimations for group factors and its loadings, and group membership to the true value
-lambda_group <- lambda_group_true_dgp3
+lambda_group <- RCTS::lambda_group_true_dgp3
 factor_group <- RCTS::factor_group_true_dgp3
 g <- RCTS::g_true_dgp3
 # There are no common factors to be estimated  -> but needs placeholder
@@ -57,8 +54,7 @@ lambda <- matrix(0, nrow = 1, ncol = 300)
 comfactor <- matrix(0, nrow = 1, ncol = 30)
 
 # Choose how coefficients of the observable are estimated
-method_estimate_beta <- "individual" # estimating beta_i for every individual
 beta_init <- initialise_beta(TRUE, Y, X,
-  vars = 3, vars_est = 3, S = 3, g
+  S = 3, g
 )
 }

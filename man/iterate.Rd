@@ -17,9 +17,8 @@ iterate(
   S,
   k,
   kg,
-  method_estimate_beta,
-  method_estimate_factors,
-  vars = 3,
+  method_estimate_beta = "individual",
+  method_estimate_factors = "macro",
   vars_est = 3,
   special_case_dgp1 = FALSE,
   verbose = FALSE
@@ -54,9 +53,7 @@ iterate(
 
 \item{method_estimate_factors}{specifies the robust algorithm to estimate factors: default is "macro". The value is not used when use_robust is set to FALSE.}
 
-\item{vars}{number of variables available (in X)}
-
-\item{vars_est}{number of variables for which a beta is estimated. Usually equal to vars.}
+\item{vars_est}{number of variables for which a beta is estimated. Usually equal to the number of variables available in X.}
 
 \item{special_case_dgp1}{TRUE or FALSE: whether data is generated from dgp1 and has the extra spread in group centers. Default is FALSE.}
 

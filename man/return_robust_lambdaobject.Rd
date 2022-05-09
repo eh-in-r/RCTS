@@ -10,8 +10,8 @@ return_robust_lambdaobject(
   type,
   g,
   NN,
-  number_of_common_factors_rrn,
-  number_of_group_factors_rrn,
+  k,
+  kg,
   comfactor_rrn,
   factor_group_rrn,
   verbose = FALSE
@@ -28,13 +28,13 @@ return_robust_lambdaobject(
 
 \item{NN}{number of time series}
 
-\item{number_of_common_factors_rrn}{number of common factors}
+\item{k}{number of common factors}
 
-\item{number_of_group_factors_rrn}{number of group factors}
+\item{kg}{number of group factors}
 
-\item{comfactor_rrn}{estimation of common factors}
+\item{comfactor_rrn}{estimated common factors}
 
-\item{factor_group_rrn}{estimation of groupfactors}
+\item{factor_group_rrn}{estimatied group specific factors}
 
 \item{verbose}{when TRUE, it prints messages}
 }

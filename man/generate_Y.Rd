@@ -16,8 +16,7 @@ generate_Y(
   lambda_true,
   comfactor_true,
   eps,
-  X,
-  vars
+  X
 )
 }
 \arguments{
@@ -44,8 +43,6 @@ generate_Y(
 \item{eps}{NN x TT-matrix containing the error term}
 
 \item{X}{dataframe with the observed variables}
-
-\item{vars}{number of observable variables}
 }
 \value{
 N x T matrix
