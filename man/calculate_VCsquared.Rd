@@ -10,8 +10,6 @@ calculate_VCsquared(
   C_candidates,
   indices_subset,
   Smax,
-  UPDATE1 = FALSE,
-  UPDATE2 = FALSE,
   limit_est_groups = 20
 )
 }
@@ -25,10 +23,6 @@ calculate_VCsquared(
 \item{indices_subset}{all indices of the subsets}
 
 \item{Smax}{maximum allowed number of estimated groups}
-
-\item{UPDATE1}{option to indicate the number of groupfactors is updated during the algorithm; defaults to FALSE}
-
-\item{UPDATE2}{option to indicate the number of common factors is updated during the algorithm; defaults to FALSE}
 
 \item{limit_est_groups}{maximum allowed number of groups that can be estimated}
 }

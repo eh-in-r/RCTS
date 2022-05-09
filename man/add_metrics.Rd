@@ -4,7 +4,15 @@
 \alias{add_metrics}
 \title{This function adds several metrics to df_results.}
 \usage{
-add_metrics(df_results, index_configuration, pic_sigma2, g, g_true)
+add_metrics(
+  df_results,
+  index_configuration,
+  pic_sigma2,
+  g,
+  g_true,
+  TT,
+  iteration
+)
 }
 \arguments{
 \item{df_results}{dataframe with results for each estimated configuration}
@@ -16,6 +24,10 @@ add_metrics(df_results, index_configuration, pic_sigma2, g, g_true)
 \item{g}{Vector with estimated group membership for all individuals}
 
 \item{g_true}{vector of length NN with true group memberships}
+
+\item{TT}{length of time series}
+
+\item{iteration}{number of iteration}
 }
 \description{
 This function adds several metrics to df_results.

@@ -18,5 +18,5 @@ LMROB(parameter_y, parameter_x, nointercept = FALSE, nosetting = FALSE)
 \description{
 Desgined to make sure the following error does not happen anymore:
 Error in if (init$scale == 0)  : missing value where TRUE/FALSE needed.
-KS2014 is the recommended setting. It however does lead to a strongly increased computational time.
+KS2014 is the recommended setting (use "nosetting = FALSE"). It however does lead to a strongly increased computational time.
 }

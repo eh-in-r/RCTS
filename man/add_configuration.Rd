@@ -4,7 +4,7 @@
 \alias{add_configuration}
 \title{This function add the current configuration (number of groups and factors) to df_results}
 \usage{
-add_configuration(df_results, S, k, kg, limit_est_groups = 20)
+add_configuration(df_results, S, k, kg)
 }
 \arguments{
 \item{df_results}{dataframe with results for each estimated configuration}
@@ -14,8 +14,6 @@ add_configuration(df_results, S, k, kg, limit_est_groups = 20)
 \item{k}{estimated number of common factors in current configuration}
 
 \item{kg}{estimated number of group specific factors in current configuration}
-
-\item{limit_est_groups}{maximum allowed number of groups that can be estimated}
 }
 \description{
 This function add the current configuration (number of groups and factors) to df_results

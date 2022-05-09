@@ -11,9 +11,9 @@ calculate_FL_group_true(
   NN,
   TT,
   S_true,
-  kg_true,
   k_true,
-  num_factors_may_vary,
+  kg_true,
+  num_factors_may_vary = TRUE,
   dgp1_AB_local = FALSE
 )
 }
@@ -30,9 +30,9 @@ calculate_FL_group_true(
 
 \item{S_true}{true number of groups}
 
-\item{kg_true}{true number of group factors for each group}
-
 \item{k_true}{true number of common factors}
+
+\item{kg_true}{true number of group factors for each group}
 
 \item{num_factors_may_vary}{whether or not the number of groupfactors is constant over all groups or not}
 

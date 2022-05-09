@@ -4,7 +4,17 @@
 \alias{calculate_FL_group_estimated}
 \title{Returns the estimated groupfactorstructure.}
 \usage{
-calculate_FL_group_estimated(lg, fg, g, NN, TT, S, k, kg, num_factors_may_vary)
+calculate_FL_group_estimated(
+  lg,
+  fg,
+  g,
+  NN,
+  TT,
+  S,
+  k,
+  kg,
+  num_factors_may_vary = TRUE
+)
 }
 \arguments{
 \item{lg}{loadings of estimated group factors}

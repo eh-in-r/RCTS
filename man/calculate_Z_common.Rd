@@ -10,7 +10,6 @@ calculate_Z_common(
   beta_est,
   g,
   lgfg_list,
-  vars,
   vars_est,
   kg,
   method_estimate_beta,
@@ -29,9 +28,7 @@ calculate_Z_common(
 
 \item{lgfg_list}{This is a list (length number of groups) containing FgLg for every group.}
 
-\item{vars}{number of observable variables}
-
-\item{vars_est}{number of variables that will be included in the algorithm and have their coefficient estimated. This is usually equal to vars}
+\item{vars_est}{number of variables that will be included in the algorithm and have their coefficient estimated. This is usually equal to the number of observable variables.}
 
 \item{kg}{number of group specific factors to be estimated}
 

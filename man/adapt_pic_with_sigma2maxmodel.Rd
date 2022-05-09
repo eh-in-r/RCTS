@@ -4,13 +4,7 @@
 \alias{adapt_pic_with_sigma2maxmodel}
 \title{Adapts the object that contains PIC for all candidate C's and all subsamples with sigma2_max_model.}
 \usage{
-adapt_pic_with_sigma2maxmodel(
-  df,
-  df_results,
-  sigma2_max_model,
-  UPDATE1 = FALSE,
-  UPDATE2 = FALSE
-)
+adapt_pic_with_sigma2maxmodel(df, df_results, sigma2_max_model)
 }
 \arguments{
 \item{df}{contains PIC for all candidate C's and all subsamples}
@@ -18,10 +12,6 @@ adapt_pic_with_sigma2maxmodel(
 \item{df_results}{dataframe with results for each estimated configuration}
 
 \item{sigma2_max_model}{sigma2 of model with maximum number of groups and factors}
-
-\item{UPDATE1}{option to indicate the number of groupfactors is updated during the algorithm; defaults to FALSE}
-
-\item{UPDATE2}{option to indicate the number of common factors is updated during the algorithm; defaults to FALSE}
 }
 \description{
 The PIC is calculated with a sigma2 specific to the configuration (= number of groups and factors).

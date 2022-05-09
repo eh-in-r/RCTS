@@ -14,12 +14,11 @@ calculate_PIC(
   sigma2,
   NN,
   TT,
-  vars_est,
   method_estimate_beta,
   beta_est,
   g,
-  alternative_pic = FALSE,
-  alternative_pic_2 = FALSE
+  vars_est,
+  choice_pic = "pic2022"
 )
 }
 \arguments{
@@ -41,17 +40,18 @@ calculate_PIC(
 
 \item{TT}{length of time series}
 
-\item{vars_est}{number of variables that will be included in the algorithm and have their coefficient estimated. This is usually equal to vars}
-
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 
 \item{beta_est}{estimated values of beta}
 
 \item{g}{Vector with estimated group membership for all individuals}
 
-\item{alternative_pic}{uses alternative PIC: for testing purposes}
+\item{vars_est}{number of variables that will be included in the algorithm and have their coefficient estimated. This is usually equal to the number of observable variables.}
 
-\item{alternative_pic_2}{modifies PIC: for testing purposes}
+\item{choice_pic}{indicates which PIC to use to estimate the number of groups and factors:
+options are "pic2017" (uses the PIC of \insertCite{Ando2017;textual}{RCTS}; works better for large N),
+"pic2016" (\insertCite{Ando2016;textual}{RCTS}; works better for large T) weighs the fourth term with an extra factor relative to the size of the groups,
+and "pic2022" which shrinks the NT-space where the number of groups and factors would be over- or underestimated compared to pic2016 and pic2017.}
 }
 \description{
 This depends on kappa1 -> kappaN, through p (=number of nonzero elements of beta_est).

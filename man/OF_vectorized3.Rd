@@ -19,7 +19,7 @@ OF_vectorized3(
   k,
   kg,
   method_estimate_beta,
-  num_factors_may_vary
+  num_factors_may_vary = TRUE
 )
 }
 \arguments{
@@ -29,7 +29,7 @@ OF_vectorized3(
 
 \item{g}{Vector with group membership for all individuals}
 
-\item{grid}{dataframe containing XB, FgLg and FL}
+\item{grid}{dataframe containing the matrix multiplications XB, FgLg and FL}
 
 \item{Y}{Y: the panel data of interest}
 

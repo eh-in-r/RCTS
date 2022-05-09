@@ -12,7 +12,6 @@ calculate_errors_virtual_groups(
   TT,
   k,
   kg,
-  vars,
   vars_est,
   method_estimate_beta,
   Y,
@@ -35,9 +34,7 @@ calculate_errors_virtual_groups(
 
 \item{kg}{number of group specific factors to be estimated}
 
-\item{vars}{number of observable variables}
-
-\item{vars_est}{number of variables that will be included in the algorithm and have their coefficient estimated. This is usually equal to vars}
+\item{vars_est}{number of variables that will be included in the algorithm and have their coefficient estimated. This is usually equal to the number of observable variables.}
 
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 

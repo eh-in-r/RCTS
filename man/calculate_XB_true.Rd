@@ -4,14 +4,12 @@
 \alias{calculate_XB_true}
 \title{Calculates the product of X*beta_true .}
 \usage{
-calculate_XB_true(X, beta_true, vars, g, g_true, method_estimate_beta)
+calculate_XB_true(X, beta_true, g, g_true, method_estimate_beta)
 }
 \arguments{
 \item{X}{X}
 
 \item{beta_true}{true coefficients of the observable variables}
-
-\item{vars}{number of observable variables}
 
 \item{g}{Vector with estimated group membership for all individuals}
 

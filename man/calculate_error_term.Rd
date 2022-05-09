@@ -13,12 +13,11 @@ calculate_error_term(
   lambda_group,
   comfactor,
   lambda,
-  method_estimate_beta,
-  vars,
-  vars_est,
   S,
   k,
   kg,
+  method_estimate_beta = "individual",
+  vars_est = dim(X)[3],
   no_common_factorstructure = FALSE,
   no_group_factorstructure = FALSE
 )
@@ -40,17 +39,15 @@ calculate_error_term(
 
 \item{lambda}{loadings of the estimated common factors}
 
-\item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
-
-\item{vars}{number of observable variables}
-
-\item{vars_est}{number of variables that will be included in the algorithm and have their coefficient estimated. This is usually equal to vars}
-
 \item{S}{number of estimated groups}
 
 \item{k}{number of common factors to be estimated}
 
 \item{kg}{number of group specific factors to be estimated}
+
+\item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
+
+\item{vars_est}{number of variables that will be included in the algorithm and have their coefficient estimated. This is usually equal to the number of observable variables.}
 
 \item{no_common_factorstructure}{if there is a common factorstructure being estimated}
 
