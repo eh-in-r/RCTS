@@ -37,9 +37,3 @@ Returns list (with as length the number of groups) with lgfg (product of grouplo
 Each element of the list with the assumption that all individuals are in the same group k.
 This function is used to speed up code.
 }
-\examples{
-library("tidyverse")
-lambda_group <- RCTS::lambda_group_true_dgp3
-factor_group <- RCTS::factor_group_true_dgp3
-calculate_lgfg(lambda_group, factor_group, 3, 0, c(3, 3, 3), FALSE, 300, 30)
-}

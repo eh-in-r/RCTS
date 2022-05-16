@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{add_pic}
 \alias{add_pic}
-\title{This function fills in df_pic with the calculated PIC for the current configuration.}
+\title{Fills in df_pic with the calculated PIC for the current configuration.}
 \usage{
 add_pic(
   df,
@@ -56,5 +56,5 @@ different NT-regions (where N is the number of time series and T is the length o
 Pic2022 is the default (this PIC shrinks the problematic NT-region to very large N / very small T).}
 }
 \description{
-This function fills in df_pic with the calculated PIC for the current configuration.
+Fills in df_pic with the calculated PIC for the current configuration.
 }

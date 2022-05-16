@@ -7,7 +7,7 @@
 #' @param NN number of time series
 #' @return NxN covariance matrix
 #' @examples
-#' create_covMat_crosssectional_dependence(0.3, 300)
+#' RCTS:::create_covMat_crosssectional_dependence(0.3, 300)
 create_covMat_crosssectional_dependence <- function(parameter, NN) {
   covMat <- matrix(NA, nrow = NN, ncol = NN)
   for (i in 1:NN) {
@@ -102,7 +102,7 @@ beta_true_heterogroups <- function(vars, S_true, extra_beta_factor = 1, limit_tr
 #' equal to the true number of groups.
 #' @examples
 #' library("tidyverse")
-#' create_true_beta(vars = 3, NN = 300, S_true = 3)
+#' RCTS:::create_true_beta(vars = 3, NN = 300, S_true = 3)
 #' @importFrom stats rnorm
 create_true_beta <- function(vars,
                              NN,
@@ -150,7 +150,7 @@ create_true_beta <- function(vars,
 #' @param scale_robust logical, defines if X will be scaled with robust metrics instead of with non-robust metrics
 #' @return array with dimensions N x T x number of observable variables
 #' @examples
-#' initialise_X(300, 30, vars = 3)
+#' RCTS:::initialise_X(300, 30, vars = 3)
 initialise_X <- function(NN, TT, vars, scale_robust = TRUE) {
   if (vars > 0) {
     X <- array(0, dim = c(NN, TT, vars))
@@ -181,8 +181,8 @@ initialise_X <- function(NN, TT, vars, scale_robust = TRUE) {
 #' @inheritParams initialise_X
 #' @examples
 #' use_robust <- TRUE
-#' X <- initialise_X(300, 30, vars = 3)
-#' scaling_X(X, TRUE, use_robust, vars = 3)
+#' X <- RCTS:::initialise_X(300, 30, vars = 3)
+#' RCTS:::scaling_X(X, TRUE, use_robust, vars = 3)
 #' @importFrom stats sd
 scaling_X <- function(X, firsttime, use_robust, vars) {
   #
@@ -249,14 +249,14 @@ scaling_X <- function(X, firsttime, use_robust, vars) {
   return(X)
 }
 
-#' This function restructures X (which is an 3D-array of dimensions (N,T,p) to a 2D-matrix of dimension (NxT,p).
+#' Restructures X (which is an 3D-array of dimensions (N,T,p) to a 2D-matrix of dimension (NxT,p).
 #'
 #' @param X input
 #' @inheritParams create_true_beta
 #' @inheritParams estimate_beta
 #' @examples
-#' X <- initialise_X(300, 30, vars = 3)
-#' X_restructured <- restructure_X_to_order_slowN_fastT(X,
+#' X <- RCTS:::initialise_X(300, 30, vars = 3)
+#' X_restructured <- RCTS:::restructure_X_to_order_slowN_fastT(X,
 #'   vars_est = 3
 #' )
 restructure_X_to_order_slowN_fastT <- function(X, vars_est) {
@@ -307,7 +307,7 @@ restructure_X_to_order_slowN_fastT <- function(X, vars_est) {
 #' library("tidyverse")
 #' # For 3 groups, each with 3 groupfactors:
 #' g_true <- ceiling(runif(300) * 3)
-#' generate_grouped_factorstructure(3, c(3, 3, 3), TT = 30, g_true)
+#' RCTS:::generate_grouped_factorstructure(3, c(3, 3, 3), TT = 30, g_true)
 #' @importFrom dplyr bind_rows
 generate_grouped_factorstructure <- function(S, kg_true,
                                              TT, g_true,
@@ -1132,11 +1132,6 @@ OF_vectorized3 <- function(NN,
 #' @param k number of common factors
 #' @param kg vector with the number of group specific factors for each group
 #' @importFrom dplyr arrange
-#' @examples
-#' library("tidyverse")
-#' lambda_group <- RCTS::lambda_group_true_dgp3
-#' factor_group <- RCTS::factor_group_true_dgp3
-#' calculate_lgfg(lambda_group, factor_group, 3, 0, c(3, 3, 3), FALSE, 300, 30)
 #' @importFrom rlang .data
 calculate_lgfg <- function(lambda_group, factor_group, S, k, kg, num_factors_may_vary,
                            NN, TT) {
@@ -3199,7 +3194,7 @@ adapt_pic_with_sigma2maxmodel <- function(df, df_results, sigma2_max_model
   return(df)
 }
 
-#' This function creates an instance of DGP 2, as defined in \insertCite{BoudtHeyndels2021;textual}{RCTS}.
+#' Creates an instance of DGP 2, as defined in \insertCite{BoudtHeyndels2021;textual}{RCTS}.
 #'
 #' The default has 3 groups with each 3 group specific factors. Further it contains 0 common factors and 3 observed variables.
 #' The output is a dataframe with N (amount of time series) rows and T (length of time series) columns.
@@ -3242,7 +3237,7 @@ create_data_dgp2 <- function(N, TT, S_true = 3, vars = 3, k_true = 0, kg_true = 
   return(list(Y, X, g_true, beta_true, factor_group_true, lambda_group_true, comfactor_true, lambda_true))
 }
 
-#' This function selects a subsample of the time series, and of the length of the time series. Based on this it returns a subsample of Y.
+#' Selects a subsample of the time series, and of the length of the time series. Based on this it returns a subsample of Y.
 #' It also returns the corresponding subsamples X and the group membership.
 #'
 #' @param original_data list containing the true data: Y, X, g_true, beta_true, factor_group_true, lambda_group_true, comfactor_true, lambda_true
@@ -3430,7 +3425,7 @@ initialise_clustering <- function(use_robust, Y, g, beta_est, S, k, kg, comfacto
   return(g)
 }
 
-#' This function initialises the estimation of the common factors and their loadings.
+#' Initialises the estimation of the common factors and their loadings.
 #'
 #' This is a short version of initialise_commonfactorstructure() which only contains implementations for the robust macropca case and the classical case.
 #' @inheritParams define_object_for_initial_clustering_macropca
@@ -3569,8 +3564,9 @@ iterate <- function(use_robust, Y, X, beta_est, g, lambda_group, factor_group, l
   return(list(beta_est, g, comfactor, lambda, factor_group, lambda_group, value))
 }
 
-#' This function prints a table of the estimated vs the true group memberships.
-#' If the true group membership is unknown the result is a table with the estimated group membership counts.
+#' Prints a table of the estimated vs the true group memberships.
+#'
+#' If the true group membership is unknown, the result is a table with the estimated group membership counts.
 #' @param g vector with estimated group membership for all individuals
 #' @inheritParams generate_Y
 #' @export
@@ -3582,7 +3578,7 @@ show_gtable <- function(g, g_true) {
   }
 }
 
-#' This function defines the convergence speed.
+#' Defines the convergence speed.
 #'
 #' @param iteration number of iteration
 #' @param of objective function
@@ -3607,10 +3603,13 @@ get_convergence_speed <- function(iteration, of) { # , verbose = FALSE) {
   return(speed)
 }
 
-#' This function checks the rules for stopping the algorithm, based on its convergence speed.
+#' Checks the rules for stopping the algorithm, based on its convergence speed.
 #'
+#' @param iteration number of iteration
 #' @param speed convergence speed
 #' @param speedlimit if the convergence speed falls under this limit the algorithm stops
+#' @param all_OF_values vector containing the values of the objective function from previous iterations
+#' @param verbose if TRUE, more information is printed
 #' @export
 check_stopping_rules <- function(iteration, speed, all_OF_values, speedlimit = 0.01, verbose = FALSE) {
   if (is.na(speed)) {
@@ -3730,7 +3729,7 @@ define_kg_candidates <- function(S, kg_min, kg_max, nfv, limit_est_groups = 20) 
   return(kg_candidates)
 }
 
-#' This functions initialises a dataframe that will contain an overview of metrics for each estimated configuration (for example adjusted randindex).
+#' Initialises a dataframe that will contain an overview of metrics for each estimated configuration (for example adjusted randindex).
 #'
 #' @inheritParams initialise_beta
 #' @param limit_est_groups maximum allowed number of groups that can be estimated
@@ -3747,13 +3746,14 @@ initialise_df_results <- function(use_robust, limit_est_groups = 20) {
   return(df_results)
 }
 
-#' This function defines the candidate values for C.
+#' Defines the candidate values for C.
+#' @export
 define_C_candidates <- function() {
   C_candidates <- c(0, 10^(seq(-10, 10, by = 0.01)))
   return(C_candidates)
 }
 
-#' This function initialises a dataframe which will contain the PIC for each configuration and for each value of C.
+#' Initialises a dataframe which will contain the PIC for each configuration and for each value of C.
 #'
 #' @inheritParams calculate_VCsquared
 #' @export
@@ -3762,7 +3762,7 @@ initialise_df_pic <- function(C_candidates) {
   return(df_pic)
 }
 
-#' This function add the current configuration (number of groups and factors) to df_results
+#' Adds the current configuration (number of groups and factors) to df_results
 #'
 #' @param df_results dataframe with results for each estimated configuration
 #' @param S estimated number of groups in current configuration
@@ -3783,7 +3783,7 @@ add_configuration <- function(df_results, S, k, kg) {
   return(df_results)
 }
 
-#' This function fills in df_pic with the calculated PIC for the current configuration.
+#' Fills in df_pic with the calculated PIC for the current configuration.
 #'
 #' @param df input data frame
 #' @param index_configuration index of the configuration of groups and factors
@@ -3825,7 +3825,7 @@ add_pic <- function(df, index_configuration, use_robust, Y, beta_est, g, S, k, k
   return(df)
 }
 
-#' This function returns a vector with the indices of the subsets. Must start with zero.
+#' Returns a vector with the indices of the subsets. Must start with zero.
 #'
 #' @param n number of subsets
 #' @export
@@ -3858,7 +3858,7 @@ calculate_best_config <- function(df_results, df_pic, C_candidates, limit_est_gr
   return(as.matrix(result, nrow = (length(C_candidates))))
 }
 
-#' This function fills in the optimized number of common factors for each C.
+#' Fills in the optimized number of common factors for each C.
 #'
 #' @param df input
 #' @param all_best_values data frame with the optimal number of groups, common factors and group specific factors
@@ -3868,7 +3868,7 @@ fill_rc <- function(df, all_best_values, subset) {
   df[, subset + 1] <- all_best_values[, 2] # fill in the best number of common factors
   return(df)
 }
-#' This function fills in the optimized number of groups and group specific factors for each C.
+#' Fills in the optimized number of groups and group specific factors for each C.
 #' @param df input
 #' @param all_best_values data frame with the optimal number of groups, common factors and group specific factors
 #' @param subset index of the subsample
@@ -3886,8 +3886,9 @@ fill_rcj <- function(df, all_best_values, subset, S_cand, kg_cand) {
   return(df)
 }
 
-#' This function initialises a data frame which will eventually be filled with the optimized number of common factors for each C and for each subset of the original dataset.
+#' Initialises rc.
 #'
+#' This function initialises a data frame which will eventually be filled with the optimized number of common factors for each C and for each subset of the original dataset.
 #' @param indices_subset all indices of the subsets
 #' @inheritParams calculate_VCsquared
 #' @export
@@ -3895,8 +3896,9 @@ initialise_rc <- function(indices_subset, C_candidates) {
   return(data.frame(matrix(NA, length(C_candidates), length(indices_subset))))
 }
 
-#' This function initialises a data frame which will eventually be filled with the optimized number of groups and group specific factors for each C and for each subset of the original dataset.
+#' Initialises rcj.
 #'
+#' This function initialises a data frame which will eventually be filled with the optimized number of groups and group specific factors for each C and for each subset of the original dataset.
 #' @param indices_subset all indices of the subsets
 #' @inheritParams calculate_VCsquared
 #' @export
@@ -3904,7 +3906,7 @@ initialise_rcj <- function(indices_subset, C_candidates) {
   return(data.frame(matrix(NA, length(C_candidates), length(indices_subset))))
 }
 
-#' This function adds several metrics to df_results.
+#' Adds several metrics to df_results.
 #'
 #' @inheritParams add_configuration
 #' @inheritParams add_pic
@@ -3923,7 +3925,7 @@ add_metrics <- function(df_results, index_configuration, pic_sigma2, g, g_true, 
   return(df_results)
 }
 
-#' This functions visualises the confusionmatrix of the group membership of the time series.
+#' Visualises the confusionmatrix of the group membership of the time series.
 #'
 #' @param g estimated groups
 #' @param g_true true groups
@@ -3941,7 +3943,7 @@ plot_gtable <- function(g, g_true) {
   )
 }
 
-#' This function finds the first stable interval after the first unstable point. It then defines the value for C for the begin, middle and end of this interval.
+#' Finds the first stable interval after the first unstable point. It then defines the value for C for the begin, middle and end of this interval.
 #'
 #' @param list_vc list with resulting expression(VC^2) for each run
 #' @param list_rc list with resulting rc for each run
@@ -4059,7 +4061,7 @@ get_best_configuration <- function(list_vc, list_rc, list_rcj, C_candidates, S_c
   }
 }
 
-#' This function shows the configurations for potential C's of the first stable interval (beginpoint, middlepoint and endpoint)
+#' Shows the configurations for potential C's of the first stable interval (beginpoint, middlepoint and endpoint)
 #'
 #' @param df input dataframe
 #' @param runs number of panel data sets for which the algorithm has run. If larger than one, the median VC2 is used to determine C.
@@ -4084,7 +4086,7 @@ tabulate_potential_C <- function(df, runs, beginpoint, middlepoint_log, middlepo
   }
 }
 
-#' This function plots expression(VC^2) along with the corresponding number of groups (orange), common factors (darkblue) and group factors of the first group (lightblue).
+#' Plots expression(VC^2) along with the corresponding number of groups (orange), common factors (darkblue) and group factors of the first group (lightblue).
 #'
 #' @inheritParams calculate_VCsquared
 #' @param VC_squared measure of variability in the optimal configuration between the subsets

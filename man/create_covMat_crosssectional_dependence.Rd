@@ -18,5 +18,5 @@ NxN covariance matrix
 Used to include cross-sectional dependence or serial dependence into the simulated panel data.
 }
 \examples{
-create_covMat_crosssectional_dependence(0.3, 300)
+RCTS:::create_covMat_crosssectional_dependence(0.3, 300)
 }

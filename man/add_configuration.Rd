@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{add_configuration}
 \alias{add_configuration}
-\title{This function add the current configuration (number of groups and factors) to df_results}
+\title{Adds the current configuration (number of groups and factors) to df_results}
 \usage{
 add_configuration(df_results, S, k, kg)
 }
@@ -16,5 +16,5 @@ add_configuration(df_results, S, k, kg)
 \item{kg}{estimated number of group specific factors in current configuration}
 }
 \description{
-This function add the current configuration (number of groups and factors) to df_results
+Adds the current configuration (number of groups and factors) to df_results
 }

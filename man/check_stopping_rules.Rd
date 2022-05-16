@@ -2,15 +2,27 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{check_stopping_rules}
 \alias{check_stopping_rules}
-\title{This function checks the rules for stopping the algorithm, based on its convergence speed.}
+\title{Checks the rules for stopping the algorithm, based on its convergence speed.}
 \usage{
-check_stopping_rules(speed, speedlimit = 0.01)
+check_stopping_rules(
+  iteration,
+  speed,
+  all_OF_values,
+  speedlimit = 0.01,
+  verbose = FALSE
+)
 }
 \arguments{
+\item{iteration}{number of iteration}
+
 \item{speed}{convergence speed}
 
+\item{all_OF_values}{vector containing the values of the objective function from previous iterations}
+
 \item{speedlimit}{if the convergence speed falls under this limit the algorithm stops}
+
+\item{verbose}{if TRUE, more information is printed}
 }
 \description{
-This function checks the rules for stopping the algorithm, based on its convergence speed.
+Checks the rules for stopping the algorithm, based on its convergence speed.
 }

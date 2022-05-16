@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{create_data_dgp2}
 \alias{create_data_dgp2}
-\title{This function creates an instance of DGP 2, as defined in \insertCite{BoudtHeyndels2021;textual}{RCTS}.}
+\title{Creates an instance of DGP 2, as defined in \insertCite{BoudtHeyndels2021;textual}{RCTS}.}
 \usage{
 create_data_dgp2(N, TT, S_true = 3, vars = 3, k_true = 0, kg_true = c(3, 3, 3))
 }

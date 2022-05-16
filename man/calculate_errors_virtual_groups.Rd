@@ -15,6 +15,7 @@ calculate_errors_virtual_groups(
   vars_est,
   method_estimate_beta,
   Y,
+  X,
   beta_est,
   g
 )
@@ -39,6 +40,8 @@ calculate_errors_virtual_groups(
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 
 \item{Y}{Y: the panel data of interest}
+
+\item{X}{dataframe with the observed variables}
 
 \item{beta_est}{estimated values of beta}
 

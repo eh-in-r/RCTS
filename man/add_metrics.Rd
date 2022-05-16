@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{add_metrics}
 \alias{add_metrics}
-\title{This function adds several metrics to df_results.}
+\title{Adds several metrics to df_results.}
 \usage{
 add_metrics(
   df_results,
@@ -30,5 +30,5 @@ add_metrics(
 \item{iteration}{number of iteration}
 }
 \description{
-This function adds several metrics to df_results.
+Adds several metrics to df_results.
 }
