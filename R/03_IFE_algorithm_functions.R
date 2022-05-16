@@ -3801,6 +3801,7 @@ add_configuration <- function(df_results, S, k, kg) {
 #' They differ in the penalty they perform on the number of group specific factors (and implicitly on the number of groups). They also differ in the sense that they have
 #' different NT-regions (where N is the number of time series and T is the length of the time series) where the estimated number of groups, and thus group specific factors will be wrong.
 #' Pic2022 is the default (this PIC shrinks the problematic NT-region to very large N / very small T).
+#' @export
 add_pic <- function(df, index_configuration, use_robust, Y, beta_est, g, S, k, kg,
                     pic_e2, C_candidates,
                     method_estimate_beta = "individual",
