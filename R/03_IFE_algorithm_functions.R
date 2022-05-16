@@ -8,7 +8,6 @@
 #' @return NxN covariance matrix
 #' @examples
 #' create_covMat_crosssectional_dependence(0.3, 300)
-#' @export
 create_covMat_crosssectional_dependence <- function(parameter, NN) {
   covMat <- matrix(NA, nrow = NN, ncol = NN)
   for (i in 1:NN) {
@@ -105,7 +104,6 @@ beta_true_heterogroups <- function(vars, S_true, extra_beta_factor = 1, limit_tr
 #' library("tidyverse")
 #' create_true_beta(vars = 3, NN = 300, S_true = 3)
 #' @importFrom stats rnorm
-#' @export
 create_true_beta <- function(vars,
                              NN,
                              S_true,
@@ -153,7 +151,6 @@ create_true_beta <- function(vars,
 #' @return array with dimensions N x T x number of observable variables
 #' @examples
 #' initialise_X(300, 30, vars = 3)
-#' @export
 initialise_X <- function(NN, TT, vars, scale_robust = TRUE) {
   if (vars > 0) {
     X <- array(0, dim = c(NN, TT, vars))
@@ -187,7 +184,6 @@ initialise_X <- function(NN, TT, vars, scale_robust = TRUE) {
 #' X <- initialise_X(300, 30, vars = 3)
 #' scaling_X(X, TRUE, use_robust, vars = 3)
 #' @importFrom stats sd
-#' @export
 scaling_X <- function(X, firsttime, use_robust, vars) {
   #
   # replaced this codeblock by a less concise but more clear codeblock
@@ -263,7 +259,6 @@ scaling_X <- function(X, firsttime, use_robust, vars) {
 #' X_restructured <- restructure_X_to_order_slowN_fastT(X,
 #'   vars_est = 3
 #' )
-#' @export
 restructure_X_to_order_slowN_fastT <- function(X, vars_est) {
   if (!(is.na(X)[1])) {
     if (length(dim(X)) == 2) {
@@ -314,7 +309,6 @@ restructure_X_to_order_slowN_fastT <- function(X, vars_est) {
 #' g_true <- ceiling(runif(300) * 3)
 #' generate_grouped_factorstructure(3, c(3, 3, 3), TT = 30, g_true)
 #' @importFrom dplyr bind_rows
-#' @export
 generate_grouped_factorstructure <- function(S, kg_true,
                                              TT, g_true,
                                              lgr_factor_mean = 0,
@@ -707,7 +701,7 @@ calculate_errors_virtual_groups <- function(group, LF, virtual_grouped_factor_st
                                             k, kg,
                                             vars_est,
                                             method_estimate_beta,
-                                            Y, beta_est, g) {
+                                            Y, X, beta_est, g) {
   E_prep <- matrix(NA, nrow = NN, ncol = TT)
 
   a <- do_we_estimate_common_factors(k)
@@ -736,6 +730,8 @@ calculate_errors_virtual_groups <- function(group, LF, virtual_grouped_factor_st
     # calculate the objective function, while making sure that NA's do not have any effect in the sum
     E_prep[i,] <- Y[i,] - a * LF[i,]
     if (b != 0) E_prep[i,] <- (E_prep[i,] - b * virtual_structure)
+    # print(dim(XT))
+    # print(length(E_prep[i,]))
     if (vars_est > 0) E_prep[i,] <- E_prep[i,] - XT # note: XT is an TTx1 matrix
   }
   return(E_prep)
@@ -905,7 +901,7 @@ update_g <- function(use_robust, Y, X, beta_est, g,
       k,
       kg,
       vars_est,
-      method_estimate_beta, Y, beta_est, g
+      method_estimate_beta, Y, X, beta_est, g
     )
   })
   #if (verbose) message("errors_virtual is created")
@@ -1092,7 +1088,6 @@ OF_vectorized_helpfunction3 <- function(i, t, XBETA, LF,
 #' @inheritParams estimate_beta
 #' @importFrom tidyselect starts_with
 #' @importFrom magrittr %>%
-#' @export
 OF_vectorized3 <- function(NN,
                            TT, g, grid,
                            Y,
@@ -1143,7 +1138,6 @@ OF_vectorized3 <- function(NN,
 #' factor_group <- RCTS::factor_group_true_dgp3
 #' calculate_lgfg(lambda_group, factor_group, 3, 0, c(3, 3, 3), FALSE, 300, 30)
 #' @importFrom rlang .data
-#' @export
 calculate_lgfg <- function(lambda_group, factor_group, S, k, kg, num_factors_may_vary,
                            NN, TT) {
   lgfg_list <- list()
@@ -1463,8 +1457,8 @@ estimate_beta <- function(use_robust, Y, X, g, lambda_group, factor_group, lambd
         )
       } else {
         # note that mapply isnt faster than map2
-        print(length(X_special_list))
-        print(length(Y_special_list))
+        # print(length(X_special_list))
+        # print(length(Y_special_list))
         beta_est <- map2(
           X_special_list, Y_special_list,
           function(x, y) {
@@ -1515,8 +1509,9 @@ estimate_beta <- function(use_robust, Y, X, g, lambda_group, factor_group, lambd
       beta_est <- tryCatch(
         matrix(unlist(beta_est), ncol = NN),
         warning = function(w) {
-          print("----")
+          print("------")
           message(w)
+          print(unlist(beta_est))
           print(NN)
           # print("sleep")
           # Sys.sleep(36000)
@@ -1538,7 +1533,6 @@ estimate_beta <- function(use_robust, Y, X, g, lambda_group, factor_group, lambd
 #' @param g Vector with group membership for all individuals
 #' @inheritParams estimate_beta
 #' @return NxT matrix
-#' @export
 calculate_W <- function(Y, X, beta_est, g,
                         vars_est,
                         method_estimate_beta) {
@@ -1580,7 +1574,6 @@ calculate_W <- function(Y, X, beta_est, g,
 #' @param lgfg_list This is a list (length number of groups) containing FgLg for every group.
 #' @param initialise indicator of being in the initialisation phase
 #' @inheritParams estimate_beta
-#' @export
 calculate_Z_common <- function(Y, X, beta_est, g, lgfg_list,
                                vars_est,
                                kg,
@@ -1633,7 +1626,6 @@ calculate_Z_common <- function(Y, X, beta_est, g, lgfg_list,
 #' @inheritParams calculate_Z_common
 #' @inheritParams estimate_beta
 #' @param group indexnumber of the group
-#' @export
 calculate_Z_group <- function(Y, X, beta_est, g, lambda, comfactor, group,
                               k,
                               method_estimate_beta,
@@ -1805,7 +1797,6 @@ handle_macropca_errors <- function(object, temp, KMAX, number_eigenvectors, verb
 #' @param number_eigenvectors number of eigenvectors to extract
 #' @param KMAX The maximal number of principal components to compute. This is a parameter in cellWise::MacroPCA()
 #' @param verbose_robustpca when TRUE, it prints messages
-#' @export
 robustpca <- function(object, number_eigenvectors, KMAX = 20, verbose_robustpca = FALSE) {
   if (verbose_robustpca) {
     print(paste("*************************************************robust PCA with:", number_eigenvectors))
@@ -1878,7 +1869,7 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20, verbose_robustpca 
       #   Only ... singular triplets converged within ... iterations.
       message(paste(
         "There is an issue with the dimensions of the factors: MacroPCA returns only", dim(temp$loadings)[2],
-        "eigenvectors, instead of", number_eigenvectors, "-> do not update factors this iteration."
+        "eigenvectors, instead of", number_eigenvectors,"."
       ))
 
       # for (i in 1:(number_eigenvectors - dim(temp$loadings)[2])) {
@@ -2087,8 +2078,7 @@ estimate_factor_group <- function(use_robust, Y, X, beta_est, g, lambda, comfact
           temp <- prepare_for_robpca(Wj, NN, TT)
           temp2 <- robustpca(temp, kg[group], verbose_robustpca = verbose)
           if(is.null(temp2[[1]])) {
-            message(paste("MacroPCA returned a wrong amount of factors, so do not update the group factors for group", group, "in this iteration"))
-            #problemgroups = c(problemgroups, group)
+            message(paste("MacroPCA returned a wrong amount of factors, so skip the update of the group factors for group", group, "(has ", as.numeric(table(g)[group]), " units) in this iteration."))
             if(!initialise) {
               estimatorF[[group]] <- factor_group_previous[[group]] #-1 #placeholder
             } else {
@@ -2369,7 +2359,6 @@ calculate_lambda_group <- function(use_robust, Y, X, beta_est, factor_group, g, 
 #' @param beta_est estimated values of beta
 #' @param limit_est_groups_heterogroups maximum amount of groups that can be estimated when method_estimate_beta is set to "group"
 #' @inheritParams estimate_beta
-#' @export
 grid_add_variables <- function(grid, Y, X, beta_est, g, lambda, comfactor, method_estimate_beta,
                                vars_est,
                                S,
@@ -2583,7 +2572,6 @@ calculate_sigma2 <- function(e, NN = nrow(e), TT = ncol(e)) {
 #' Function to calculate the norm of a matrix.
 #'
 #' @param A input matrix
-#' @export
 matrixnorm <- function(A) {
   return(sqrt(sum(diag(t(A) %*% A))))
 }
@@ -2596,7 +2584,6 @@ matrixnorm <- function(A) {
 #' @param e2 NxT matrix with the error terms
 #' @inheritParams initialise_beta
 #' @importFrom robustbase Mpsi
-#' @export
 calculate_PIC_term1 <- function(e2, use_robust) {
   if (use_robust) {
     # This replaces the classical sum(z^2) by sum(rho(z)) with rho the bisquare function.
@@ -2705,7 +2692,6 @@ calculate_PIC <- function(C, use_robust, S, k, kg, e2, sigma2,
 #' @inheritParams generate_Y
 #' @param g Vector with estimated group membership for all individuals
 #' @param g_true true group membership
-#' @export
 calculate_XB_true <- function(X, beta_true, g, g_true, method_estimate_beta) {
   NN <- dim(X)[1]
   TT <- dim(X)[2]
@@ -2764,7 +2750,6 @@ adapt_X_estimating_less_variables <- function(X, vars_est) {
 #'
 #' @inheritParams estimate_beta
 #' @inheritParams OF_vectorized3
-#' @export
 calculate_XB_estimated <- function(X, beta_est, g,
                                    vars_est,
                                    method_estimate_beta) {
@@ -2818,7 +2803,6 @@ calculate_XB_estimated <- function(X, beta_est, g,
 #' @inheritParams estimate_beta
 #' @inheritParams generate_Y
 #' @param dgp1_AB_local gives information about which DGP we use; TRUE of FALSE
-#' @export
 calculate_FL_group_true <- function(lgt, fgt, g_true, NN, TT,
                                     S_true,
                                     k_true,
@@ -2850,7 +2834,6 @@ calculate_FL_group_true <- function(lgt, fgt, g_true, NN, TT,
 #' @inheritParams generate_Y
 #' @inheritParams update_g
 #' @return list with NjxT matrices
-#' @export
 calculate_FL_group_estimated <- function(lg, fg, g,
                                          NN,
                                          TT,
@@ -3080,7 +3063,6 @@ calculate_VCsquared <- function(rcj, rc, C_candidates, indices_subset,
 # @param newkmax sets parameter k.max in lmrob.control
 #' @importFrom robustbase lmrob
 #' @importFrom robustbase lmrob.control
-#' @export
 LMROB <- function(parameter_y, parameter_x, nointercept = FALSE, nosetting = FALSE) {
   if (is.na(parameter_x)[1]) { # when there are no independent variables
     result2 <- tryCatch(
@@ -3120,20 +3102,28 @@ LMROB <- function(parameter_y, parameter_x, nointercept = FALSE, nosetting = FAL
             # The defaults of all the remaining arguments are not changed.
             # The option setting="KS2014" builds upon setting="KS2011". More arguments are changed to best.r.s = 20, k.fast.s = 2, nResample = 1000.
             lmrobcontrol_ks2014 = lmrob.control(method = "SMDM", psi = "lqq", max.it = 500, k.max = 3000, cov = ".vcov.w", best.r.s = 20, k.fast.s = 2, nResample = 1000)
-            lmrob(parameter_y ~ parameter_x, control = lmrobcontrol_ks2014)
+            result = lmrob(parameter_y ~ parameter_x, control = lmrobcontrol_ks2014)
+            return(result)
           },
-          warning = function(w) {
-            #"S refinements did not converge (to refine.tol=1e-07) in 2000 (= k.max) steps"
-            #-> i increased k.max to 3000
-            message(w)
-            message(paste("\nlength of input:",length(parameter_y)))
-            return(result2)
-          },
+          #possible warnings are:
+          #"S refinements did not converge (to refine.tol=1e-07) in 2000 (= k.max) steps"
+          #-> solution: i increased k.max to 3000
+
+          #find_scale() did not converge in 'maxit.scale' (= 200) iterations with tol=1e-10, last rel.diff=0
+
+          #but note that if code reaches the warning, there is no access to "result", and i won't calculate it again -> comment out the warning part
+          #(this thus only lists the warnings after the algorithm has run, and not anymore per iteration)
+
+          # warning = function(w) {
+          #   message(w)
+          #   message(paste("\nlength of input:",length(parameter_y)))
+          #   return(result)
+          # },
           error = function(e) {
             message(e)
             print("error, therefore use lmrob without 'setting'") #does this still occur?
-            result2 <- lmrob(parameter_y ~ parameter_x)
-            return(result2)
+            result <- lmrob(parameter_y ~ parameter_x)
+            return(result)
           },
           finally = {}
         )
@@ -3160,7 +3150,6 @@ LMROB <- function(parameter_y, parameter_x, nointercept = FALSE, nosetting = FAL
 #' @param k estimated number of common factors
 #' @param k_cand vector with candidate value for the number of common factors
 # @param optimize_kappa indicates if kappa has to be optimized or not (only relevant for the classical algorithm); defaults to FALSE
-#' @export
 calculate_sigma2maxmodel <- function(e, kg_max,
                                      S, S_cand,
                                      kg,
@@ -3343,7 +3332,6 @@ make_subsamples <- function(original_data,
 #' @param method_estimate_beta defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".
 #' @param method_estimate_factors specifies the robust algorithm to estimate factors: default is "macro". The value is not used when use_robust is set to FALSE.
 #' @param verbose when TRUE, it prints messages
-#' @export
 define_object_for_initial_clustering_macropca <- function(use_robust, Y, g, beta_est, k, kg, comfactor, method_estimate_beta = "individual", method_estimate_factors = "macro", verbose = FALSE) {
   TT <- ncol(Y)
   number_of_initial_factors <- 10
@@ -3624,11 +3612,30 @@ get_convergence_speed <- function(iteration, of) { # , verbose = FALSE) {
 #' @param speed convergence speed
 #' @param speedlimit if the convergence speed falls under this limit the algorithm stops
 #' @export
-check_stopping_rules <- function(speed, speedlimit = 0.01) {
+check_stopping_rules <- function(iteration, speed, all_OF_values, speedlimit = 0.01, verbose = FALSE) {
   if (is.na(speed)) {
     return(FALSE)
   } else {
-    return(speed < speedlimit)
+    #########################################################################
+    # stop when range of OF is small enough during last 3 + current iteration
+    if(speed < speedlimit) {
+      if(verbose) print("stop (rule 1)")
+      return(TRUE)
+    }
+    #################################################
+    # stop when there are recurring periods in the OF
+    ###########################################################
+    # stop when the last XX steps do not give a better mean(OF)
+    if(iteration > 14) {
+      stoplimit = 7
+      OF_9_15 <- mean(all_OF_values[(iteration - stoplimit + 1):iteration], na.rm=T) #mean of objective function in iteration 9->15, 10->16,...
+      OF_1_8 <- mean(all_OF_values[(iteration - (2 * stoplimit)):(iteration - stoplimit)], na.rm=T) #mean of objective function in iteration 1->8, 2->9,...
+      if(OF_9_15 >= OF_1_8) {
+        if(verbose) print("stop (rule 3)")
+        return(TRUE)
+      }
+    }
+    return(FALSE)
   }
 }
 
@@ -3855,6 +3862,7 @@ calculate_best_config <- function(df_results, df_pic, C_candidates, limit_est_gr
 #' @param df input
 #' @param all_best_values data frame with the optimal number of groups, common factors and group specific factors
 #' @param subset index of the subsample
+#' @export
 fill_rc <- function(df, all_best_values, subset) {
   df[, subset + 1] <- all_best_values[, 2] # fill in the best number of common factors
   return(df)
@@ -3865,6 +3873,7 @@ fill_rc <- function(df, all_best_values, subset) {
 #' @param subset index of the subsample
 #' @param S_cand candidate values for the number of estimated groups
 #' @param kg_cand candidate values for the number of estimated group specific factors
+#' @export
 fill_rcj <- function(df, all_best_values, subset, S_cand, kg_cand) {
   if (max(kg_cand, na.rm = TRUE) > 0) {
     if (max(S_cand) > 1) {
@@ -3880,6 +3889,7 @@ fill_rcj <- function(df, all_best_values, subset, S_cand, kg_cand) {
 #'
 #' @param indices_subset all indices of the subsets
 #' @inheritParams calculate_VCsquared
+#' @export
 initialise_rc <- function(indices_subset, C_candidates) {
   return(data.frame(matrix(NA, length(C_candidates), length(indices_subset))))
 }
@@ -3888,6 +3898,7 @@ initialise_rc <- function(indices_subset, C_candidates) {
 #'
 #' @param indices_subset all indices of the subsets
 #' @inheritParams calculate_VCsquared
+#' @export
 initialise_rcj <- function(indices_subset, C_candidates) {
   return(data.frame(matrix(NA, length(C_candidates), length(indices_subset))))
 }
@@ -3900,11 +3911,13 @@ initialise_rcj <- function(indices_subset, C_candidates) {
 #' @param pic_sigma2 sum of squared errors divided by NT
 #' @param iteration number of iteration
 #' @importFrom mclust adjustedRandIndex
+#' @export
 add_metrics <- function(df_results, index_configuration, pic_sigma2, g, g_true, TT, iteration) {
   df_results$sigma2[index_configuration] <- pic_sigma2
   if (!is.na(g_true[1])) df_results$adjustedrandindex[index_configuration] <- mclust::adjustedRandIndex(g, g_true)
-  df_results$g[index_configuration] <- paste(table(g), collapse = "_")
-  df_results$g_true[index_configuration] <- paste(table(g_true), collapse = "_")
+  df_results$table_g[index_configuration] <- paste(table(g), collapse = "_")
+  df_results$table_g_true[index_configuration] <- paste(table(g_true), collapse = "_")
+  df_results$g[index_configuration] <- paste(g, collapse = "-")
   df_results$number_of_iterations[index_configuration] <- iteration
   return(df_results)
 }
@@ -3943,6 +3956,7 @@ plot_gtable <- function(g, g_true) {
 #' @importFrom stringr str_count
 #' @importFrom stringr str_sub
 #' @importFrom stringr str_locate
+#' @export
 get_best_configuration <- function(list_vc, list_rc, list_rcj, C_candidates, S_cand, k_cand, kg_cand, return_short = FALSE, verbose = FALSE) {
 
   # take the results of the full samples:
@@ -4109,23 +4123,40 @@ plot_VCsquared <- function(VC_squared, rc, rcj, C_candidates, S_cand, k_cand, kg
   return(p)
 }
 
-#' This function adds a reduced form (C and sigma2_max_model are unknown, and assumed equal to one) of the 4th term of the PIC to df.
+
+
+#' Function that returns the final clustering, based on the estimated number of groups and common and group specific factors.
 #'
-#' More specifically it calculates sum(groupfactors of group j + TN_factor) for PIC2017.
-#' It also adds the reduced form of the alternative PIC's.
-#' @param df input data frame
-#' @param TT length of time series
-add_reduced_pic4 <- function(df, TT) {
-  for(i in 1:nrow(df)) {
-    all_Nj <- as.numeric(unlist(str_split(df$g[i], "_")))
-    all_TN_factors <- sapply(all_Nj, function(x) calculate_TN_factor(TT, x))
-    all_groupfactors = (df %>% dplyr::select(.data$k1:.data$k20) %>% dplyr::slice(i))[1:length(all_TN_factors)] #k20 <---> limit_est_groups = 20
-
-
-    df$reduced_pic4_2017[i] = sum(all_groupfactors * all_TN_factors)
-    df$reduced_pic4_2016[i] = sum((all_Nj / sum(all_Nj)) * all_groupfactors * all_TN_factors)
-    df$reduced_pic4_2022[i] = sum((all_Nj / sum(all_Nj)) * all_groupfactors * sapply(all_Nj, function(x) (TT + x) / (TT * x) * log(log((TT * x) * 1e60))))
-  }
-  return(df)
+#' @param df input dataframe (this will be df_results_full)
+#' @param opt_groups the optimal number of groups
+#' @param k the optimal number of common factors
+#' @param kg vector with the optimal number of group specific factors
+#' @param limit_est_groups maximum allowed number of groups that can be estimated
+#' @export
+get_final_clustering <- function(df, opt_groups, k, kg, limit_est_groups = 20) {
+  stopifnot(length(kg) <= limit_est_groups) #code is implemented up to 20 estimated groups
+  df <- df %>% dplyr::filter(.data$S == opt_groups, .data$k_common == k, .data$k1 == kg[1])
+  if(length(kg) > 1) df <- df %>% dplyr::filter(.data$k2 == kg[2])
+  if(length(kg) > 2) df <- df %>% dplyr::filter(.data$k3 == kg[3])
+  if(length(kg) > 3) df <- df %>% dplyr::filter(.data$k4 == kg[4])
+  if(length(kg) > 4) df <- df %>% dplyr::filter(.data$k5 == kg[5])
+  if(length(kg) > 5) df <- df %>% dplyr::filter(.data$k6 == kg[6])
+  if(length(kg) > 6) df <- df %>% dplyr::filter(.data$k7 == kg[7])
+  if(length(kg) > 7) df <- df %>% dplyr::filter(.data$k8 == kg[8])
+  if(length(kg) > 8) df <- df %>% dplyr::filter(.data$k9 == kg[9])
+  if(length(kg) > 9) df <- df %>% dplyr::filter(.data$k10 == kg[10])
+  if(length(kg) > 10) df <- df %>% dplyr::filter(.data$k11 == kg[11])
+  if(length(kg) > 11) df <- df %>% dplyr::filter(.data$k12 == kg[12])
+  if(length(kg) > 12) df <- df %>% dplyr::filter(.data$k13 == kg[13])
+  if(length(kg) > 13) df <- df %>% dplyr::filter(.data$k14 == kg[14])
+  if(length(kg) > 14) df <- df %>% dplyr::filter(.data$k15 == kg[15])
+  if(length(kg) > 15) df <- df %>% dplyr::filter(.data$k16 == kg[16])
+  if(length(kg) > 16) df <- df %>% dplyr::filter(.data$k17 == kg[17])
+  if(length(kg) > 17) df <- df %>% dplyr::filter(.data$k18 == kg[18])
+  if(length(kg) > 18) df <- df %>% dplyr::filter(.data$k19 == kg[19])
+  if(length(kg) > 19) df <- df %>% dplyr::filter(.data$k20 == kg[20])
+  print(df)
+  print(dim(df))
+  if(nrow(df) != 1) warning("only 1 configuration should be found")
+  return(as.numeric(unlist(df$g %>% str_split("-"))))
 }
-
