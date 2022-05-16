@@ -44,5 +44,5 @@ loadings ~ N(lgr_factor_mean, j * lgr_factor_sd) -> default case will be N(0, j)
 library("tidyverse")
 # For 3 groups, each with 3 groupfactors:
 g_true <- ceiling(runif(300) * 3)
-generate_grouped_factorstructure(3, c(3, 3, 3), TT = 30, g_true)
+RCTS:::generate_grouped_factorstructure(3, c(3, 3, 3), TT = 30, g_true)
 }

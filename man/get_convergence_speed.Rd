@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{get_convergence_speed}
 \alias{get_convergence_speed}
-\title{This function defines the convergence speed.}
+\title{Defines the convergence speed.}
 \usage{
 get_convergence_speed(iteration, of)
 }
@@ -12,5 +12,5 @@ get_convergence_speed(iteration, of)
 \item{of}{objective function}
 }
 \description{
-This function defines the convergence speed.
+Defines the convergence speed.
 }

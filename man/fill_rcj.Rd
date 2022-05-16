@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{fill_rcj}
 \alias{fill_rcj}
-\title{This function fills in the optimized number of groups and group specific factors for each C.}
+\title{Fills in the optimized number of groups and group specific factors for each C.}
 \usage{
 fill_rcj(df, all_best_values, subset, S_cand, kg_cand)
 }
@@ -18,5 +18,5 @@ fill_rcj(df, all_best_values, subset, S_cand, kg_cand)
 \item{kg_cand}{candidate values for the number of estimated group specific factors}
 }
 \description{
-This function fills in the optimized number of groups and group specific factors for each C.
+Fills in the optimized number of groups and group specific factors for each C.
 }

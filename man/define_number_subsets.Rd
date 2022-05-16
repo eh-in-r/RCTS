@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{define_number_subsets}
 \alias{define_number_subsets}
-\title{This function returns a vector with the indices of the subsets. Must start with zero.}
+\title{Returns a vector with the indices of the subsets. Must start with zero.}
 \usage{
 define_number_subsets(n)
 }
@@ -10,5 +10,5 @@ define_number_subsets(n)
 \item{n}{number of subsets}
 }
 \description{
-This function returns a vector with the indices of the subsets. Must start with zero.
+Returns a vector with the indices of the subsets. Must start with zero.
 }

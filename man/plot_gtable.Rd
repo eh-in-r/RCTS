@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{plot_gtable}
 \alias{plot_gtable}
-\title{This functions visualises the confusionmatrix of the group membership of the time series.}
+\title{Visualises the confusionmatrix of the group membership of the time series.}
 \usage{
 plot_gtable(g, g_true)
 }
@@ -12,5 +12,5 @@ plot_gtable(g, g_true)
 \item{g_true}{true groups}
 }
 \description{
-This functions visualises the confusionmatrix of the group membership of the time series.
+Visualises the confusionmatrix of the group membership of the time series.
 }

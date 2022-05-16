@@ -21,6 +21,6 @@ Scaling of X.
 }
 \examples{
 use_robust <- TRUE
-X <- initialise_X(300, 30, vars = 3)
-scaling_X(X, TRUE, use_robust, vars = 3)
+X <- RCTS:::initialise_X(300, 30, vars = 3)
+RCTS:::scaling_X(X, TRUE, use_robust, vars = 3)
 }

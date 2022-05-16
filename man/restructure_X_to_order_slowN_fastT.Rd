@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{restructure_X_to_order_slowN_fastT}
 \alias{restructure_X_to_order_slowN_fastT}
-\title{This function restructures X (which is an 3D-array of dimensions (N,T,p) to a 2D-matrix of dimension (NxT,p).}
+\title{Restructures X (which is an 3D-array of dimensions (N,T,p) to a 2D-matrix of dimension (NxT,p).}
 \usage{
 restructure_X_to_order_slowN_fastT(X, vars_est)
 }
@@ -12,11 +12,11 @@ restructure_X_to_order_slowN_fastT(X, vars_est)
 \item{vars_est}{number of variables that will be included in the algorithm and have their coefficient estimated. This is usually equal to the number of observable variables.}
 }
 \description{
-This function restructures X (which is an 3D-array of dimensions (N,T,p) to a 2D-matrix of dimension (NxT,p).
+Restructures X (which is an 3D-array of dimensions (N,T,p) to a 2D-matrix of dimension (NxT,p).
 }
 \examples{
-X <- initialise_X(300, 30, vars = 3)
-X_restructured <- restructure_X_to_order_slowN_fastT(X,
+X <- RCTS:::initialise_X(300, 30, vars = 3)
+X_restructured <- RCTS:::restructure_X_to_order_slowN_fastT(X,
   vars_est = 3
 )
 }

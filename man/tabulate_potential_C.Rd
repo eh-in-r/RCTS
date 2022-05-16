@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{tabulate_potential_C}
 \alias{tabulate_potential_C}
-\title{This function shows the configurations for potential C's of the first stable interval (beginpoint, middlepoint and endpoint)}
+\title{Shows the configurations for potential C's of the first stable interval (beginpoint, middlepoint and endpoint)}
 \usage{
 tabulate_potential_C(
   df,
@@ -30,5 +30,5 @@ tabulate_potential_C(
 \item{S_cand}{candidate number for the number of groups}
 }
 \description{
-This function shows the configurations for potential C's of the first stable interval (beginpoint, middlepoint and endpoint)
+Shows the configurations for potential C's of the first stable interval (beginpoint, middlepoint and endpoint)
 }

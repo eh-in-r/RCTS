@@ -2,10 +2,10 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{define_C_candidates}
 \alias{define_C_candidates}
-\title{This function defines the candidate values for C.}
+\title{Defines the candidate values for C.}
 \usage{
 define_C_candidates()
 }
 \description{
-This function defines the candidate values for C.
+Defines the candidate values for C.
 }

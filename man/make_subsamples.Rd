@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{make_subsamples}
 \alias{make_subsamples}
-\title{This function selects a subsample of the time series, and of the length of the time series. Based on this it returns a subsample of Y.
+\title{Selects a subsample of the time series, and of the length of the time series. Based on this it returns a subsample of Y.
 It also returns the corresponding subsamples X and the group membership.}
 \usage{
 make_subsamples(
@@ -25,6 +25,6 @@ make_subsamples(
 \item{verbose}{when TRUE, it prints messages}
 }
 \description{
-This function selects a subsample of the time series, and of the length of the time series. Based on this it returns a subsample of Y.
+Selects a subsample of the time series, and of the length of the time series. Based on this it returns a subsample of Y.
 It also returns the corresponding subsamples X and the group membership.
 }

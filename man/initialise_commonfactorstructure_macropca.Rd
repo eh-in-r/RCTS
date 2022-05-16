@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{initialise_commonfactorstructure_macropca}
 \alias{initialise_commonfactorstructure_macropca}
-\title{This function initialises the estimation of the common factors and their loadings.}
+\title{Initialises the estimation of the common factors and their loadings.}
 \usage{
 initialise_commonfactorstructure_macropca(
   use_robust,

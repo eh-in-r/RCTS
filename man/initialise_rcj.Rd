@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{initialise_rcj}
 \alias{initialise_rcj}
-\title{This function initialises a data frame which will eventually be filled with the optimized number of groups and group specific factors for each C and for each subset of the original dataset.}
+\title{Initialises rcj.}
 \usage{
 initialise_rcj(indices_subset, C_candidates)
 }

@@ -2,8 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{show_gtable}
 \alias{show_gtable}
-\title{This function prints a table of the estimated vs the true group memberships.
-If the true group membership is unknown the result is a table with the estimated group membership counts.}
+\title{Prints a table of the estimated vs the true group memberships.}
 \usage{
 show_gtable(g, g_true)
 }
@@ -13,6 +12,5 @@ show_gtable(g, g_true)
 \item{g_true}{vector of length NN with true group memberships}
 }
 \description{
-This function prints a table of the estimated vs the true group memberships.
-If the true group membership is unknown the result is a table with the estimated group membership counts.
+If the true group membership is unknown, the result is a table with the estimated group membership counts.
 }

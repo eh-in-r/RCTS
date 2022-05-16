@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{plot_VCsquared}
 \alias{plot_VCsquared}
-\title{This function plots expression(VC^2) along with the corresponding number of groups (orange), common factors (darkblue) and group factors of the first group (lightblue).}
+\title{Plots expression(VC^2) along with the corresponding number of groups (orange), common factors (darkblue) and group factors of the first group (lightblue).}
 \usage{
 plot_VCsquared(
   VC_squared,
@@ -39,5 +39,5 @@ plot_VCsquared(
 \item{add_true_lines}{if set to TRUE, for each C the true number of groups, common factors, and group specific factors of group 1 will be added to the plot}
 }
 \description{
-This function plots expression(VC^2) along with the corresponding number of groups (orange), common factors (darkblue) and group factors of the first group (lightblue).
+Plots expression(VC^2) along with the corresponding number of groups (orange), common factors (darkblue) and group factors of the first group (lightblue).
 }

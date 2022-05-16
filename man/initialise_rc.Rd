@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{initialise_rc}
 \alias{initialise_rc}
-\title{This function initialises a data frame which will eventually be filled with the optimized number of common factors for each C and for each subset of the original dataset.}
+\title{Initialises rc.}
 \usage{
 initialise_rc(indices_subset, C_candidates)
 }

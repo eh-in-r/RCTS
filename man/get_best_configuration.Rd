@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{get_best_configuration}
 \alias{get_best_configuration}
-\title{This function finds the first stable interval after the first unstable point. It then defines the value for C for the begin, middle and end of this interval.}
+\title{Finds the first stable interval after the first unstable point. It then defines the value for C for the begin, middle and end of this interval.}
 \usage{
 get_best_configuration(
   list_vc,
@@ -36,5 +36,5 @@ get_best_configuration(
 \item{verbose}{when TRUE, it prints messages}
 }
 \description{
-This function finds the first stable interval after the first unstable point. It then defines the value for C for the begin, middle and end of this interval.
+Finds the first stable interval after the first unstable point. It then defines the value for C for the begin, middle and end of this interval.
 }

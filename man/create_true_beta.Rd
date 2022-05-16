@@ -36,5 +36,5 @@ Creates beta_true, which contains the true values of beta (= the coefficients of
 }
 \examples{
 library("tidyverse")
-create_true_beta(vars = 3, NN = 300, S_true = 3)
+RCTS:::create_true_beta(vars = 3, NN = 300, S_true = 3)
 }

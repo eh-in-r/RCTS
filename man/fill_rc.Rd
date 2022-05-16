@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{fill_rc}
 \alias{fill_rc}
-\title{This function fills in the optimized number of common factors for each C.}
+\title{Fills in the optimized number of common factors for each C.}
 \usage{
 fill_rc(df, all_best_values, subset)
 }
@@ -14,5 +14,5 @@ fill_rc(df, all_best_values, subset)
 \item{subset}{index of the subsample}
 }
 \description{
-This function fills in the optimized number of common factors for each C.
+Fills in the optimized number of common factors for each C.
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{initialise_df_pic}
 \alias{initialise_df_pic}
-\title{This function initialises a dataframe which will contain the PIC for each configuration and for each value of C.}
+\title{Initialises a dataframe which will contain the PIC for each configuration and for each value of C.}
 \usage{
 initialise_df_pic(C_candidates)
 }
@@ -10,5 +10,5 @@ initialise_df_pic(C_candidates)
 \item{C_candidates}{candidates for C (parameter in PIC)}
 }
 \description{
-This function initialises a dataframe which will contain the PIC for each configuration and for each value of C.
+Initialises a dataframe which will contain the PIC for each configuration and for each value of C.
 }
