@@ -39,7 +39,7 @@ calculate_errors_virtual_groups(
 
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 
-\item{Y}{Y: the panel data of interest}
+\item{Y}{Y: NxT dataframe with the panel data of interest}
 
 \item{X}{dataframe with the observed variables}
 

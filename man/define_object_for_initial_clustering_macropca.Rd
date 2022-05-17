@@ -20,7 +20,7 @@ define_object_for_initial_clustering_macropca(
 \arguments{
 \item{use_robust}{TRUE or FALSE: defines using the classical or robust algorithm to estimate beta}
 
-\item{Y}{Y: the panel data of interest}
+\item{Y}{Y: NxT dataframe with the panel data of interest}
 
 \item{g}{Vector with estimated group membership for all individuals}
 
