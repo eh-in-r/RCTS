@@ -27,15 +27,19 @@ Imports:
   tibble,
   ggplot2,
   tidyselect,
-  Matrix,
   ncvreg,
   tclust,
   robustbase,
   cellWise,
   rlang,
   Rdpack,
-  mclust,
-  tsqn
+  mclust
+Suggests:
+  Matrix,
+  tsqn,
+  doParallel,
+  doSNOW,
+  foreach
 RdMacros: 
   Rdpack
 Depends: 

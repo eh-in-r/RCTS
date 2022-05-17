@@ -1,110 +1,17 @@
 
+globalVariables(c("i")) #required to pass R CMD check of a function which uses foreach
 
-# parallel_subsets <- function(subset, original_data, C_candidates, rc, rcj, S_cand, k_cand, kg_cand, maxit = 30) {
-#
-#
-# print(paste("subset:", subset))
-# temp <- make_subsamples(original_data, subset)
-# Y <- temp[[1]]
-# X <- temp[[2]]
-# g_true <- temp[[3]]
-#
-# df_results <- initialise_df_results(use_robust = TRUE) #df_results will contain results for each configuration (for example adjusted randindex, ...)
-# df_pic <- data.frame(t(matrix(rep(NA, length(C_candidates))))) #df_pic will contain PIC for each C and each subset
-#
-# index_configuration <- 0
-# for(S in S_cand) { #loop over the possible number of groups
-#   print(paste("S:", S))
-#   for(k in k_cand) { #loop over the possible number of common factors
-#     #define set of possible combinations of number of group factors
-#     kg_candidates <- define_kg_candidates(S, min(kg_cand), max(kg_cand), TRUE)
-#
-#     for(w in 1:nrow(kg_candidates)) {
-#
-#       index_configuration <- index_configuration + 1
-#       kg <- unlist(kg_candidates[w,])
-#
-#
-#       ########## initialisation
-#
-#       iteration <- 0 #number of the iteration; 0 indicates being in the initialisation phase
-#       beta_est <- initialise_beta(use_robust = TRUE, Y, X, S)
-#       #initial grouping
-#       g <- initialise_clustering(use_robust = TRUE, Y, g, beta_est, S, k, kg, comfactor, max_percent_outliers_tkmeans = 0)
-#       #initial common factorstructure
-#       temp <- initialise_commonfactorstructure_macropca(use_robust = TRUE, Y, X, beta_est, g, NA, k, kg)
-#       comfactor <- temp[[1]]
-#       lambda <- temp[[2]]
-#       #initial group specific factorstructure
-#       factor_group <- estimate_factor_group(use_robust = TRUE, Y, X, beta_est, g, NA, NA, NA, S, k, kg, initialise = TRUE)
-#
-#       lambda_group <- calculate_lambda_group(use_robust = TRUE, Y, X, beta_est, factor_group, g, NA, NA, S, k, kg, initialise = TRUE)
-#
-#
-#       ######### estimations
-#       obj_funct_values = c()
-#       speed = 999999 #convergence speed: set to initial high value
-#       while(iteration < maxit & !check_stopping_rules(iteration, speed, obj_funct_values, verbose = TRUE)) {
-#         temp <- iterate(use_robust = TRUE, Y, X, beta_est, g, lambda_group, factor_group, lambda, comfactor, S, k, kg, verbose = FALSE)
-#         beta_est <- temp[[1]]
-#         g <- temp[[2]]
-#         comfactor <- temp[[3]]
-#         lambda <- temp[[4]]
-#         factor_group <- temp[[5]]
-#         lambda_group <- temp[[6]]
-#         value <- temp[[7]]
-#         if(!exists("i")) i = 1
-#         print(paste(c(i,"   subset:", subset, "/", max(indices_subset), "config:", S,"-", k, "-", kg[1:S], "-", "iteration", iteration, ":", round(value)), collapse = " "))
-#         obj_funct_values <- c(obj_funct_values, value)
-#         iteration <- iteration + 1
-#         speed <- get_convergence_speed(iteration, obj_funct_values / nrow(Y) / ncol(Y))
-#       }
-#       print(show_gtable(g, g_true))
-#
-#       # calculate the estimation errors
-#       pic_e2 <- calculate_error_term(Y, X, beta_est, g,
-#                                      factor_group, lambda_group,
-#                                      comfactor, lambda,
-#                                      S, k, kg)
-#
-#       # calculate PIC for all C's and collect in a dataframe df_pic
-#       df_pic <- add_pic(df_pic, index_configuration, use_robust = TRUE, Y, beta_est, g, S, k, kg,
-#                         pic_e2, C_candidates)
-#
-#
-#       # add results of this configuration to df_results
-#       pic_sigma2 <- calculate_sigma2(pic_e2, nrow(Y), ncol(Y))
-#       df_results <- df_results %>%
-#         add_configuration(S, k, kg) %>%
-#         add_metrics(index_configuration, pic_sigma2, g, g_true, ncol(Y), iteration)
-#
-#       #df_results <- add_reduced_pic4(df_results, ncol(Y)) #only for test purposes
-#     }
-#   }
-# }
-# #(MOVED TO FUNCTION)df_results <- df_results[-1,] #delete empty row
-#
-# #Ensure that all PIC-values use the same sigma2 by replacing the previously used configuration-dependent "sigma2" by "sigma2_max_model" (this is the sigma2 of the last configuration).
-# df_pic <- adapt_pic_with_sigma2maxmodel(df_pic, df_results, pic_sigma2)
-#
-#
-# #calculate for each candidate value for C the best S, k and kg
-# all_best_values <- calculate_best_config(df_results, df_pic, C_candidates)
-# return(all_best_values)
-# }
-
-
-#' Wrapper around the non-parallel algorithm.
+#' Wrapper around the non-parallel algorithm, to estimate beta, group membership and the factorstructures.
 #'
 #' The function estimates beta, group membership and the common and group specific factorstructures for one configuration.
-#' @param configs dataframe where each row contains one configuration of groups and factors
-#' @param i index of the current configuration
+# @param configs dataframe where each row contains one configuration of groups and factors
+#' @param config contains one configuration of groups and factors
+# @param n_configs total number of configurations
+# @param i index of the current configuration
 #' @inheritParams calculate_VCsquared
 #' @inheritParams estimate_beta
 #' @param maxit maximum limit for the number of iterations
-#' @export
-run_parallel_config <- function(configs, i, C_candidates, Y, X, indices_subset, maxit = 30) {
-  config <- configs[i,]
+run_config <- function(config, C_candidates, Y, X, maxit = 30) {
   print("start:")
   S <- config %>%
     dplyr::select(S) %>%
@@ -153,7 +60,7 @@ run_parallel_config <- function(configs, i, C_candidates, Y, X, indices_subset, 
     factor_group <- temp[[5]]
     lambda_group <- temp[[6]]
     value <- temp[[7]]
-    print(paste(c("   subset:", subset, "/", max(indices_subset), "config:", i, "/", nrow(configs), "(", S, "-", k, "-", kg[1:S], ")", "iteration", iteration, ":", round(value)), collapse = " "))
+    #print(paste(c("   subset:", subset, "/", max(indices_subset), "config:", i, "/", n_configs, "(", S, "-", k, "-", kg[1:S], ")", "iteration", iteration, ":", round(value)), collapse = " "))
     obj_funct_values <- c(obj_funct_values, value)
     iteration <- iteration + 1
     speed <- get_convergence_speed(iteration, obj_funct_values / nrow(Y) / ncol(Y))
@@ -225,4 +132,57 @@ make_df_results_parallel <- function(x, limit_est_groups = 20) {
 make_df_pic_parallel <- function(x) {
   df <- t(matrix(unlist(x %>% purrr::map(4)), nrow = 2002))
   return(df)
+}
+
+#' Wrapper of the loop over the subsets which in turn use the parallelised algorithm.
+#' @param original_data list containing the original data (1: Y, 2: X, 3: true group membership)
+#' @param indices_subset vector with indices of the subsets; starts with zero
+#' @inheritParams get_best_configuration
+#' @inheritParams calculate_VCsquared
+#' @export
+parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg_cand, C_candidates) {
+  rc <- initialise_rc(indices_subset, C_candidates) # dataframe that will contain the optimized number of common factors for each C and subset
+  rcj <- initialise_rcj(indices_subset, C_candidates) # dataframe that will contain the optimized number of groups and group specific factors for each C and subset
+
+  for (subset in indices_subset) {
+    print(paste("subset:", subset))
+    temp <- make_subsamples(original_data, subset)
+    Y <- temp[[1]]
+    X <- temp[[2]]
+    g_true <- temp[[3]]
+
+    # define set of possible combinations of number of group factors
+    configs <- define_configurations(S_cand, k_cand, kg_cand)
+
+    # to add a progressbar:
+    progress <- function(n) utils::setTxtProgressBar(utils::txtProgressBar(max = nrow(configs), style = 3), n)
+    opts <- list(progress = progress)
+
+    `%dopar%` <- foreach::`%dopar%` #to make dopar work within a function/package
+    output <- foreach::foreach(
+      i = 1:nrow(configs),
+      .packages = c("RCTS", "tidyverse"),
+      .options.snow = opts
+    ) %dopar% {
+      run_config(configs[i,], C_candidates, Y, X, maxit = 2)
+    }
+
+    df_results <- make_df_results_parallel(output)
+    df_pic <- make_df_pic_parallel(output)
+
+
+    pic_sigma2 <- df_results$sigma2[nrow(df_results)]
+    df_pic <- adapt_pic_with_sigma2maxmodel(df_pic, df_results, pic_sigma2)
+
+
+    # calculate for each candidate value for C the best S, k and kg
+    all_best_values <- calculate_best_config(df_results, df_pic, C_candidates)
+    rc <- fill_rc(rc, all_best_values, subset) # best number of common factors
+    rcj <- fill_rcj(rcj, all_best_values, subset, S_cand, kg_cand) # best number of group specific factors and groups
+    rm(all_best_values)
+
+    # keep df_results of the full sample (this will contain the final clustering):
+    if (subset == 0) df_results_full <- df_results
+  } # closes loop over subsets
+  return(list(rc, rcj, df_results_full))
 }

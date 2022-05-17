@@ -806,9 +806,9 @@ solveFG <- function(TT, S, kg, factor_group) {
   for (group in 1:S) {
     if (kg[group] > 0) {
       FG <- factor_group[[group]]
-      if (as.numeric(rankMatrix(FG)) != kg[group]) {
+      if (as.numeric(Matrix::rankMatrix(FG)) != kg[group]) {
         warning("There is an issue in solveFG(): rank of FG should be the same as the number of group factors")
-        message(paste("rank of matrix FG: ", as.numeric(rankMatrix(FG))))
+        message(paste("rank of matrix FG: ", as.numeric(Matrix::rankMatrix(FG))))
         message(paste("number_of_group_factors[group]: ", kg[group]))
         print(FG[, 1:3])
       }
@@ -975,8 +975,8 @@ reassign_if_empty_groups <- function(g, S_true, TT) {
 # @importFrom graphics plot
 #' @importFrom stats qchisq
 #' @importFrom stats quantile
-#' @importFrom tsqn corQn
-#' @importFrom Matrix rankMatrix
+# @importFrom tsqn corQn
+# @importFrom Matrix rankMatrix
 clustering_with_robust_distances <- function(g, number_of_groups, Y) {
   RD <- matrix(NA, nrow = number_of_groups, ncol = nrow(Y)) # every row contains the distances to a certain group, and every column is 1 individual
   for (group in 1:number_of_groups) { # loop over all groups
@@ -984,7 +984,7 @@ clustering_with_robust_distances <- function(g, number_of_groups, Y) {
     s <- apply(Y[g == group, ], 2, "Qn")
     x <- Y[g == group, 2:ncol(Y)]
     laggedx <- Y[g == group, 1:(ncol(Y) - 1)]
-    r <- corQn(as.vector(x), as.vector(laggedx)) # Computes the robust correlation of x and y
+    r <- tsqn::corQn(as.vector(x), as.vector(laggedx)) # Computes the robust correlation of x and y
 
     ar1_cor <- function(n, rho) {
       exponent <- abs(matrix(1:n - 1, nrow = n, ncol = n, byrow = TRUE) -
@@ -992,7 +992,7 @@ clustering_with_robust_distances <- function(g, number_of_groups, Y) {
       rho^exponent
     }
 
-    if (rankMatrix(diag(s))[[1]] < ncol(Y)) {
+    if (Matrix::rankMatrix(diag(s))[[1]] < ncol(Y)) {
       message("rank of diag(s) is too small (reason: because Qn(.) equals zero for 1 year)") #-> solve(sig) would generate error
       s[s == 0] <- 1e-6
     }
@@ -1834,7 +1834,7 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20, verbose_robustpca 
 
   if (verbose_robustpca) {
     message("--start of macropca")
-    print(paste("rank of input:", rankMatrix(object)))
+    print(paste("rank of input:", Matrix::rankMatrix(object)))
     print(paste("required number of eigenvectors:", number_eigenvectors))
   }
   temp <- tryCatch(
@@ -3199,7 +3199,13 @@ adapt_pic_with_sigma2maxmodel <- function(df, df_results, sigma2_max_model
 #' Creates an instance of DGP 2, as defined in \insertCite{BoudtHeyndels2021;textual}{RCTS}.
 #'
 #' The default has 3 groups with each 3 group specific factors. Further it contains 0 common factors and 3 observed variables.
-#' The output is a dataframe with N (amount of time series) rows and T (length of time series) columns.
+#' The output is a list where the first element is the simulated panel dataset (a dataframe with N (amount of time series) rows and T (length of time series) columns).
+#' The second element contains the NxTxp array with the p observed variables. The third element contains the true group membership.
+#' The fourth element contains the true beta's (this has p+1 rows and one column for each group).
+#' The fifth element contains a list with the true group specific factors.
+#' The sixth element contains a dataframe with N rows where each row contains the group specific factor loadings that corresponds to the group specific factors.
+#' Further it contains the true group membership and an index (this corresponds to the rownumber in Y and X).
+#' The seventh and eighth elements contain the true common factor(s) and its loadings respectively.
 #' @importFrom Rdpack reprompt
 #' @param N number of time series
 #' @param TT length of time series
