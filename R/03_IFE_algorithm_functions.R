@@ -1276,8 +1276,8 @@ determine_beta <- function(string, X_special, Y_special, use_robust,
 #' @inheritParams determine_beta
 # @param use_real_world_data Parameter to indicate using real world dataset. Defaults to FALSE.#' @param lambda_group_true loadings of the group factors
 #' @param use_robust TRUE or FALSE: defines using the classical or robust algorithm to estimate beta
-#' @param Y Y: the panel data of interest
-#' @param X X
+#' @param Y Y: NxT dataframe with the panel data of interest
+#' @param X X: NxTxp array containing the observable variables
 #' @param factor_group estimated group specific factors
 #' @param lambda_group loadings of the estimated group specific factors
 #' @param comfactor estimated common factors
@@ -4169,8 +4169,9 @@ get_final_clustering <- function(df, opt_groups, k, kg, limit_est_groups = 20) {
   return(as.numeric(unlist(df$g %>% str_split("-"))))
 }
 
-#' Constructs dataframe where the rows contains all configurations that are included.
+#' Constructs dataframe where the rows contains all configurations that are included and for which the estimators will be estimated.
 #'
+#' @inheritParams get_best_configuration
 #' @export
 define_configurations <- function(S_cand, k_cand, kg_cand) {
   config_cand <- define_kg_candidates(min(S_cand), min(kg_cand), max(kg_cand), nfv = TRUE) %>% mutate(S = min(S_cand), k = min(k_cand))
@@ -4184,5 +4185,5 @@ define_configurations <- function(S_cand, k_cand, kg_cand) {
   }
 
 
-  return(config_cand %>% dplyr::select(S, k, everything()))
+  return(config_cand %>% dplyr::select(.data$S, .data$k, dplyr::everything()))
 }

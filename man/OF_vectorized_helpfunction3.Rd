@@ -28,7 +28,7 @@ OF_vectorized_helpfunction3(
 
 \item{lgfg_list}{product of groupfactors and their loadings; list with length the number of groups}
 
-\item{Y}{Y: the panel data of interest}
+\item{Y}{Y: NxT dataframe with the panel data of interest}
 
 \item{kg}{vector containing the number of group factors to be estimated for all groups}
 }

@@ -7,7 +7,7 @@
 calculate_XB_true(X, beta_true, g, g_true, method_estimate_beta)
 }
 \arguments{
-\item{X}{X}
+\item{X}{X: NxTxp array containing the observable variables}
 
 \item{beta_true}{true coefficients of the observable variables}
 

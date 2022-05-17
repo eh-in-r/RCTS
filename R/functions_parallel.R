@@ -94,37 +94,48 @@
 # }
 
 
-
-parallel_config <- function(config, C_candidates, maxit = 30) {
-
-
+#' Wrapper around the non-parallel algorithm.
+#'
+#' The function estimates beta, group membership and the common and group specific factorstructures for one configuration.
+#' @param configs dataframe where each row contains one configuration of groups and factors
+#' @param i index of the current configuration
+#' @inheritParams calculate_VCsquared
+#' @inheritParams estimate_beta
+#' @param maxit maximum limit for the number of iterations
+#' @export
+run_parallel_config <- function(configs, i, C_candidates, Y, X, indices_subset, maxit = 30) {
+  config <- configs[i,]
   print("start:")
-  S <- config %>% dplyr::select(S) %>% pull()
-  k <- config %>% dplyr::select(k) %>% pull()
-  kg <- unlist(config %>% dplyr::select(k1:k20)) #must be a vector (class "integer")
+  S <- config %>%
+    dplyr::select(S) %>%
+    dplyr::pull()
+  k <- config %>%
+    dplyr::select(k) %>%
+    dplyr::pull()
+  kg <- unlist(config %>% dplyr::select(.data$k1:.data$k20)) # must be a vector (class "integer")
 
 
   print("initialise:")
   ########## initialisation
 
-  iteration <- 0 #number of the iteration; 0 indicates being in the initialisation phase
+  iteration <- 0 # number of the iteration; 0 indicates being in the initialisation phase
   beta_est <- initialise_beta(use_robust = TRUE, Y, X, S)
-  #initial grouping
-  g <- initialise_clustering(use_robust = TRUE, Y, g, beta_est, S, k, kg, comfactor, max_percent_outliers_tkmeans = 0)
-  #initial common factorstructure
+  # initial grouping
+  g <- initialise_clustering(use_robust = TRUE, Y, g, beta_est, S, k, kg, NA, max_percent_outliers_tkmeans = 0)
+  # initial common factorstructure
   temp <- initialise_commonfactorstructure_macropca(use_robust = TRUE, Y, X, beta_est, g, NA, k, kg)
   comfactor <- temp[[1]]
   lambda <- temp[[2]]
-  #initial group specific factorstructure
+  # initial group specific factorstructure
   factor_group <- estimate_factor_group(use_robust = TRUE, Y, X, beta_est, g, NA, NA, NA, S, k, kg, initialise = TRUE)
   lambda_group <- calculate_lambda_group(use_robust = TRUE, Y, X, beta_est, factor_group, g, NA, NA, S, k, kg, initialise = TRUE)
 
 
   print("estimate:")
   ######### estimations
-  obj_funct_values = c()
-  speed = 999999 #convergence speed: set to initial high value
-  while(iteration < maxit & !check_stopping_rules(iteration, speed, obj_funct_values, verbose = TRUE)) {
+  obj_funct_values <- c()
+  speed <- 999999 # convergence speed: set to initial high value
+  while (iteration < maxit & !check_stopping_rules(iteration, speed, obj_funct_values, verbose = TRUE)) {
     temp <- iterate(use_robust = TRUE, Y, X, beta_est, g, lambda_group, factor_group, lambda, comfactor, S, k, kg, verbose = FALSE)
     beta_est <- temp[[1]]
     g <- temp[[2]]
@@ -133,53 +144,51 @@ parallel_config <- function(config, C_candidates, maxit = 30) {
     factor_group <- temp[[5]]
     lambda_group <- temp[[6]]
     value <- temp[[7]]
-    print(paste(c("   subset:", subset, "/", max(indices_subset), "config:", i,"/",nrow(configs),"(", S,"-", k, "-", kg[1:S], ")", "iteration", iteration, ":", round(value)), collapse = " "))
+    print(paste(c("   subset:", subset, "/", max(indices_subset), "config:", i, "/", nrow(configs), "(", S, "-", k, "-", kg[1:S], ")", "iteration", iteration, ":", round(value)), collapse = " "))
     obj_funct_values <- c(obj_funct_values, value)
     iteration <- iteration + 1
     speed <- get_convergence_speed(iteration, obj_funct_values / nrow(Y) / ncol(Y))
   }
-  print(show_gtable(g, g_true))
 
 
   # calculate the estimation errors
   print("e2:")
-  pic_e2 <- calculate_error_term(Y, X, beta_est, g,
-                                 factor_group, lambda_group,
-                                 comfactor, lambda,
-                                 S, k, kg)
+  pic_e2 <- calculate_error_term(
+    Y, X, beta_est, g,
+    factor_group, lambda_group,
+    comfactor, lambda,
+    S, k, kg
+  )
 
-  # calculate PIC for all C's and collect in a dataframe df_pic
-  # df_pic <- add_pic(df_pic, index_configuration, use_robust = TRUE, Y, beta_est, g, S, k, kg,
-  #                   pic_e2, C_candidates)
   print("pic:")
-  pic <- add_pic_parallel(use_robust = TRUE, Y, beta_est, g, S, k, kg,
-                          pic_e2, C_candidates)
+  pic <- add_pic_parallel(
+    use_robust = TRUE, Y, beta_est, g, S, k, kg,
+    pic_e2, C_candidates
+  )
 
 
   # add results of this configuration to df_results
   print("pic_sigma2:")
   pic_sigma2 <- calculate_sigma2(pic_e2, nrow(Y), ncol(Y))
-  # df_results <- df_results %>%
-  #   add_configuration(S, k, kg) %>%
-  #   add_metrics(index_configuration, pic_sigma2, g, g_true, ncol(Y), iteration)
 
   print("done")
 
 
-return(list(S,k,kg,pic,pic_sigma2,g))
+  return(list(S, k, kg, pic, pic_sigma2, g))
 }
 
 #' Calculates the PIC for the current configuration.
 #'
 #' @inheritParams add_pic
 add_pic_parallel <- function(use_robust, Y, beta_est, g,
-                     S, k, kg, pic_e2, C_candidates, method_estimate_beta = "individual",
-                     vars_est = ncol(beta_est), choice_pic = "pic2022") {
+                             S, k, kg, pic_e2, C_candidates, method_estimate_beta = "individual",
+                             vars_est = ncol(beta_est), choice_pic = "pic2022") {
   pic_sigma2 <- calculate_sigma2(pic_e2)
-  pic = sapply(C_candidates, function(x) {
+  pic <- sapply(C_candidates, function(x) {
     calculate_PIC(x, use_robust, S, k, kg, pic_e2, pic_sigma2,
-                  NN = nrow(Y), TT = ncol(Y), method_estimate_beta,
-                  beta_est, g, vars_est, choice_pic)
+      NN = nrow(Y), TT = ncol(Y), method_estimate_beta,
+      beta_est, g, vars_est, choice_pic
+    )
   })
   return(pic)
 }
@@ -187,14 +196,16 @@ add_pic_parallel <- function(use_robust, Y, beta_est, g,
 #' Makes a dataframe with information on each configuration.
 #'
 #' @param x output of the parallel version of the algorithm
+#' @inheritParams kg_candidates_expand
 #' @export
 make_df_results_parallel <- function(x, limit_est_groups = 20) {
-  df <- data.frame(S = unlist(x %>% purrr::map(1)),
-                           k_common = unlist(x %>% purrr::map(2)),
-                           sigma2 = unlist(x %>% purrr::map(5))
+  df <- data.frame(
+    S = unlist(x %>% purrr::map(1)),
+    k_common = unlist(x %>% purrr::map(2)),
+    sigma2 = unlist(x %>% purrr::map(5))
   ) %>% cbind(t(matrix(unlist(x %>% purrr::map(3)), nrow = limit_est_groups)))
-  names(df)[4:(4+limit_est_groups-1)] <- paste0("k",1:limit_est_groups)
-  df$g <- sapply(1:nrow(df), function(x) paste((output %>% purrr::map(6))[[x]], collapse = "-"))
+  names(df)[4:(4 + limit_est_groups - 1)] <- paste0("k", 1:limit_est_groups)
+  df$g <- sapply(1:nrow(df), function(x) paste((x %>% purrr::map(6))[[x]], collapse = "-"))
   return(df)
 }
 
