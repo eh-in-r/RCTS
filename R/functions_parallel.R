@@ -136,7 +136,16 @@ run_parallel_config <- function(configs, i, C_candidates, Y, X, indices_subset, 
   obj_funct_values <- c()
   speed <- 999999 # convergence speed: set to initial high value
   while (iteration < maxit & !check_stopping_rules(iteration, speed, obj_funct_values, verbose = TRUE)) {
-    temp <- iterate(use_robust = TRUE, Y, X, beta_est, g, lambda_group, factor_group, lambda, comfactor, S, k, kg, verbose = FALSE)
+
+    #new errors occuring when using parallel system -> find out why
+    temp<- tryCatch(
+      iterate(use_robust = TRUE, Y, X, beta_est, g, lambda_group, factor_group, lambda, comfactor, S, k, kg, verbose = FALSE),
+      error = function(e) {
+        message(e)
+        return(e)
+      }
+    )
+    #temp <- iterate(use_robust = TRUE, Y, X, beta_est, g, lambda_group, factor_group, lambda, comfactor, S, k, kg, verbose = FALSE)
     beta_est <- temp[[1]]
     g <- temp[[2]]
     comfactor <- temp[[3]]
@@ -205,7 +214,7 @@ make_df_results_parallel <- function(x, limit_est_groups = 20) {
     sigma2 = unlist(x %>% purrr::map(5))
   ) %>% cbind(t(matrix(unlist(x %>% purrr::map(3)), nrow = limit_est_groups)))
   names(df)[4:(4 + limit_est_groups - 1)] <- paste0("k", 1:limit_est_groups)
-  df$g <- sapply(1:nrow(df), function(x) paste((x %>% purrr::map(6))[[x]], collapse = "-"))
+  df$g <- sapply(1:nrow(df), function(y) paste((x %>% purrr::map(6))[[y]], collapse = "-"))
   return(df)
 }
 
