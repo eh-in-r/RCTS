@@ -19,7 +19,7 @@ initialise_beta(
 \arguments{
 \item{use_robust}{robust or classical estimation}
 
-\item{Y}{Y: the panel data of interest}
+\item{Y}{Y: NxT dataframe with the panel data of interest}
 
 \item{X}{dataframe with the observed variables}
 

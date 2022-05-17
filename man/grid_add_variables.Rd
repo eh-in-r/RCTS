@@ -21,9 +21,9 @@ grid_add_variables(
 \arguments{
 \item{grid}{dataframe containing values for X*beta_est and LF (product of common factor and its loadings)}
 
-\item{Y}{Y: the panel data of interest}
+\item{Y}{Y: NxT dataframe with the panel data of interest}
 
-\item{X}{X}
+\item{X}{X: NxTxp array containing the observable variables}
 
 \item{beta_est}{estimated values of beta}
 

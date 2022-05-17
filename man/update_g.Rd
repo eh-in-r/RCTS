@@ -25,9 +25,9 @@ update_g(
 \arguments{
 \item{use_robust}{robust or classical estimation of group membership}
 
-\item{Y}{Y: the panel data of interest}
+\item{Y}{Y: NxT dataframe with the panel data of interest}
 
-\item{X}{X}
+\item{X}{X: NxTxp array containing the observable variables}
 
 \item{beta_est}{estimated values of beta}
 
