@@ -164,7 +164,7 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
       .packages = c("RCTS", "tidyverse"),
       .options.snow = opts
     ) %dopar% {
-      run_config(configs[i,], C_candidates, Y, X, maxit = 2)
+      run_config(configs[i,], C_candidates, Y, X)
     }
 
     df_results <- make_df_results_parallel(output)
