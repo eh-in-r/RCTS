@@ -7,7 +7,7 @@
 calculate_XB_estimated(X, beta_est, g, vars_est, method_estimate_beta)
 }
 \arguments{
-\item{X}{X}
+\item{X}{X: NxTxp array containing the observable variables}
 
 \item{beta_est}{estimated values of beta}
 

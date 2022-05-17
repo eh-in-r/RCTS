@@ -31,7 +31,7 @@ OF_vectorized3(
 
 \item{grid}{dataframe containing the matrix multiplications XB, FgLg and FL}
 
-\item{Y}{Y: the panel data of interest}
+\item{Y}{Y: NxT dataframe with the panel data of interest}
 
 \item{beta_est}{estimated values of beta}
 

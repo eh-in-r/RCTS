@@ -7,9 +7,9 @@
 calculate_W(Y, X, beta_est, g, vars_est, method_estimate_beta)
 }
 \arguments{
-\item{Y}{Y: the panel data of interest}
+\item{Y}{Y: NxT dataframe with the panel data of interest}
 
-\item{X}{X}
+\item{X}{X: NxTxp array containing the observable variables}
 
 \item{beta_est}{estimated values of beta}
 
