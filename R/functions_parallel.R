@@ -200,7 +200,8 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
       message(paste("issue with configuration", paste(configs[i,], collapse = " "), "due to parallelisation -> no results available"))
       output[[i]] <- NULL
     }
-    if(sum(has_error) == 0) {
+    has_error_new <- unlist(lapply(purrr::map(output, class), function(x) "error" %in% x))
+    if(sum(has_error_new) == 0) {
       message("possible errors were removed")
       df_results <- make_df_results_parallel(output)
       df_pic <- make_df_pic_parallel(output)
@@ -210,7 +211,6 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
 
       # calculate for each candidate value for C the best S, k and kg
       all_best_values <- calculate_best_config(df_results, df_pic, C_candidates)
-      print(all_best_values)
       rc <- fill_rc(rc, all_best_values, subset) # best number of common factors
       rcj <- fill_rcj(rcj, all_best_values, subset, S_cand, kg_cand) # best number of group specific factors and groups
       rm(all_best_values)
