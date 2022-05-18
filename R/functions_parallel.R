@@ -182,7 +182,7 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
         i = 1:nrow(configs),
         .packages = c("RCTS", "tidyverse"),
         .options.snow = opts,
-        .errorhandling = "remove"
+        .errorhandling = "pass"
       ) %dopar% {
         run_config(configs[i,], C_candidates, Y, X, maxit = 2)
       }
@@ -190,7 +190,8 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
     print("foreach has finished")
     print(purrr::map(output, 1))
     print(purrr::map(output, class))
-    print(class(output[[1]])) #extend this to check all elements of the output
+    print("error" %in% purrr::map(output, class))
+    print("--")
     if(!("error" %in% class(output[[1]]))) {
       df_results <- make_df_results_parallel(output)
       df_pic <- make_df_pic_parallel(output)
