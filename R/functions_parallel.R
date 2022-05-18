@@ -135,6 +135,7 @@ make_df_pic_parallel <- function(x) {
 }
 
 #' Wrapper of the loop over the subsets which in turn use the parallelised algorithm.
+#'
 #' @param original_data list containing the original data (1: Y, 2: X, 3: true group membership)
 #' @param indices_subset vector with indices of the subsets; starts with zero
 #' @inheritParams get_best_configuration
@@ -162,9 +163,11 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
     output <- foreach::foreach(
       i = 1:nrow(configs),
       .packages = c("RCTS", "tidyverse"),
-      .options.snow = opts
+      .options.snow = opts,
+      .errorhandling = 'pass'
     ) %dopar% {
-      run_config(configs[i,], C_candidates, Y, X)
+      message("maxit is set to 2 for test")
+      run_config(configs[i,], C_candidates, Y, X, maxit = 2) #might still be needing an extra trycatch around this function here?
     }
 
     df_results <- make_df_results_parallel(output)
