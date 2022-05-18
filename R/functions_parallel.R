@@ -189,21 +189,25 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
     }
     print("foreach has finished")
     print(output)
+    print(class(output))
+    if(class(output) != "error") {
+      df_results <- make_df_results_parallel(output)
+      df_pic <- make_df_pic_parallel(output)
 
-    df_results <- make_df_results_parallel(output)
-    df_pic <- make_df_pic_parallel(output)
-
-    print("_1")
-    pic_sigma2 <- df_results$sigma2[nrow(df_results)]
-    df_pic <- adapt_pic_with_sigma2maxmodel(df_pic, df_results, pic_sigma2)
+      print("_1")
+      pic_sigma2 <- df_results$sigma2[nrow(df_results)]
+      df_pic <- adapt_pic_with_sigma2maxmodel(df_pic, df_results, pic_sigma2)
 
 
-    print("_2")
-    # calculate for each candidate value for C the best S, k and kg
-    all_best_values <- calculate_best_config(df_results, df_pic, C_candidates)
-    rc <- fill_rc(rc, all_best_values, subset) # best number of common factors
-    rcj <- fill_rcj(rcj, all_best_values, subset, S_cand, kg_cand) # best number of group specific factors and groups
-    rm(all_best_values)
+      print("_2")
+      # calculate for each candidate value for C the best S, k and kg
+      all_best_values <- calculate_best_config(df_results, df_pic, C_candidates)
+      rc <- fill_rc(rc, all_best_values, subset) # best number of common factors
+      rcj <- fill_rcj(rcj, all_best_values, subset, S_cand, kg_cand) # best number of group specific factors and groups
+      rm(all_best_values)
+    } else {
+      print("do something...")
+    }
 
     print("_3")
     # keep df_results of the full sample (this will contain the final clustering):
