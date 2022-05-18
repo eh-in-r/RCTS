@@ -170,7 +170,12 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
         .options.snow = opts,
         .errorhandling = "pass"
       ) %do% {
-        run_config(configs[i,], C_candidates, Y, X, maxit = 2) #might still be needing an extra trycatch around this function here?
+        tryCatch(
+          run_config(configs[i,], C_candidates, Y, X, maxit = 2), #might still be needing an extra trycatch around this function here?
+          error = function(e) {
+            return("moeilijk ding")
+          }
+        )
       }
     } else {
       output <- foreach::foreach(
