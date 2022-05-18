@@ -42,17 +42,17 @@ run_config <- function(config, C_candidates, Y, X, maxit = 30) {
   ######### estimations
   obj_funct_values <- c()
   speed <- 999999 # convergence speed: set to initial high value
-  while (iteration < maxit & !check_stopping_rules(iteration, speed, obj_funct_values, verbose = TRUE)) {
+  while (iteration < maxit & !check_stopping_rules(iteration, speed, obj_funct_values, verbose = FALSE)) {
 
     #new errors occuring when using parallel system -> find out why
-    temp<- tryCatch(
-      iterate(use_robust = TRUE, Y, X, beta_est, g, lambda_group, factor_group, lambda, comfactor, S, k, kg, verbose = FALSE),
-      error = function(e) {
-        message(e)
-        return(e)
-      }
-    )
-    #temp <- iterate(use_robust = TRUE, Y, X, beta_est, g, lambda_group, factor_group, lambda, comfactor, S, k, kg, verbose = FALSE)
+    #note: iterate() does not return errors in the serialized algorithm
+    #temp<- tryCatch(
+    temp <- iterate(use_robust = TRUE, Y, X, beta_est, g, lambda_group, factor_group, lambda, comfactor, S, k, kg, verbose = FALSE)
+    #   error = function(e) {
+    #     message(e)
+    #     return(e)
+    #   }
+    # )
     beta_est <- temp[[1]]
     g <- temp[[2]]
     comfactor <- temp[[3]]
