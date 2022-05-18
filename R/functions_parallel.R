@@ -190,9 +190,9 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
     print("foreach has finished")
     print(purrr::map(output, 1))
     print(purrr::map(output, class))
-    print("error" %in% purrr::map(output, class))
+    print(sum(unlist(lapply(purrr::map(output, class), function(x) "error" %in% x))))
     print("--")
-    if(!("error" %in% class(output[[1]]))) {
+    if(sum(unlist(lapply(purrr::map(output, class), function(x) "error" %in% x))) == 0) {
       df_results <- make_df_results_parallel(output)
       df_pic <- make_df_pic_parallel(output)
 
@@ -207,7 +207,7 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
     } else {
       #note that these errors is due to trycatch statements not or not properly working within a foreach loop
       #they are however solved in the serialized algorithm
-      message(paste("issue with configuration", configs[i,], "due to parallelisation -> no results available"))
+      message(paste("issue with configuration", paste(configs[i,], sep = "-"), "due to parallelisation -> no results available"))
       print(output[[1]])
     }
 
