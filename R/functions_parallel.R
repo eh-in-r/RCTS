@@ -188,19 +188,18 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
       }
     }
     print("foreach has finished")
-    print(purrr::map(output, 1))
-    print(purrr::map(output, class))
+    config_groups_plus_errormessages <- purrr::map(output, 1)
+    print(config_groups_plus_errormessages)
     has_error <- unlist(lapply(purrr::map(output, class), function(x) "error" %in% x))
-    print(sum(has_error))
-    print("--")
+    #Note that these errors is due to trycatch statements not or not properly working within a foreach loop.
+    #They are in fact solved in the serialized algorithm!
+    #Note that these errors are often linked to one estimated group being small, or to many factors fitted to a group.
+    #This occurs in configurations that have more groups and factors then the true values.
+    #Omitting them from analysis should then have little impact on the overall estimation of the optimal configuration.
     for(i in sort(which(has_error == 1), decreasing = TRUE)) { #first the error with highest index is deleted, then the rest
       message(i)
-      #Note that these errors is due to trycatch statements not or not properly working within a foreach loop.
-      #They are in fact solved in the serialized algorithm!
-      #Note that these errors are often linked to one estimated group being small, or to many factors fitted to a group.
-      #This occurs in configurations that have more groups and factors then the true values.
-      #Omitting them from analysis should then have little impact on the overall estimation of the optimal configuration.
-      message(paste("subset", subset, "has an problem with configuration", paste(configs[i,], collapse = " "), "-> no results available -> this configuration is omitted as candidate."))
+      message(paste("Subset", subset, "has a problem with configuration", paste(configs[i,], collapse = " "), "-> no results available -> this configuration is omitted as candidate."))
+      message(config_groups_plus_errormessages[[i]])
       output[[i]] <- NULL
     }
     has_error_new <- unlist(lapply(purrr::map(output, class), function(x) "error" %in% x))
