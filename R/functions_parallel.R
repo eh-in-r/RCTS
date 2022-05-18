@@ -170,11 +170,11 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
     } else {
       output <- foreach::foreach(
         i = 1:nrow(configs),
-        .packages = c("RCTS", "tidyverse"),
+        #.packages = c("RCTS", "tidyverse"),
         .options.snow = opts,
         .errorhandling = "pass"
       ) %dopar% {
-        run_config(configs[i,], C_candidates, Y, X, maxit = 2)
+        run_config(configs[i,], C_candidates, Y, X, maxit = 30)
       }
     }
     #print("foreach has finished")
@@ -187,9 +187,9 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
     #This occurs in configurations that have more groups and factors then the true values.
     #Omitting them from analysis should then have little impact on the overall estimation of the optimal configuration.
     for(i in sort(which(has_error == 1), decreasing = TRUE)) { #first the error with highest index is deleted, then the rest
-      message(i)
-      warning(paste("Subset", subset, "has a problem with configuration", paste(configs[i,], collapse = " "), "-> no results available -> this configuration is omitted as candidate."))
-      message(config_groups_plus_errormessages[[i]])
+      #message(i)
+      warning(paste("Subset", subset, "has a problem with configuration", paste(configs[i,], collapse = " "),
+                    "(", config_groups_plus_errormessages[[i]], ") -> no results available -> this configuration is omitted as a candidate."))
       output[[i]] <- NULL
     }
     has_error_new <- unlist(lapply(purrr::map(output, class), function(x) "error" %in% x))
