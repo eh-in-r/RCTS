@@ -188,7 +188,7 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
       }
     }
     print("foreach has finished")
-    #print(output)
+    print(output)
     print(class(output[[1]])) #extend this to check all elements of the output
     if(!("error" %in% class(output[[1]]))) {
       df_results <- make_df_results_parallel(output)
