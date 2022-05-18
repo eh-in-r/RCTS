@@ -13,6 +13,7 @@ globalVariables(c("i")) #required to pass R CMD check of a function which uses f
 #' @param maxit maximum limit for the number of iterations
 run_config <- function(config, C_candidates, Y, X, maxit = 30) {
   print("start:")
+  print(config)
   S <- config %>%
     dplyr::select(S) %>%
     dplyr::pull()
@@ -141,12 +142,12 @@ make_df_pic_parallel <- function(x) {
 #' @inheritParams get_best_configuration
 #' @inheritParams calculate_VCsquared
 #' @export
-parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg_cand, C_candidates) {
+parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg_cand, C_candidates, USE_DO = FALSE) {
   rc <- initialise_rc(indices_subset, C_candidates) # dataframe that will contain the optimized number of common factors for each C and subset
   rcj <- initialise_rcj(indices_subset, C_candidates) # dataframe that will contain the optimized number of groups and group specific factors for each C and subset
 
   for (subset in indices_subset) {
-    print(paste("subset:", subset))
+    print(paste("subset:", subset, "/", max(indices_subset)))
     temp <- make_subsamples(original_data, subset)
     Y <- temp[[1]]
     X <- temp[[2]]
@@ -159,15 +160,27 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
     progress <- function(n) utils::setTxtProgressBar(utils::txtProgressBar(max = nrow(configs), style = 3), n)
     opts <- list(progress = progress)
 
+    message("--maxit is set to 2 for test--")
     `%dopar%` <- foreach::`%dopar%` #to make dopar work within a function/package
-    output <- foreach::foreach(
-      i = 1:nrow(configs),
-      .packages = c("RCTS", "tidyverse"),
-      .options.snow = opts,
-      .errorhandling = 'pass'
-    ) %dopar% {
-      message("maxit is set to 2 for test")
-      run_config(configs[i,], C_candidates, Y, X, maxit = 2) #might still be needing an extra trycatch around this function here?
+    `%do%` <- foreach::`%do%` #for testing purposes
+    if(USE_DO) {
+      output <- foreach::foreach(
+        i = 1:nrow(configs),
+        .packages = c("RCTS", "tidyverse"),
+        .options.snow = opts,
+        .errorhandling = "pass"
+      ) %do% {
+        run_config(configs[i,], C_candidates, Y, X, maxit = 2) #might still be needing an extra trycatch around this function here?
+      }
+    } else {
+      output <- foreach::foreach(
+        i = 1:nrow(configs),
+        .packages = c("RCTS", "tidyverse"),
+        .options.snow = opts,
+        .errorhandling = "pass"
+      ) %dopar% {
+        run_config(configs[i,], C_candidates, Y, X, maxit = 2) #might still be needing an extra trycatch around this function here?
+      }
     }
 
     df_results <- make_df_results_parallel(output)
