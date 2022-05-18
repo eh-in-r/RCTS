@@ -190,9 +190,17 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
     print("foreach has finished")
     print(purrr::map(output, 1))
     print(purrr::map(output, class))
-    print(sum(unlist(lapply(purrr::map(output, class), function(x) "error" %in% x))))
+    has_error <- unlist(lapply(purrr::map(output, class), function(x) "error" %in% x))
+    print(sum(has_error))
     print("--")
-    if(sum(unlist(lapply(purrr::map(output, class), function(x) "error" %in% x))) == 0) {
+    for(i in which(has_error == 1)) {
+      message(i)
+      #note that these errors is due to trycatch statements not or not properly working within a foreach loop
+      #they are however solved in the serialized algorithm
+      message(paste("issue with configuration", paste(configs[i,], collapse = " "), "due to parallelisation -> no results available"))
+      output[[i]] <- NULL
+    }
+    if(sum(has_error) == 0) {
       df_results <- make_df_results_parallel(output)
       df_pic <- make_df_pic_parallel(output)
 
@@ -204,11 +212,6 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
       rc <- fill_rc(rc, all_best_values, subset) # best number of common factors
       rcj <- fill_rcj(rcj, all_best_values, subset, S_cand, kg_cand) # best number of group specific factors and groups
       rm(all_best_values)
-    } else {
-      #note that these errors is due to trycatch statements not or not properly working within a foreach loop
-      #they are however solved in the serialized algorithm
-      message(paste("issue with configuration", paste(configs[i,], sep = "-"), "due to parallelisation -> no results available"))
-      print(output[[1]])
     }
 
     # keep df_results of the full sample (this will contain the final clustering):
