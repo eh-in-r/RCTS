@@ -193,11 +193,11 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
     has_error <- unlist(lapply(purrr::map(output, class), function(x) "error" %in% x))
     print(sum(has_error))
     print("--")
-    for(i in which(has_error == 1)) {
+    for(i in sort(which(has_error == 1), decreasing = TRUE)) { #first the error with highest index is deleted, then the rest
       message(i)
       #note that these errors is due to trycatch statements not or not properly working within a foreach loop
-      #they are however solved in the serialized algorithm
-      message(paste("issue with configuration", paste(configs[i,], collapse = " "), "due to parallelisation -> no results available"))
+      #they are in fact solved in the serialized algorithm
+      message(paste("subset", subset, "has an problem with configuration", paste(configs[i,], collapse = " "), "-> no results available"))
       output[[i]] <- NULL
     }
     has_error_new <- unlist(lapply(purrr::map(output, class), function(x) "error" %in% x))
@@ -215,7 +215,7 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
       rcj <- fill_rcj(rcj, all_best_values, subset, S_cand, kg_cand) # best number of group specific factors and groups
       rm(all_best_values)
     } else {
-      message("errors left!")
+      message("errors left! this should not happen!")
     }
 
     # keep df_results of the full sample (this will contain the final clustering):
