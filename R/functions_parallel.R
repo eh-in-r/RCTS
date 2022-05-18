@@ -12,8 +12,8 @@ globalVariables(c("i")) #required to pass R CMD check of a function which uses f
 #' @inheritParams estimate_beta
 #' @param maxit maximum limit for the number of iterations
 run_config <- function(config, C_candidates, Y, X, maxit = 30) {
-  print("start:")
-  print(config)
+  #print("start:")
+  #print(config)
   S <- config %>%
     dplyr::select(S) %>%
     dplyr::pull()
@@ -23,9 +23,8 @@ run_config <- function(config, C_candidates, Y, X, maxit = 30) {
   kg <- unlist(config %>% dplyr::select(.data$k1:.data$k20)) # must be a vector (class "integer")
 
 
-  print("initialise:")
+  #print("initialise:")
   ########## initialisation
-
   iteration <- 0 # number of the iteration; 0 indicates being in the initialisation phase
   beta_est <- initialise_beta(use_robust = TRUE, Y, X, S)
   # initial grouping
@@ -39,7 +38,7 @@ run_config <- function(config, C_candidates, Y, X, maxit = 30) {
   lambda_group <- calculate_lambda_group(use_robust = TRUE, Y, X, beta_est, factor_group, g, NA, NA, S, k, kg, initialise = TRUE)
 
 
-  print("estimate:")
+  #print("estimate:")
   ######### estimations
   obj_funct_values <- c()
   speed <- 999999 # convergence speed: set to initial high value
@@ -56,7 +55,6 @@ run_config <- function(config, C_candidates, Y, X, maxit = 30) {
     #temp <- iterate(use_robust = TRUE, Y, X, beta_est, g, lambda_group, factor_group, lambda, comfactor, S, k, kg, verbose = FALSE)
     beta_est <- temp[[1]]
     g <- temp[[2]]
-    print(g[1:10])
     comfactor <- temp[[3]]
     lambda <- temp[[4]]
     factor_group <- temp[[5]]
@@ -70,29 +68,20 @@ run_config <- function(config, C_candidates, Y, X, maxit = 30) {
 
 
   # calculate the estimation errors
-  print("e2:")
   pic_e2 <- calculate_error_term(
     Y, X, beta_est, g,
     factor_group, lambda_group,
     comfactor, lambda,
     S, k, kg
   )
-  print(pic_e2[1:5,1:3])
 
-  print("pic:")
   pic <- add_pic_parallel(
     use_robust = TRUE, Y, beta_est, g, S, k, kg,
     pic_e2, C_candidates
   )
 
-
   # add results of this configuration to df_results
-  print("pic_sigma2:")
   pic_sigma2 <- calculate_sigma2(pic_e2, nrow(Y), ncol(Y))
-  print(pic_sigma2)
-
-  print("done")
-
 
   return(list(S, k, kg, pic, pic_sigma2, g))
 }
@@ -144,6 +133,7 @@ make_df_pic_parallel <- function(x) {
 #' @param indices_subset vector with indices of the subsets; starts with zero
 #' @inheritParams get_best_configuration
 #' @inheritParams calculate_VCsquared
+#' @param USE_DO if TRUE, then a serialized version is performed ("do" instead of "dopar") (for testing purposes)
 #' @export
 parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg_cand, C_candidates, USE_DO = FALSE) {
   df_results_full <- NULL
@@ -164,7 +154,7 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
     progress <- function(n) utils::setTxtProgressBar(utils::txtProgressBar(max = nrow(configs), style = 3), n)
     opts <- list(progress = progress)
 
-    message("--maxit is set to 2 for test--")
+    #message("--maxit is set to 2 for test--")
     `%dopar%` <- foreach::`%dopar%` #to make dopar work within a function/package
     `%do%` <- foreach::`%do%` #for testing purposes
     if(USE_DO) {
@@ -174,7 +164,7 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
         .options.snow = opts,
         .errorhandling = "pass"
       ) %do% {
-          run_config(configs[i,], C_candidates, Y, X, maxit = 2) #might still be needing an extra trycatch around this function here? Tested: that does not do anything.
+          run_config(configs[i,], C_candidates, Y, X, maxit = 30) #might still be needing an extra trycatch around this function here? Tested: that does not do anything.
 
       }
     } else {
@@ -187,9 +177,9 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
         run_config(configs[i,], C_candidates, Y, X, maxit = 2)
       }
     }
-    print("foreach has finished")
+    #print("foreach has finished")
     config_groups_plus_errormessages <- purrr::map(output, 1)
-    print(config_groups_plus_errormessages)
+    #print(config_groups_plus_errormessages)
     has_error <- unlist(lapply(purrr::map(output, class), function(x) "error" %in% x))
     #Note that these errors is due to trycatch statements not or not properly working within a foreach loop.
     #They are in fact solved in the serialized algorithm!
@@ -198,13 +188,12 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
     #Omitting them from analysis should then have little impact on the overall estimation of the optimal configuration.
     for(i in sort(which(has_error == 1), decreasing = TRUE)) { #first the error with highest index is deleted, then the rest
       message(i)
-      message(paste("Subset", subset, "has a problem with configuration", paste(configs[i,], collapse = " "), "-> no results available -> this configuration is omitted as candidate."))
+      warning(paste("Subset", subset, "has a problem with configuration", paste(configs[i,], collapse = " "), "-> no results available -> this configuration is omitted as candidate."))
       message(config_groups_plus_errormessages[[i]])
       output[[i]] <- NULL
     }
     has_error_new <- unlist(lapply(purrr::map(output, class), function(x) "error" %in% x))
     if(sum(has_error_new) == 0) {
-      message("possible errors were removed")
       df_results <- make_df_results_parallel(output)
       df_pic <- make_df_pic_parallel(output)
 
