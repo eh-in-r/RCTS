@@ -56,6 +56,7 @@ run_config <- function(config, C_candidates, Y, X, maxit = 30) {
     #temp <- iterate(use_robust = TRUE, Y, X, beta_est, g, lambda_group, factor_group, lambda, comfactor, S, k, kg, verbose = FALSE)
     beta_est <- temp[[1]]
     g <- temp[[2]]
+    print(g[1:10])
     comfactor <- temp[[3]]
     lambda <- temp[[4]]
     factor_group <- temp[[5]]
@@ -76,6 +77,7 @@ run_config <- function(config, C_candidates, Y, X, maxit = 30) {
     comfactor, lambda,
     S, k, kg
   )
+  print(pic_e2[1:5,1:3])
 
   print("pic:")
   pic <- add_pic_parallel(
@@ -87,6 +89,7 @@ run_config <- function(config, C_candidates, Y, X, maxit = 30) {
   # add results of this configuration to df_results
   print("pic_sigma2:")
   pic_sigma2 <- calculate_sigma2(pic_e2, nrow(Y), ncol(Y))
+  print(pic_sigma2)
 
   print("done")
 
@@ -170,12 +173,8 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
         .options.snow = opts,
         .errorhandling = "pass"
       ) %do% {
-        tryCatch(
-          run_config(configs[i,], C_candidates, Y, X, maxit = 2), #might still be needing an extra trycatch around this function here?
-          error = function(e) {
-            return("moeilijk ding")
-          }
-        )
+          run_config(configs[i,], C_candidates, Y, X, maxit = 2) #might still be needing an extra trycatch around this function here? Tested: that does not do anything.
+
       }
     } else {
       output <- foreach::foreach(
@@ -184,7 +183,7 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
         .options.snow = opts,
         .errorhandling = "pass"
       ) %dopar% {
-        run_config(configs[i,], C_candidates, Y, X, maxit = 2) #might still be needing an extra trycatch around this function here?
+        run_config(configs[i,], C_candidates, Y, X, maxit = 2)
       }
     }
 
