@@ -1847,12 +1847,26 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20, verbose_robustpca 
     print(paste("required number of eigenvectors:", number_eigenvectors))
   }
   temp <- tryCatch(
-    cellWise::MacroPCA(object, k = max(macropca_kmax, number_eigenvectors), MacroPCApars = list(kmax = KMAX, silent = TRUE)),
+    {
+      print("test1")
+      cellWise::MacroPCA(object, k = max(macropca_kmax, number_eigenvectors), MacroPCApars = list(kmax = KMAX, silent = TRUE))
+    },
+    # warning = function(w) {
+    #   message(w)
+    # },
     error = function(e) {
       message(e)
       return(e)
+    },
+    finally = {
+      print("test2")
     }
   )
+  print("verbose_robustpca:")
+  print(verbose_robustpca)
+  print(is.null(temp))
+  print("test3")
+  if (verbose_robustpca) print(class(temp))
   if ("error" %in% class(temp)) {
     error_macropca <- TRUE
   }
@@ -2059,7 +2073,6 @@ estimate_factor_group <- function(use_robust, Y, X, beta_est, g, lambda, comfact
 
   estimatorF <- list()
   scores <- list()
-  # problemgroups <- c() #contains groupnumbers where macropca has failed
   for (group in 1:S) {
     if (verbose) print(paste("Estimate factors for group", group))
     if (kg[group] > 0) {
@@ -3355,7 +3368,7 @@ define_object_for_initial_clustering_macropca <- function(use_robust, Y, g, beta
 
   if (use_robust) {
     if (method_estimate_factors == "macro") {
-      ev <- robustpca(Y, number_of_initial_factors) # these are the eigenvectors
+      ev <- robustpca(Y, number_of_initial_factors, verbose_robustpca = verbose) # these are the eigenvectors
       if (is.null(ev)) {
         # then macropca returned a wrong amount of factors
         message("define_object_for_initial_clustering_macropca() fails due to macoPCA returning wrong amount of factors")
@@ -3386,8 +3399,8 @@ define_object_for_initial_clustering_macropca <- function(use_robust, Y, g, beta
 #' @importFrom stats kmeans
 #' @importFrom tclust tkmeans
 #' @export
-initialise_clustering <- function(use_robust, Y, g, beta_est, S, k, kg, comfactor, max_percent_outliers_tkmeans = 0) {
-  df <- define_object_for_initial_clustering_macropca(use_robust, Y, g, beta_est, k, kg, comfactor)
+initialise_clustering <- function(use_robust, Y, g, beta_est, S, k, kg, comfactor, max_percent_outliers_tkmeans = 0, verbose = FALSE) {
+  df <- define_object_for_initial_clustering_macropca(use_robust, Y, g, beta_est, k, kg, comfactor, verbose = verbose)
   # in the kmeans-call NA's are not allowed:
   # -> function handleNA() will drop time series with NA's.
   NN <- nrow(df)
@@ -3538,13 +3551,13 @@ iterate <- function(use_robust, Y, X, beta_est, g, lambda_group, factor_group, l
     use_robust, Y, X, beta_est, g, lambda, comfactor, factor_group,
     S, k, kg,
     method_estimate_beta, method_estimate_factors,
-    vars_est
+    vars_est, verbose = verbose
   )
   lambda_group <- calculate_lambda_group(
     use_robust, Y, X, beta_est, factor_group, g, lambda, comfactor,
     S, k, kg,
     method_estimate_beta, method_estimate_factors,
-    vars_est, verbose # , UPDATE1 = FALSE, UPDATE2 = FALSE
+    vars_est, verbose = verbose # , UPDATE1 = FALSE, UPDATE2 = FALSE
   )
 
   if (verbose) message("calculate objective function")

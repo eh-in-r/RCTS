@@ -12,7 +12,7 @@ globalVariables(c("i")) #required to pass R CMD check of a function which uses f
 #' @inheritParams estimate_beta
 #' @param maxit maximum limit for the number of iterations
 run_config <- function(config, C_candidates, Y, X, maxit = 30) {
-  #print("start:")
+  print("-----------------------------------------start run_config:-------------------------------------------")
   #print(config)
   S <- config %>%
     dplyr::select(S) %>%
@@ -38,7 +38,7 @@ run_config <- function(config, C_candidates, Y, X, maxit = 30) {
   lambda_group <- calculate_lambda_group(use_robust = TRUE, Y, X, beta_est, factor_group, g, NA, NA, S, k, kg, initialise = TRUE)
 
 
-  #print("estimate:")
+  print("estimate:")
   ######### estimations
   obj_funct_values <- c()
   speed <- 999999 # convergence speed: set to initial high value
@@ -47,12 +47,13 @@ run_config <- function(config, C_candidates, Y, X, maxit = 30) {
     #new errors occurring when using parallel system -> find out why
     #note: iterate() does not return errors in the serialized algorithm
     #temp<- tryCatch(
-    temp <- iterate(use_robust = TRUE, Y, X, beta_est, g, lambda_group, factor_group, lambda, comfactor, S, k, kg, verbose = FALSE)
+    temp <- iterate(use_robust = TRUE, Y, X, beta_est, g, lambda_group, factor_group, lambda, comfactor, S, k, kg, verbose = TRUE)
     #   error = function(e) {
     #     message(e)
     #     return(e)
     #   }
     # )
+    print(class(temp))
     beta_est <- temp[[1]]
     g <- temp[[2]]
     comfactor <- temp[[3]]
@@ -60,12 +61,14 @@ run_config <- function(config, C_candidates, Y, X, maxit = 30) {
     factor_group <- temp[[5]]
     lambda_group <- temp[[6]]
     value <- temp[[7]]
-    #print(paste(c("   subset:", subset, "/", max(indices_subset), "config:", i, "/", n_configs, "(", S, "-", k, "-", kg[1:S], ")", "iteration", iteration, ":", round(value)), collapse = " "))
+    print(iteration)
+    if(iteration == 0) print(paste(S, "-", k, "-", kg[1:S]),collapse = " ")
+    #print(paste(c("   subset:", subset, "/", max(indices_subset), "config:", i, "/", "...", "(", S, "-", k, "-", kg[1:S], ")", "iteration", iteration, ":", round(value)), collapse = " "))
     obj_funct_values <- c(obj_funct_values, value)
     iteration <- iteration + 1
     speed <- get_convergence_speed(iteration, obj_funct_values / nrow(Y) / ncol(Y))
   }
-
+  print("estimation is done")
 
   # calculate the estimation errors
   pic_e2 <- calculate_error_term(
@@ -82,7 +85,7 @@ run_config <- function(config, C_candidates, Y, X, maxit = 30) {
 
   # add results of this configuration to df_results
   pic_sigma2 <- calculate_sigma2(pic_e2, nrow(Y), ncol(Y))
-
+  print("run_config is done")
   return(list(S, k, kg, pic, pic_sigma2, g))
 }
 
@@ -179,8 +182,9 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
     }
     print("foreach has finished")
     config_groups_plus_errormessages <- purrr::map(output, 1)
-    #print(config_groups_plus_errormessages)
+    print(config_groups_plus_errormessages)
     has_error <- unlist(lapply(purrr::map(output, class), function(x) "error" %in% x))
+    message(paste("There are", sum(has_error), "configurations that returned an error."))
     if(sum(has_error) == nrow(configs)) {
       message("1. All possible configurations have produced an error for this subset. Expanding the configurationspace is an option.")
     }
@@ -191,11 +195,13 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
     #Omitting them from analysis should then have little impact on the overall estimation of the optimal configuration.
     for(i in sort(which(has_error == 1), decreasing = TRUE)) { #first the error with highest index is deleted, then the rest
       #message(i)
-      warning(paste("Subset", subset, "has a problem with configuration", paste(configs[i,], collapse = " "),
-                    "(", config_groups_plus_errormessages[[i]], ") -> no results available -> this configuration is omitted as a candidate."))
+      to_print <- paste("Subset", subset, "has a problem with configuration", paste(configs[i,], collapse = " "),
+                        "(", config_groups_plus_errormessages[[i]], ") -> no results available -> this configuration is omitted as a candidate.")
+      message(to_print)
+      warning(to_print)
       output[[i]] <- NULL
-
-    }#new vector showing which configurations have an error; should be all FALSE; can be NULL when all configurations failed
+    }
+    #new vector showing which configurations have an error; should be all FALSE; can be NULL when all configurations failed
     has_error_new <- unlist(lapply(purrr::map(output, class), function(x) "error" %in% x))
     if (sum(has_error_new) == 0) {
       if (!is.null(has_error_new)) {
