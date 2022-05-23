@@ -13,7 +13,8 @@ globalVariables(c("i")) #required to pass R CMD check of a function which uses f
 #' @param maxit maximum limit for the number of iterations
 run_config <- function(config, C_candidates, Y, X, maxit = 30) {
   print("-----------------------------------------start run_config:-------------------------------------------")
-  #print(config)
+  print(config)
+  Sys.sleep(2)
   S <- config %>%
     dplyr::select(S) %>%
     dplyr::pull()
@@ -28,7 +29,7 @@ run_config <- function(config, C_candidates, Y, X, maxit = 30) {
   iteration <- 0 # number of the iteration; 0 indicates being in the initialisation phase
   beta_est <- initialise_beta(use_robust = TRUE, Y, X, S)
   # initial grouping
-  g <- initialise_clustering(use_robust = TRUE, Y, g, beta_est, S, k, kg, NA, max_percent_outliers_tkmeans = 0)
+  g <- initialise_clustering(use_robust = TRUE, Y, g, beta_est, S, k, kg, NA, max_percent_outliers_tkmeans = 0, verbose = TRUE)
   # initial common factorstructure
   temp <- initialise_commonfactorstructure_macropca(use_robust = TRUE, Y, X, beta_est, g, NA, k, kg)
   comfactor <- temp[[1]]
@@ -53,6 +54,7 @@ run_config <- function(config, C_candidates, Y, X, maxit = 30) {
     #     return(e)
     #   }
     # )
+    print("********************************************************(end of iterate()")
     print(class(temp))
     beta_est <- temp[[1]]
     g <- temp[[2]]

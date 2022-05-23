@@ -1851,20 +1851,18 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20, verbose_robustpca 
       print("test1")
       cellWise::MacroPCA(object, k = max(macropca_kmax, number_eigenvectors), MacroPCApars = list(kmax = KMAX, silent = TRUE))
     },
-    # warning = function(w) {
-    #   message(w)
-    # },
     error = function(e) {
       message(e)
+      print(e)
       return(e)
     },
     finally = {
       print("test2")
     }
   )
-  print("verbose_robustpca:")
-  print(verbose_robustpca)
-  print(is.null(temp))
+  #HERE IS AN ISSUE IN THE PARALLEL SYSTEM: SOMETIMES IT STOPS HERE!!!!
+  print("-")
+  print(paste("is.null: ",is.null(temp)))
   print("test3")
   if (verbose_robustpca) print(class(temp))
   if ("error" %in% class(temp)) {
