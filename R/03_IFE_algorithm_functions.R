@@ -1714,60 +1714,66 @@ handle_macropca_errors <- function(object, temp, KMAX, number_eigenvectors, verb
   if ("error" %in% class(temp)) {
     if (verbose) {
       message("*******************************")
-      message(paste("MacroPCA with", number_eigenvectors, " eigenvectors fails, -> use different amount of eigenvectors. Start with a couple more and decrease 1 by 1."))
+      message(paste("MacroPCA with", number_eigenvectors, " eigenvectors fails, -> calculate different (higher) amount of eigenvectors and select afterwards the necessary ones.
+                    Start with a couple more and decrease 1 by 1."))
     }
+    k_higher_value <- 0
     counter <- 0
+    #NOTE: changing k does help now and then (also with lower k, but in that case there is a factor short of course, and that one should then be imputed)
+    #-> depreciate this while-loop, and immediately go to the classical estimation as solution
     while ("error" %in% class(temp)) {
       counter <- counter + 1
-      if (verbose) print(paste("counter:", counter))
-
-      # NOTE: changing k does not help anymore since updating packages -> depreciate this while-loop-system and immediately use classical estimation
-      # print(paste("try", max(number_eigenvectors + 2, number_eigenvectors) - counter))
+      # if (verbose) print(paste("counter:", counter))
+      # print(paste("set to", max(number_eigenvectors + k_higher_value, number_eigenvectors) - counter))
       # temp <- tryCatch(
-      #   cellWise::MacroPCA(object, k = max(number_eigenvectors + 2, number_eigenvectors) - counter, MacroPCApars = list(kmax = KMAX, silent = TRUE)),
+      #   cellWise::MacroPCA(object, k = max(number_eigenvectors + k_higher_value, number_eigenvectors) - counter, MacroPCApars = list(kmax = KMAX, silent = TRUE)),
       #   error = function(e) {
       #     message(e)
       #     return(e)
+      #   },
+      #   finally = {
+      #     #print("new macropca is done")
       #   }
       # )
 
       # sometimes, when there occurred too often errors in macropca, we end up with only a limited amount of possible eigenvectors that are calculated.
       # This happens when a group has very little elements.
-      if (verbose) {
-        print("----")
-        print(class(temp))
-      }
-      number_columns <- 999
-      temp <- tryCatch(
-        number_columns = ncol(temp$loadings),
-        error = function(e) {
-          message(e)
-          return(e)
-        }
-      )
-      temp <- tryCatch(
-        temp = temp$loadings[, 1:min(number_eigenvectors, number_columns)],
-        error = function(e) {
-          message(e)
-          return(e)
-        }
-      )
-      if (number_columns < number_eigenvectors) {
-        message("---- This should be solved. Does this still occur? ----")
-        message(paste("add", number_eigenvectors - number_columns, "columns to temp"))
-        print(temp)
-        # message("sleep...")
-        # Sys.sleep(9000)
-      }
+      # if (verbose) {
+      #   print("----")
+      #   print(class(temp))
+      # }
+      # number_columns <- 999
+      # if(!("error" %in% class(temp))) { #otherwise temp$loadings would return NULL (and no error)
+      #   number_columns <- tryCatch(
+      #     ncol(temp$loadings),
+      #     error = function(e) {
+      #       message(e)
+      #       return(999)
+      #     }
+      #   )
+      #
+      #   temp <- tryCatch(
+      #     temp$loadings[, 1:min(number_eigenvectors, number_columns)],
+      #     error = function(e) {
+      #       message(e)
+      #       return(e)
+      #     }
+      #   )
+      # }
 
-      if (counter >= 0) { # (counter >= number_eigenvectors) {
+      # if (number_columns < number_eigenvectors) {
+      #   message(paste("add", number_eigenvectors - number_columns, "columns to temp"))
+      #   print(temp)
+      # }
+
+      if (counter >= k_higher_value) { # counter >= number_eigenvectors
         #-> then infinite loop (MacroPCA does not work with any k)
 
         # cause unknown:
         # unlikely to be caused by "small" amount of units in this group : (occurs up to 51 units have I found)
         # can happen during any iteration at (150,30), but happens only in iteration 0 or 1 at (300,200)
         # it does seem to occur more with small N / small T
-        # happen with higher amount of groupfactors to be estimated
+        # happens with higher amount of groupfactors to be estimated
 
         # note: warning() does not print in console here -> use message()
         message("\nMacroPCA failed to estimate factors for a group with ", nrow(object), " units -> use in this iteration for this group the classical estimation of the factors.")
@@ -1776,6 +1782,9 @@ handle_macropca_errors <- function(object, temp, KMAX, number_eigenvectors, verb
       }
     }
     # print(paste("endcounter:", counter))
+  }
+  if(is.null(temp)) {
+    message("--temp should not be null!--")
   }
   return(temp)
 }
@@ -3066,8 +3075,10 @@ LMROB <- function(parameter_y, parameter_x, nointercept = FALSE, nosetting = FAL
       {
         if (nosetting) {
           result <- lmrob(parameter_y ~ 1)
+          return(result)
         } else {
           result <- lmrob(parameter_y ~ 1, setting = "KS2014")
+          return(result)
         }
       },
       error = function(e) {
@@ -3404,15 +3415,15 @@ initialise_clustering <- function(use_robust, Y, g, beta_est, S, k, kg, comfacto
     # trimmed kmeans identifies outliers and puts them in zero (if parameter > 0) -> they would thus need to be replaced
   } else {
     # use kmeans
-    AA <- tryCatch(Km <- kmeans(df, S), error = function(e) e)
-    if ("error" %in% class(AA)) {
-      print(AA)
+    kmeans_clustering <- tryCatch(kmeans(df, S), error = function(e) e)
+    if ("error" %in% class(kmeans_clustering)) {
+      print(kmeans_clustering)
       # more cluster centers than distinct data points.
       warning("Km does not exist now: take as initial kmeans one group less + change 1 element to the empty group")
       counter <- 0
-      while ("error" %in% class(AA)) {
+      while ("error" %in% class(kmeans_clustering)) {
         counter <- counter + 1
-        AA <- tryCatch(Km <- kmeans(df, S - counter), error = function(e) e)
+        kmeans_clustering <- tryCatch(kmeans(df, S - counter), error = function(e) e)
         if (counter > 50) {
           stop("infinite loop -> stop")
         }

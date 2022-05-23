@@ -160,7 +160,7 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
     if(USE_DO) {
       output <- foreach::foreach(
         i = 1:nrow(configs),
-        .packages = c("RCTS", "tidyverse"),
+        #.packages = c("RCTS", "tidyverse"), #apparently not needed anymore
         .options.snow = opts,
         .errorhandling = "pass"
       ) %do% {
@@ -170,7 +170,7 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
     } else {
       output <- foreach::foreach(
         i = 1:nrow(configs),
-        #.packages = c("RCTS", "tidyverse"),
+        #.packages = c("RCTS", "tidyverse"), #apparently not needed anymore
         .options.snow = opts,
         .errorhandling = "pass"
       ) %dopar% {
