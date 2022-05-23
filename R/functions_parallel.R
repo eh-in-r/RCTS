@@ -44,7 +44,7 @@ run_config <- function(config, C_candidates, Y, X, maxit = 30) {
   speed <- 999999 # convergence speed: set to initial high value
   while (iteration < maxit & !check_stopping_rules(iteration, speed, obj_funct_values, verbose = FALSE)) {
 
-    #new errors occuring when using parallel system -> find out why
+    #new errors occurring when using parallel system -> find out why
     #note: iterate() does not return errors in the serialized algorithm
     #temp<- tryCatch(
     temp <- iterate(use_robust = TRUE, Y, X, beta_est, g, lambda_group, factor_group, lambda, comfactor, S, k, kg, verbose = FALSE)
@@ -164,7 +164,7 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
         .options.snow = opts,
         .errorhandling = "pass"
       ) %do% {
-          run_config(configs[i,], C_candidates, Y, X, maxit = 30) #might still be needing an extra trycatch around this function here? Tested: that does not do anything.
+          run_config(configs[i,], C_candidates, Y, X, maxit = 30)
 
       }
     } else {
@@ -177,10 +177,13 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
         run_config(configs[i,], C_candidates, Y, X, maxit = 30)
       }
     }
-    #print("foreach has finished")
+    print("foreach has finished")
     config_groups_plus_errormessages <- purrr::map(output, 1)
     #print(config_groups_plus_errormessages)
     has_error <- unlist(lapply(purrr::map(output, class), function(x) "error" %in% x))
+    if(sum(has_error) == nrow(configs)) {
+      message("1. All possible configurations have produced an error for this subset. Expanding the configurationspace is an option.")
+    }
     #Note that these errors is due to trycatch statements not or not properly working within a foreach loop.
     #They are in fact solved in the serialized algorithm!
     #Note that these errors are often linked to one estimated group being small, or to many factors fitted to a group.
@@ -191,22 +194,28 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
       warning(paste("Subset", subset, "has a problem with configuration", paste(configs[i,], collapse = " "),
                     "(", config_groups_plus_errormessages[[i]], ") -> no results available -> this configuration is omitted as a candidate."))
       output[[i]] <- NULL
-    }
+
+    }#new vector showing which configurations have an error; should be all FALSE; can be NULL when all configurations failed
     has_error_new <- unlist(lapply(purrr::map(output, class), function(x) "error" %in% x))
-    if(sum(has_error_new) == 0) {
-      df_results <- make_df_results_parallel(output)
-      df_pic <- make_df_pic_parallel(output)
+    if (sum(has_error_new) == 0) {
+      if (!is.null(has_error_new)) {
+        df_results <- make_df_results_parallel(output)
+        df_pic <- make_df_pic_parallel(output)
 
-      pic_sigma2 <- df_results$sigma2[nrow(df_results)]
-      df_pic <- adapt_pic_with_sigma2maxmodel(df_pic, df_results, pic_sigma2)
+        pic_sigma2 <- df_results$sigma2[nrow(df_results)]
+        df_pic <- adapt_pic_with_sigma2maxmodel(df_pic, df_results, pic_sigma2)
 
-      # calculate for each candidate value for C the best S, k and kg
-      all_best_values <- calculate_best_config(df_results, df_pic, C_candidates)
-      rc <- fill_rc(rc, all_best_values, subset) # best number of common factors
-      rcj <- fill_rcj(rcj, all_best_values, subset, S_cand, kg_cand) # best number of group specific factors and groups
-      rm(all_best_values)
+        # calculate for each candidate value for C the best S, k and kg
+        all_best_values <- calculate_best_config(df_results, df_pic, C_candidates)
+        rc <- fill_rc(rc, all_best_values, subset) # best number of common factors
+        rcj <- fill_rcj(rcj, all_best_values, subset, S_cand, kg_cand) # best number of group specific factors and groups
+        rm(all_best_values)
+      } else {
+        print(output)
+        message("2. All possible configurations have produced an error for this subset. Expanding the configurationspace is an option.")
+      }
     } else {
-      message("errors left! this should not happen!")
+      message("Errors left! This should not happen!")
     }
 
     # keep df_results of the full sample (this will contain the final clustering):
