@@ -1854,7 +1854,7 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20, verbose_robustpca 
     },
     error = function(e) {
       #message(e) #THIS IS FORBIDDEN, AS IT FAILS THE PARALLEL SYSTEM SOMEHOW!!!!!!!!! (using message() itself is ok though)
-      print(e) #using print is ok
+      #print(e) #using print is ok, but the text gets too long, and looks too unhelpful (and I know the cause anyway)
       return(e)
     },
     finally = {
@@ -3124,7 +3124,9 @@ LMROB <- function(parameter_y, parameter_x, nointercept = FALSE, nosetting = FAL
             # The option setting="KS2011" alters the default arguments. They are changed to method = "SMDM", psi = "lqq", max.it = 500, k.max = 2000, cov = ".vcov.w".
             # The defaults of all the remaining arguments are not changed.
             # The option setting="KS2014" builds upon setting="KS2011". More arguments are changed to best.r.s = 20, k.fast.s = 2, nResample = 1000.
-            lmrobcontrol_ks2014 <- lmrob.control(method = "SMDM", psi = "lqq", max.it = 500, k.max = 3000, cov = ".vcov.w", best.r.s = 20, k.fast.s = 2, nResample = 1000)
+
+            #I also increased k.max and maxit.scale
+            lmrobcontrol_ks2014 <- lmrob.control(method = "SMDM", psi = "lqq", max.it = 500, k.max = 3000, cov = ".vcov.w", best.r.s = 20, k.fast.s = 2, nResample = 1000, maxit.scale = 600)
             result <- lmrob(parameter_y ~ parameter_x, control = lmrobcontrol_ks2014)
             return(result)
           },
@@ -3133,6 +3135,7 @@ LMROB <- function(parameter_y, parameter_x, nointercept = FALSE, nosetting = FAL
           #-> solution: i increased k.max to 3000
 
           # find_scale() did not converge in 'maxit.scale' (= 200) iterations with tol=1e-10, last rel.diff=0
+          #-> increased to 600
 
           # but note that if code reaches the warning, there is no access to "result", and i won't calculate it again -> comment out the warning part
           # (this thus only lists the warnings after the algorithm has run, and not anymore per iteration)
