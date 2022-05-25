@@ -1846,13 +1846,15 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20, verbose_robustpca 
     print(paste("rank of input:", Matrix::rankMatrix(object)))
     print(paste("required number of eigenvectors:", number_eigenvectors))
   }
+
   temp <- tryCatch(
     {
       print("test1")
+      print(dim(object))
       cellWise::MacroPCA(object, k = max(macropca_kmax, number_eigenvectors), MacroPCApars = list(kmax = KMAX, silent = TRUE))
     },
     error = function(e) {
-      message(e)
+      #message(e) #THIS IS FORBIDDEN, AS IT FAILS THE PARALLEL SYSTEM SOMEHOW!!!!!!!!!
       print(e)
       return(e)
     },
@@ -1860,8 +1862,13 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20, verbose_robustpca 
       print("test2")
     }
   )
-  #HERE IS AN ISSUE IN THE PARALLEL SYSTEM: SOMETIMES IT STOPS HERE!!!!
-  print("-")
+#--HERE IS AN ISSUE IN THE PARALLEL SYSTEM (both with "do" and with "dopar"): SOMETIMES IT STOPS HERE!!!! The serialized system works normal.--
+#--Does not make much sense!
+#--This seems also to be linked with small amount of units in one of the groups.
+#--Also: no error is printed above, so there is no error i'd say.
+#--Increasing ROBUST_THRESHOLD (e.g. to 25) works as a hack around it, (works as a hybrid classical/robust estimation), but it really should not come to this...
+#-----> SOLUTION: removing 'message(e)' seems to work...
+    print("-") #this should always print, after "test2".
   print(paste("is.null: ",is.null(temp)))
   print("test3")
   if (verbose_robustpca) print(class(temp))

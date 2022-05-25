@@ -14,6 +14,7 @@ globalVariables(c("i")) #required to pass R CMD check of a function which uses f
 run_config <- function(config, C_candidates, Y, X, maxit = 30) {
   print("-----------------------------------------start run_config:-------------------------------------------")
   print(config)
+  print("-remove sleep again-")
   Sys.sleep(2)
   S <- config %>%
     dplyr::select(S) %>%
@@ -48,7 +49,7 @@ run_config <- function(config, C_candidates, Y, X, maxit = 30) {
     #new errors occurring when using parallel system -> find out why
     #note: iterate() does not return errors in the serialized algorithm
     #temp<- tryCatch(
-    temp <- iterate(use_robust = TRUE, Y, X, beta_est, g, lambda_group, factor_group, lambda, comfactor, S, k, kg, verbose = TRUE)
+    temp <- iterate(use_robust = TRUE, Y, X, beta_est, g, lambda_group, factor_group, lambda, comfactor, S, k, kg, verbose = F)
     #   error = function(e) {
     #     message(e)
     #     return(e)
@@ -199,7 +200,7 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
       #message(i)
       to_print <- paste("Subset", subset, "has a problem with configuration", paste(configs[i,], collapse = " "),
                         "(", config_groups_plus_errormessages[[i]], ") -> no results available -> this configuration is omitted as a candidate.")
-      message(to_print)
+      #message(to_print)
       warning(to_print)
       output[[i]] <- NULL
     }
