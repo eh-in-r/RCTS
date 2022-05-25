@@ -12,8 +12,8 @@ globalVariables(c("i")) #required to pass R CMD check of a function which uses f
 #' @inheritParams estimate_beta
 #' @param maxit maximum limit for the number of iterations
 run_config <- function(config, C_candidates, Y, X, maxit = 30) {
-  print("-----------------------------------------start run_config:-------------------------------------------")
-  print(config)
+  #print("-----------------------------------------start run_config:-------------------------------------------")
+  #print(config)
   # print("-remove sleep again-")
   # Sys.sleep(2)
   S <- config %>%
@@ -40,7 +40,7 @@ run_config <- function(config, C_candidates, Y, X, maxit = 30) {
   lambda_group <- calculate_lambda_group(use_robust = TRUE, Y, X, beta_est, factor_group, g, NA, NA, S, k, kg, initialise = TRUE)
 
 
-  print("estimate:")
+  #print("estimate:")
   ######### estimations
   obj_funct_values <- c()
   speed <- 999999 # convergence speed: set to initial high value
@@ -63,7 +63,7 @@ run_config <- function(config, C_candidates, Y, X, maxit = 30) {
     iteration <- iteration + 1
     speed <- get_convergence_speed(iteration, obj_funct_values / nrow(Y) / ncol(Y))
   }
-  print("estimation is done")
+  #print("estimation is done")
 
   # calculate the estimation errors
   pic_e2 <- calculate_error_term(
@@ -80,7 +80,7 @@ run_config <- function(config, C_candidates, Y, X, maxit = 30) {
 
   # add results of this configuration to df_results
   pic_sigma2 <- calculate_sigma2(pic_e2, nrow(Y), ncol(Y))
-  print("run_config is done")
+  #print("run_config is done")
   return(list(S, k, kg, pic, pic_sigma2, g))
 }
 

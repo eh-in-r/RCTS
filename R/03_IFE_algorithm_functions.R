@@ -1849,7 +1849,7 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20, verbose_robustpca 
   temp <- tryCatch(
     {
       # print("test1")
-      print(dim(object))
+      # print(dim(object))
       cellWise::MacroPCA(object, k = max(macropca_kmax, number_eigenvectors), MacroPCApars = list(kmax = KMAX, silent = TRUE))
     },
     error = function(e) {
