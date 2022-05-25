@@ -13,7 +13,8 @@ initialise_clustering(
   k,
   kg,
   comfactor,
-  max_percent_outliers_tkmeans = 0
+  max_percent_outliers_tkmeans = 0,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -34,6 +35,8 @@ initialise_clustering(
 \item{comfactor}{estimated common factors}
 
 \item{max_percent_outliers_tkmeans}{The proportion of observations to be trimmed.}
+
+\item{verbose}{when TRUE, it prints messages}
 }
 \description{
 If a time series contains NA's a random cluster will be assigned to that time series.

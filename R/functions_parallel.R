@@ -14,8 +14,8 @@ globalVariables(c("i")) #required to pass R CMD check of a function which uses f
 run_config <- function(config, C_candidates, Y, X, maxit = 30) {
   print("-----------------------------------------start run_config:-------------------------------------------")
   print(config)
-  print("-remove sleep again-")
-  Sys.sleep(2)
+  # print("-remove sleep again-")
+  # Sys.sleep(2)
   S <- config %>%
     dplyr::select(S) %>%
     dplyr::pull()
@@ -46,17 +46,9 @@ run_config <- function(config, C_candidates, Y, X, maxit = 30) {
   speed <- 999999 # convergence speed: set to initial high value
   while (iteration < maxit & !check_stopping_rules(iteration, speed, obj_funct_values, verbose = FALSE)) {
 
-    #new errors occurring when using parallel system -> find out why
-    #note: iterate() does not return errors in the serialized algorithm
-    #temp<- tryCatch(
     temp <- iterate(use_robust = TRUE, Y, X, beta_est, g, lambda_group, factor_group, lambda, comfactor, S, k, kg, verbose = F)
-    #   error = function(e) {
-    #     message(e)
-    #     return(e)
-    #   }
-    # )
-    print("********************************************************(end of iterate()")
-    print(class(temp))
+    #print("********************************************************(end of iterate()")
+    #print(class(temp))
     beta_est <- temp[[1]]
     g <- temp[[2]]
     comfactor <- temp[[3]]
@@ -183,15 +175,17 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
         run_config(configs[i,], C_candidates, Y, X, maxit = 30)
       }
     }
-    print("foreach has finished")
+    #print("foreach has finished")
     config_groups_plus_errormessages <- purrr::map(output, 1)
     print(config_groups_plus_errormessages)
     has_error <- unlist(lapply(purrr::map(output, class), function(x) "error" %in% x))
-    message(paste("There are", sum(has_error), "configurations that returned an error."))
+    if(sum(has_error) > 0) {
+      message(paste("There are", sum(has_error), "configurations that returned an error."))
+    }
     if(sum(has_error) == nrow(configs)) {
       message("1. All possible configurations have produced an error for this subset. Expanding the configurationspace is an option.")
     }
-    #Note that these errors is due to trycatch statements not or not properly working within a foreach loop.
+    #Note that these errors is due to trycatch statements not or not properly working within a foreach loop. (this should be solved now)
     #They are in fact solved in the serialized algorithm!
     #Note that these errors are often linked to one estimated group being small, or to many factors fitted to a group.
     #This occurs in configurations that have more groups and factors then the true values.

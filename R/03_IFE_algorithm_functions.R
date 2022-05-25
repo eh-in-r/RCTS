@@ -1634,7 +1634,6 @@ calculate_Z_group <- function(Y, X, beta_est, g, lambda, comfactor, group,
   indices_group <- which(g == group)
   if (length(indices_group) == 0) {
     message("empty group (calculate_Z_group())")
-    Sys.sleep(1)
   }
 
   Z <- matrix(0, nrow = length(indices_group), ncol = TT) # Nj x T matrix
@@ -1728,7 +1727,7 @@ handle_macropca_errors <- function(object, temp, KMAX, number_eigenvectors, verb
       # temp <- tryCatch(
       #   cellWise::MacroPCA(object, k = max(number_eigenvectors + k_higher_value, number_eigenvectors) - counter, MacroPCApars = list(kmax = KMAX, silent = TRUE)),
       #   error = function(e) {
-      #     message(e)
+      #     print(e)
       #     return(e)
       #   },
       #   finally = {
@@ -1747,7 +1746,7 @@ handle_macropca_errors <- function(object, temp, KMAX, number_eigenvectors, verb
       #   number_columns <- tryCatch(
       #     ncol(temp$loadings),
       #     error = function(e) {
-      #       message(e)
+      #       print(e)
       #       return(999)
       #     }
       #   )
@@ -1755,7 +1754,7 @@ handle_macropca_errors <- function(object, temp, KMAX, number_eigenvectors, verb
       #   temp <- tryCatch(
       #     temp$loadings[, 1:min(number_eigenvectors, number_columns)],
       #     error = function(e) {
-      #       message(e)
+      #       print(e)
       #       return(e)
       #     }
       #   )
@@ -1849,28 +1848,26 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20, verbose_robustpca 
 
   temp <- tryCatch(
     {
-      print("test1")
+      # print("test1")
       print(dim(object))
       cellWise::MacroPCA(object, k = max(macropca_kmax, number_eigenvectors), MacroPCApars = list(kmax = KMAX, silent = TRUE))
     },
     error = function(e) {
-      #message(e) #THIS IS FORBIDDEN, AS IT FAILS THE PARALLEL SYSTEM SOMEHOW!!!!!!!!!
-      print(e)
+      #message(e) #THIS IS FORBIDDEN, AS IT FAILS THE PARALLEL SYSTEM SOMEHOW!!!!!!!!! (using message() itself is ok though)
+      print(e) #using print is ok
       return(e)
     },
     finally = {
-      print("test2")
+      # print("test2")
     }
   )
 #--HERE IS AN ISSUE IN THE PARALLEL SYSTEM (both with "do" and with "dopar"): SOMETIMES IT STOPS HERE!!!! The serialized system works normal.--
-#--Does not make much sense!
 #--This seems also to be linked with small amount of units in one of the groups.
-#--Also: no error is printed above, so there is no error i'd say.
 #--Increasing ROBUST_THRESHOLD (e.g. to 25) works as a hack around it, (works as a hybrid classical/robust estimation), but it really should not come to this...
 #-----> SOLUTION: removing 'message(e)' seems to work...
-    print("-") #this should always print, after "test2".
-  print(paste("is.null: ",is.null(temp)))
-  print("test3")
+  # print("-") #this should always print, after "test2".
+  # print(paste("is.null: ",is.null(temp)))
+  # print("test3")
   if (verbose_robustpca) print(class(temp))
   if ("error" %in% class(temp)) {
     error_macropca <- TRUE
@@ -3100,7 +3097,7 @@ LMROB <- function(parameter_y, parameter_x, nointercept = FALSE, nosetting = FAL
         }
       },
       error = function(e) {
-        message(e)
+        print(e)
         print("error, therefore use lmrob without 'setting'")
         result <- lmrob(parameter_y ~ 1)
         return(result)
@@ -3146,7 +3143,7 @@ LMROB <- function(parameter_y, parameter_x, nointercept = FALSE, nosetting = FAL
           #   return(result)
           # },
           error = function(e) {
-            message(e)
+            print(e)
             print("error, therefore use lmrob without 'setting'") # does this still occur?
             result <- lmrob(parameter_y ~ parameter_x)
             return(result)
