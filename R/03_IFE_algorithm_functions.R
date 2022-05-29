@@ -1952,9 +1952,9 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20, verbose_robustpca 
 #' @export
 estimate_factor <- function(use_robust, Y, X, beta_est, g, lgfg_list,
                             k, kg,
-                            vars_est,
                             method_estimate_beta,
                             method_estimate_factors,
+                            vars_est = dim(X)[3],
                             initialise = FALSE,
                             verbose = FALSE) {
   NN <- nrow(Y)
@@ -3961,7 +3961,7 @@ add_metrics <- function(df_results, index_configuration, pic_sigma2, g, g_true, 
   df_results$sigma2[index_configuration] <- pic_sigma2
   if (!is.na(g_true[1])) df_results$adjustedrandindex[index_configuration] <- mclust::adjustedRandIndex(g, g_true)
   df_results$table_g[index_configuration] <- paste(table(g), collapse = "_")
-  df_results$table_g_true[index_configuration] <- paste(table(g_true), collapse = "_")
+  if (!is.na(g_true[1])) df_results$table_g_true[index_configuration] <- paste(table(g_true), collapse = "_")
   df_results$g[index_configuration] <- paste(g, collapse = "-")
   df_results$number_of_iterations[index_configuration] <- iteration
   return(df_results)

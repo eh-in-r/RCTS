@@ -113,6 +113,7 @@ make_df_results_parallel <- function(x, limit_est_groups = 20) {
   ) %>% cbind(t(matrix(unlist(x %>% purrr::map(3)), nrow = limit_est_groups)))
   names(df)[4:(4 + limit_est_groups - 1)] <- paste0("k", 1:limit_est_groups)
   df$g <- sapply(1:nrow(df), function(y) paste((x %>% purrr::map(6))[[y]], collapse = "-"))
+  df$table_g <- sapply(1:nrow(df), function(y) paste(table(x %>% purrr::map(6))[[y]]), collapse = "_")
   return(df)
 }
 
@@ -147,6 +148,7 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
 
     # define set of possible combinations of number of group factors
     configs <- define_configurations(S_cand, k_cand, kg_cand)
+    print(paste("There are", nrow(configs), "possible configurations."))
 
     # to add a progressbar:
     progress <- function(n) utils::setTxtProgressBar(utils::txtProgressBar(max = nrow(configs), style = 3), n)
@@ -177,7 +179,7 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
     }
     #print("foreach has finished")
     config_groups_plus_errormessages <- purrr::map(output, 1)
-    print(config_groups_plus_errormessages)
+    #print(config_groups_plus_errormessages)
     has_error <- unlist(lapply(purrr::map(output, class), function(x) "error" %in% x))
     if(sum(has_error) > 0) {
       message(paste("There are", sum(has_error), "configurations that returned an error."))
