@@ -13,9 +13,9 @@ estimate_factor(
   lgfg_list,
   k,
   kg,
-  vars_est,
   method_estimate_beta,
   method_estimate_factors,
+  vars_est = dim(X)[3],
   initialise = FALSE,
   verbose = FALSE
 )
@@ -37,11 +37,11 @@ estimate_factor(
 
 \item{kg}{number of group specific factors to be estimated}
 
-\item{vars_est}{number of variables that will be included in the algorithm and have their coefficient estimated. This is usually equal to the number of observable variables.}
-
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 
 \item{method_estimate_factors}{defines method of robust estimaton of the factors: "macro", "pertmm" or "cz"}
+
+\item{vars_est}{number of variables that will be included in the algorithm and have their coefficient estimated. This is usually equal to the number of observable variables.}
 
 \item{initialise}{indicator of being in the initialisation phase}
 
