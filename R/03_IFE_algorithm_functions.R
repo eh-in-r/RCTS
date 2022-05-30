@@ -3276,19 +3276,17 @@ create_data_dgp2 <- function(N, TT, S_true = 3, vars = 3, k_true = 0, kg_true = 
   return(list(Y, X, g_true, beta_true, factor_group_true, lambda_group_true, comfactor_true, lambda_true))
 }
 
-#' Selects a subsample of the time series, and of the length of the time series. Based on this it returns a subsample of Y.
-#' It also returns the corresponding subsamples X and the group membership.
+#' Selects a subsample of the time series, and of the length of the time series.
+#' Based on this it returns a subsample of Y, the corresponding subsample of X and of the true group membership and factorstructures if applicable.
 #'
 #' @param original_data list containing the true data: Y, X, g_true, beta_true, factor_group_true, lambda_group_true, comfactor_true, lambda_true
 #' @param subset index of the subsample: this defines how many times stepsize_N is subtracted from the original N time series. Similar for stepsize_T.
-# @param use_real_world_data indicates using real world data; defaults to FALSE
 #' @inheritParams generate_Y
 #' @inheritParams update_g
 # @param subsamples_factors determines whether subsamples of the (unobservable) factors and loadings also need to be constructed. This cannot be done for real world data. Default is TRUE.
 #' @export
 make_subsamples <- function(original_data,
                             subset,
-                            #use_real_world_data = FALSE,
                             verbose = TRUE) {
   #determine whether input data is simulated or real world data, based on size of input
   if(length(original_data) == 2) {
@@ -3327,11 +3325,13 @@ make_subsamples <- function(original_data,
   Y <- Y[sampleN, sampleT]
 
   # subsample of X
-  if (dim(X)[3] > 0) {
-    X_temp <- array(NA, dim = c(subN, subT, dim(X)[3])) # subT*T_FACTOR
-    X_temp[, , ] <- X[sampleN, sampleT, ]
-    X <- X_temp
-    rm(X_temp)
+  if(!is.na(X) & !is.null(X)) {
+    if (dim(X)[3] > 0) {
+      X_temp <- array(NA, dim = c(subN, subT, dim(X)[3])) # subT*T_FACTOR
+      X_temp[, , ] <- X[sampleN, sampleT, ]
+      X <- X_temp
+      rm(X_temp)
+    }
   }
 
   if (!use_real_world_data) {

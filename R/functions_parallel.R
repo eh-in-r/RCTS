@@ -139,6 +139,7 @@ make_df_pic_parallel <- function(x) {
 #' @param USE_DO if TRUE, then a serialized version is performed ("do" instead of "dopar") (for testing purposes)
 #' @export
 parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg_cand, C_candidates, robust = TRUE, USE_DO = FALSE) {
+  stopifnot(max(kg_cand) > 0)
   df_results_full <- NULL
   rc <- initialise_rc(indices_subset, C_candidates) # dataframe that will contain the optimized number of common factors for each C and subset
   rcj <- initialise_rcj(indices_subset, C_candidates) # dataframe that will contain the optimized number of groups and group specific factors for each C and subset
