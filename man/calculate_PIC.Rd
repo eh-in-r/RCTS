@@ -6,7 +6,7 @@
 \usage{
 calculate_PIC(
   C,
-  use_robust,
+  robust,
   S,
   k,
   kg,
@@ -24,7 +24,7 @@ calculate_PIC(
 \arguments{
 \item{C}{determines relative contribution of the penalty terms compared to the estimation error term}
 
-\item{use_robust}{TRUE or FALSE: defines using the classical or robust algorithm to estimate beta}
+\item{robust}{TRUE or FALSE: defines using the classical or robust algorithm to estimate beta}
 
 \item{S}{number of estimated groups}
 

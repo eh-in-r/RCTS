@@ -7,7 +7,7 @@
 add_pic(
   df,
   index_configuration,
-  use_robust,
+  robust,
   Y,
   beta_est,
   g,
@@ -26,7 +26,7 @@ add_pic(
 
 \item{index_configuration}{index of the configuration of groups and factors}
 
-\item{use_robust}{robust or classical estimation}
+\item{robust}{robust or classical estimation}
 
 \item{Y}{Y: NxT dataframe with the panel data of interest}
 

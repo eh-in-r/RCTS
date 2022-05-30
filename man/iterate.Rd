@@ -5,7 +5,7 @@
 \title{Wrapper around estimate_beta, update_g, and estimating the factorstructures.}
 \usage{
 iterate(
-  use_robust,
+  robust,
   Y,
   X,
   beta_est,
@@ -25,7 +25,7 @@ iterate(
 )
 }
 \arguments{
-\item{use_robust}{TRUE or FALSE: defines using the classical or robust algorithm to estimate beta}
+\item{robust}{TRUE or FALSE: defines using the classical or robust algorithm to estimate beta}
 
 \item{Y}{Y: NxT dataframe with the panel data of interest}
 
@@ -51,7 +51,7 @@ iterate(
 
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 
-\item{method_estimate_factors}{specifies the robust algorithm to estimate factors: default is "macro". The value is not used when use_robust is set to FALSE.}
+\item{method_estimate_factors}{specifies the robust algorithm to estimate factors: default is "macro". The value is not used when robust is set to FALSE.}
 
 \item{vars_est}{number of variables for which a beta is estimated. Usually equal to the number of variables available in X.}
 

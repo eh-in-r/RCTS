@@ -8,7 +8,7 @@ determine_beta(
   string,
   X_special,
   Y_special,
-  use_robust,
+  robust,
   NN,
   TT,
   S,
@@ -28,7 +28,7 @@ determine_beta(
 
 \item{Y_special}{preprocessed Y}
 
-\item{use_robust}{robust or classical estimation}
+\item{robust}{robust or classical estimation}
 
 \item{NN}{number of time series}
 

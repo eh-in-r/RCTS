@@ -5,7 +5,7 @@
 \title{Estimates beta.}
 \usage{
 estimate_beta(
-  use_robust,
+  robust,
   Y,
   X,
   g,
@@ -25,7 +25,7 @@ estimate_beta(
 )
 }
 \arguments{
-\item{use_robust}{TRUE or FALSE: defines using the classical or robust algorithm to estimate beta}
+\item{robust}{TRUE or FALSE: defines using the classical or robust algorithm to estimate beta}
 
 \item{Y}{Y: NxT dataframe with the panel data of interest}
 
@@ -85,7 +85,7 @@ comfactor <- matrix(0, nrow = 1, ncol = 30)
 method_estimate_beta <- "individual"
 method_estimate_factors <- "macro"
 beta_est <- estimate_beta(
-  use_robust = TRUE, Y, X, g, lambda_group, factor_group,
+  robust = TRUE, Y, X, g, lambda_group, factor_group,
   lambda, comfactor,
   S = 3, k = 0, kg = c(3, 3, 3),
   vars_est = 3

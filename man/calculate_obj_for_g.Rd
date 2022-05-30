@@ -4,7 +4,7 @@
 \alias{calculate_obj_for_g}
 \title{Calculates objective function for individual i and group k in order to estimate group membership.}
 \usage{
-calculate_obj_for_g(i, k, errors_virtual, rho_parameters, use_robust, TT)
+calculate_obj_for_g(i, k, errors_virtual, rho_parameters, robust, TT)
 }
 \arguments{
 \item{i}{individual}
@@ -15,7 +15,7 @@ calculate_obj_for_g(i, k, errors_virtual, rho_parameters, use_robust, TT)
 
 \item{rho_parameters}{median and madn of the calculated error term}
 
-\item{use_robust}{robust or classical estimation}
+\item{robust}{robust or classical estimation}
 
 \item{TT}{length of time series}
 }

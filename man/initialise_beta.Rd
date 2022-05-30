@@ -5,7 +5,7 @@
 \title{Initialisation of estimation of beta (the coefficients with the observable variables)}
 \usage{
 initialise_beta(
-  use_robust,
+  robust,
   Y,
   X,
   S,
@@ -17,7 +17,7 @@ initialise_beta(
 )
 }
 \arguments{
-\item{use_robust}{robust or classical estimation}
+\item{robust}{robust or classical estimation}
 
 \item{Y}{Y: NxT dataframe with the panel data of interest}
 

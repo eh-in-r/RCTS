@@ -5,7 +5,7 @@
 \title{Function that estimates group membership.}
 \usage{
 update_g(
-  use_robust,
+  robust,
   Y,
   X,
   beta_est,
@@ -23,7 +23,7 @@ update_g(
 )
 }
 \arguments{
-\item{use_robust}{robust or classical estimation of group membership}
+\item{robust}{robust or classical estimation of group membership}
 
 \item{Y}{Y: NxT dataframe with the panel data of interest}
 
@@ -76,13 +76,13 @@ lambda <- matrix(0, nrow = 1, ncol = 300)
 comfactor <- matrix(0, nrow = 1, ncol = 30)
 # Choose how coefficients of the observable are estimated
 beta_est <- estimate_beta(
-  use_robust = TRUE, Y, X, g, lambda_group, factor_group,
+  robust = TRUE, Y, X, g, lambda_group, factor_group,
   lambda, comfactor,
   S = 3, k = 0, kg = c(3, 3, 3),
   vars_est = 3
 )[[1]]
 g_new <- update_g(
-  use_robust = TRUE, Y, X, beta_est, g,
+  robust = TRUE, Y, X, beta_est, g,
   factor_group, lambda, comfactor,
   S = 3,
   k = 0,

@@ -33,9 +33,9 @@ Imports:
   cellWise,
   rlang,
   Rdpack,
-  mclust
+  mclust,
+  Matrix
 Suggests:
-  Matrix,
   tsqn,
   doParallel,
   doSNOW,

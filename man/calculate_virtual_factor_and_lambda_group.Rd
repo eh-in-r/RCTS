@@ -7,7 +7,7 @@
 calculate_virtual_factor_and_lambda_group(
   group,
   solve_FG_FG_times_FG,
-  use_robust,
+  robust,
   NN_local,
   method_estimate_factors_local,
   g,
@@ -29,7 +29,7 @@ calculate_virtual_factor_and_lambda_group(
 
 \item{solve_FG_FG_times_FG}{This is the same as groupfactor / T. It is only used in the Classical approach}
 
-\item{use_robust}{robust or classical estimation of group membership}
+\item{robust}{robust or classical estimation of group membership}
 
 \item{NN_local}{number of time series}
 

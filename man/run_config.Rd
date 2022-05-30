@@ -4,9 +4,11 @@
 \alias{run_config}
 \title{Wrapper around the non-parallel algorithm, to estimate beta, group membership and the factorstructures.}
 \usage{
-run_config(config, C_candidates, Y, X, maxit = 30)
+run_config(robust, config, C_candidates, Y, X, maxit = 30)
 }
 \arguments{
+\item{robust}{TRUE or FALSE: defines using the classical or robust algorithm to estimate beta}
+
 \item{config}{contains one configuration of groups and factors}
 
 \item{C_candidates}{candidates for C (parameter in PIC)}

@@ -11,6 +11,7 @@ parallel_algorithm(
   k_cand,
   kg_cand,
   C_candidates,
+  robust = TRUE,
   USE_DO = FALSE
 )
 }
@@ -26,6 +27,8 @@ parallel_algorithm(
 \item{kg_cand}{candidates for kg (number of group specific factors)}
 
 \item{C_candidates}{candidates for C}
+
+\item{robust}{robust or classical estimation}
 
 \item{USE_DO}{if TRUE, then a serialized version is performed ("do" instead of "dopar") (for testing purposes)}
 }

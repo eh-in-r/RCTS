@@ -5,7 +5,7 @@
 \title{Function that clusters time series in a dataframe with kmeans (classical algorithm) or trimmed kmeans(robust algorithms).}
 \usage{
 initialise_clustering(
-  use_robust,
+  robust,
   Y,
   g,
   beta_est,
@@ -18,7 +18,7 @@ initialise_clustering(
 )
 }
 \arguments{
-\item{use_robust}{TRUE or FALSE: defines using the classical or robust algorithm to estimate beta}
+\item{robust}{TRUE or FALSE: defines using the classical or robust algorithm to estimate beta}
 
 \item{Y}{Y: NxT dataframe with the panel data of interest}
 

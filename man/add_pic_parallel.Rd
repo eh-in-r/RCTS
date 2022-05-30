@@ -5,7 +5,7 @@
 \title{Calculates the PIC for the current configuration.}
 \usage{
 add_pic_parallel(
-  use_robust,
+  robust,
   Y,
   beta_est,
   g,
@@ -20,7 +20,7 @@ add_pic_parallel(
 )
 }
 \arguments{
-\item{use_robust}{robust or classical estimation}
+\item{robust}{robust or classical estimation}
 
 \item{Y}{Y: NxT dataframe with the panel data of interest}
 

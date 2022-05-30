@@ -4,7 +4,7 @@
 \alias{scaling_X}
 \title{Scaling of X.}
 \usage{
-scaling_X(X, firsttime, use_robust, vars)
+scaling_X(X, firsttime, robust, vars)
 }
 \arguments{
 \item{X}{input}
@@ -12,7 +12,7 @@ scaling_X(X, firsttime, use_robust, vars)
 \item{firsttime}{Scaling before generating Y and before adding outliers: this is always with mean and sd. If this is FALSE, it indicates that
 we are using the function for a second time, after adding the outliers. In the robust case it uses median and MAD, otherwise again mean and sd.}
 
-\item{use_robust}{logical, scaling with robust metrics instead of with non-robust measures}
+\item{robust}{logical, scaling with robust metrics instead of with non-robust measures}
 
 \item{vars}{number of observable variables}
 }
@@ -20,7 +20,7 @@ we are using the function for a second time, after adding the outliers. In the r
 Scaling of X.
 }
 \examples{
-use_robust <- TRUE
+robust <- TRUE
 X <- RCTS:::initialise_X(300, 30, vars = 3)
-RCTS:::scaling_X(X, TRUE, use_robust, vars = 3)
+RCTS:::scaling_X(X, TRUE, robust, vars = 3)
 }

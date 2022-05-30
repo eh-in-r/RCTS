@@ -10,8 +10,9 @@ globalVariables(c("i")) #required to pass R CMD check of a function which uses f
 # @param i index of the current configuration
 #' @inheritParams calculate_VCsquared
 #' @inheritParams estimate_beta
+#' @inheritParams initialise_beta
 #' @param maxit maximum limit for the number of iterations
-run_config <- function(config, C_candidates, Y, X, maxit = 30) {
+run_config <- function(robust, config, C_candidates, Y, X, maxit = 30) {
   #print("-----------------------------------------start run_config:-------------------------------------------")
   #print(config)
   # print("-remove sleep again-")
@@ -28,16 +29,16 @@ run_config <- function(config, C_candidates, Y, X, maxit = 30) {
   #print("initialise:")
   ########## initialisation
   iteration <- 0 # number of the iteration; 0 indicates being in the initialisation phase
-  beta_est <- initialise_beta(use_robust = TRUE, Y, X, S)
+  beta_est <- initialise_beta(robust, Y, X, S)
   # initial grouping
-  g <- initialise_clustering(use_robust = TRUE, Y, g, beta_est, S, k, kg, NA, max_percent_outliers_tkmeans = 0, verbose = TRUE)
+  g <- initialise_clustering(robust, Y, g, beta_est, S, k, kg, NA, max_percent_outliers_tkmeans = 0, verbose = TRUE)
   # initial common factorstructure
-  temp <- initialise_commonfactorstructure_macropca(use_robust = TRUE, Y, X, beta_est, g, NA, k, kg)
+  temp <- initialise_commonfactorstructure_macropca(robust, Y, X, beta_est, g, NA, k, kg)
   comfactor <- temp[[1]]
   lambda <- temp[[2]]
   # initial group specific factorstructure
-  factor_group <- estimate_factor_group(use_robust = TRUE, Y, X, beta_est, g, NA, NA, NA, S, k, kg, initialise = TRUE)
-  lambda_group <- calculate_lambda_group(use_robust = TRUE, Y, X, beta_est, factor_group, g, NA, NA, S, k, kg, initialise = TRUE)
+  factor_group <- estimate_factor_group(robust, Y, X, beta_est, g, NA, NA, NA, S, k, kg, initialise = TRUE)
+  lambda_group <- calculate_lambda_group(robust, Y, X, beta_est, factor_group, g, NA, NA, S, k, kg, initialise = TRUE)
 
 
   #print("estimate:")
@@ -46,7 +47,7 @@ run_config <- function(config, C_candidates, Y, X, maxit = 30) {
   speed <- 999999 # convergence speed: set to initial high value
   while (iteration < maxit & !check_stopping_rules(iteration, speed, obj_funct_values, verbose = FALSE)) {
 
-    temp <- iterate(use_robust = TRUE, Y, X, beta_est, g, lambda_group, factor_group, lambda, comfactor, S, k, kg, verbose = F)
+    temp <- iterate(robust, Y, X, beta_est, g, lambda_group, factor_group, lambda, comfactor, S, k, kg, verbose = F)
     #print("********************************************************(end of iterate()")
     #print(class(temp))
     beta_est <- temp[[1]]
@@ -74,7 +75,7 @@ run_config <- function(config, C_candidates, Y, X, maxit = 30) {
   )
 
   pic <- add_pic_parallel(
-    use_robust = TRUE, Y, beta_est, g, S, k, kg,
+    robust, Y, beta_est, g, S, k, kg,
     pic_e2, C_candidates
   )
 
@@ -87,12 +88,12 @@ run_config <- function(config, C_candidates, Y, X, maxit = 30) {
 #' Calculates the PIC for the current configuration.
 #'
 #' @inheritParams add_pic
-add_pic_parallel <- function(use_robust, Y, beta_est, g,
+add_pic_parallel <- function(robust, Y, beta_est, g,
                              S, k, kg, pic_e2, C_candidates, method_estimate_beta = "individual",
                              vars_est = ncol(beta_est), choice_pic = "pic2022") {
   pic_sigma2 <- calculate_sigma2(pic_e2)
   pic <- sapply(C_candidates, function(x) {
-    calculate_PIC(x, use_robust, S, k, kg, pic_e2, pic_sigma2,
+    calculate_PIC(x, robust, S, k, kg, pic_e2, pic_sigma2,
       NN = nrow(Y), TT = ncol(Y), method_estimate_beta,
       beta_est, g, vars_est, choice_pic
     )
@@ -113,7 +114,6 @@ make_df_results_parallel <- function(x, limit_est_groups = 20) {
   ) %>% cbind(t(matrix(unlist(x %>% purrr::map(3)), nrow = limit_est_groups)))
   names(df)[4:(4 + limit_est_groups - 1)] <- paste0("k", 1:limit_est_groups)
   temp <- x %>% purrr::map(6)
-  print(temp[[1]])
   df$g <- sapply(1:nrow(df), function(y) paste(temp[[y]], collapse = "-"))
   df$table_g <- sapply(1:nrow(df), function(y) paste(table(temp[[y]]), collapse = "_"))
   return(df)
@@ -134,9 +134,10 @@ make_df_pic_parallel <- function(x) {
 #' @param indices_subset vector with indices of the subsets; starts with zero
 #' @inheritParams get_best_configuration
 #' @inheritParams calculate_VCsquared
+#' @inheritParams initialise_beta
 #' @param USE_DO if TRUE, then a serialized version is performed ("do" instead of "dopar") (for testing purposes)
 #' @export
-parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg_cand, C_candidates, USE_DO = FALSE) {
+parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg_cand, C_candidates, robust = TRUE, USE_DO = FALSE) {
   df_results_full <- NULL
   rc <- initialise_rc(indices_subset, C_candidates) # dataframe that will contain the optimized number of common factors for each C and subset
   rcj <- initialise_rcj(indices_subset, C_candidates) # dataframe that will contain the optimized number of groups and group specific factors for each C and subset
@@ -166,7 +167,7 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
         .options.snow = opts,
         .errorhandling = "pass"
       ) %do% {
-          run_config(configs[i,], C_candidates, Y, X, maxit = 30)
+          run_config(robust, configs[i,], C_candidates, Y, X, maxit = 30)
 
       }
     } else {
@@ -176,7 +177,7 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
         .options.snow = opts,
         .errorhandling = "pass"
       ) %dopar% {
-        run_config(configs[i,], C_candidates, Y, X, maxit = 30)
+        run_config(robust, configs[i,], C_candidates, Y, X, maxit = 30)
       }
     }
     #print("foreach has finished")

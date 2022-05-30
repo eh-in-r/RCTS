@@ -5,7 +5,7 @@
 \title{Estimates group factors}
 \usage{
 estimate_factor_group(
-  use_robust,
+  robust,
   Y,
   X,
   beta_est,
@@ -24,7 +24,7 @@ estimate_factor_group(
 )
 }
 \arguments{
-\item{use_robust}{TRUE or FALSE: defines using the classical or robust algorithm to estimate beta}
+\item{robust}{TRUE or FALSE: defines using the classical or robust algorithm to estimate beta}
 
 \item{Y}{Y: NxT dataframe with the panel data of interest}
 
