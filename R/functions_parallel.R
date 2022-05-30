@@ -109,11 +109,12 @@ add_pic_parallel <- function(robust, Y, beta_est, g,
 make_df_results_parallel <- function(x, limit_est_groups = 20) {
   df <- data.frame(
     S = unlist(x %>% purrr::map(1)),
-    k_common = unlist(x %>% purrr::map(2)),
-    sigma2 = unlist(x %>% purrr::map(5))
-  ) %>% cbind(t(matrix(unlist(x %>% purrr::map(3)), nrow = limit_est_groups)))
-  names(df)[4:(4 + limit_est_groups - 1)] <- paste0("k", 1:limit_est_groups)
-  temp <- x %>% purrr::map(6)
+    k_common = unlist(x %>% purrr::map(2))
+  ) %>% cbind(t(matrix(unlist(x %>% purrr::map(3)), nrow = limit_est_groups))) %>%
+    mutate(sigma2 = unlist(x %>% purrr::map(5)))
+
+  names(df)[3:(3 + limit_est_groups - 1)] <- paste0("k", 1:limit_est_groups)
+  temp <- x %>% purrr::map(6) #contains the group memberships
   df$g <- sapply(1:nrow(df), function(y) paste(temp[[y]], collapse = "-"))
   df$table_g <- sapply(1:nrow(df), function(y) paste(table(temp[[y]]), collapse = "_"))
   return(df)
