@@ -113,7 +113,7 @@ make_df_results_parallel <- function(x, limit_est_groups = 20) {
   ) %>% cbind(t(matrix(unlist(x %>% purrr::map(3)), nrow = limit_est_groups)))
   names(df)[4:(4 + limit_est_groups - 1)] <- paste0("k", 1:limit_est_groups)
   df$g <- sapply(1:nrow(df), function(y) paste((x %>% purrr::map(6))[[y]], collapse = "-"))
-  df$table_g <- sapply(1:nrow(df), function(y) paste(table(x %>% purrr::map(6))[[y]]), collapse = "_")
+  df$table_g <- sapply(1:nrow(df), function(y) paste(table(x %>% purrr::map(6))[[y]], collapse = "_"))
   return(df)
 }
 
