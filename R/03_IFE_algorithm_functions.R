@@ -3281,16 +3281,21 @@ create_data_dgp2 <- function(N, TT, S_true = 3, vars = 3, k_true = 0, kg_true = 
 #'
 #' @param original_data list containing the true data: Y, X, g_true, beta_true, factor_group_true, lambda_group_true, comfactor_true, lambda_true
 #' @param subset index of the subsample: this defines how many times stepsize_N is subtracted from the original N time series. Similar for stepsize_T.
-#' @param use_real_world_data indicates using real world data; defaults to FALSE
+# @param use_real_world_data indicates using real world data; defaults to FALSE
 #' @inheritParams generate_Y
 #' @inheritParams update_g
-#' @param subsamples_factors determines whether subsamples of the (unobservable) factors and loadings also need to be constructed. This cannot be done for real world data. Default is TRUE.
+# @param subsamples_factors determines whether subsamples of the (unobservable) factors and loadings also need to be constructed. This cannot be done for real world data. Default is TRUE.
 #' @export
 make_subsamples <- function(original_data,
                             subset,
-                            subsamples_factors = TRUE,
-                            use_real_world_data = FALSE,
+                            #use_real_world_data = FALSE,
                             verbose = TRUE) {
+  #determine whether input data is simulated or real world data, based on size of input
+  if(length(original_data) == 2) {
+    use_real_world_data = TRUE
+  } else {
+    use_real_world_data = FALSE
+  }
   Y <- original_data[[1]]
   N_fulldata <- nrow(Y)
   T_fulldata <- ncol(Y)
@@ -3298,11 +3303,13 @@ make_subsamples <- function(original_data,
   stepsize_T <- round(T_fulldata / 30)
 
   X <- original_data[[2]]
-  g_true <- original_data[[3]]
-  factor_group_true <- original_data[[5]]
-  lambda_group_true <- original_data[[6]]
-  comfactor_true <- original_data[[7]]
-  lambda_true <- original_data[[8]]
+  if(!use_real_world_data) {
+    g_true <- original_data[[3]]
+    factor_group_true <- original_data[[5]]
+    lambda_group_true <- original_data[[6]]
+    comfactor_true <- original_data[[7]]
+    lambda_true <- original_data[[8]]
+  }
 
 
   # define size of the subsample
@@ -3331,28 +3338,27 @@ make_subsamples <- function(original_data,
     # subsample of true group membership
     g_true <- g_true[sampleN]
 
-    if (subsamples_factors) {
-      S <- length(factor_group_true)
-      k <- nrow(comfactor_true)
-      kg <- unlist(lapply(factor_group_true, nrow))
+    S <- length(factor_group_true)
+    k <- nrow(comfactor_true)
+    kg <- unlist(lapply(factor_group_true, nrow))
 
-      # subsample of the factors and their loadings
-      if (k > 0) {
-        comfactor_true <- matrix(comfactor_true[, sampleT], nrow = k)
-        lambda_true <- matrix(lambda_true[, sampleN], nrow = k)
-      }
-      if (max(kg, na.rm = TRUE) > 0) {
-        for (ii in 1:S) {
-          factor_group_true[[ii]] <- matrix(factor_group_true[[ii]][, sampleT], nrow = kg[ii])
-          lambda_group_true <- lambda_group_true %>% dplyr::filter(.data$id %in% sampleN)
-        }
-      }
-    } else {
-      comfactor_true <- NA
-      lambda_true <- NA
-      factor_group_true <- NA
-      lambda_group_true <- NA
+    # subsample of the factors and their loadings
+    if (k > 0) {
+      comfactor_true <- matrix(comfactor_true[, sampleT], nrow = k)
+      lambda_true <- matrix(lambda_true[, sampleN], nrow = k)
     }
+    if (max(kg, na.rm = TRUE) > 0) {
+      for (ii in 1:S) {
+        factor_group_true[[ii]] <- matrix(factor_group_true[[ii]][, sampleT], nrow = kg[ii])
+        lambda_group_true <- lambda_group_true %>% dplyr::filter(.data$id %in% sampleN)
+      }
+    }
+  } else {
+    g_true <- NA
+    comfactor_true <- NA
+    lambda_true <- NA
+    factor_group_true <- NA
+    lambda_group_true <- NA
   }
   return(list(Y, X, g_true, comfactor_true, lambda_true, factor_group_true, lambda_group_true, sampleN, sampleT))
 }

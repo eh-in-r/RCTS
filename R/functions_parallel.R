@@ -130,7 +130,7 @@ make_df_pic_parallel <- function(x) {
 
 #' Wrapper of the loop over the subsets which in turn use the parallelised algorithm.
 #'
-#' @param original_data list containing the original data (1: Y, 2: X, 3: true group membership)
+#' @param original_data list containing the original data (1: Y, 2: X)
 #' @param indices_subset vector with indices of the subsets; starts with zero
 #' @inheritParams get_best_configuration
 #' @inheritParams calculate_VCsquared

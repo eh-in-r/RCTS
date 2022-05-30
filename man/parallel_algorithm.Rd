@@ -16,7 +16,7 @@ parallel_algorithm(
 )
 }
 \arguments{
-\item{original_data}{list containing the original data (1: Y, 2: X, 3: true group membership)}
+\item{original_data}{list containing the original data (1: Y, 2: X)}
 
 \item{indices_subset}{vector with indices of the subsets; starts with zero}
 

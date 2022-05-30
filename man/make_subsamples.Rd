@@ -5,22 +5,12 @@
 \title{Selects a subsample of the time series, and of the length of the time series. Based on this it returns a subsample of Y.
 It also returns the corresponding subsamples X and the group membership.}
 \usage{
-make_subsamples(
-  original_data,
-  subset,
-  subsamples_factors = TRUE,
-  use_real_world_data = FALSE,
-  verbose = TRUE
-)
+make_subsamples(original_data, subset, verbose = TRUE)
 }
 \arguments{
 \item{original_data}{list containing the true data: Y, X, g_true, beta_true, factor_group_true, lambda_group_true, comfactor_true, lambda_true}
 
 \item{subset}{index of the subsample: this defines how many times stepsize_N is subtracted from the original N time series. Similar for stepsize_T.}
-
-\item{subsamples_factors}{determines whether subsamples of the (unobservable) factors and loadings also need to be constructed. This cannot be done for real world data. Default is TRUE.}
-
-\item{use_real_world_data}{indicates using real world data; defaults to FALSE}
 
 \item{verbose}{when TRUE, it prints messages}
 }
