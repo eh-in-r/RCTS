@@ -2,15 +2,15 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{adapt_X_estimating_less_variables}
 \alias{adapt_X_estimating_less_variables}
-\title{When we run the algorithm with a different number of observable variables then the number we actually have, we need to reformat X.}
+\title{When running the algorithm with a different number of observable variables then the number that is available, reformat X. (Mainly used for testing)}
 \usage{
 adapt_X_estimating_less_variables(X, vars_est)
 }
 \arguments{
 \item{X}{dataframe with the observed variables}
 
-\item{vars_est}{number of variables from which the coefficients are estimated}
+\item{vars_est}{number of available observed variables for which a coefficient will be estimated}
 }
 \description{
-When we run the algorithm with a different number of observable variables then the number we actually have, we need to reformat X.
+When running the algorithm with a different number of observable variables then the number that is available, reformat X. (Mainly used for testing)
 }

@@ -33,9 +33,9 @@ calculate_virtual_factor_and_lambda_group(
 
 \item{NN_local}{number of time series}
 
-\item{method_estimate_factors_local}{specifies the robust algorithm to estimate factors: default is "macro".}
+\item{method_estimate_factors_local}{specifies the robust algorithm to estimate factors: default is "macro"}
 
-\item{g}{vector with group memberships for all individuals}
+\item{g}{vector with estimated group membership for all individuals}
 
 \item{vars_est}{number of variables that are included in the algorithm and have their coefficient estimated. This is usually equal to vars.}
 

@@ -21,7 +21,7 @@ add_metrics(
 
 \item{pic_sigma2}{sum of squared errors divided by NT}
 
-\item{g}{Vector with estimated group membership for all individuals}
+\item{g}{vector with estimated group membership for all individuals}
 
 \item{g_true}{vector of length NN with true group memberships}
 

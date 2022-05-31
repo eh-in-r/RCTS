@@ -8,7 +8,6 @@ initialise_clustering(
   robust,
   Y,
   g,
-  beta_est,
   S,
   k,
   kg,
@@ -22,9 +21,7 @@ initialise_clustering(
 
 \item{Y}{Y: NxT dataframe with the panel data of interest}
 
-\item{g}{Vector with estimated group membership for all individuals}
-
-\item{beta_est}{estimated values of beta}
+\item{g}{vector with estimated group membership for all individuals}
 
 \item{S}{the desired number of groups}
 

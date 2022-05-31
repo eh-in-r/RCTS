@@ -31,7 +31,7 @@ run_config <- function(robust, config, C_candidates, Y, X, maxit = 30) {
   iteration <- 0 # number of the iteration; 0 indicates being in the initialisation phase
   beta_est <- initialise_beta(robust, Y, X, S)
   # initial grouping
-  g <- initialise_clustering(robust, Y, g, beta_est, S, k, kg, NA, max_percent_outliers_tkmeans = 0, verbose = TRUE)
+  g <- initialise_clustering(robust, Y, g, S, k, kg, NA, max_percent_outliers_tkmeans = 0, verbose = TRUE)
   # initial common factorstructure
   temp <- initialise_commonfactorstructure_macropca(robust, Y, X, beta_est, g, NA, k, kg)
   comfactor <- temp[[1]]
@@ -90,7 +90,12 @@ run_config <- function(robust, config, C_candidates, Y, X, maxit = 30) {
 #' @inheritParams add_pic
 add_pic_parallel <- function(robust, Y, beta_est, g,
                              S, k, kg, pic_e2, C_candidates, method_estimate_beta = "individual",
-                             vars_est = ncol(beta_est), choice_pic = "pic2022") {
+                             choice_pic = "pic2022") {
+  if(!is.na(beta_est)) {
+    vars_est <- ncol(beta_est)
+  } else {
+    vars_est <- 0
+  }
   pic_sigma2 <- calculate_sigma2(pic_e2)
   pic <- sapply(C_candidates, function(x) {
     calculate_PIC(x, robust, S, k, kg, pic_e2, pic_sigma2,

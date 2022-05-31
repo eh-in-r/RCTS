@@ -18,7 +18,6 @@ calculate_lambda_group(
   kg,
   method_estimate_beta = "individual",
   method_estimate_factors = "macro",
-  vars_est = dim(X)[3],
   verbose = FALSE,
   initialise = FALSE
 )
@@ -49,8 +48,6 @@ calculate_lambda_group(
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 
 \item{method_estimate_factors}{defines method of robust estimaton of the factors: "macro", "pertmm" or "cz"}
-
-\item{vars_est}{number of variables that will be included in the algorithm and have their coefficient estimated. This is usually equal to the number of observable variables.}
 
 \item{verbose}{when TRUE, it prints messages}
 

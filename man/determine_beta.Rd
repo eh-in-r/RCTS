@@ -34,7 +34,7 @@ determine_beta(
 
 \item{TT}{length of time series}
 
-\item{S}{estimated number of groups}
+\item{S}{estimated number of groups#'}
 
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 
@@ -42,7 +42,7 @@ determine_beta(
 
 \item{indices}{individuals for which beta_est is being estimated}
 
-\item{vars_est}{number of variables from which the coefficients are estimated}
+\item{vars_est}{number of available observed variables for which a coefficient will be estimated. As default it is equal to the number of available observed variables.}
 
 \item{nosetting_local}{option to remove the recommended setting in lmrob(). It is much faster. Defaults to FALSE.}
 

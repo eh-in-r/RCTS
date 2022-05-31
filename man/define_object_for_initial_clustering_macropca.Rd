@@ -8,7 +8,6 @@ define_object_for_initial_clustering_macropca(
   robust,
   Y,
   g,
-  beta_est,
   k,
   kg,
   comfactor,
@@ -22,9 +21,7 @@ define_object_for_initial_clustering_macropca(
 
 \item{Y}{Y: NxT dataframe with the panel data of interest}
 
-\item{g}{Vector with estimated group membership for all individuals}
-
-\item{beta_est}{estimated values of beta}
+\item{g}{Vector with group membership for all individuals}
 
 \item{k}{number of common factors to be estimated}
 

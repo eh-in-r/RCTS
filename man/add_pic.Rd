@@ -17,7 +17,6 @@ add_pic(
   pic_e2,
   C_candidates,
   method_estimate_beta = "individual",
-  vars_est = ncol(beta_est),
   choice_pic = "pic2022"
 )
 }
@@ -32,7 +31,7 @@ add_pic(
 
 \item{beta_est}{estimated values of beta}
 
-\item{g}{Vector with estimated group membership for all individuals}
+\item{g}{vector with estimated group membership for all individuals}
 
 \item{S}{number of estimated groups}
 
@@ -45,8 +44,6 @@ add_pic(
 \item{C_candidates}{candidates for C (parameter in PIC)}
 
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
-
-\item{vars_est}{number of variables from which the coefficients are estimated}
 
 \item{choice_pic}{parameter that defines which PIC is used to select the best configuration of groups and factors.
 Options are "pic2017" (uses the PIC of \insertCite{Ando2017;textual}{RCTS}),

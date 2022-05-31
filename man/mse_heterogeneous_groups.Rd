@@ -22,7 +22,7 @@ mse_heterogeneous_groups(
 
 \item{TT}{length of time series}
 
-\item{g}{Vector with estimated group membership for all individuals}
+\item{g}{vector with estimated group membership for all individuals}
 
 \item{g_true}{vector of length NN with true group memberships}
 

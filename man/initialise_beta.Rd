@@ -11,7 +11,6 @@ initialise_beta(
   S,
   g,
   method_estimate_beta = "individual",
-  vars_est = dim(X)[3],
   nosetting_lmrob = FALSE,
   special_case_dgp1 = FALSE
 )
@@ -23,13 +22,11 @@ initialise_beta(
 
 \item{X}{dataframe with the observed variables}
 
-\item{S}{estimated number of groups}
+\item{S}{estimated number of groups#'}
 
-\item{g}{Vector with estimated group membership for all individuals}
+\item{g}{vector with estimated group membership for all individuals}
 
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
-
-\item{vars_est}{number of variables from which the coefficients are estimated}
 
 \item{nosetting_lmrob}{option to remove the recommended setting in lmrob(). It is much faster. Defaults to FALSE.}
 
