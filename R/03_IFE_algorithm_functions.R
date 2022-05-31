@@ -4003,7 +4003,7 @@ initialise_rcj <- function(indices_subset, C_candidates) {
 #' @param iteration number of iteration
 #' @importFrom mclust adjustedRandIndex
 #' @export
-add_metrics <- function(df_results, index_configuration, pic_sigma2, g, g_true, TT, iteration) {
+add_metrics <- function(df_results, index_configuration, pic_sigma2, g, TT, iteration, g_true = NA) {
   df_results$sigma2[index_configuration] <- pic_sigma2
   if (!is.na(g_true[1])) df_results$adjustedrandindex[index_configuration] <- mclust::adjustedRandIndex(g, g_true)
   df_results$table_g[index_configuration] <- paste(table(g), collapse = "_")
