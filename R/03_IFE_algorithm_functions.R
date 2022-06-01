@@ -4245,30 +4245,30 @@ get_final_estimation <- function(df, opt_groups, k, kg, type, limit_est_groups =
     return(final_g)
   }
   if(type == "fg") {
-    object <- df$factor_group[[1]][[1]]
-    if("list" %in% class(object)) object <- object[[1]] #for the serialized algorithm i need 3 times [[1]]. parallel algorithm only 2 times
-    return(object[[1]])
+    object <- df$factor_group[[1]]
+    while("list" %in% class(object)) object <- object[[1]] #for the serialized algorithm i need 3 times [[1]]. parallel algorithm only 1 time
+    return(object)
   }
   if(type == "f") {
     if(k == 0) return(NA)
-    object <- df$comfactor[[1]][[1]]
-    if("list" %in% class(object)) object <- object[[1]] #for the serialized algorithm i need 3 times [[1]]. parallel algorithm only 2 times
+    object <- df$comfactor[[1]]
+    while("list" %in% class(object)) object <- object[[1]] #for the serialized algorithm i need 3 times [[1]]. parallel algorithm only 1 time
     return(object)
   }
   if(type == "lg") {
-    object <- df$lambda_group[[1]][[1]]
-    if("list" %in% class(object)) object <- object[[1]] #for the serialized algorithm i need 3 times [[1]]. parallel algorithm only 2 times
+    object <- df$lambda_group[[1]]
+    while("list" %in% class(object)) object <- object[[1]] #for the serialized algorithm i need 3 times [[1]]. parallel algorithm only 1 time
     return(object %>% arrange(.data$id))
   }
   if(type == "l") {
     if(k == 0) return(NA)
-    object <- df$lambda[[1]][[1]]
-    if("list" %in% class(object)) object <- object[[1]] #for the serialized algorithm i need 3 times [[1]]. parallel algorithm only 2 times
+    object <- df$lambda[[1]]
+    while("list" %in% class(object)) object <- object[[1]] #for the serialized algorithm i need 3 times [[1]]. parallel algorithm only 1 time
     return(object)
   }
   if(type == "beta") {
-    object <- df$beta_est[[1]][[1]]
-    if("list" %in% class(object)) object <- object[[1]] #for the serialized algorithm i need 3 times [[1]]. parallel algorithm only 2 times
+    object <- df$beta_est[[1]]
+    while("list" %in% class(object)) object <- object[[1]] #for the serialized algorithm i need 3 times [[1]]. parallel algorithm only 1 time
     return(object)
   }
 }
