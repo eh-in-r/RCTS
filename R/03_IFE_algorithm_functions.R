@@ -4001,9 +4001,13 @@ initialise_rcj <- function(indices_subset, C_candidates) {
 #' @inheritParams add_configuration
 #' @inheritParams add_pic
 #' @inheritParams generate_Y
+#' @inheritParams estimate_beta
 #' @param pic_sigma2 sum of squared errors divided by NT
 #' @param iteration number of iteration
 #' @importFrom mclust adjustedRandIndex
+#' @importFrom tidyr nest
+#' @importFrom dplyr everything
+#' @importFrom dplyr tibble
 #' @export
 add_metrics <- function(df_results, index_configuration, pic_sigma2, beta_est, g, comfactor, lambda, factor_group, lambda_group, TT, iteration, g_true = NA) {
   df_results$sigma2[index_configuration] <- pic_sigma2
@@ -4254,7 +4258,7 @@ get_final_estimation <- function(df, opt_groups, k, kg, type, limit_est_groups =
   if(type == "lg") {
     object <- df$lambda_group[[1]][[1]]
     if("list" %in% class(object)) object <- object[[1]] #for the serialized algorithm i need 3 times [[1]]. parallel algorithm only 2 times
-    return(object %>% arrange(id))
+    return(object %>% arrange(.data$id))
   }
   if(type == "l") {
     if(k == 0) return(NA)
@@ -4271,6 +4275,8 @@ get_final_estimation <- function(df, opt_groups, k, kg, type, limit_est_groups =
 
 #' Filters dataframe on the requested group specific factors configuration.
 #'
+#' @param df input dataframe
+#' @param kg vector with number of group specific factors for each group, on which should be filtered
 final_estimations_filter_kg <- function(df, kg) {
   if (length(kg) > 1) df <- df %>% dplyr::filter(.data$k2 == kg[2])
   if (length(kg) > 2) df <- df %>% dplyr::filter(.data$k3 == kg[3])
@@ -4296,7 +4302,9 @@ final_estimations_filter_kg <- function(df, kg) {
 }
 #' Constructs dataframe where the rows contains all configurations that are included and for which the estimators will be estimated.
 #'
-#' @inheritParams get_best_configuration
+#' @param S_cand candidates for S (number of groups)
+#' @param k_cand candidates for k (number of common factors)
+#' @param kg_cand candidates for kg (number of group specific factors)
 #' @export
 define_configurations <- function(S_cand, k_cand, kg_cand) {
   config_cand <- define_kg_candidates(min(S_cand), min(kg_cand), max(kg_cand), nfv = TRUE) %>% mutate(S = min(S_cand), k = min(k_cand))

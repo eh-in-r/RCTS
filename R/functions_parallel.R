@@ -148,6 +148,7 @@ make_df_pic_parallel <- function(x) {
 #' @inheritParams get_best_configuration
 #' @inheritParams calculate_VCsquared
 #' @inheritParams initialise_beta
+#' @inheritParams define_configurations
 #' @param USE_DO if TRUE, then a serialized version is performed ("do" instead of "dopar") (for testing purposes)
 #' @export
 parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg_cand, C_candidates, robust = TRUE, USE_DO = FALSE) {

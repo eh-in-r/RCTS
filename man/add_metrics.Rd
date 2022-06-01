@@ -8,7 +8,12 @@ add_metrics(
   df_results,
   index_configuration,
   pic_sigma2,
+  beta_est,
   g,
+  comfactor,
+  lambda,
+  factor_group,
+  lambda_group,
   TT,
   iteration,
   g_true = NA
@@ -21,7 +26,17 @@ add_metrics(
 
 \item{pic_sigma2}{sum of squared errors divided by NT}
 
+\item{beta_est}{estimated values of beta}
+
 \item{g}{vector with estimated group membership for all individuals}
+
+\item{comfactor}{estimated common factors}
+
+\item{lambda}{loadings of the estimated common factors}
+
+\item{factor_group}{estimated group specific factors}
+
+\item{lambda_group}{loadings of the estimated group specific factors}
 
 \item{TT}{length of time series}
 

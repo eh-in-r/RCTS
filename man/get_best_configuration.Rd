@@ -10,8 +10,6 @@ get_best_configuration(
   list_rcj,
   C_candidates,
   S_cand,
-  k_cand,
-  kg_cand,
   return_short = FALSE,
   verbose = FALSE
 )
@@ -26,10 +24,6 @@ get_best_configuration(
 \item{C_candidates}{candidates for C}
 
 \item{S_cand}{candidates for S (number of groups)}
-
-\item{k_cand}{candidates for k (number of common factors)}
-
-\item{kg_cand}{candidates for kg (number of group specific factors)}
 
 \item{return_short}{if TRUE, the function returns the dataframe filtered for several specified potential candidates for C}
 
