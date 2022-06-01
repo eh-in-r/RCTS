@@ -82,7 +82,7 @@ run_config <- function(robust, config, C_candidates, Y, X, maxit = 30) {
   # add results of this configuration to df_results
   pic_sigma2 <- calculate_sigma2(pic_e2, nrow(Y), ncol(Y))
   #print("run_config is done")
-  return(list(S, k, kg, pic, pic_sigma2, g, iteration, beta_est, comfactor, lambda, factor_group, lambda_group))
+  return(list(S, k, kg, pic, pic_sigma2, g, iteration, data.frame(beta_est), data.frame(comfactor), data.frame(lambda), factor_group, lambda_group))
 }
 
 #' Calculates the PIC for the current configuration.
