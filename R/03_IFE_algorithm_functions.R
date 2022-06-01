@@ -2718,6 +2718,7 @@ calculate_PIC <- function(C, robust, S, k, kg, e2, sigma2,
     }
     if (choice_pic == "pic2022") {
       # note: any finite param_pic2022 > 0 will do. The larger it is, the smaller the problematic NT-region becomes.
+      # 1e308 is the max for floating point stuff
       param_pic2022 <- 1e60
       term4 <- term4 + (C * kg[j] * sigma2 * (Nj / NN) * (TT + Nj) / (TT * Nj) * log(log((TT * Nj) * param_pic2022)))
     }
@@ -4044,8 +4045,8 @@ plot_gtable <- function(g, g_true) {
 #' @param list_rcj list with resulting rcj for each run
 #' @param C_candidates candidates for C
 #' @param S_cand candidates for S (number of groups)
-#' @param k_cand candidates for k (number of common factors)
-#' @param kg_cand candidates for kg (number of group specific factors)
+# @param k_cand candidates for k (number of common factors)
+# @param kg_cand candidates for kg (number of group specific factors)
 #' @param return_short if TRUE, the function returns the dataframe filtered for several specified potential candidates for C
 #' @param verbose when TRUE, it prints messages
 #' @importFrom dplyr lead
@@ -4054,7 +4055,7 @@ plot_gtable <- function(g, g_true) {
 #' @importFrom stringr str_sub
 #' @importFrom stringr str_locate
 #' @export
-get_best_configuration <- function(list_vc, list_rc, list_rcj, C_candidates, S_cand, k_cand, kg_cand, return_short = FALSE, verbose = FALSE) {
+get_best_configuration <- function(list_vc, list_rc, list_rcj, C_candidates, S_cand, return_short = FALSE, verbose = FALSE) {
 
   # take the results of the full samples:
   if (class(list_rcj) == "list") { # if there were multiple runs
@@ -4226,11 +4227,50 @@ plot_VCsquared <- function(VC_squared, rc, rcj, C_candidates, S_cand, k_cand, kg
 #' @param opt_groups the optimal number of groups
 #' @param k the optimal number of common factors
 #' @param kg vector with the optimal number of group specific factors
+#' @param type defines which estimation to return: options are "clustering", "beta", "fg" (group specific factors), "lg" (loadings corresponding to fg), "f" (common factors), "l" (loadings corresponding to f),
 #' @param limit_est_groups maximum allowed number of groups that can be estimated
 #' @export
-get_final_clustering <- function(df, opt_groups, k, kg, limit_est_groups = 20) {
+get_final_estimation <- function(df, opt_groups, k, kg, type, limit_est_groups = 20) {
   stopifnot(length(kg) <= limit_est_groups) # code is implemented up to 20 estimated groups
-  df <- df %>% dplyr::filter(.data$S == opt_groups, .data$k_common == k, .data$k1 == kg[1])
+  df <- df %>%
+    dplyr::filter(.data$S == opt_groups, .data$k_common == k, .data$k1 == kg[1]) %>%
+    final_estimations_filter_kg(kg)
+  if(type == "clustering") {
+    final_g <- as.numeric(unlist(df$g %>% str_split("-")))
+    return(final_g)
+  }
+  if(type == "fg") {
+    object <- df$factor_group[[1]][[1]]
+    if("list" %in% class(object)) object <- object[[1]] #for the serialized algorithm i need 3 times [[1]]. parallel algorithm only 2 times
+    return(object[[1]])
+  }
+  if(type == "f") {
+    if(k == 0) return(NA)
+    object <- df$comfactor[[1]][[1]]
+    if("list" %in% class(object)) object <- object[[1]] #for the serialized algorithm i need 3 times [[1]]. parallel algorithm only 2 times
+    return(object)
+  }
+  if(type == "lg") {
+    object <- df$lambda_group[[1]][[1]]
+    if("list" %in% class(object)) object <- object[[1]] #for the serialized algorithm i need 3 times [[1]]. parallel algorithm only 2 times
+    return(object %>% arrange(id))
+  }
+  if(type == "l") {
+    if(k == 0) return(NA)
+    object <- df$lambda[[1]][[1]]
+    if("list" %in% class(object)) object <- object[[1]] #for the serialized algorithm i need 3 times [[1]]. parallel algorithm only 2 times
+    return(object)
+  }
+  if(type == "beta") {
+    object <- df$beta_est[[1]][[1]]
+    if("list" %in% class(object)) object <- object[[1]] #for the serialized algorithm i need 3 times [[1]]. parallel algorithm only 2 times
+    return(object)
+  }
+}
+
+#' Filters dataframe on the requested group specific factors configuration.
+#'
+final_estimations_filter_kg <- function(df, kg) {
   if (length(kg) > 1) df <- df %>% dplyr::filter(.data$k2 == kg[2])
   if (length(kg) > 2) df <- df %>% dplyr::filter(.data$k3 == kg[3])
   if (length(kg) > 3) df <- df %>% dplyr::filter(.data$k4 == kg[4])
@@ -4250,12 +4290,9 @@ get_final_clustering <- function(df, opt_groups, k, kg, limit_est_groups = 20) {
   if (length(kg) > 17) df <- df %>% dplyr::filter(.data$k18 == kg[18])
   if (length(kg) > 18) df <- df %>% dplyr::filter(.data$k19 == kg[19])
   if (length(kg) > 19) df <- df %>% dplyr::filter(.data$k20 == kg[20])
-  print(df)
-  print(dim(df))
   if (nrow(df) != 1) warning("only 1 configuration should be found")
-  return(as.numeric(unlist(df$g %>% str_split("-"))))
+  return(df)
 }
-
 #' Constructs dataframe where the rows contains all configurations that are included and for which the estimators will be estimated.
 #'
 #' @inheritParams get_best_configuration
