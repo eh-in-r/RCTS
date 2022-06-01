@@ -9,9 +9,9 @@ add_metrics(
   index_configuration,
   pic_sigma2,
   g,
-  g_true,
   TT,
-  iteration
+  iteration,
+  g_true = NA
 )
 }
 \arguments{
@@ -23,11 +23,11 @@ add_metrics(
 
 \item{g}{vector with estimated group membership for all individuals}
 
-\item{g_true}{vector of length NN with true group memberships}
-
 \item{TT}{length of time series}
 
 \item{iteration}{number of iteration}
+
+\item{g_true}{vector of length NN with true group memberships}
 }
 \description{
 Adds several metrics to df_results.

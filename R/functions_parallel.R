@@ -82,7 +82,7 @@ run_config <- function(robust, config, C_candidates, Y, X, maxit = 30) {
   # add results of this configuration to df_results
   pic_sigma2 <- calculate_sigma2(pic_e2, nrow(Y), ncol(Y))
   #print("run_config is done")
-  return(list(S, k, kg, pic, pic_sigma2, g))
+  return(list(S, k, kg, pic, pic_sigma2, g, iteration, beta_est, comfactor, lambda, factor_group, lambda_group))
 }
 
 #' Calculates the PIC for the current configuration.
@@ -122,6 +122,13 @@ make_df_results_parallel <- function(x, limit_est_groups = 20) {
   temp <- x %>% purrr::map(6) #contains the group memberships
   df$g <- sapply(1:nrow(df), function(y) paste(temp[[y]], collapse = "-"))
   df$table_g <- sapply(1:nrow(df), function(y) paste(table(temp[[y]]), collapse = "_"))
+  df$number_of_iterations <- unlist(x %>% purrr::map(7))
+  print("--testing phase: make_df_results_parallel")
+  df$beta_est[index_configuration] <- x %>% purrr::map(8)
+  df$comfactor[index_configuration] <- x %>% purrr::map(9)
+  df$lambda[index_configuration] <- x %>% purrr::map(10)
+  df$factor_group[index_configuration] <- x %>% purrr::map(11)
+  df$lambda_group[index_configuration] <- x %>% purrr::map(12)
   return(df)
 }
 
