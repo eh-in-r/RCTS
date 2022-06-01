@@ -4010,11 +4010,11 @@ add_metrics <- function(df_results, index_configuration, pic_sigma2, beta_est, g
   if (!is.na(g_true[1])) df_results$table_g_true[index_configuration] <- paste(table(g_true), collapse = "_")
   df_results$g[index_configuration] <- paste(g, collapse = "-")
   df_results$number_of_iterations[index_configuration] <- iteration
-
+  #note: use data.frame instead of tibble -> size is more clear then
   df_results$beta_est[index_configuration] <- nest(data.frame(beta_est), data = everything())
   df_results$comfactor[index_configuration] <- nest(data.frame(comfactor), data = everything())
   df_results$lambda[index_configuration] <- nest(data.frame(lambda), data = everything())
-  df_results$factor_group[index_configuration] <- nest(data.frame(factor_group), data = everything())
+  df_results$factor_group[index_configuration] <- nest(tibble(factor_group), data = everything()) #do use tibble here (factor_group is a list)
   df_results$lambda_group[index_configuration] <- nest(data.frame(lambda_group), data = everything())
   return(df_results)
 }

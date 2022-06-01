@@ -124,11 +124,11 @@ make_df_results_parallel <- function(x, limit_est_groups = 20) {
   df$table_g <- sapply(1:nrow(df), function(y) paste(table(temp[[y]]), collapse = "_"))
   df$number_of_iterations <- unlist(x %>% purrr::map(7))
   print("--testing phase: make_df_results_parallel")
-  df$beta_est[index_configuration] <- x %>% purrr::map(8)
-  df$comfactor[index_configuration] <- x %>% purrr::map(9)
-  df$lambda[index_configuration] <- x %>% purrr::map(10)
-  df$factor_group[index_configuration] <- x %>% purrr::map(11)
-  df$lambda_group[index_configuration] <- x %>% purrr::map(12)
+  df$beta_est <- x %>% purrr::map(8)
+  df$comfactor <- x %>% purrr::map(9)
+  df$lambda <- x %>% purrr::map(10)
+  df$factor_group <- x %>% purrr::map(11)
+  df$lambda_group <- x %>% purrr::map(12)
   return(df)
 }
 
