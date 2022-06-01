@@ -2718,7 +2718,8 @@ calculate_PIC <- function(C, robust, S, k, kg, e2, sigma2,
     }
     if (choice_pic == "pic2022") {
       # note: any finite param_pic2022 > 0 will do. The larger it is, the smaller the problematic NT-region becomes.
-      # 1e308 is the max for floating point stuff
+      # 1e308 is the max for floating point stuff and should never be reached in a multiplication
+      # -> param_pic2022 lower: 1e60 is quite conservative
       param_pic2022 <- 1e60
       term4 <- term4 + (C * kg[j] * sigma2 * (Nj / NN) * (TT + Nj) / (TT * Nj) * log(log((TT * Nj) * param_pic2022)))
     }
