@@ -3469,15 +3469,15 @@ initialise_clustering <- function(robust, Y, g, S, k, kg, comfactor, max_percent
     # trimmed kmeans identifies outliers and puts them in zero (if parameter > 0) -> they would thus need to be replaced
   } else {
     # use kmeans
-    kmeans_clustering <- tryCatch(kmeans(df, S), error = function(e) e)
-    if ("error" %in% class(kmeans_clustering)) {
-      print(kmeans_clustering)
+    Km <- tryCatch(kmeans(df, S), error = function(e) e)
+    if ("error" %in% class(Km)) {
+      print(Km)
       # more cluster centers than distinct data points.
       warning("Km does not exist now: take as initial kmeans one group less + change 1 element to the empty group")
       counter <- 0
-      while ("error" %in% class(kmeans_clustering)) {
+      while ("error" %in% class(Km)) {
         counter <- counter + 1
-        kmeans_clustering <- tryCatch(kmeans(df, S - counter), error = function(e) e)
+        Km <- tryCatch(kmeans(df, S - counter), error = function(e) e)
         if (counter > 50) {
           stop("infinite loop -> stop")
         }
