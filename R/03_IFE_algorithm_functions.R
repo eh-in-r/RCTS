@@ -4246,7 +4246,8 @@ get_final_estimation <- function(df, opt_groups, k, kg, type, limit_est_groups =
   }
   if(type == "fg") {
     object <- df$factor_group[[1]]
-    while("list" %in% class(object)) object <- object[[1]] #for the serialized algorithm i need 3 times [[1]]. parallel algorithm only 1 time
+    #note: use object[[1]] in while instead of object, since output must be a list of groupfactors for each group
+    while("list" %in% class(object[[1]])) object <- object[[1]] #for the serialized algorithm i need 3 times [[1]]. parallel algorithm only 1 time
     return(object)
   }
   if(type == "f") {

@@ -123,7 +123,6 @@ make_df_results_parallel <- function(x, limit_est_groups = 20) {
   df$g <- sapply(1:nrow(df), function(y) paste(temp[[y]], collapse = "-"))
   df$table_g <- sapply(1:nrow(df), function(y) paste(table(temp[[y]]), collapse = "_"))
   df$number_of_iterations <- unlist(x %>% purrr::map(7))
-  print("--testing phase: make_df_results_parallel")
   df$beta_est <- x %>% purrr::map(8)
   df$comfactor <- x %>% purrr::map(9)
   df$lambda <- x %>% purrr::map(10)
