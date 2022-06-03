@@ -1695,10 +1695,12 @@ evade_crashes_macropca <- function(object, verbose = FALSE) {
 
   for (i in 1:length(size_with_crashes1)) {
     if (changed_objectsize == FALSE & dim(object)[1] == size_with_crashes1[i] & dim(object)[2] == size_with_crashes2[i]) {
-      message(paste("Rstudio would crash when applying MacroPCA on an object of size", dim(object)[1], " ", dim(object)[2], " -> double amount of rows of input (no information added, and result does not change)."))
-      print(i)
+      if (verbose) {
+        message(paste("Rstudio would crash when applying MacroPCA on an object of size", dim(object)[1], " ", dim(object)[2], " -> double amount of rows of input (no information added, and result does not change)."))
+        print(i)
+      }
       object <- rbind(object, object)
-      message(dim(object))
+      if (verbose) message(dim(object))
       changed_objectsize <- TRUE
     }
   }
@@ -4195,12 +4197,13 @@ tabulate_potential_C <- function(df, runs, beginpoint, middlepoint_log, middlepo
 #' @param xlim_min starting point of the plot
 #' @param xlim_max end point of the plot
 #' @param add_true_lines if set to TRUE, for each C the true number of groups, common factors, and group specific factors of group 1 will be added to the plot
+#' @param verbose if TRUE, more details are printed
 #' @export
 plot_VCsquared <- function(VC_squared, rc, rcj, C_candidates, S_cand, k_cand, kg_cand,
                            xlim_min = 1e-3,
-                           xlim_max = 1e2, add_true_lines = FALSE) {
+                           xlim_max = 1e2, add_true_lines = FALSE, verbose = FALSE) {
   # get data frame collecting for each C the VC2 and the best configuration
-  df <- get_best_configuration(VC_squared, rc, rcj, C_candidates, S_cand, k_cand, kg_cand)
+  df <- get_best_configuration(VC_squared, rc, rcj, C_candidates, S_cand, k_cand, kg_cand, verbose = verbose)
   df <- df %>%
     dplyr::filter(.data$C != 0)
   colnames(df) <- c("C", "VC2", "S", "k", paste0("k", 1:max(S_cand)))
