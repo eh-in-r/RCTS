@@ -181,9 +181,8 @@ initialise_X <- function(NN, TT, vars, scale_robust = TRUE) {
 #' @param robust logical, scaling with robust metrics instead of with non-robust measures
 #' @inheritParams initialise_X
 #' @examples
-#' robust <- TRUE
 #' X <- RCTS:::initialise_X(300, 30, vars = 3)
-#' RCTS:::scaling_X(X, TRUE, robust, vars = 3)
+#' RCTS:::scaling_X(X, TRUE, TRUE, vars = 3)
 #' @importFrom stats sd
 scaling_X <- function(X, firsttime, robust, vars) {
   #
@@ -463,10 +462,6 @@ generate_Y <- function(NN, TT, k_true, kg_true,
 #' lambda_group <- RCTS::lambda_group_true_dgp3
 #' factor_group <- RCTS::factor_group_true_dgp3
 #' g <- RCTS::g_true_dgp3
-#' # There are no common factors to be estimated  -> but needs placeholder
-#' lambda <- matrix(0, nrow = 1, ncol = 300)
-#' comfactor <- matrix(0, nrow = 1, ncol = 30)
-#'
 #' # Choose how coefficients of the observable are estimated
 #' beta_init <- initialise_beta(TRUE, Y, X,
 #'   S = 3, g
@@ -835,6 +830,7 @@ solveFG <- function(TT, S, kg, factor_group) {
 #' @param robust robust or classical estimation of group membership
 #' @param verbose when TRUE, it prints messages
 #' @examples
+#' \donttest{
 #' library("RCTS")
 #' library("tidyverse")
 #' library("robustbase")
@@ -865,6 +861,7 @@ solveFG <- function(TT, S, kg, factor_group) {
 #'   vars_est = 3,
 #'   "macro", "individual"
 #' )[[1]]
+#' }
 #' @importFrom purrr map_dbl
 #' @export
 update_g <- function(robust, Y, X, beta_est, g,
@@ -1298,7 +1295,7 @@ determine_beta <- function(string, X_special, Y_special, robust,
 #' @inheritParams initialise_beta
 #' @return list: 1st element contains matrix (N columns: 1 for each element of the panel data) with estimated beta_est's.
 #' @examples
-#' # This function needs several initial parameters to be initialized in order to work on itself.
+#' \donttest{
 #' library("RCTS")
 #' library("tidyverse")
 #' library("robustbase")
@@ -1322,6 +1319,7 @@ determine_beta <- function(string, X_special, Y_special, robust,
 #'   S = 3, k = 0, kg = c(3, 3, 3),
 #'   vars_est = 3
 #' )[[1]]
+#' }
 #' @importFrom stats filter
 #' @importFrom purrr pmap
 #' @importFrom purrr map2
@@ -4192,18 +4190,18 @@ tabulate_potential_C <- function(df, runs, beginpoint, middlepoint_log, middlepo
 #' @inheritParams calculate_VCsquared
 #' @param VC_squared measure of variability in the optimal configuration between the subsets
 #' @param S_cand candidate numbers for the number of groups
-#' @param k_cand candidate numbers for the number of common factors
-#' @param kg_cand candidate numbers for the number of group specific factors
+# @param k_cand candidate numbers for the number of common factors
+# @param kg_cand candidate numbers for the number of group specific factors
 #' @param xlim_min starting point of the plot
 #' @param xlim_max end point of the plot
 #' @param add_true_lines if set to TRUE, for each C the true number of groups, common factors, and group specific factors of group 1 will be added to the plot
 #' @param verbose if TRUE, more details are printed
 #' @export
-plot_VCsquared <- function(VC_squared, rc, rcj, C_candidates, S_cand, k_cand, kg_cand,
+plot_VCsquared <- function(VC_squared, rc, rcj, C_candidates, S_cand,
                            xlim_min = 1e-3,
                            xlim_max = 1e2, add_true_lines = FALSE, verbose = FALSE) {
   # get data frame collecting for each C the VC2 and the best configuration
-  df <- get_best_configuration(VC_squared, rc, rcj, C_candidates, S_cand, k_cand, kg_cand, verbose = verbose)
+  df <- get_best_configuration(VC_squared, rc, rcj, C_candidates, S_cand, verbose = verbose)
   df <- df %>%
     dplyr::filter(.data$C != 0)
   colnames(df) <- c("C", "VC2", "S", "k", paste0("k", 1:max(S_cand)))

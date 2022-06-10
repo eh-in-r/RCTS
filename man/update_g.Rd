@@ -60,6 +60,7 @@ list: 1st element contains group membership and second element contains the valu
 Function that estimates group membership.
 }
 \examples{
+\donttest{
 library("RCTS")
 library("tidyverse")
 library("robustbase")
@@ -90,4 +91,5 @@ g_new <- update_g(
   vars_est = 3,
   "macro", "individual"
 )[[1]]
+}
 }

@@ -10,11 +10,10 @@ plot_VCsquared(
   rcj,
   C_candidates,
   S_cand,
-  k_cand,
-  kg_cand,
   xlim_min = 0.001,
   xlim_max = 100,
-  add_true_lines = FALSE
+  add_true_lines = FALSE,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -28,15 +27,13 @@ plot_VCsquared(
 
 \item{S_cand}{candidate numbers for the number of groups}
 
-\item{k_cand}{candidate numbers for the number of common factors}
-
-\item{kg_cand}{candidate numbers for the number of group specific factors}
-
 \item{xlim_min}{starting point of the plot}
 
 \item{xlim_max}{end point of the plot}
 
 \item{add_true_lines}{if set to TRUE, for each C the true number of groups, common factors, and group specific factors of group 1 will be added to the plot}
+
+\item{verbose}{if TRUE, more details are printed}
 }
 \description{
 Plots expression(VC^2) along with the corresponding number of groups (orange), common factors (darkblue) and group factors of the first group (lightblue).

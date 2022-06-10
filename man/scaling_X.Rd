@@ -20,7 +20,6 @@ we are using the function for a second time, after adding the outliers. In the r
 Scaling of X.
 }
 \examples{
-robust <- TRUE
 X <- RCTS:::initialise_X(300, 30, vars = 3)
-RCTS:::scaling_X(X, TRUE, robust, vars = 3)
+RCTS:::scaling_X(X, TRUE, TRUE, vars = 3)
 }

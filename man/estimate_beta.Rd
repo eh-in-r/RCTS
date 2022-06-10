@@ -66,7 +66,7 @@ list: 1st element contains matrix (N columns: 1 for each element of the panel da
 Update step of algorithm to obtain new estimation for beta. Note that we call it beta_est because beta() exists in base R.
 }
 \examples{
-# This function needs several initial parameters to be initialized in order to work on itself.
+\donttest{
 library("RCTS")
 library("tidyverse")
 library("robustbase")
@@ -90,4 +90,5 @@ beta_est <- estimate_beta(
   S = 3, k = 0, kg = c(3, 3, 3),
   vars_est = 3
 )[[1]]
+}
 }

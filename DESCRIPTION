@@ -6,10 +6,10 @@ Authors@R:
            family = "Heyndels",
            role = c("aut", "cre"),
            email = "ewoud.heyndels@vub.be",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: RCTS has the functionality to cluster time series using the classical and robust interactive fixed effects framework. 
-  The classical framework is based on Ando & Bai (2017) ("Clustering huge number of financial time series: A panel data approach with high-dimensional predictors and factor structures") and the robust approach on Boudt & Heyndels (2022) ("Robust interactive fixed effects").
-  The method iteratively updates beta (the coefficients of the observable variables), group membership, and the latent factors (which can be common and group-specific) along
+           comment = c(ORCID = "0000-0003-4540-8571"))
+Description: RCTS has the functionality to cluster time series using the robust interactive fixed effects framework. 
+  This robust framework is developed in Boudt & Heyndels (2022) <doi:10.1016/j.ecosta.2022.01.002> and is a robust version of Ando & Bai (2017) <10.1080/01621459.2016.1195743>.
+  The method iteratively updates beta (the coefficients of the observable variables), group membership, and the latent factors (which can be common and/or group-specific) along
   with their loadings. The number of groups and factors can be estimated if they are unknown.
 License: GPL (>= 2)
 Encoding: UTF-8

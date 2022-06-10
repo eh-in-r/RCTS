@@ -46,10 +46,6 @@ Y <- RCTS::Y_dgp3
 lambda_group <- RCTS::lambda_group_true_dgp3
 factor_group <- RCTS::factor_group_true_dgp3
 g <- RCTS::g_true_dgp3
-# There are no common factors to be estimated  -> but needs placeholder
-lambda <- matrix(0, nrow = 1, ncol = 300)
-comfactor <- matrix(0, nrow = 1, ncol = 30)
-
 # Choose how coefficients of the observable are estimated
 beta_init <- initialise_beta(TRUE, Y, X,
   S = 3, g
