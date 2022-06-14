@@ -7,18 +7,18 @@ Authors@R:
            role = c("aut", "cre"),
            email = "ewoud.heyndels@vub.be",
            comment = c(ORCID = "0000-0003-4540-8571"))
-Description: RCTS has the functionality to cluster time series using the robust interactive fixed effects framework. 
-  This robust framework is developed in Boudt & Heyndels (2022) <doi:10.1016/j.ecosta.2022.01.002> and is a robust version of Ando & Bai (2017) <10.1080/01621459.2016.1195743>.
-  The method iteratively updates beta (the coefficients of the observable variables), group membership, and the latent factors (which can be common and/or group-specific) along
+Description: RCTS has the functionality to cluster time series using both the classical and the robust interactive fixed effects framework. 
+  The classical framework is developed in Ando & Bai (2017) <10.1080/01621459.2016.1195743>.
+  This robust framework is developed in Boudt & Heyndels (2022) <doi:10.1016/j.ecosta.2022.01.002> and is made robust against different kinds of outliers.
+  The algorithm iteratively update beta (the coefficients of the observable variables), group membership, and the latent factors (which can be common and/or group-specific) along
   with their loadings. The number of groups and factors can be estimated if they are unknown.
 License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.0
 Imports: 
   stats,
-  tidyverse,
   magrittr,
   dplyr,
   purrr,
@@ -26,21 +26,19 @@ Imports:
   tidyr,
   tibble,
   ggplot2,
-  tidyselect,
   ncvreg,
-  tclust,
   robustbase,
   cellWise,
   rlang,
-  Rdpack,
-  mclust,
-  Matrix
+  Rdpack
 Suggests:
   tsqn,
   doParallel,
   doSNOW,
-  foreach
+  foreach,
+  mclust,
+  Matrix
 RdMacros: 
   Rdpack
 Depends: 
-    R (>= 3.6.0)
+    R (>= 4.1.0)

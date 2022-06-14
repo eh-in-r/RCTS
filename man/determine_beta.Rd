@@ -16,8 +16,9 @@ determine_beta(
   initialisation = FALSE,
   indices = NA,
   vars_est,
+  sigma2,
   nosetting_local = FALSE,
-  kappa_candidates = c(0.1),
+  kappa_candidates = c(2^(-0:-20), 0),
   special_case_dgp1 = FALSE
 )
 }
@@ -34,7 +35,7 @@ determine_beta(
 
 \item{TT}{length of time series}
 
-\item{S}{estimated number of groups#'}
+\item{S}{estimated number of groups}
 
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 
@@ -44,9 +45,11 @@ determine_beta(
 
 \item{vars_est}{number of available observed variables for which a coefficient will be estimated. As default it is equal to the number of available observed variables.}
 
+\item{sigma2}{sum of squared error terms, scaled by NT}
+
 \item{nosetting_local}{option to remove the recommended setting in lmrob(). It is much faster. Defaults to FALSE.}
 
-\item{kappa_candidates}{defines the size of the SCAD-penalty used in the classical algorithm}
+\item{kappa_candidates}{Defines the size of the SCAD-penalty used in the classical algorithm. This vector should contain more than 1 element.}
 
 \item{special_case_dgp1}{special case for data generated according to dgp 1: it changes the 1st variable in X to 1 (-> intercept). Consequently the estimation of beta needs to be restructured slightly.}
 }

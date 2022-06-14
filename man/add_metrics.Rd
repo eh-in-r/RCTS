@@ -16,7 +16,8 @@ add_metrics(
   lambda_group,
   TT,
   iteration,
-  g_true = NA
+  g_true = NA,
+  add_rand = FALSE
 )
 }
 \arguments{
@@ -43,6 +44,8 @@ add_metrics(
 \item{iteration}{number of iteration}
 
 \item{g_true}{vector of length NN with true group memberships}
+
+\item{add_rand}{adds the adjusted randindex to the df (requires the mclust package); used for simulations}
 }
 \description{
 Adds several metrics to df_results.

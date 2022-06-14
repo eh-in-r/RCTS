@@ -4,7 +4,7 @@
 \alias{solveFG}
 \title{Helpfunction in update_g(), to calculate solve(FG x t(FG)) x FG}
 \usage{
-solveFG(TT, S, kg, factor_group)
+solveFG(TT, S, kg, factor_group, testing = FALSE)
 }
 \arguments{
 \item{TT}{length of time series}
@@ -14,6 +14,8 @@ solveFG(TT, S, kg, factor_group)
 \item{kg}{vector with the estimated number of group specific factors for each group}
 
 \item{factor_group}{estimated group specific factors}
+
+\item{testing}{variable that determines if we are in 'testing phase'; defaults to FALSE (requires Matrix-package if set to TRUE)}
 }
 \description{
 Helpfunction in update_g(), to calculate solve(FG x t(FG)) x FG

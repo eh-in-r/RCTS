@@ -22,7 +22,7 @@ initialise_beta(
 
 \item{X}{dataframe with the observed variables}
 
-\item{S}{estimated number of groups#'}
+\item{S}{estimated number of groups}
 
 \item{g}{vector with estimated group membership for all individuals}
 
@@ -36,18 +36,16 @@ initialise_beta(
 Note: this needs to be called before the definition of grid.
 }
 \examples{
-library("RCTS")
-library("tidyverse")
-library("robustbase")
-
+\donttest{
 X <- RCTS::X_dgp3
 Y <- RCTS::Y_dgp3
-# Set estimations for group factors and its loadings, and group membership to the true value
+# Set estimations for group factors and its loadings, and group membership
+#  to the true value for this example.
 lambda_group <- RCTS::lambda_group_true_dgp3
 factor_group <- RCTS::factor_group_true_dgp3
 g <- RCTS::g_true_dgp3
-# Choose how coefficients of the observable are estimated
 beta_init <- initialise_beta(TRUE, Y, X,
   S = 3, g
 )
+}
 }

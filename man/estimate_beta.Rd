@@ -8,6 +8,7 @@ estimate_beta(
   robust,
   Y,
   X,
+  beta_est,
   g,
   lambda_group,
   factor_group,
@@ -31,6 +32,8 @@ estimate_beta(
 
 \item{X}{X: NxTxp array containing the observable variables}
 
+\item{beta_est}{estimated values of beta}
+
 \item{g}{Vector with estimated group membership for all individuals}
 
 \item{lambda_group}{loadings of the estimated group specific factors}
@@ -53,7 +56,7 @@ estimate_beta(
 
 \item{num_factors_may_vary}{whether or not the number of groupfactors is constant over all groups or not}
 
-\item{optimize_kappa}{indicates if kappa has to be optimized or not (only relevant for the classical algorithm); defaults to FALSE}
+\item{optimize_kappa}{indicates if kappa has to be optimized or not (only relevant for the classical algorithm)}
 
 \item{nosetting}{option to remove the recommended setting in lmrob(). It is much faster. Defaults to FALSE.}
 
@@ -67,10 +70,6 @@ Update step of algorithm to obtain new estimation for beta. Note that we call it
 }
 \examples{
 \donttest{
-library("RCTS")
-library("tidyverse")
-library("robustbase")
-
 X <- RCTS::X_dgp3
 Y <- RCTS::Y_dgp3
 # Set estimations for group factors and its loadings, and group membership to the true value
@@ -85,7 +84,7 @@ comfactor <- matrix(0, nrow = 1, ncol = 30)
 method_estimate_beta <- "individual"
 method_estimate_factors <- "macro"
 beta_est <- estimate_beta(
-  robust = TRUE, Y, X, g, lambda_group, factor_group,
+  robust = TRUE, Y, X, NA, g, lambda_group, factor_group,
   lambda, comfactor,
   S = 3, k = 0, kg = c(3, 3, 3),
   vars_est = 3

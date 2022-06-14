@@ -35,6 +35,5 @@ equal to the true number of groups.
 Creates beta_true, which contains the true values of beta (= the coefficients of X)
 }
 \examples{
-library("tidyverse")
 RCTS:::create_true_beta(vars = 3, NN = 300, S_true = 3)
 }

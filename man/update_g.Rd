@@ -61,10 +61,6 @@ Function that estimates group membership.
 }
 \examples{
 \donttest{
-library("RCTS")
-library("tidyverse")
-library("robustbase")
-
 X <- RCTS::X_dgp3
 Y <- RCTS::Y_dgp3
 # Set estimations for group factors and its loadings, and group membership to the true value
@@ -77,7 +73,7 @@ lambda <- matrix(0, nrow = 1, ncol = 300)
 comfactor <- matrix(0, nrow = 1, ncol = 30)
 # Choose how coefficients of the observable are estimated
 beta_est <- estimate_beta(
-  robust = TRUE, Y, X, g, lambda_group, factor_group,
+  robust = TRUE, Y, X, NA, g, lambda_group, factor_group,
   lambda, comfactor,
   S = 3, k = 0, kg = c(3, 3, 3),
   vars_est = 3
