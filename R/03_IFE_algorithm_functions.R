@@ -1860,8 +1860,8 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20, verbose_robustpca 
 
   temp <- tryCatch(
     {
-      print("test1")
-      print(dim(object))
+      # print("test1")
+      # print(dim(object))
       cellWise::MacroPCA(object, k = max(macropca_kmax, number_eigenvectors), MacroPCApars = list(kmax = KMAX, silent = TRUE))
     },
     error = function(e) {
@@ -1870,16 +1870,16 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20, verbose_robustpca 
       return(e)
     },
     finally = {
-      print("test2")
+      # print("test2")
     }
   )
-#--HERE IS AN ISSUE IN THE PARALLEL SYSTEM (both with "do" and with "dopar"): SOMETIMES IT STOPS HERE!!!! The serialized system works normal.--
+#--HERE USED TO BE AN ISSUE IN THE PARALLEL SYSTEM (both with "do" and with "dopar"): SOMETIMES IT STOPS HERE!!!! The serialized system works normal.--
 #--This seems also to be linked with small amount of units in one of the groups.
 #--Increasing ROBUST_THRESHOLD (e.g. to 25) works as a hack around it, (works as a hybrid classical/robust estimation), but it really should not come to this...
 #-----> SOLUTION: removing 'message(e)' seems to work...
-  print("-") #this should always print, after "test2".
-  print(paste("is.null: ",is.null(temp)))
-  print("test3")
+  # print("-") #this should always print, after "test2".
+  # print(paste("is.null: ",is.null(temp)))
+  # print("test3")
   if (verbose_robustpca) print(class(temp))
   if ("error" %in% class(temp)) {
     error_macropca <- TRUE
