@@ -79,7 +79,6 @@ run_config <- function(robust, config, C_candidates, Y, X, maxit = 30) {
     pic_e2, C_candidates
   )
 
-  # add results of this configuration to df_results
   pic_sigma2 <- calculate_sigma2(pic_e2, nrow(Y), ncol(Y))
   #print("run_config is done")
   return(list(S, k, kg, pic, pic_sigma2, g, iteration, data.frame(beta_est), data.frame(comfactor), data.frame(lambda), factor_group, lambda_group))
@@ -91,7 +90,7 @@ run_config <- function(robust, config, C_candidates, Y, X, maxit = 30) {
 add_pic_parallel <- function(robust, Y, beta_est, g,
                              S, k, kg, pic_e2, C_candidates, method_estimate_beta = "individual",
                              choice_pic = "pic2022") {
-  if(!is.na(beta_est)) {
+  if(!is.na(beta_est[1])) {
     vars_est <- ncol(beta_est)
   } else {
     vars_est <- 0
