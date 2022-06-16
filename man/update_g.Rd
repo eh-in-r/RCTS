@@ -54,19 +54,21 @@ update_g(
 \item{verbose}{when TRUE, it prints messages}
 }
 \value{
-list: 1st element contains group membership and second element contains the values which are used to determine group membership
+Returns a list. The first element contains a vector with the estimated group membership for all time series. The second element contains the values
+which were used to determine the group membership. The third element is only relevant if method_estimate_factors is set to "cz" (non-default) and
+contains the group membership before moving some of the time series to class zero.
 }
 \description{
 Function that estimates group membership.
 }
 \examples{
 \donttest{
-X <- RCTS::X_dgp3
-Y <- RCTS::Y_dgp3
+X <- X_dgp3
+Y <- Y_dgp3
 # Set estimations for group factors and its loadings, and group membership to the true value
-lambda_group <- RCTS::lambda_group_true_dgp3
-factor_group <- RCTS::factor_group_true_dgp3
-g_true <- RCTS::g_true_dgp3 # true values of group membership
+lambda_group <- lambda_group_true_dgp3
+factor_group <- factor_group_true_dgp3
+g_true <- g_true_dgp3 # true values of group membership
 g <- g_true # estimated values of group membership; set in this example to be equal to true values
 # There are no common factors to be estimated  ->  use placeholder with values set to zero
 lambda <- matrix(0, nrow = 1, ncol = 300)

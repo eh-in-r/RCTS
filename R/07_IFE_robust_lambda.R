@@ -86,7 +86,6 @@ determine_robust_lambda <- function(almost_classical_lambda, fastoption = TRUE, 
 #' @param factor_group_rrn estimatied group specific factors
 #' @param verbose when TRUE, it prints messages
 #' @return Nxk dataframe
-#' @export
 return_robust_lambdaobject <- function(Y_like_object, group, type, g,
                                        NN,
                                        k,

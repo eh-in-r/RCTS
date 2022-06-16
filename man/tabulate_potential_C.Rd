@@ -29,6 +29,9 @@ tabulate_potential_C(
 
 \item{S_cand}{candidate number for the number of groups}
 }
+\value{
+data.frame
+}
 \description{
 Shows the configurations for potential C's of the first stable interval (beginpoint, middlepoint and endpoint)
 }
