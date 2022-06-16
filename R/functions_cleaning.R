@@ -2,7 +2,7 @@
 #'
 #' @param df input
 #' @importFrom stats na.omit
-#' @export
+#' @return list with a dataframe where the rows with NA are filtered out, and a dataframe with only those rows
 handleNA <- function(df) {
   rows_with_NA <- which(apply(df, 1, function(x) sum(is.na(x)) != 0)) # rownumbers of rows containing NA
   # message(paste("There are ",length(rows_with_NA),"of",nrow(df), "rows with NA's."))
@@ -14,7 +14,7 @@ handleNA <- function(df) {
 #' @param df input
 #' @importFrom dplyr mutate_if
 #' @importFrom tidyr replace_na
-#' @export
+#' @return matrix
 handleNA_LG <- function(df) {
   result <- (as.matrix(data.frame(df) %>% mutate_if(is.numeric, replace_na, replace = 0)))
   return(result)
@@ -24,11 +24,11 @@ handleNA_LG <- function(df) {
 #'
 #' Sets values that should be zero but are >0 (e.g. 1e-13) on zero.
 #' @param LIMIT limit under which value is set to 0
-#' @param A input
-#' @export
-evade_floating_point_errors <- function(A, LIMIT = 1e-13) {
-  for (i in 1:length(A)) {
-    if (abs(A[i]) < LIMIT) A[i] <- 0
+#' @param x numeric input
+#' @return numeric
+evade_floating_point_errors <- function(x, LIMIT = 1e-13) {
+  for (i in 1:length(x)) {
+    if (abs(x[i]) < LIMIT) x[i] <- 0
   }
-  return(A)
+  return(x)
 }

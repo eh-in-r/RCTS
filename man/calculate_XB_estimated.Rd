@@ -17,6 +17,9 @@ calculate_XB_estimated(X, beta_est, g, vars_est, method_estimate_beta)
 
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 }
+\value{
+Returns a NxT matrix. If vars_est is set to 0, it returns NA.
+}
 \description{
 Calculates (the estimated value of) the matrix X*beta_est.
 }

@@ -11,6 +11,9 @@ adapt_X_estimating_less_variables(X, vars_est)
 
 \item{vars_est}{number of available observed variables for which a coefficient will be estimated}
 }
+\value{
+Returns a 3D-array. If vars_est is set to 0, it returns NA.
+}
 \description{
 When running the algorithm with a different number of observable variables then the number that is available, reformat X. (Mainly used for testing)
 }

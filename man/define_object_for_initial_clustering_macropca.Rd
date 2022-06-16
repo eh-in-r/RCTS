@@ -7,7 +7,6 @@
 define_object_for_initial_clustering_macropca(
   robust,
   Y,
-  g,
   k,
   kg,
   comfactor,
@@ -21,8 +20,6 @@ define_object_for_initial_clustering_macropca(
 
 \item{Y}{Y: NxT dataframe with the panel data of interest}
 
-\item{g}{Vector with group membership for all individuals}
-
 \item{k}{number of common factors to be estimated}
 
 \item{kg}{number of group specific factors to be estimated}
@@ -34,6 +31,9 @@ define_object_for_initial_clustering_macropca(
 \item{method_estimate_factors}{specifies the robust algorithm to estimate factors: default is "macro". The value is not used when robust is set to FALSE.}
 
 \item{verbose}{when TRUE, it prints messages}
+}
+\value{
+matrix with N rows and 10 columns
 }
 \description{
 This is a short version of define_object_for_initial_clustering() which only contains implementations for robust macropca case and classical case.

@@ -13,6 +13,15 @@ calculate_sigma2(e, NN = nrow(e), TT = ncol(e))
 
 \item{TT}{T}
 }
+\value{
+numeric
+}
 \description{
 Calculates sum of squared errors, divided by NT
+}
+\examples{
+Y <- Y_dgp3
+set.seed(1)
+e <- matrix(rnorm(nrow(Y) * ncol(Y)), nrow = nrow(Y))
+calculate_sigma2(e)
 }

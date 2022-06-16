@@ -4,12 +4,15 @@
 \alias{calculate_PIC_term1}
 \title{Function to calculate the first term of PIC (panel information criterium)}
 \usage{
-calculate_PIC_term1(e2, robust)
+calculate_PIC_term1(e, robust)
 }
 \arguments{
-\item{e2}{NxT matrix with the error terms}
+\item{e}{NxT matrix with the error terms}
 
 \item{robust}{robust or classical estimation}
+}
+\value{
+numeric
 }
 \description{
 This is used in calculate_PIC()

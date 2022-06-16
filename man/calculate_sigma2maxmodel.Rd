@@ -21,6 +21,9 @@ calculate_sigma2maxmodel(e, kg_max, S, S_cand, kg, k, k_cand)
 
 \item{k_cand}{vector with candidate value for the number of common factors}
 }
+\value{
+numeric
+}
 \description{
 Sigma2 is the sum of the squared errors, divided by NT. We need the sigma2 of the maxmodel to use (in term 2,3,4 of the PIC) instead of the configuration-dependent sigma2. (See paper AndoBai 2016).
 sigma2_max_model could actually be set to 1 as well, as it can be absorbed in parameter C of the PIC.

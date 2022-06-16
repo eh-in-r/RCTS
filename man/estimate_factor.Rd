@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{estimate_factor}
 \alias{estimate_factor}
-\title{Estimates common factor F}
+\title{Estimates common factor(s) F}
 \usage{
 estimate_factor(
   robust,
@@ -45,10 +45,10 @@ estimate_factor(
 \item{verbose}{when TRUE, it prints messages}
 }
 \value{
-r x T matrix
+Return a list. The first element contains the k x T matrix with the k estimated common factors. The second element contains either the
+robust MacroPCA-based loadings or NA.
 }
 \description{
-The estimator for F, see Anderson (1984), is equal to the first r eigenvectors (multiplied by sqrt(T) due to the restriction F'F/T = I)
-associated with first r largest eigenvalues of the matrix WW' (which is TxT)
-W is called Z in Ando and Bai (2017)
+The estimator for F, see Anderson (1984), is equal to the first k eigenvectors (multiplied by sqrt(T) due to the restriction F'F/T = I)
+associated with first r largest eigenvalues of the matrix WW' (which is of size TxT).
 }

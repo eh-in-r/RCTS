@@ -19,6 +19,9 @@ calculate_obj_for_g(i, k, errors_virtual, rho_parameters, robust, TT)
 
 \item{TT}{length of time series}
 }
+\value{
+numeric value
+}
 \description{
 Helpfunction in update_g().
 Depends on an not yet established group k ( cannot use lgfg_list)

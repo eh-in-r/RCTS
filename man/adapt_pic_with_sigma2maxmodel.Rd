@@ -13,9 +13,19 @@ adapt_pic_with_sigma2maxmodel(df, df_results, sigma2_max_model)
 
 \item{sigma2_max_model}{sigma2 of model with maximum number of groups and factors}
 }
+\value{
+data.frame of same size as df
+}
 \description{
 The PIC is calculated with a sigma2 specific to the configuration (= number of groups and factors).
 Because the method to estimate the number of groups and factors requires sigma2 to be equal over all configurations
 (see proofs of different papers of Ando/Bai) we replace sigma2
 by the sigma2 of the configuration with maximum number of groups and factors (this is the last one that was executed).
+}
+\examples{
+set.seed(1)
+df_pic <- data.frame(matrix(rnorm(4 * 50), nrow = 4)) #4 configuration / 50 candidate values for C
+df_results <- data.frame(sigma2 = rnorm(4))
+pic_sigma2 <- 3.945505
+adapt_pic_with_sigma2maxmodel(df_pic, df_results, pic_sigma2)
 }

@@ -32,7 +32,16 @@ calculate_mse_beta(
 
 \item{special_case_dgp1}{special case for data generated according to dgp 1: it changes the 1st variable in X to 1 (-> intercept). Consequently the estimation of beta needs to be restructured slightly.}
 }
+\value{
+numeric, or NA if the true number of variables is not equal to the standard of 3
+}
 \description{
-It is calculated with the formula on p19 of the supplement of \insertCite{Ando2017;textual}{RCTS}.
 For DGP 1 & 2: When the true number of variables in X is not equal to the standard of 3 it currently returns NA.
+}
+\examples{
+set.seed(1)
+beta_est <- matrix(rnorm(30 * 4), ncol = 30) #random values for beta
+beta_true <- matrix(rnorm(4 * 3), nrow = 4)
+g_true <- round(runif(30, 1,3)) #random values for true group membership
+calculate_mse_beta(beta_est, beta_true, 30, 10, g_true, "individual")
 }

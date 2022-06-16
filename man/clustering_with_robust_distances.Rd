@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{clustering_with_robust_distances}
 \alias{clustering_with_robust_distances}
-\title{Function that puts individuals in a separate "class zero", when their distance to all possible groups is bigger then a threshold.}
+\title{Function that puts individuals in a separate "class zero", when their distance to all possible groups is bigger then a certain threshold.}
 \usage{
 clustering_with_robust_distances(g, number_of_groups, Y)
 }
@@ -11,12 +11,11 @@ clustering_with_robust_distances(g, number_of_groups, Y)
 
 \item{number_of_groups}{number of groups}
 
-\item{Y}{Y: the panel data of interest
-It starts with defining a robust location and scatter (based on Ma & Genton (2000): Highly robust estimation of the autocovariance function)}
+\item{Y}{Y: the panel data of interest}
 }
 \value{
-new clustering, including class zero
+numeric vector with the new clustering, now including class zero adjustments
 }
 \description{
-Function that puts individuals in a separate "class zero", when their distance to all possible groups is bigger then a threshold.
+It starts with defining a robust location and scatter (based on Ma & Genton (2000): Highly robust estimation of the autocovariance function).
 }

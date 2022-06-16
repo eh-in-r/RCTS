@@ -53,6 +53,10 @@ calculate_lambda_group(
 
 \item{initialise}{indicator of being in the initialisation phase}
 }
+\value{
+Returns a data.frame with a row for each time series. The first number of columns contain the individual loadings to the group specific factors.
+Furthermore "group" (group membership) and id (the order in which the time series appear in Y) are added.
+}
 \description{
 returns object which includes group and id of the individuals
 }

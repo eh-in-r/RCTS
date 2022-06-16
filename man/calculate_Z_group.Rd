@@ -41,6 +41,9 @@ calculate_Z_group(
 
 \item{vars_est}{number of variables that will be included in the algorithm and have their coefficient estimated. This is usually equal to the number of observable variables.}
 }
+\value{
+NxT matrix
+}
 \description{
 Calculates Z = Y - X*beta_est - LF. It is used to estimate the groupfactorstructure.
 }

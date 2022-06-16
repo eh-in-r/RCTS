@@ -53,6 +53,9 @@ estimate_factor_group(
 
 \item{verbose}{when TRUE, it prints messages}
 }
+\value{
+Return a list with an element for each estimated group. Each element of the list is a matrix with the group specific factors as rows.
+}
 \description{
 Estimates group factors
 }

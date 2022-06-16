@@ -9,6 +9,12 @@ define_number_subsets(n)
 \arguments{
 \item{n}{number of subsets}
 }
+\value{
+numeric
+}
 \description{
 Returns a vector with the indices of the subsets. Must start with zero.
+}
+\examples{
+define_number_subsets(3)
 }

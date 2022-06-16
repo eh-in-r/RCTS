@@ -15,6 +15,17 @@ calculate_best_config(df_results, df_pic, C_candidates, limit_est_groups = 20)
 
 \item{limit_est_groups}{maximum allowed number of groups that can be estimated}
 }
+\value{
+Returns a matrix with a row for each candidate value for C.
+The first column contains the optimized number of groups (for each candidate C).
+The second columns does the same for the number of common factors.
+Column 3 until 22 do the same for the number of group specific factors. This is set to NA if the configuration has less than 20 groups estimated.
+}
 \description{
 Function that returns for each candidate C the best number of groups and factors, based on the PIC.
+}
+\examples{
+df_results <- add_configuration(initialise_df_results(TRUE),
+  3, 0, c(3, 3, 3, rep(NA, 17))) #data.frame with one configuration
+calculate_best_config(df_results, data.frame(t(1:5)), 1:5)
 }

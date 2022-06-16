@@ -53,8 +53,20 @@ options are "pic2017" (uses the PIC of \insertCite{Ando2017;textual}{RCTS}; work
 "pic2016" (\insertCite{Ando2016;textual}{RCTS}; works better for large T) weighs the fourth term with an extra factor relative to the size of the groups,
 and "pic2022" which shrinks the NT-space where the number of groups and factors would be over- or underestimated compared to pic2016 and pic2017.}
 }
+\value{
+numeric
+}
 \description{
 This depends on kappa1 -> kappaN, through p (=number of nonzero elements of beta_est).
 The parameter 'sigma2' is the non-robust sigma2. As it is only used in term 2 to 4, it does not actually matter what its value is (needs to be > 0).
-Could be set to 1 as well.
+It could be set to 1 as well.
+}
+\examples{
+set.seed(1)
+NN <- 30
+TT <- 10
+e <- matrix(rnorm(NN * TT), nrow = NN)
+beta_est <- matrix(rnorm(NN * 4), ncol = NN) #random values for beta
+g <- rnorm(NN)
+calculate_PIC(0.51, TRUE, 3, 0, c(3, 3, 3), e, e^2/(NN*TT), NN, TT, "individual", beta_est, g, 3)
 }

@@ -13,6 +13,12 @@ define_configurations(S_cand, k_cand, kg_cand)
 
 \item{kg_cand}{candidates for kg (number of group specific factors)}
 }
+\value{
+data.frame
+}
 \description{
 Constructs dataframe where the rows contains all configurations that are included and for which the estimators will be estimated.
+}
+\examples{
+define_configurations(2:4, 0, 2:3)
 }

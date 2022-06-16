@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{calculate_TN_factor}
 \alias{calculate_TN_factor}
-\title{Calculates part of the 4th term of the PIC}
+\title{Helpfunction. Calculates part of the 4th term of the PIC.}
 \usage{
 calculate_TN_factor(TT, Nj)
 }
@@ -11,6 +11,9 @@ calculate_TN_factor(TT, Nj)
 
 \item{Nj}{number of time series in group j}
 }
+\value{
+numeric
+}
 \description{
-Calculates part of the 4th term of the PIC
+Helpfunction. Calculates part of the 4th term of the PIC.
 }

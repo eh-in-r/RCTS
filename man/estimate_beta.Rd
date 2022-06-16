@@ -63,19 +63,19 @@ estimate_beta(
 \item{special_case_dgp1}{special case for data generated according to dgp 1: it changes the 1st variable in X to 1 (-> intercept). Consequently the estimation of beta needs to be restructured slightly.}
 }
 \value{
-list: 1st element contains matrix (N columns: 1 for each element of the panel data) with estimated beta_est's.
+list: 1st element contains matrix (N columns: 1 for each time series of the panel data) with estimated beta_est's. If vars_est is set to 0, the list contains NA.
 }
 \description{
 Update step of algorithm to obtain new estimation for beta. Note that we call it beta_est because beta() exists in base R.
 }
 \examples{
 \donttest{
-X <- RCTS::X_dgp3
-Y <- RCTS::Y_dgp3
+X <- X_dgp3
+Y <- Y_dgp3
 # Set estimations for group factors and its loadings, and group membership to the true value
-lambda_group <- RCTS::lambda_group_true_dgp3
-factor_group <- RCTS::factor_group_true_dgp3
-g <- RCTS::g_true_dgp3
+lambda_group <- lambda_group_true_dgp3
+factor_group <- factor_group_true_dgp3
+g <- g_true_dgp3
 # There are no common factors to be estimated  -> but needs placeholder
 lambda <- matrix(0, nrow = 1, ncol = 300)
 comfactor <- matrix(0, nrow = 1, ncol = 30)

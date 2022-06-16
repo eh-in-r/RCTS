@@ -6,6 +6,12 @@
 \usage{
 define_C_candidates()
 }
+\value{
+numeric vector
+}
 \description{
 Defines the candidate values for C.
+}
+\examples{
+define_C_candidates()
 }

@@ -32,6 +32,9 @@ calculate_lgfg(
 
 \item{TT}{length of time series}
 }
+\value{
+list with S elements: each element contains a matrix with NN rows and TT columns with the estimated group factor structure of this particular group
+}
 \description{
 Returns list (with as length the number of groups) with lgfg (product of grouploadings and groupfactors).
 Each element of the list with the assumption that all individuals are in the same group k.

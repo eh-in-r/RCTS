@@ -32,6 +32,9 @@ OF_vectorized_helpfunction3(
 
 \item{kg}{vector containing the number of group factors to be estimated for all groups}
 }
+\value{
+numeric: contains the contribution to the objective function of one timepoint for one time series
+}
 \description{
 Helpfunction in OF_vectorized3()
 }

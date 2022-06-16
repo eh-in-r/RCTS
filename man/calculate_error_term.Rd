@@ -56,3 +56,18 @@ NxT matrix
 \description{
 Calculates the error term Y - X*beta_est - LF - LgFg.
 }
+\examples{
+X <- X_dgp3
+Y <- Y_dgp3
+# Set estimations for group factors and its loadings, and group membership
+#  to the true value for this example.
+lambda_group <- lambda_group_true_dgp3
+factor_group <- factor_group_true_dgp3
+g <- g_true_dgp3
+set.seed(1)
+beta_est <- matrix(rnorm(nrow(Y) * 4), ncol = nrow(Y)) #random values for beta
+comfactor <- matrix(0, ncol = ncol(Y))
+lambda  <- matrix(0, ncol = nrow(Y))
+calculate_error_term(Y, X, beta_est, g, factor_group, lambda_group, comfactor, lambda,
+  3, 0, c(3, 3, 3))
+}

@@ -38,6 +38,9 @@ calculate_Z_common(
 
 \item{initialise}{indicator of being in the initialisation phase}
 }
+\value{
+NxT matrix
+}
 \description{
 Calculates Z = Y - X*beta_est - LgFg. It is used in the estimate of the common factorstructure.
 }

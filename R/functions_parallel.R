@@ -12,6 +12,7 @@ globalVariables(c("i")) #required to pass R CMD check of a function which uses f
 #' @inheritParams estimate_beta
 #' @inheritParams initialise_beta
 #' @param maxit maximum limit for the number of iterations
+#' @return list with the estimators and metrics for this configuration
 run_config <- function(robust, config, C_candidates, Y, X, maxit = 30) {
   #print("-----------------------------------------start run_config:-------------------------------------------")
   #print(config)
@@ -31,7 +32,7 @@ run_config <- function(robust, config, C_candidates, Y, X, maxit = 30) {
   iteration <- 0 # number of the iteration; 0 indicates being in the initialisation phase
   beta_est <- initialise_beta(robust, Y, X, S)
   # initial grouping
-  g <- initialise_clustering(robust, Y, g, S, k, kg, NA, max_percent_outliers_tkmeans = 0, verbose = TRUE)
+  g <- initialise_clustering(robust, Y, S, k, kg, NA, max_percent_outliers_tkmeans = 0, verbose = FALSE)
   # initial common factorstructure
   temp <- initialise_commonfactorstructure_macropca(robust, Y, X, beta_est, g, NA, k, kg)
   comfactor <- temp[[1]]
@@ -47,7 +48,7 @@ run_config <- function(robust, config, C_candidates, Y, X, maxit = 30) {
   speed <- 999999 # convergence speed: set to initial high value
   while (iteration < maxit & !check_stopping_rules(iteration, speed, obj_funct_values, verbose = FALSE)) {
 
-    temp <- iterate(robust, Y, X, beta_est, g, lambda_group, factor_group, lambda, comfactor, S, k, kg, verbose = F)
+    temp <- iterate(robust, Y, X, beta_est, g, lambda_group, factor_group, lambda, comfactor, S, k, kg, verbose = FALSE)
     #print("********************************************************(end of iterate()")
     #print(class(temp))
     beta_est <- temp[[1]]
@@ -87,6 +88,7 @@ run_config <- function(robust, config, C_candidates, Y, X, maxit = 30) {
 #' Calculates the PIC for the current configuration.
 #'
 #' @inheritParams add_pic
+#' @return numeric vector with a value for each candidate C
 add_pic_parallel <- function(robust, Y, beta_est, g,
                              S, k, kg, pic_e2, C_candidates, method_estimate_beta = "individual",
                              choice_pic = "pic2022") {
@@ -109,7 +111,7 @@ add_pic_parallel <- function(robust, Y, beta_est, g,
 #'
 #' @param x output of the parallel version of the algorithm
 #' @inheritParams kg_candidates_expand
-#' @export
+#' @return data.frame
 make_df_results_parallel <- function(x, limit_est_groups = 20) {
   df <- data.frame(
     S = unlist(x %>% purrr::map(1)),
@@ -133,7 +135,7 @@ make_df_results_parallel <- function(x, limit_est_groups = 20) {
 #' Makes a dataframe with the PIC for each configuration and each candidate C.
 #'
 #' @param x output of the parallel version of the algorithm
-#' @export
+#' @return data.frame
 make_df_pic_parallel <- function(x) {
   df <- t(matrix(unlist(x %>% purrr::map(4)), nrow = 2002))
   return(df)
@@ -147,9 +149,41 @@ make_df_pic_parallel <- function(x) {
 #' @inheritParams calculate_VCsquared
 #' @inheritParams initialise_beta
 #' @inheritParams define_configurations
-#' @param USE_DO if TRUE, then a serialized version is performed ("do" instead of "dopar") (for testing purposes)
+#' @param maxit maximum limit for the number of iterations for each configuration; defaults to 30
+#' @param USE_DO (for testing purposes) if TRUE, then a serialized version is performed ("do" instead of "dopar")
+#' @return Returns a list with three elements.
+#' 1. Data.frame with the optimal number of common factors for each candidate C in the rows.
+#'    Each column contains the results of one subset of the input data (the first row corresponds to the full dataset).
+#' 2. Data.frame with the optimal number of groups and group specific factors for each candidate C in the rows. The structure is the same as in the above.
+#'    Each entry is of the form "1_2_3_NA". This is to be interpreted as 3 groups (three non NA values) where group 1 contains 1 group specific factor,
+#'    group 2 contains 2 and group 3 contains 3.
+#' 3. Data.frame with information about each configuration in the rows.
+#' @examples
+#' \donttest{
+#' #Using a small dataset as an example; this will generate several warnings due to its size.
+#' #Note that this example is run sequentially instead of parallel,
+#' #  and consequently will print some intermediate information in the console.
+#' set.seed(1)
+#' original_data <- create_data_dgp2(30, 10)
+#' #define the number of subsets used to estimate the optimal number of groups and factors
+#' indices_subset <- define_number_subsets(2)
+#' #define the candidate values for C (this is a parameter in the information criterium
+#' #  used to estimate the optimal number of groups and factors)
+#' C_candidates <- define_C_candidates()
+#'
+#' S_cand <- 3:3 # vector with candidate number of groups
+#' k_cand <- 0:0 # vector with candidate number of common factors
+#' kg_cand <- 1:2 # vector with candidate number of group specific factors
+#'
+#' #excluding parallel part from this example
+#' #cl <- makeCluster(detectCores() - 1)
+#' #registerDoSNOW(cl)
+#' output <- parallel_algorithm(original_data, indices_subset, S_cand, k_cand, kg_cand,
+#'   C_candidates, maxit = 3)
+#' #stopCluster(cl)
+#' }
 #' @export
-parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg_cand, C_candidates, robust = TRUE, USE_DO = FALSE) {
+parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg_cand, C_candidates, robust = TRUE, USE_DO = FALSE, maxit = 30) {
   stopifnot(max(kg_cand) > 0)
   df_results_full <- NULL
   rc <- initialise_rc(indices_subset, C_candidates) # dataframe that will contain the optimized number of common factors for each C and subset
@@ -180,7 +214,7 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
         .options.snow = opts,
         .errorhandling = "pass"
       ) %do% {
-          run_config(robust, configs[i,], C_candidates, Y, X, maxit = 30)
+          run_config(robust, configs[i,], C_candidates, Y, X, maxit)
 
       }
     } else {
@@ -190,7 +224,7 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
         .options.snow = opts,
         .errorhandling = "pass"
       ) %dopar% {
-        run_config(robust, configs[i,], C_candidates, Y, X, maxit = 30)
+        run_config(robust, configs[i,], C_candidates, Y, X, maxit)
       }
     }
     #print("foreach has finished")

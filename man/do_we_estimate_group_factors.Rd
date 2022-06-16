@@ -2,13 +2,16 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{do_we_estimate_group_factors}
 \alias{do_we_estimate_group_factors}
-\title{Helpfunction to shorten code: use a and b}
+\title{Helpfunction to shorten code: are group factors being estimated.}
 \usage{
 do_we_estimate_group_factors(kg)
 }
 \arguments{
 \item{kg}{number of group factors to be estimated}
 }
+\value{
+numeric: 0 or 1
+}
 \description{
-Helpfunction to shorten code: use a and b
+Helpfunction to shorten code: are group factors being estimated.
 }

@@ -17,6 +17,9 @@ calculate_XB_true(X, beta_true, g, g_true, method_estimate_beta)
 
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 }
+\value{
+Returns a NxT matrix (if method_estimate_beta == "individual"), and otherwise NA.
+}
 \description{
 Calculates the product of X*beta_true .
 }

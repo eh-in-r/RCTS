@@ -63,7 +63,7 @@ calculate_virtual_factor_and_lambda_group(
 NxT matrix containing the product of virtual groupfactors and virtual loadings
 }
 \description{
-We calculate FgLg (the groupfactorstructure) for all possible groups where individual i can be placed. For each group we have before estimated
-the groupfactors (Fg). Now we need the grouploadings for each group as well. In the classical case these are calculated by Fg*Y/T. In the robust case
+This function calculates FgLg (the groupfactorstructure) for all possible groups where individual i can be placed. For each group were
+the groupfactors (Fg) estimated earlier. Now the grouploadings are needed for each group as well. In the classical case these are calculated by Fg*Y/T. In the robust case
 these are robust.
 }

@@ -9,9 +9,12 @@ define_rho_parameters(object = NULL)
 \arguments{
 \item{object}{input}
 }
+\value{
+list
+}
 \description{
-In robust updating of group membership we use a rho function (instead of the non-robust quadratic function) on the norm of the errors.
-For this we need parameters of location and scale.
+Robust updating of group membership is based on a rho function (instead of the non-robust quadratic function) on the norm of the errors.
+This requires parameters of location and scale.
 They are defined here (currently as median and madn).
 This function is applied on the estimated errors: Y - XB - FL - FgLg.
 This function is used in update_g().

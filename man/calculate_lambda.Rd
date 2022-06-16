@@ -50,6 +50,9 @@ calculate_lambda(
 
 \item{initialise}{indicator of being in the initialisation phase}
 }
+\value{
+Returns a matrix where each row contains a common factor. If the number of estimated common factors equals zero, it returns a matrix with 1 row, containing zero's.
+}
 \description{
 calculates factor loadings of common factors
 }

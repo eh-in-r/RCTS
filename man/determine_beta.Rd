@@ -53,6 +53,9 @@ determine_beta(
 
 \item{special_case_dgp1}{special case for data generated according to dgp 1: it changes the 1st variable in X to 1 (-> intercept). Consequently the estimation of beta needs to be restructured slightly.}
 }
+\value{
+The function returns a numeric vector (for the default setting: string == "heterogeneous") or a matrix with the estimated beta (if string == "homogeneous").
+}
 \description{
 Helpfunction in estimate_beta() for estimating beta_est.
 }

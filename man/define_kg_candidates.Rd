@@ -4,7 +4,7 @@
 \alias{define_kg_candidates}
 \title{Defines the set of combinations of group specific factors.}
 \usage{
-define_kg_candidates(S, kg_min, kg_max, nfv, limit_est_groups = 20)
+define_kg_candidates(S, kg_min, kg_max, nfv = TRUE, limit_est_groups = 20)
 }
 \arguments{
 \item{S}{number of estimated groups}
@@ -18,8 +18,12 @@ define_kg_candidates(S, kg_min, kg_max, nfv, limit_est_groups = 20)
 \item{limit_est_groups}{maximum allowed number of groups that can be estimated}
 }
 \value{
-data frame where each row contains the number of group specific factors for all the estimated groups
+Returns a data frame where each row contains the number of group specific factors for all the estimated groups.
+The number of columns is set to 20 (the current maximum amount of group that can be estimated)
 }
 \description{
 Defines the set of combinations of group specific factors.
+}
+\examples{
+define_kg_candidates(3, 2, 4)
 }

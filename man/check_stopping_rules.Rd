@@ -23,6 +23,12 @@ check_stopping_rules(
 
 \item{verbose}{if TRUE, more information is printed}
 }
+\value{
+logical
+}
 \description{
 Checks the rules for stopping the algorithm, based on its convergence speed.
+}
+\examples{
+check_stopping_rules(4, 1.7, 5:1)
 }

@@ -26,7 +26,15 @@ calculate_VCsquared(
 
 \item{limit_est_groups}{maximum allowed number of groups that can be estimated}
 }
+\value{
+numeric vector with the VC2-value for each candidate C
+}
 \description{
 VC² depends on C (this is the scale parameter in PIC). When VC² is equal to zero, the found number of groups and factors
 are the same over the subsamples.
+}
+\examples{
+rcj <- data.frame(X1 = rep("3_3_3", 5), X2 = rep("3_2_1", 5))
+rc <- data.frame(X1 = rep(1, 5), X2 = rep(0, 5))
+calculate_VCsquared(rcj, rc, 1:5, 0:1, 3)
 }

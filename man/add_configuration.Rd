@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{add_configuration}
 \alias{add_configuration}
-\title{Adds the current configuration (number of groups and factors) to df_results}
+\title{Adds the current configuration (number of groups and factors) to df_results.}
 \usage{
 add_configuration(df_results, S, k, kg)
 }
@@ -13,8 +13,14 @@ add_configuration(df_results, S, k, kg)
 
 \item{k}{estimated number of common factors in current configuration}
 
-\item{kg}{estimated number of group specific factors in current configuration}
+\item{kg}{vector with the estimated number of group specific factors in current configuration (augmented with NA's to reach a length of 20)}
+}
+\value{
+data.frame
 }
 \description{
-Adds the current configuration (number of groups and factors) to df_results
+Adds the current configuration (number of groups and factors) to df_results.
+}
+\examples{
+add_configuration(initialise_df_results(TRUE), 3, 0, c(3, 3, 3, rep(NA, 17)))
 }

@@ -23,7 +23,7 @@ calculate_errors_virtual_groups(
 \arguments{
 \item{group}{group}
 
-\item{LF}{NxT-matrix of the commonfactorstructure}
+\item{LF}{NxT-matrix of the common factorstructure}
 
 \item{virtual_grouped_factor_structure}{list with length the number of groups; every element of the list contains NxT-matrix}
 
@@ -48,9 +48,8 @@ calculate_errors_virtual_groups(
 \item{g}{Vector with estimated group membership for all individuals}
 }
 \value{
-NxT matrix with the errorterms (=dataset minus the estimated factorstructure and minus X*beta)
+NxT matrix with the errorterms (=Y minus the estimated factorstructure(s) and minus X*beta)
 }
 \description{
-As we are updating group membership, we use the errorterm as objective function to estimate the group. We assume group membership equals 1,...,NG
-(with NG the total number of groups) and calculate the error term.
+During the updating of group membership, the errorterm is used as the objective function to estimate the group.
 }
