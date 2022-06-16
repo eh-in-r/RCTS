@@ -7,7 +7,6 @@
 initialise_clustering(
   robust,
   Y,
-  g,
   S,
   k,
   kg,
@@ -21,8 +20,6 @@ initialise_clustering(
 
 \item{Y}{Y: NxT dataframe with the panel data of interest}
 
-\item{g}{vector with estimated group membership for all individuals}
-
 \item{S}{the desired number of groups}
 
 \item{k}{number of common factors to be estimated}
@@ -31,10 +28,18 @@ initialise_clustering(
 
 \item{comfactor}{estimated common factors}
 
-\item{max_percent_outliers_tkmeans}{The proportion of observations to be trimmed.}
+\item{max_percent_outliers_tkmeans}{the proportion of observations to be trimmed}
 
 \item{verbose}{when TRUE, it prints messages}
 }
+\value{
+numeric vector
+}
 \description{
 If a time series contains NA's a random cluster will be assigned to that time series.
+}
+\examples{
+Y <- Y_dgp3
+comfactor <- matrix(0, nrow = ncol(Y))
+initialise_clustering(TRUE, Y, 3, 0, c(3, 3, 3), comfactor)
 }

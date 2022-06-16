@@ -46,6 +46,9 @@ They differ in the penalty they perform on the number of group specific factors 
 different NT-regions (where N is the number of time series and T is the length of the time series) where the estimated number of groups, and thus group specific factors will be wrong.
 Pic2022 is the default (this PIC shrinks the problematic NT-region to very large N / very small T).}
 }
+\value{
+numeric vector with a value for each candidate C
+}
 \description{
 Calculates the PIC for the current configuration.
 }

@@ -15,6 +15,9 @@ prepare_for_robpca(object, NN, TT, option = 3)
 
 \item{option}{1 (robust covmatrix), 2 (classical covmatrix), 3 (no covmatrix)}
 }
+\value{
+matrix
+}
 \description{
 It contains options to use the classical or robust covmatrix or no covariance matrix at all.
 }

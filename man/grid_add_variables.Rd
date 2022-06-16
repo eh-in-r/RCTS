@@ -41,6 +41,9 @@ grid_add_variables(
 
 \item{limit_est_groups_heterogroups}{maximum amount of groups that can be estimated when method_estimate_beta is set to "group"}
 }
+\value{
+data.frame
+}
 \description{
-(The dataframe "grid" used to be required in update_g(), via OF_vectorized3(), but not anymore.)
+It is used in iterate().
 }

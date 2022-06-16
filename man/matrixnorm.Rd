@@ -4,10 +4,13 @@
 \alias{matrixnorm}
 \title{Function to calculate the norm of a matrix.}
 \usage{
-matrixnorm(A)
+matrixnorm(mat)
 }
 \arguments{
-\item{A}{input matrix}
+\item{mat}{input matrix}
+}
+\value{
+numeric
 }
 \description{
 Function to calculate the norm of a matrix.

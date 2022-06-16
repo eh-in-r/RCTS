@@ -15,6 +15,9 @@ kg_candidates_expand(S, kg_min, kg_max, limit_est_groups = 20)
 
 \item{limit_est_groups}{maximum allowed number of groups that can be estimated}
 }
+\value{
+data.frame where each row contains a possible combination of group specific factors for each of the groups
+}
 \description{
 Function that returns the set of combinations of groupfactors for which the algorithm needs to run.
 }

@@ -11,6 +11,12 @@ initialise_rcj(indices_subset, C_candidates)
 
 \item{C_candidates}{candidates for C (parameter in PIC)}
 }
+\value{
+data.frame
+}
 \description{
 This function initialises a data frame which will eventually be filled with the optimized number of groups and group specific factors for each C and for each subset of the original dataset.
+}
+\examples{
+initialise_rcj(0:2, 1:5)
 }

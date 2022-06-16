@@ -11,6 +11,9 @@ make_df_results_parallel(x, limit_est_groups = 20)
 
 \item{limit_est_groups}{maximum allowed number of groups that can be estimated}
 }
+\value{
+data.frame
+}
 \description{
 Makes a dataframe with information on each configuration.
 }

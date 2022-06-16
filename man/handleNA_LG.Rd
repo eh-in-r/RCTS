@@ -9,6 +9,9 @@ handleNA_LG(df)
 \arguments{
 \item{df}{input}
 }
+\value{
+matrix
+}
 \description{
 Removes NA's in LG (in function calculate_virtual_factor_and_lambda_group() )
 }

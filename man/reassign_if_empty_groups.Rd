@@ -13,6 +13,9 @@ reassign_if_empty_groups(g, S_true, TT)
 
 \item{TT}{length of time series}
 }
+\value{
+numeric vector with the estimated group membership for all time series
+}
 \description{
 Randomly reassign individual(s) if there are empty groups. This can happen if the total number of time series is low compared to the number of desired groups.
 }

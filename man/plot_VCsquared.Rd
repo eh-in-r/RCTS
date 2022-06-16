@@ -35,6 +35,23 @@ plot_VCsquared(
 
 \item{verbose}{if TRUE, more details are printed}
 }
+\value{
+A ggplot object.
+}
 \description{
 Plots expression(VC^2) along with the corresponding number of groups (orange), common factors (darkblue) and group factors of the first group (lightblue).
+}
+\examples{
+\donttest{
+set.seed(1)
+#requires filled in dataframes rc and rcj
+all_best_values <- calculate_best_config(add_configuration(initialise_df_results(TRUE),
+  3, 0, c(3, 3, 3, rep(NA, 17))),
+  data.frame(t(1:20)), 1:20)
+rc <- fill_rc(initialise_rc(0:1, 1:20), all_best_values, 0)
+rc <- fill_rc(rc, all_best_values, 1)
+rcj <- fill_rcj(initialise_rcj(0:1, 1:20) , all_best_values, 0, 2:4, 2:4)
+rcj <- fill_rcj(rcj, all_best_values, 1, 2:4, 2:4)
+plot_VCsquared(c(runif(9), 0, 0, runif(9)), rc, rcj, 1:20, 2:4)
+}
 }

@@ -16,10 +16,9 @@ we are using the function for a second time, after adding the outliers. In the r
 
 \item{vars}{number of observable variables}
 }
+\value{
+3D-array with the same dimensions as X
+}
 \description{
 Scaling of X.
-}
-\examples{
-X <- RCTS:::initialise_X(300, 30, vars = 3)
-RCTS:::scaling_X(X, TRUE, TRUE, vars = 3)
 }

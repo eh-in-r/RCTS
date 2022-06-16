@@ -9,6 +9,12 @@ initialise_df_pic(C_candidates)
 \arguments{
 \item{C_candidates}{candidates for C (parameter in PIC)}
 }
+\value{
+Returns an empty data.frame.
+}
 \description{
 Initialises a dataframe which will contain the PIC for each configuration and for each value of C.
+}
+\examples{
+initialise_df_pic(1:10)
 }

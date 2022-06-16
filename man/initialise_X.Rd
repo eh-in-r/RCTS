@@ -22,6 +22,3 @@ array with dimensions N x T x number of observable variables
 X is an array with dimensions N, T and number of observable variables.
 The variables are randomly generated with mean 0 and sd 1.
 }
-\examples{
-RCTS:::initialise_X(300, 30, vars = 3)
-}

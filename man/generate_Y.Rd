@@ -45,7 +45,7 @@ generate_Y(
 \item{X}{dataframe with the observed variables}
 }
 \value{
-N x T matrix
+NN x TT matrix
 }
 \description{
 Generate panel data Y for simulations.

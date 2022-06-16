@@ -11,6 +11,12 @@ initialise_df_results(robust, limit_est_groups = 20)
 
 \item{limit_est_groups}{maximum allowed number of groups that can be estimated}
 }
+\value{
+Returns an empty data.frame.
+}
 \description{
 Initialises a dataframe that will contain an overview of metrics for each estimated configuration (for example adjusted randindex).
+}
+\examples{
+initialise_df_results(TRUE)
 }

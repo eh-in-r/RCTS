@@ -15,16 +15,18 @@ robustpca(object, number_eigenvectors, KMAX = 20, verbose_robustpca = FALSE)
 
 \item{verbose_robustpca}{when TRUE, it prints messages: used for testing (requires Matrix-package when set to TRUE)}
 }
+\value{
+list with as the first element the robust factors and as the second element the robust factor loadings
+}
 \description{
-Contains MacroPCA
+Contains call to MacroPCA()
 }
 \details{
-Notes for MACROPCA:
+Notes:
 
 Different values for kmax give different factors, but the product lambda\emph{factor stays constant. Note that
 this number needs to be big enough, otherwise eigen() will be used. Variation in k does give different results for lambda}factor
 
-NOTE: this function may (not certain) crash when ncol(object) >> nrow(object)
-Actually it crashes with specific values of dim(object). For example when dim(object) = c(193,27).
-This is solved with evade_crashes_macropca(), for those problematic dimensions that are already encountered.
+MacroPCA() crashes with specific values of dim(object). For example when dim(object) = c(193,27).
+This is solved with evade_crashes_macropca(), for those problematic dimensions that are already encountered during tests.
 }

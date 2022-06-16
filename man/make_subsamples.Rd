@@ -3,7 +3,7 @@
 \name{make_subsamples}
 \alias{make_subsamples}
 \title{Selects a subsample of the time series, and of the length of the time series.
-Based on this it returns a subsample of Y, the corresponding subsample of X and of the true group membership and factorstructures if applicable.}
+Based on this it returns a list with a subsample of Y, the corresponding subsample of X and of the true group membership and factorstructures if applicable.}
 \usage{
 make_subsamples(original_data, subset, verbose = TRUE)
 }
@@ -14,7 +14,22 @@ make_subsamples(original_data, subset, verbose = TRUE)
 
 \item{verbose}{when TRUE, it prints messages}
 }
+\value{
+Y, X, g_true, comfactor_true, lambda_true, factor_group_true, lambda_group_true, sampleN, sampleT
+The output is a list where the first element is a subset of the panel dataset.
+The second element contains a subsetted 3D-array with the p observed variables.
+The third element contains the subsetted true group membership.
+The fourth and fifth elements contain the subsetted true common factor(s) and its loadings respectively.
+The sixth element contains a list with the subsetted true group specific factors.
+The seventh element contains a dataframe where each row contains the group specific factor loadings that corresponds to the group specific factors.
+The eighth and ninth element contain the indices of N and T respectively, which were used to create the subsets.
+}
 \description{
 Selects a subsample of the time series, and of the length of the time series.
-Based on this it returns a subsample of Y, the corresponding subsample of X and of the true group membership and factorstructures if applicable.
+Based on this it returns a list with a subsample of Y, the corresponding subsample of X and of the true group membership and factorstructures if applicable.
+}
+\examples{
+set.seed(1)
+original_data <- create_data_dgp2(30, 10)
+make_subsamples(original_data, 1)
 }

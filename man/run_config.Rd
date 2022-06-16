@@ -19,6 +19,9 @@ run_config(robust, config, C_candidates, Y, X, maxit = 30)
 
 \item{maxit}{maximum limit for the number of iterations}
 }
+\value{
+list with the estimators and metrics for this configuration
+}
 \description{
 The function estimates beta, group membership and the common and group specific factorstructures for one configuration.
 }

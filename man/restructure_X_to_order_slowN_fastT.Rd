@@ -11,12 +11,9 @@ restructure_X_to_order_slowN_fastT(X, vars_est)
 
 \item{vars_est}{number of variables that will be included in the algorithm and have their coefficient estimated. This is usually equal to the number of observable variables.}
 }
+\value{
+The function returns a 2D-array, unless the input X is NA, in which case the output will be NA as well.
+}
 \description{
 Restructures X (which is an 3D-array of dimensions (N,T,p) to a 2D-matrix of dimension (NxT,p).
-}
-\examples{
-X <- RCTS:::initialise_X(300, 30, vars = 3)
-X_restructured <- RCTS:::restructure_X_to_order_slowN_fastT(X,
-  vars_est = 3
-)
 }

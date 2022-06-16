@@ -9,6 +9,9 @@ handleNA(df)
 \arguments{
 \item{df}{input}
 }
+\value{
+list with a dataframe where the rows with NA are filtered out, and a dataframe with only those rows
+}
 \description{
 Function with as input a dataframe. (this will be "Y" or "to_divide") It filters out rows with NA.
 }

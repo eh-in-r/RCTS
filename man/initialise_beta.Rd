@@ -32,18 +32,23 @@ initialise_beta(
 
 \item{special_case_dgp1}{special case for data generated according to dgp 1: it changes the 1st variable in X to 1 (-> intercept). Consequently the estimation of beta needs to be restructured slightly.}
 }
+\value{
+Matrix with number of rows equal to the number of estimated variables plus one. If method_estimate_beta is set to the default ("individual"),
+the number of columns is equal to the number of time series in Y. If method_estimate_beta is set to "group" or to "homogeneous" the number of columns
+is equal to the number of groups.
+}
 \description{
 Note: this needs to be called before the definition of grid.
 }
 \examples{
 \donttest{
-X <- RCTS::X_dgp3
-Y <- RCTS::Y_dgp3
+X <- X_dgp3
+Y <- Y_dgp3
 # Set estimations for group factors and its loadings, and group membership
 #  to the true value for this example.
-lambda_group <- RCTS::lambda_group_true_dgp3
-factor_group <- RCTS::factor_group_true_dgp3
-g <- RCTS::g_true_dgp3
+lambda_group <- lambda_group_true_dgp3
+factor_group <- factor_group_true_dgp3
+g <- g_true_dgp3
 beta_init <- initialise_beta(TRUE, Y, X,
   S = 3, g
 )

@@ -4,12 +4,15 @@
 \alias{evade_floating_point_errors}
 \title{Function to evade floating point errors.}
 \usage{
-evade_floating_point_errors(A, LIMIT = 1e-13)
+evade_floating_point_errors(x, LIMIT = 1e-13)
 }
 \arguments{
-\item{A}{input}
+\item{x}{numeric input}
 
 \item{LIMIT}{limit under which value is set to 0}
+}
+\value{
+numeric
 }
 \description{
 Sets values that should be zero but are >0 (e.g. 1e-13) on zero.

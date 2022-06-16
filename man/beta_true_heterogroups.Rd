@@ -14,11 +14,14 @@ beta_true_heterogroups(
 \arguments{
 \item{vars}{number of observable variables}
 
-\item{S_true}{true number of groups}
+\item{S_true}{true number of groups: should be at least 1 and maximum limit_true_groups}
 
 \item{extra_beta_factor}{option to multiply the coefficients in true beta; default = 1}
 
 \item{limit_true_groups}{Maximum number of true groups in a simulation-DGP for which the code in this package is implemented. Currently equals 12. For application on realworld data this parameter is not relevant.}
+}
+\value{
+matrix where the number of rows equals S_true, and the number of columns equals max(1, vars)
 }
 \description{
 Helpfunction in create_true_beta() for the option beta_true_heterogeneous_groups. (This is the default option.)

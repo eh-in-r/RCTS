@@ -12,7 +12,8 @@ parallel_algorithm(
   kg_cand,
   C_candidates,
   robust = TRUE,
-  USE_DO = FALSE
+  USE_DO = FALSE,
+  maxit = 30
 )
 }
 \arguments{
@@ -30,8 +31,46 @@ parallel_algorithm(
 
 \item{robust}{robust or classical estimation}
 
-\item{USE_DO}{if TRUE, then a serialized version is performed ("do" instead of "dopar") (for testing purposes)}
+\item{USE_DO}{(for testing purposes) if TRUE, then a serialized version is performed ("do" instead of "dopar")}
+
+\item{maxit}{maximum limit for the number of iterations for each configuration; defaults to 30}
+}
+\value{
+Returns a list with three elements.
+\enumerate{
+\item Data.frame with the optimal number of common factors for each candidate C in the rows.
+Each column contains the results of one subset of the input data (the first row corresponds to the full dataset).
+\item Data.frame with the optimal number of groups and group specific factors for each candidate C in the rows. The structure is the same as in the above.
+Each entry is of the form "1_2_3_NA". This is to be interpreted as 3 groups (three non NA values) where group 1 contains 1 group specific factor,
+group 2 contains 2 and group 3 contains 3.
+\item Data.frame with information about each configuration in the rows.
+}
 }
 \description{
 Wrapper of the loop over the subsets which in turn use the parallelised algorithm.
+}
+\examples{
+\donttest{
+#Using a small dataset as an example; this will generate several warnings due to its size.
+#Note that this example is run sequentially instead of parallel,
+#  and consequently will print some intermediate information in the console.
+set.seed(1)
+original_data <- create_data_dgp2(30, 10)
+#define the number of subsets used to estimate the optimal number of groups and factors
+indices_subset <- define_number_subsets(2)
+#define the candidate values for C (this is a parameter in the information criterium
+#  used to estimate the optimal number of groups and factors)
+C_candidates <- define_C_candidates()
+
+S_cand <- 3:3 # vector with candidate number of groups
+k_cand <- 0:0 # vector with candidate number of common factors
+kg_cand <- 1:2 # vector with candidate number of group specific factors
+
+#excluding parallel part from this example
+#cl <- makeCluster(detectCores() - 1)
+#registerDoSNOW(cl)
+output <- parallel_algorithm(original_data, indices_subset, S_cand, k_cand, kg_cand,
+  C_candidates, maxit = 3)
+#stopCluster(cl)
+}
 }

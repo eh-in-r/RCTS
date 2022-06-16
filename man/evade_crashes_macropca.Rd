@@ -11,6 +11,9 @@ evade_crashes_macropca(object, verbose = FALSE)
 
 \item{verbose}{prints messages}
 }
+\value{
+matrix
+}
 \description{
 MacroPCA crashes Rstudio with certain dimensions of the input. Solve this by doubling every row.
 No information is added by this, so there is no influence on the end result,

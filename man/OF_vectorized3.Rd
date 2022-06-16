@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{OF_vectorized3}
 \alias{OF_vectorized3}
-\title{Calculates objective function: used in local_search + to determine "best_result".}
+\title{Calculates objective function for the classical algorithm: used in iterate() and in local_search.}
 \usage{
 OF_vectorized3(
   NN,
@@ -53,6 +53,9 @@ OF_vectorized3(
 
 \item{num_factors_may_vary}{whether or not the number of groupfactors is constant over all groups or not}
 }
+\value{
+numeric value of the objective function
+}
 \description{
-Calculates objective function: used in local_search + to determine "best_result".
+Calculates objective function for the classical algorithm: used in iterate() and in local_search.
 }

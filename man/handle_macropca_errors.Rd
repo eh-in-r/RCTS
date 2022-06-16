@@ -23,6 +23,9 @@ handle_macropca_errors(
 
 \item{verbose}{when TRUE, it prints messages}
 }
+\value{
+matrix of which the columns contain the chosen amount of eigenvectors of object
+}
 \description{
 It handles possible thrown errors in MacroPCA.
 }

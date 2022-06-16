@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{add_pic}
 \alias{add_pic}
-\title{Fills in df_pic with the calculated PIC for the current configuration.}
+\title{Fills in df_pic: adds a row with the calculated PIC for the current configuration.}
 \usage{
 add_pic(
   df,
@@ -52,6 +52,19 @@ They differ in the penalty they perform on the number of group specific factors 
 different NT-regions (where N is the number of time series and T is the length of the time series) where the estimated number of groups, and thus group specific factors will be wrong.
 Pic2022 is the default (this PIC shrinks the problematic NT-region to very large N / very small T).}
 }
+\value{
+data.frame
+}
 \description{
-Fills in df_pic with the calculated PIC for the current configuration.
+Fills in df_pic: adds a row with the calculated PIC for the current configuration.
+}
+\examples{
+set.seed(1)
+original_data <- create_data_dgp2(30, 10)
+Y <- original_data[[1]]
+g <- original_data[[3]]
+beta_est <- matrix(rnorm(4 * nrow(Y)), nrow = 4)
+df_pic <- initialise_df_pic(1:5)
+e <- matrix(rnorm(nrow(Y) * ncol(Y)), nrow(Y))
+add_pic(df_pic, 1, TRUE, Y, beta_est, g, 3, 0, c(3, 3, 3), e, 1:5)
 }

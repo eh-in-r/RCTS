@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{iterate}
 \alias{iterate}
-\title{Wrapper around estimate_beta, update_g, and estimating the factorstructures.}
+\title{Wrapper around estimate_beta(), update_g(), and estimating the factorstructures.}
 \usage{
 iterate(
   robust,
@@ -56,6 +56,32 @@ iterate(
 
 \item{verbose}{when TRUE, it prints messages}
 }
+\value{
+list with
+\enumerate{
+\item estimated beta
+\item vector with group membership
+\item matrix with the common factor(s) (contains zero's if there are none estimated)
+\item loadings to the common factor(s)
+\item list with the group specific factors for each of the groups
+\item data.frame with loadings to the group specific factors augmented with group membership and id (to have the order of the time series)
+\item the value of the objective function
+}
+}
 \description{
-Wrapper around estimate_beta, update_g, and estimating the factorstructures.
+Wrapper around estimate_beta(), update_g(), and estimating the factorstructures.
+}
+\examples{
+set.seed(1)
+original_data <- create_data_dgp2(30, 10)
+Y <- original_data[[1]]
+X <- original_data[[2]]
+g <- original_data[[3]]
+beta_est <- matrix(rnorm(4 * ncol(Y)), nrow = 4)
+factor_group <- original_data[[5]]
+lambda_group <- original_data[[6]]
+comfactor <- matrix(0, nrow = 1, ncol = ncol(Y))
+lambda <- matrix(0, nrow = 1, ncol = nrow(Y))
+iterate(TRUE, Y, X, beta_est, g, lambda_group, factor_group, lambda, comfactor, 3, 0, c(3, 3, 3),
+  verbose = FALSE)
 }

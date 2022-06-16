@@ -2,8 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{mse_heterogeneous_groups}
 \alias{mse_heterogeneous_groups}
-\title{Helpfunction in calculate_mse_beta, when method_estimate_beta == "group".
-(beta is estimated for each group separately).}
+\title{Helpfunction in calculate_mse_beta(), when method_estimate_beta == "group" (beta is then estimated for each group separately).}
 \usage{
 mse_heterogeneous_groups(
   beta_est,
@@ -30,7 +29,9 @@ mse_heterogeneous_groups(
 
 \item{special_case_dgp1}{special case for data generated according to dgp 1: it changes the 1st variable in X to 1 (-> intercept). Consequently the estimation of beta needs to be restructured slightly.}
 }
+\value{
+numeric vector
+}
 \description{
-Helpfunction in calculate_mse_beta, when method_estimate_beta == "group".
-(beta is estimated for each group separately).
+Helpfunction in calculate_mse_beta(), when method_estimate_beta == "group" (beta is then estimated for each group separately).
 }

@@ -41,6 +41,18 @@ initialise_commonfactorstructure_macropca(
 
 \item{verbose}{when TRUE, it prints messages}
 }
+\value{
+list: 1st element contains the common factor(s) and the second element contains the factor loadings
+}
 \description{
 This is a short version of initialise_commonfactorstructure() which only contains implementations for the robust macropca case and the classical case.
+}
+\examples{
+set.seed(1)
+original_data <- create_data_dgp2(30, 20)
+Y <- original_data[[1]]
+X <- original_data[[2]]
+g <- original_data[[3]]
+beta_est <- matrix(rnorm(4 * ncol(Y)), nrow = 4)
+initialise_commonfactorstructure_macropca(TRUE, Y, X, beta_est, g, NA, 0, c(3, 3, 3))
 }

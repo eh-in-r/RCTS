@@ -11,6 +11,12 @@ get_convergence_speed(iteration, of)
 
 \item{of}{objective function}
 }
+\value{
+numeric if iteration > 3, otherwise NA
+}
 \description{
 Defines the convergence speed.
+}
+\examples{
+get_convergence_speed(5, 10:1)
 }

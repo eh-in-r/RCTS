@@ -17,6 +17,10 @@ solveFG(TT, S, kg, factor_group, testing = FALSE)
 
 \item{testing}{variable that determines if we are in 'testing phase'; defaults to FALSE (requires Matrix-package if set to TRUE)}
 }
+\value{
+list: the number of elements in this list is equal to S (the number of groups).
+Each of the elements in this list has a number rows equal to the number of group specific factors, and TT columns.
+}
 \description{
 Helpfunction in update_g(), to calculate solve(FG x t(FG)) x FG
 }

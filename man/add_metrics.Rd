@@ -14,7 +14,6 @@ add_metrics(
   lambda,
   factor_group,
   lambda_group,
-  TT,
   iteration,
   g_true = NA,
   add_rand = FALSE
@@ -39,14 +38,20 @@ add_metrics(
 
 \item{lambda_group}{loadings of the estimated group specific factors}
 
-\item{TT}{length of time series}
-
 \item{iteration}{number of iteration}
 
 \item{g_true}{vector of length NN with true group memberships}
 
 \item{add_rand}{adds the adjusted randindex to the df (requires the mclust package); used for simulations}
 }
+\value{
+data.frame with final estimations of each configuration
+}
 \description{
 Adds several metrics to df_results.
+}
+\examples{
+df_results <- add_configuration(initialise_df_results(TRUE),
+  3, 0, c(3, 3, 3, rep(NA, 17))) #data.frame with one configuration
+add_metrics(df_results, 1, 3.94, NA, round(runif(30, 1, 3)), NA, NA, NA, NA, 9)
 }

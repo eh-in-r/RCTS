@@ -9,6 +9,9 @@ make_df_pic_parallel(x)
 \arguments{
 \item{x}{output of the parallel version of the algorithm}
 }
+\value{
+data.frame
+}
 \description{
 Makes a dataframe with the PIC for each configuration and each candidate C.
 }

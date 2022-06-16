@@ -13,6 +13,15 @@ fill_rc(df, all_best_values, subset)
 
 \item{subset}{index of the subsample}
 }
+\value{
+data.frame
+}
 \description{
 Fills in the optimized number of common factors for each C.
+}
+\examples{
+df_results <- add_configuration(initialise_df_results(TRUE),
+  3, 0, c(3, 3, 3, rep(NA, 17))) #data.frame with one configuration
+all_best_values <- calculate_best_config(df_results, data.frame(t(1:5)), 1:5)
+rc <- fill_rc(initialise_rc(0:2, 1:5), all_best_values, 1)
 }

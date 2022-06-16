@@ -13,10 +13,19 @@ fill_rcj(df, all_best_values, subset, S_cand, kg_cand)
 
 \item{subset}{index of the subsample}
 
-\item{S_cand}{candidate values for the number of estimated groups}
+\item{S_cand}{vector with candidate values for the number of estimated groups}
 
-\item{kg_cand}{candidate values for the number of estimated group specific factors}
+\item{kg_cand}{vector with candidate values for the number of estimated group specific factors}
+}
+\value{
+data.frame
 }
 \description{
 Fills in the optimized number of groups and group specific factors for each C.
+}
+\examples{
+df_results <- add_configuration(initialise_df_results(TRUE),
+  3, 0, c(3, 3, 3, rep(NA, 17))) #data.frame with one configuration
+all_best_values <- calculate_best_config(df_results, data.frame(t(1:5)), 1:5)
+rcj <- fill_rcj(initialise_rcj(0:2, 1:5) , all_best_values, 1, 2:4, 2:4)
 }

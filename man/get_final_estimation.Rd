@@ -19,6 +19,19 @@ get_final_estimation(df, opt_groups, k, kg, type, limit_est_groups = 20)
 
 \item{limit_est_groups}{maximum allowed number of groups that can be estimated}
 }
+\value{
+This function returns the estimations of the chosen configuration.
+If type is "clustering" it returns a numeric vector with the estimated group membership for all time series.
+If type is "beta", "lg" the function returns a data.frame.
+If type is "f" or "l" the function also returns a data.frame. If no common factors were estimated in the optimized configuration, then NA is returned.
+If type is "fg" the function returns a list.
+}
 \description{
 Function that returns the final clustering, based on the estimated number of groups and common and group specific factors.
+}
+\examples{
+get_final_estimation(df_results_example, 3, 0, c(3, 3, 3), "clustering")
+get_final_estimation(df_results_example, 3, 0, c(3, 3, 3), "beta")
+get_final_estimation(df_results_example, 3, 0, c(3, 3, 3), "fg")
+get_final_estimation(df_results_example, 3, 0, c(3, 3, 3), "lg")
 }

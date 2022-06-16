@@ -11,6 +11,9 @@ final_estimations_filter_kg(df, kg)
 
 \item{kg}{vector with number of group specific factors for each group, on which should be filtered}
 }
+\value{
+data.frame
+}
 \description{
 Filters dataframe on the requested group specific factors configuration.
 }
