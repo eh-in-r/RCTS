@@ -67,6 +67,6 @@ NN <- 30
 TT <- 10
 e <- matrix(rnorm(NN * TT), nrow = NN)
 beta_est <- matrix(rnorm(NN * 4), ncol = NN) #random values for beta
-g <- rnorm(NN)
+g <- round(runif(NN, 1, 3))
 calculate_PIC(0.51, TRUE, 3, 0, c(3, 3, 3), e, e^2/(NN*TT), NN, TT, "individual", beta_est, g, 3)
 }

@@ -51,9 +51,11 @@ Wrapper of the loop over the subsets which in turn use the parallelised algorith
 }
 \examples{
 \donttest{
-#Using a small dataset as an example; this will generate several warnings due to its size.
+#Using a small dataset as an example; this will generate several warnings due to its small size.
 #Note that this example is run sequentially instead of parallel,
 #  and consequently will print some intermediate information in the console.
+#This example uses the classical algorithm instead of the robust algorithm
+#  to limit its running time.
 set.seed(1)
 original_data <- create_data_dgp2(30, 10)
 #define the number of subsets used to estimate the optimal number of groups and factors
@@ -70,7 +72,7 @@ kg_cand <- 1:2 # vector with candidate number of group specific factors
 #cl <- makeCluster(detectCores() - 1)
 #registerDoSNOW(cl)
 output <- parallel_algorithm(original_data, indices_subset, S_cand, k_cand, kg_cand,
-  C_candidates, maxit = 3)
+  C_candidates, robust = FALSE, USE_DO = TRUE, maxit = 3)
 #stopCluster(cl)
 }
 }
