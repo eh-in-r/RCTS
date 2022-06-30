@@ -4,7 +4,7 @@
 \alias{calculate_XB_estimated}
 \title{Calculates (the estimated value of) the matrix X*beta_est.}
 \usage{
-calculate_XB_estimated(X, beta_est, g, vars_est, method_estimate_beta)
+calculate_XB_estimated(X, beta_est, g, vars_est, method_estimate_beta, TT)
 }
 \arguments{
 \item{X}{X: NxTxp array containing the observable variables}
@@ -16,6 +16,8 @@ calculate_XB_estimated(X, beta_est, g, vars_est, method_estimate_beta)
 \item{vars_est}{number of variables that will be included in the algorithm and have their coefficient estimated. This is usually equal to the number of observable variables.}
 
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
+
+\item{TT}{length of time series}
 }
 \value{
 Returns a NxT matrix. If vars_est is set to 0, it returns NA.

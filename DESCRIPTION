@@ -1,6 +1,6 @@
 Package: RCTS 
 Title: Clustering Time Series While Resisting Outliers
-Version: 0.2.2
+Version: 0.2.2.1
 Authors@R: 
     person(given = "Ewoud",
            family = "Heyndels",

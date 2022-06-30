@@ -60,3 +60,17 @@ Furthermore "group" (group membership) and id (the order in which the time serie
 \description{
 returns object which includes group and id of the individuals
 }
+\examples{
+#' #example with data generated with DGP 2
+data <- create_data_dgp2(30, 10)
+Y <- data[[1]]
+X <- data[[2]]
+g <- data[[3]] #true group membership
+set.seed(1)
+beta_est <- matrix(rnorm(4 * nrow(Y)), nrow = 4)
+factor_group <- data[[5]] #true values of group specific factors
+comfactor <- matrix(0, nrow = 1, ncol = ncol(Y))
+lambda <- matrix(0, nrow = 1, ncol = nrow(Y))
+calculate_lambda_group(TRUE, Y, X, beta_est, factor_group, g, lambda, comfactor,
+3, 0, c(3, 3, 3) )
+}

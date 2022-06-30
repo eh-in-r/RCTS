@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{estimate_factor_group}
 \alias{estimate_factor_group}
-\title{Estimates group factors}
+\title{Estimates group factors Fg.}
 \usage{
 estimate_factor_group(
   robust,
@@ -57,5 +57,19 @@ estimate_factor_group(
 Return a list with an element for each estimated group. Each element of the list is a matrix with the group specific factors as rows.
 }
 \description{
-Estimates group factors
+Estimates group factors Fg.
+}
+\examples{
+#example with data generated with DGP 2
+data <- create_data_dgp2(30, 10)
+Y <- data[[1]]
+X <- data[[2]]
+g <- data[[3]] #true group membership
+set.seed(1)
+beta_est <- matrix(rnorm(4 * nrow(Y)), nrow = 4)
+factor_group <- data[[5]] #true values of group specific factors
+comfactor <- matrix(0, nrow = 1, ncol = ncol(Y))
+lambda <- matrix(0, nrow = 1, ncol = nrow(Y))
+estimate_factor_group(TRUE, Y, X, beta_est, g, lambda, comfactor, factor_group,
+3, 0, c(3, 3, 3))
 }

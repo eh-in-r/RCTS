@@ -605,9 +605,8 @@ calculate_virtual_factor_and_lambda_group <- function(group, solve_FG_FG_times_F
   LF <- t(lambda) %*% comfactor
   xbeta <- calculate_XB_estimated(
     X, beta_est, g,
-    vars_est, method_estimate_beta
+    vars_est, method_estimate_beta, ncol(Y)
   )
-
 
   if (!do_we_estimate_common_factors(number_of_common_factors_local)) {
     Y_ster <- Y[indices, ] - xbeta
@@ -689,7 +688,9 @@ calculate_errors_virtual_groups <- function(group, LF, virtual_grouped_factor_st
 
   a <- do_we_estimate_common_factors(k)
   b <- do_we_estimate_group_factors(kg)
-  X <- adapt_X_estimating_less_variables(X, vars_est)
+  if( !is.na(X[1]) & !is.null(X[1]) ) {
+    X <- adapt_X_estimating_less_variables(X, vars_est)
+  }
 
   for (i in 1:NN) {
     # calculate lambda_group for one individual, based on an hypothetical group membership
@@ -870,7 +871,6 @@ update_g <- function(robust, Y, X, beta_est, g,
         k,
         method_estimate_beta,
         factor_group, lambda, comfactor, Y, X, beta_est
-        # use_real_world_data_local = use_real_world_data_inupdateg
       )
     })
     # if (verbose) message("virtual_grouped_factor_structure is created")
@@ -880,7 +880,6 @@ update_g <- function(robust, Y, X, beta_est, g,
 
 
   LF <- (t(lambda) %*% comfactor)
-
 
   # calculate errors for each possible group
   errors_virtual <- lapply(1:S, function(x) {
@@ -893,7 +892,6 @@ update_g <- function(robust, Y, X, beta_est, g,
     )
   })
   # if (verbose) message("errors_virtual is created")
-
 
   if (robust) {
     rho_parameters <- lapply(1:S, function(x) define_rho_parameters(errors_virtual[[x]])) # (parameter object = NA -> returns median and madn of the calculated error term)
@@ -918,7 +916,6 @@ update_g <- function(robust, Y, X, beta_est, g,
   }
 
   g <- reassign_if_empty_groups(g, S, TT)
-
   return(list(g, matrix_obj_values, g_before_class_zero))
 }
 
@@ -1633,6 +1630,12 @@ calculate_Z_group <- function(Y, X, beta_est, g, lambda, comfactor, group,
                               initialise,
                               vars_est) {
   TT <- ncol(Y)
+  if(!is.na(X[1]) & !is.null(X[1])) {
+    vars_est <- dim(X)[3]
+    X <- adapt_X_estimating_less_variables(X, vars_est)
+  } else {
+    vars_est <- 0
+  }
   indices_group <- which(g == group)
   if (length(indices_group) == 0) {
     message("empty group (calculate_Z_group())")
@@ -1640,7 +1643,6 @@ calculate_Z_group <- function(Y, X, beta_est, g, lambda, comfactor, group,
 
   Z <- matrix(0, nrow = length(indices_group), ncol = TT) # Nj x T matrix
   # if vars_est < vars the obsoleterows in beta_est were already erased -> do the same in X
-  X <- adapt_X_estimating_less_variables(X, vars_est)
 
   for (i in 1:length(indices_group)) { # loop over the number of elements in the group
     index <- indices_group[i]
@@ -1946,7 +1948,7 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20, verbose_robustpca 
 
 
 
-#' Estimates common factor(s) F
+#' Estimates common factor(s) F.
 #'
 #' The estimator for F, see Anderson (1984), is equal to the first k eigenvectors (multiplied by sqrt(T) due to the restriction F'F/T = I)
 #' associated with first r largest eigenvalues of the matrix WW' (which is of size TxT).
@@ -2067,7 +2069,7 @@ prepare_for_robpca <- function(object, NN, TT, option = 3) {
 
 
 
-#' Estimates group factors
+#' Estimates group factors Fg.
 #'
 #' @inheritParams calculate_W
 #' @inheritParams calculate_Z_common
@@ -2076,6 +2078,20 @@ prepare_for_robpca <- function(object, NN, TT, option = 3) {
 #' @inheritParams estimate_factor
 #' @inheritParams update_g
 #' @return Return a list with an element for each estimated group. Each element of the list is a matrix with the group specific factors as rows.
+#' @export
+#' @examples
+#' #example with data generated with DGP 2
+#' data <- create_data_dgp2(30, 10)
+#' Y <- data[[1]]
+#' X <- data[[2]]
+#' g <- data[[3]] #true group membership
+#' set.seed(1)
+#' beta_est <- matrix(rnorm(4 * nrow(Y)), nrow = 4)
+#' factor_group <- data[[5]] #true values of group specific factors
+#' comfactor <- matrix(0, nrow = 1, ncol = ncol(Y))
+#' lambda <- matrix(0, nrow = 1, ncol = nrow(Y))
+#' estimate_factor_group(TRUE, Y, X, beta_est, g, lambda, comfactor, factor_group,
+#' 3, 0, c(3, 3, 3))
 estimate_factor_group <- function(robust, Y, X, beta_est, g, lambda, comfactor, factor_group,
                                   S, k, kg,
                                   method_estimate_beta = "individual", method_estimate_factors = "macro",
@@ -2100,7 +2116,6 @@ estimate_factor_group <- function(robust, Y, X, beta_est, g, lambda, comfactor, 
       if (TT < kg[group]) {
         warning("There are too many factors to be estimated, compared to TT.")
       }
-
       Wj <- calculate_Z_group(
         Y, X, beta_est, g, lambda, comfactor, group,
         k,
@@ -2257,6 +2272,20 @@ calculate_lambda <- function(robust, Y, X, beta_est, comfactor, factor_group, g,
 #' @importFrom rlang .data
 #' @return Returns a data.frame with a row for each time series. The first number of columns contain the individual loadings to the group specific factors.
 #' Furthermore "group" (group membership) and id (the order in which the time series appear in Y) are added.
+#' @export
+#' @examples
+#' #' #example with data generated with DGP 2
+#' data <- create_data_dgp2(30, 10)
+#' Y <- data[[1]]
+#' X <- data[[2]]
+#' g <- data[[3]] #true group membership
+#' set.seed(1)
+#' beta_est <- matrix(rnorm(4 * nrow(Y)), nrow = 4)
+#' factor_group <- data[[5]] #true values of group specific factors
+#' comfactor <- matrix(0, nrow = 1, ncol = ncol(Y))
+#' lambda <- matrix(0, nrow = 1, ncol = nrow(Y))
+#' calculate_lambda_group(TRUE, Y, X, beta_est, factor_group, g, lambda, comfactor,
+#' 3, 0, c(3, 3, 3) )
 calculate_lambda_group <- function(robust, Y, X, beta_est, factor_group, g, lambda, comfactor,
                                    S,
                                    k,
@@ -2419,7 +2448,11 @@ grid_add_variables <- function(grid, Y, X, beta_est, g, lambda, comfactor, metho
                                limit_est_groups_heterogroups = 15) {
   NN <- nrow(Y)
   TT <- ncol(Y)
-  vars <- dim(X)[3]
+  if( !is.na(X[1]) & !is.null(X[1]) ) {
+    vars <- dim(X)[3]
+  } else {
+    vars <- 0
+  }
   if (vars > 0) {
     # for homogeneous beta_est (1 -> 4 at this moment), we only need 1 column as all columns are the same
     if (method_estimate_beta == "homogeneous") {
@@ -2447,7 +2480,7 @@ grid_add_variables <- function(grid, Y, X, beta_est, g, lambda, comfactor, metho
         if (S > 13) grid$XBETA14 <- (apply(grid, 1, function(x) c(1, X[x[1], x[2], ]) %*% beta_est[, 14]))
       }
       if (method_estimate_beta == "individual") {
-        grid$XBETA <- c(calculate_XB_estimated(X, beta_est, g, vars_est, method_estimate_beta))
+        grid$XBETA <- c(calculate_XB_estimated(X, beta_est, g, vars_est, method_estimate_beta, ncol(Y)))
       }
     }
   } else {
@@ -2570,7 +2603,7 @@ calculate_error_term <- function(Y, X, beta_est, g, factor_group, lambda_group, 
       )
     }
     if (method_estimate_beta == "individual") {
-      xt <- t(calculate_XB_estimated(X, beta_est, g, vars_est, method_estimate_beta)) # TxN matrix
+      xt <- t(calculate_XB_estimated(X, beta_est, g, vars_est, method_estimate_beta, ncol(Y))) # TxN matrix
     }
   } else {
     xt <- matrix(0, nrow = TT, ncol = NN) # TxN
@@ -2845,12 +2878,16 @@ adapt_X_estimating_less_variables <- function(X, vars_est) {
 #' @return Returns a NxT matrix. If vars_est is set to 0, it returns NA.
 calculate_XB_estimated <- function(X, beta_est, g,
                                    vars_est,
-                                   method_estimate_beta) {
-  vars <- dim(X)[3] # do before adapt_X_estimating_less_variables()
-  # if vars_est < vars, then the obsolete rows in beta_est are already erased -> now do the same in X
-  X <- adapt_X_estimating_less_variables(X, vars_est)
-  NN <- dim(X)[1]
-  TT <- dim(X)[2]
+                                   method_estimate_beta, TT) {
+  if(!is.na(X[1]) & !is.null(X[1])) {
+    vars <- dim(X)[3] # do before adapt_X_estimating_less_variables()
+    # if vars_est < vars, then the obsolete rows in beta_est are already erased -> now do the same in X
+    X <- adapt_X_estimating_less_variables(X, vars_est)
+    NN <- dim(X)[1]
+  } else {
+    NN <- length(g)
+    return(matrix(0, nrow = NN, ncol = TT))
+  }
 
   if (vars > 0 & !is.na(X[1])) {
     if (method_estimate_beta == "homogeneous") { # currently only designed for DGP 5

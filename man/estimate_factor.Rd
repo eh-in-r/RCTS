@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{estimate_factor}
 \alias{estimate_factor}
-\title{Estimates common factor(s) F}
+\title{Estimates common factor(s) F.}
 \usage{
 estimate_factor(
   robust,
