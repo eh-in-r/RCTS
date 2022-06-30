@@ -27,7 +27,7 @@ run_config <- function(robust, config, C_candidates, Y, X, maxit = 30) {
   kg <- unlist(config %>% dplyr::select(.data$k1:.data$k20)) # must be a vector (class "integer")
 
 
-  #print("initialise:")
+  print("initialise:")
   ########## initialisation
   iteration <- 0 # number of the iteration; 0 indicates being in the initialisation phase
   beta_est <- initialise_beta(robust, Y, X, S)
@@ -42,13 +42,13 @@ run_config <- function(robust, config, C_candidates, Y, X, maxit = 30) {
   lambda_group <- calculate_lambda_group(robust, Y, X, beta_est, factor_group, g, NA, NA, S, k, kg, initialise = TRUE)
 
 
-  #print("estimate:")
+  print("estimate:")
   ######### estimations
   obj_funct_values <- c()
   speed <- 999999 # convergence speed: set to initial high value
   while (iteration < maxit & !check_stopping_rules(iteration, speed, obj_funct_values, verbose = FALSE)) {
 
-    temp <- iterate(robust, Y, X, beta_est, g, lambda_group, factor_group, lambda, comfactor, S, k, kg, verbose = FALSE)
+    temp <- iterate(robust, Y, X, beta_est, g, lambda_group, factor_group, lambda, comfactor, S, k, kg, verbose = TRUE)
     #print("********************************************************(end of iterate()")
     #print(class(temp))
     beta_est <- temp[[1]]
@@ -64,8 +64,9 @@ run_config <- function(robust, config, C_candidates, Y, X, maxit = 30) {
     obj_funct_values <- c(obj_funct_values, value)
     iteration <- iteration + 1
     speed <- get_convergence_speed(iteration, obj_funct_values / nrow(Y) / ncol(Y))
+    print("--")
   }
-  #print("estimation is done")
+  print("estimation is done")
 
   # calculate the estimation errors
   pic_e2 <- calculate_error_term(

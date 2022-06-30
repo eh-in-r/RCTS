@@ -915,7 +915,7 @@ update_g <- function(robust, Y, X, beta_est, g,
     g <- clustering_with_robust_distances(g, S, Y)
   }
 
-  g <- reassign_if_empty_groups(g, S, TT)
+  g <- reassign_if_empty_groups(g, S, NN)
   return(list(g, matrix_obj_values, g_before_class_zero))
 }
 
@@ -923,9 +923,9 @@ update_g <- function(robust, Y, X, beta_est, g,
 #'
 #' @param g Vector with group membership for all individuals
 #' @param S_true true number of groups
-#' @param TT length of time series
+#' @param TT number of time series
 #' @return numeric vector with the estimated group membership for all time series
-reassign_if_empty_groups <- function(g, S_true, TT) {
+reassign_if_empty_groups <- function(g, S_true, NN) {
   empty_groups <- c()
   while (length(table(g[g != 0])) != S_true) { # class zero (individuals too far from all groups) should not be counted here
     # reassign one individual to empty groups
@@ -937,7 +937,7 @@ reassign_if_empty_groups <- function(g, S_true, TT) {
     }
 
     for (i in 1:length(empty_groups)) {
-      randomindex <- ceiling(runif(1) * TT)
+      randomindex <- ceiling(runif(1) * NN)
       g[randomindex] <- empty_groups[i]
     }
   }
@@ -1646,6 +1646,11 @@ calculate_Z_group <- function(Y, X, beta_est, g, lambda, comfactor, group,
 
   for (i in 1:length(indices_group)) { # loop over the number of elements in the group
     index <- indices_group[i]
+    if(!between(index, 1, nrow(Y))) {
+      print(index)
+      print(table(g))
+      warning("index has an incorrect value")
+    }
 
     # define XT
     if (vars_est > 0) {
@@ -1658,7 +1663,7 @@ calculate_Z_group <- function(Y, X, beta_est, g, lambda, comfactor, group,
     }
 
     # calculate Z = Y - X*beta_est - LF)
-    y <- Y[index, ] %>% as.numeric()
+    y <- as.numeric(Y[index, ])
     if (initialise) {
       Z[i, ] <- y - XT
     } else {
@@ -3719,12 +3724,14 @@ iterate <- function(robust, Y, X, beta_est, g, lambda_group, factor_group, lambd
     method_estimate_beta, method_estimate_factors,
     verbose = verbose
   )
+  if (verbose) message("factor_group is estimated")
   lambda_group <- calculate_lambda_group(
     robust, Y, X, beta_est, factor_group, g, lambda, comfactor,
     S, k, kg,
     method_estimate_beta, method_estimate_factors,
     verbose = verbose # , UPDATE1 = FALSE, UPDATE2 = FALSE
   )
+  if (verbose) message("lambda_group is estimated")
 
   if (verbose) message("calculate objective function")
   grid <- expand.grid(1:nrow(Y), 1:ncol(Y))
