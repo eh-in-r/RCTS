@@ -1647,7 +1647,7 @@ calculate_Z_group <- function(Y, X, beta_est, g, lambda, comfactor, group,
 
   for (i in 1:length(indices_group)) { # loop over the number of elements in the group
     index <- indices_group[i]
-    if(!between(index, 1, nrow(Y))) {
+    if(!dplyr::between(index, 1, nrow(Y))) {
       print(index)
       print(table(g))
       warning("index has an incorrect value")
