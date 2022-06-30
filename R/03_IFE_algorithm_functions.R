@@ -1623,6 +1623,7 @@ calculate_Z_common <- function(Y, X, beta_est, g, lgfg_list,
 #' @inheritParams calculate_Z_common
 #' @inheritParams estimate_beta
 #' @param group indexnumber of the group
+#' @importFrom dplyr between
 #' @return NxT matrix
 calculate_Z_group <- function(Y, X, beta_est, g, lambda, comfactor, group,
                               k,
