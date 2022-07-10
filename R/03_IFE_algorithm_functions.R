@@ -2867,7 +2867,11 @@ calculate_XB_true <- function(X, beta_true, g, g_true, method_estimate_beta) {
 #' @param vars_est number of available observed variables for which a coefficient will be estimated
 #' @return Returns a 3D-array. If vars_est is set to 0, it returns NA.
 adapt_X_estimating_less_variables <- function(X, vars_est) {
-  vars <- dim(X)[3]
+  if (is.na(X[1]) | is.null(X[1])) {
+    vars <- 0
+  } else {
+    vars <- dim(X)[3]
+  }
   # if vars_est < vars, then the obsolete rows in beta_est are already erased -> do the same in X
   if (vars_est < vars) {
     if (vars_est > 0) {
