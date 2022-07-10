@@ -1535,7 +1535,9 @@ calculate_W <- function(Y, X, beta_est, g,
   W <- matrix(0, nrow = NN, ncol = TT) # T x N-matrix in original paper , but I rather define as NxT
 
   # if vars_est < vars the obsoleterows in beta_est were already erased -> do the same in X
-  X <- adapt_X_estimating_less_variables(X, vars_est)
+  if( !is.na(X[1]) & !is.null(X[1]) ) {
+    X <- adapt_X_estimating_less_variables(X, vars_est)
+  }
 
   if (vars_est > 0) {
     if (method_estimate_beta == "homogeneous") {
@@ -2985,7 +2987,7 @@ calculate_FL_group_estimated <- function(lg, fg, g,
     }
   }
   suppressWarnings( # the condition has length > 1 and only the first element will be used
-    if (!is.na(temp)) {
+    if (!is.na(temp[1])) {
       FL_group_est <- lapply(1:NN, function(x) FL_helpf(x, g))
       FL_group_est <- t(matrix(unlist(FL_group_est), nrow = TT))
     } else {
@@ -3517,7 +3519,7 @@ define_object_for_initial_clustering_macropca <- function(robust, Y, k, kg, comf
   return(to_divide)
 }
 
-#' Function that clusters time series in a dataframe with kmeans (classical algorithm) or trimmed kmeans(robust algorithms).
+#' Function that clusters time series in a dataframe with kmeans.
 #'
 #' If a time series contains NA's a random cluster will be assigned to that time series.
 #' @inheritParams define_object_for_initial_clustering_macropca
