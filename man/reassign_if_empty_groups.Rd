@@ -4,14 +4,14 @@
 \alias{reassign_if_empty_groups}
 \title{Randomly reassign individual(s) if there are empty groups. This can happen if the total number of time series is low compared to the number of desired groups.}
 \usage{
-reassign_if_empty_groups(g, S_true, TT)
+reassign_if_empty_groups(g, S_true, NN)
 }
 \arguments{
 \item{g}{Vector with group membership for all individuals}
 
 \item{S_true}{true number of groups}
 
-\item{TT}{length of time series}
+\item{NN}{number of time series}
 }
 \value{
 numeric vector with the estimated group membership for all time series

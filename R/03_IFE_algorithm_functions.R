@@ -923,7 +923,7 @@ update_g <- function(robust, Y, X, beta_est, g,
 #'
 #' @param g Vector with group membership for all individuals
 #' @param S_true true number of groups
-#' @param TT number of time series
+#' @param NN number of time series
 #' @return numeric vector with the estimated group membership for all time series
 reassign_if_empty_groups <- function(g, S_true, NN) {
   empty_groups <- c()

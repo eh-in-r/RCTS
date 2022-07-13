@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{initialise_clustering}
 \alias{initialise_clustering}
-\title{Function that clusters time series in a dataframe with kmeans (classical algorithm) or trimmed kmeans(robust algorithms).}
+\title{Function that clusters time series in a dataframe with kmeans.}
 \usage{
 initialise_clustering(
   robust,
