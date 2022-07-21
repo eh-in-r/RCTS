@@ -61,11 +61,9 @@ determine_robust_lambda <- function(almost_classical_lambda, fastoption = TRUE, 
         nlm(f = sum_of_rho, p = 0)$estimate,
         error = function(e) e
       )
-      print(class(robust_lambda))
       if("error" %in% class(robust_lambda)) {
         robust_lambda <- optim(par = 0, fn = sum_of_rho, method = "L-BFGS-B")$par
       }
-      print(robust_lambda)
     }
   } else {
     robust_lambda <- optim(par = 0, fn = sum_of_rho, method = "L-BFGS-B")$par
