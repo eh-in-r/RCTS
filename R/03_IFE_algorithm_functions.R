@@ -3540,6 +3540,7 @@ define_object_for_initial_clustering_macropca <- function(robust, Y, k, kg, comf
 #' @export
 initialise_clustering <- function(robust, Y, S, k, kg, comfactor, max_percent_outliers_tkmeans = 0, verbose = FALSE) {
   df <- define_object_for_initial_clustering_macropca(robust, Y, k, kg, comfactor, verbose = verbose)
+
   # in the kmeans-call NA's are not allowed:
   # -> function handleNA() will drop time series with NA's.
   NN <- nrow(df)

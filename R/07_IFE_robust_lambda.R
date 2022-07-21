@@ -52,12 +52,20 @@ determine_robust_lambda <- function(almost_classical_lambda, fastoption = TRUE, 
   sum_of_rho <- function(x) {
     sum(Mpsi((almost_classical_lambda - x) / MADCL, cc = 4.685, psi = "bisquare", deriv = -1))
   }
-
   if (fastoption) {
     if (fastoption2) {
       robust_lambda <- nlm(f = sum_of_rho, p = 0, steptol = 1e-3, gradtol = 1e-3)$estimate
     } else {
-      robust_lambda <- nlm(f = sum_of_rho, p = 0)$estimate
+      #note: sometimes happens "non-finite value supplied by 'nlm'"; reason unclear; input is fine; solution: use again the slower optim()
+      robust_lambda <- tryCatch(
+        nlm(f = sum_of_rho, p = 0)$estimate,
+        error = function(e) e
+      )
+      print(class(robust_lambda))
+      if("error" %in% class(robust_lambda)) {
+        robust_lambda <- optim(par = 0, fn = sum_of_rho, method = "L-BFGS-B")$par
+      }
+      print(robust_lambda)
     }
   } else {
     robust_lambda <- optim(par = 0, fn = sum_of_rho, method = "L-BFGS-B")$par
@@ -178,6 +186,7 @@ return_robust_lambdaobject <- function(Y_like_object, group, type, g,
         almost_classical_lambda <- (Y_like_object[ii, ] * factor_group_rrn[, rr]) #-factor_for_grouping- #Do not use the transpose here, because we use factor_for_grouping here.
 
         lambda_local[ii, rr] <- determine_robust_lambda(almost_classical_lambda)
+
       }
     }
 
