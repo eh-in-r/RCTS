@@ -146,6 +146,7 @@ make_df_results_parallel <- function(x, limit_est_groups = 20) {
 #' Makes a dataframe with the PIC for each configuration and each candidate C.
 #'
 #' @param x output of the parallel version of the algorithm
+#' @param C_candidates candidates for C
 #' @return data.frame
 make_df_pic_parallel <- function(x, C_candidates) {
   df <- t(matrix(unlist(x %>% purrr::map(4)), nrow = length(C_candidates)))
@@ -281,7 +282,8 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
           pic_sigma2 <- df_results$sigma2[nrow(df_results)]
           df_pic <- list()
           for( i in 1:length(choice_pic) ) {
-            df_pic[[i]] <- t(matrix(unlist(x %>% purrr::map(4) %>% purr::map(i)), nrow = length(C_candidates)))
+            df_pic[[i]] <- t(matrix(unlist(x %>% purrr::map(4) %>% purrr::map(i)), nrow = length(C_candidates)))
+
             df_pic[[i]] <- adapt_pic_with_sigma2maxmodel(df_pic[[i]], df_results, pic_sigma2)
 
             # calculate for each candidate value for C the best S, k and kg
