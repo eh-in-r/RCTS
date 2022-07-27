@@ -13,7 +13,7 @@ globalVariables(c("i")) #required to pass R CMD check of a function which uses f
 #' @inheritParams initialise_beta
 #' @param maxit maximum limit for the number of iterations
 #' @return list with the estimators and metrics for this configuration
-run_config <- function(robust, config, C_candidates, Y, X, maxit = 30) {
+run_config <- function(robust, config, C_candidates, Y, X, choice_pic, maxit = 30) {
   #print("-----------------------------------------start run_config:-------------------------------------------")
   #print(config)
   # print("-remove sleep again-")
@@ -78,7 +78,7 @@ run_config <- function(robust, config, C_candidates, Y, X, maxit = 30) {
 
   pic <- add_pic_parallel(
     robust, Y, beta_est, g, S, k, kg,
-    pic_e2, C_candidates
+    pic_e2, C_candidates, choice_pic
   )
 
   pic_sigma2 <- calculate_sigma2(pic_e2, nrow(Y), ncol(Y))
@@ -91,8 +91,8 @@ run_config <- function(robust, config, C_candidates, Y, X, maxit = 30) {
 #' @inheritParams add_pic
 #' @return numeric vector with a value for each candidate C
 add_pic_parallel <- function(robust, Y, beta_est, g,
-                             S, k, kg, pic_e2, C_candidates, method_estimate_beta = "individual",
-                             choice_pic = "pic2022") {
+                             S, k, kg, pic_e2, C_candidates, choice_pic,
+                             method_estimate_beta = "individual") {
   if(!is.na(beta_est[1])) {
     vars_est <- ncol(beta_est)
   } else {
@@ -186,7 +186,7 @@ make_df_pic_parallel <- function(x) {
 #' #stopCluster(cl)
 #' }
 #' @export
-parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg_cand, C_candidates, robust = TRUE, USE_DO = FALSE, maxit = 30) {
+parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg_cand, C_candidates, robust = TRUE, USE_DO = FALSE, choice_pic = "pic2022", maxit = 30) {
   stopifnot(max(kg_cand) > 0)
   df_results_full <- NULL
   rc <- initialise_rc(indices_subset, C_candidates) # dataframe that will contain the optimized number of common factors for each C and subset
@@ -217,7 +217,7 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
         .options.snow = opts,
         .errorhandling = "pass"
       ) %do% {
-          run_config(robust, configs[i,], C_candidates, Y, X, maxit)
+          run_config(robust, configs[i,], C_candidates, Y, X, choice_pic, maxit)
 
       }
     } else {
@@ -227,7 +227,7 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
         .options.snow = opts,
         .errorhandling = "pass"
       ) %dopar% {
-        run_config(robust, configs[i,], C_candidates, Y, X, maxit)
+        run_config(robust, configs[i,], C_candidates, Y, X, choice_pic, maxit)
       }
     }
     #print("foreach has finished")
