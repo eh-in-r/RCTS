@@ -77,16 +77,20 @@ run_config <- function(robust, config, C_candidates, Y, X, choice_pic, maxit = 3
     S, k, kg
   )
 
-  # pic <- add_pic_parallel(
-  #   robust, Y, beta_est, g, S, k, kg,
-  #   pic_e2, C_candidates, choice_pic
-  # )
-  pic = list()
-  for( i in 1:length(choice_pic)) {
-    pic[[i]] <- add_pic_parallel(
+  if(length(choice_pic) == 1) {
+    pic <- add_pic_parallel(
       robust, Y, beta_est, g, S, k, kg,
-      pic_e2, C_candidates, choice_pic[i]
+      pic_e2, C_candidates, choice_pic
     )
+  }
+  if(length(choice_pic) > 1) {
+    pic = list()
+    for( i in 1:length(choice_pic)) {
+      pic[[i]] <- add_pic_parallel(
+        robust, Y, beta_est, g, S, k, kg,
+        pic_e2, C_candidates, choice_pic[i]
+      )
+    }
   }
 
   pic_sigma2 <- calculate_sigma2(pic_e2, nrow(Y), ncol(Y))
@@ -282,6 +286,8 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
           pic_sigma2 <- df_results$sigma2[nrow(df_results)]
           df_pic <- list()
           for( i in 1:length(choice_pic) ) {
+            #remaining issue here:
+            print(x %>% purrr::map(4))
             df_pic[[i]] <- t(matrix(unlist(x %>% purrr::map(4) %>% purrr::map(i)), nrow = length(C_candidates)))
 
             df_pic[[i]] <- adapt_pic_with_sigma2maxmodel(df_pic[[i]], df_results, pic_sigma2)
