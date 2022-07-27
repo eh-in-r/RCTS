@@ -77,10 +77,17 @@ run_config <- function(robust, config, C_candidates, Y, X, choice_pic, maxit = 3
     S, k, kg
   )
 
-  pic <- add_pic_parallel(
-    robust, Y, beta_est, g, S, k, kg,
-    pic_e2, C_candidates, choice_pic
-  )
+  # pic <- add_pic_parallel(
+  #   robust, Y, beta_est, g, S, k, kg,
+  #   pic_e2, C_candidates, choice_pic
+  # )
+  pic = list()
+  for( i in 1:length(choice_pic)) {
+    pic[[i]] <- add_pic_parallel(
+      robust, Y, beta_est, g, S, k, kg,
+      pic_e2, C_candidates, choice_pic[i]
+    )
+  }
 
   pic_sigma2 <- calculate_sigma2(pic_e2, nrow(Y), ncol(Y))
   #print("run_config is done")
@@ -100,12 +107,14 @@ add_pic_parallel <- function(robust, Y, beta_est, g,
     vars_est <- 0
   }
   pic_sigma2 <- calculate_sigma2(pic_e2)
+
   pic <- sapply(C_candidates, function(x) {
     calculate_PIC(x, robust, S, k, kg, pic_e2, pic_sigma2,
       NN = nrow(Y), TT = ncol(Y), method_estimate_beta,
       beta_est, g, vars_est, choice_pic
     )
   })
+
   return(pic)
 }
 
@@ -138,8 +147,8 @@ make_df_results_parallel <- function(x, limit_est_groups = 20) {
 #'
 #' @param x output of the parallel version of the algorithm
 #' @return data.frame
-make_df_pic_parallel <- function(x) {
-  df <- t(matrix(unlist(x %>% purrr::map(4)), nrow = 2002))
+make_df_pic_parallel <- function(x, C_candidates) {
+  df <- t(matrix(unlist(x %>% purrr::map(4)), nrow = length(C_candidates)))
   return(df)
 }
 
@@ -193,7 +202,14 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
   df_results_full <- NULL
   rc <- initialise_rc(indices_subset, C_candidates) # dataframe that will contain the optimized number of common factors for each C and subset
   rcj <- initialise_rcj(indices_subset, C_candidates) # dataframe that will contain the optimized number of groups and group specific factors for each C and subset
-
+  if(length(choice_pic) > 1) {
+    rc <- list()
+    rcj <- list()
+    for(i in 1:length(choice_pic)) {
+      rc[[i]] <- initialise_rc(indices_subset, C_candidates)
+      rcj[[i]] <- initialise_rcj(indices_subset, C_candidates)
+    }
+  }
   for (subset in indices_subset) {
     print(paste("subset:", subset, "/", max(indices_subset)))
     temp <- make_subsamples(original_data, subset)
@@ -260,16 +276,36 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
     if (sum(has_error_new) == 0) {
       if (!is.null(has_error_new)) {
         df_results <- make_df_results_parallel(output)
-        df_pic <- make_df_pic_parallel(output)
+        if(length(choice_pic) > 1) {
+          message("not tested yet: the 4th returnelement of run_config (and thus in all elements of 'output') is now a list; needs to be handled in make_df_pic_parallel()")
+          pic_sigma2 <- df_results$sigma2[nrow(df_results)]
+          df_pic <- list()
+          for( i in 1:length(choice_pic) ) {
+            df_pic[[i]] <- t(matrix(unlist(x %>% purrr::map(4) %>% purr::map(i)), nrow = length(C_candidates)))
+            df_pic[[i]] <- adapt_pic_with_sigma2maxmodel(df_pic[[i]], df_results, pic_sigma2)
 
-        pic_sigma2 <- df_results$sigma2[nrow(df_results)]
-        df_pic <- adapt_pic_with_sigma2maxmodel(df_pic, df_results, pic_sigma2)
+            # calculate for each candidate value for C the best S, k and kg
+            all_best_values <- calculate_best_config(df_results, df_pic[[i]], C_candidates)
+            rc[[i]] <- fill_rc(rc[[i]], all_best_values, subset) # best number of common factors
+            rcj[[i]] <- fill_rcj(rcj[[i]], all_best_values, subset, S_cand, kg_cand) # best number of group specific factors and groups
+            rm(all_best_values)
+          }
 
-        # calculate for each candidate value for C the best S, k and kg
-        all_best_values <- calculate_best_config(df_results, df_pic, C_candidates)
-        rc <- fill_rc(rc, all_best_values, subset) # best number of common factors
-        rcj <- fill_rcj(rcj, all_best_values, subset, S_cand, kg_cand) # best number of group specific factors and groups
-        rm(all_best_values)
+
+        } else {
+          df_pic <- make_df_pic_parallel(output, C_candidates)
+          pic_sigma2 <- df_results$sigma2[nrow(df_results)]
+          df_pic <- adapt_pic_with_sigma2maxmodel(df_pic, df_results, pic_sigma2)
+
+          # calculate for each candidate value for C the best S, k and kg
+          all_best_values <- calculate_best_config(df_results, df_pic, C_candidates)
+          rc <- fill_rc(rc, all_best_values, subset) # best number of common factors
+          rcj <- fill_rcj(rcj, all_best_values, subset, S_cand, kg_cand) # best number of group specific factors and groups
+          rm(all_best_values)
+        }
+
+
+
       } else {
         print(output)
         message("2. All possible configurations have produced an error for this subset. Expanding the configurationspace is an option.")
