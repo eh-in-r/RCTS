@@ -4,10 +4,12 @@
 \alias{make_df_pic_parallel}
 \title{Makes a dataframe with the PIC for each configuration and each candidate C.}
 \usage{
-make_df_pic_parallel(x)
+make_df_pic_parallel(x, C_candidates)
 }
 \arguments{
 \item{x}{output of the parallel version of the algorithm}
+
+\item{C_candidates}{candidates for C}
 }
 \value{
 data.frame
