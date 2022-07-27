@@ -4,7 +4,7 @@
 \alias{run_config}
 \title{Wrapper around the non-parallel algorithm, to estimate beta, group membership and the factorstructures.}
 \usage{
-run_config(robust, config, C_candidates, Y, X, maxit = 30)
+run_config(robust, config, C_candidates, Y, X, choice_pic, maxit = 30)
 }
 \arguments{
 \item{robust}{TRUE or FALSE: defines using the classical or robust algorithm to estimate beta}
@@ -16,6 +16,11 @@ run_config(robust, config, C_candidates, Y, X, maxit = 30)
 \item{Y}{Y: NxT dataframe with the panel data of interest}
 
 \item{X}{X: NxTxp array containing the observable variables}
+
+\item{choice_pic}{indicates which PIC to use to estimate the number of groups and factors:
+options are "pic2017" (uses the PIC of \insertCite{Ando2017;textual}{RCTS}; works better for large N),
+"pic2016" (\insertCite{Ando2016;textual}{RCTS}; works better for large T) weighs the fourth term with an extra factor relative to the size of the groups,
+and "pic2022" which shrinks the NT-space where the number of groups and factors would be over- or underestimated compared to pic2016 and pic2017.}
 
 \item{maxit}{maximum limit for the number of iterations}
 }

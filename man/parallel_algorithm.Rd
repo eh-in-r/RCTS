@@ -13,6 +13,7 @@ parallel_algorithm(
   C_candidates,
   robust = TRUE,
   USE_DO = FALSE,
+  choice_pic = "pic2022",
   maxit = 30
 )
 }
@@ -32,6 +33,11 @@ parallel_algorithm(
 \item{robust}{robust or classical estimation}
 
 \item{USE_DO}{(for testing purposes) if TRUE, then a serialized version is performed ("do" instead of "dopar")}
+
+\item{choice_pic}{indicates which PIC to use to estimate the number of groups and factors:
+options are "pic2017" (uses the PIC of \insertCite{Ando2017;textual}{RCTS}; works better for large N),
+"pic2016" (\insertCite{Ando2016;textual}{RCTS}; works better for large T) weighs the fourth term with an extra factor relative to the size of the groups,
+and "pic2022" which shrinks the NT-space where the number of groups and factors would be over- or underestimated compared to pic2016 and pic2017.}
 
 \item{maxit}{maximum limit for the number of iterations for each configuration; defaults to 30}
 }

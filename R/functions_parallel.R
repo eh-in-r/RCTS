@@ -11,6 +11,7 @@ globalVariables(c("i")) #required to pass R CMD check of a function which uses f
 #' @inheritParams calculate_VCsquared
 #' @inheritParams estimate_beta
 #' @inheritParams initialise_beta
+#' @inheritParams calculate_PIC
 #' @param maxit maximum limit for the number of iterations
 #' @return list with the estimators and metrics for this configuration
 run_config <- function(robust, config, C_candidates, Y, X, choice_pic, maxit = 30) {
@@ -150,6 +151,7 @@ make_df_pic_parallel <- function(x) {
 #' @inheritParams calculate_VCsquared
 #' @inheritParams initialise_beta
 #' @inheritParams define_configurations
+#' @inheritParams calculate_PIC
 #' @param maxit maximum limit for the number of iterations for each configuration; defaults to 30
 #' @param USE_DO (for testing purposes) if TRUE, then a serialized version is performed ("do" instead of "dopar")
 #' @return Returns a list with three elements.
