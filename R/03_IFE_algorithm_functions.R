@@ -1209,23 +1209,30 @@ determine_beta <- function(string, X_special, Y_special, robust,
     model <- LMROB(Y_special, X_special, nosetting = nosetting_local) #-> lmrob(Y_special ~ X_special, setting = "KS2014")
     # }
   } else {
+
     # ncvreg, without weights
     model <- ncvreg(X_special, Y_special, family = "gaussian", penalty = "SCAD",
                     lambda = kappa_candidates
-                    )
-    # print(model$beta)
-    # plot(log(abs(model$beta[2,])))
-    # print("--")
+    )
     if (optimize_kappa) {
-    stop("Classical case with optimizing kappa is not implemented in RCTS. This would require a fixed C.")
+
+      stop("Classical case with optimizing kappa is not implemented in RCTS. This would require a fixed C.")
+
       # C <- .....
       # beta_temp = estimate_beta_classical_optimizekappa(model, kappa_candidates, Y_special, X_special, C, sigma2, TT)
       # print("--")
       # print(dim(beta_temp))
       # return(beta_temp)
-    } else {
-      #take kappa = 0 (note that kappa_candidates needs > 1 element according to documentation)
+    } else {  #when not optimizing kappa:
+      #take kappa = 0 in ncvreg (note that kappa_candidates needs > 1 element according to documentation)
       return(model$beta[, length(kappa_candidates)])
+
+      #alternatiely, we can use lm() since this returns the same results, but is faster the larger T gets
+      #but, lm() is slower than ncvreg when the number of variables in X grows large
+      #also, for practical applications X is often empty, so no estimation of beta necessary
+      # model <- lm(Y_special ~ X_special)
+      # return(model$coefficients)
+
     }
   }
 
