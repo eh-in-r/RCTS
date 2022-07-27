@@ -2765,6 +2765,9 @@ calculate_PIC <- function(C, robust, S, k, kg, e2, sigma2,
                           beta_est, g,
                           vars_est,
                           choice_pic = "pic2022") {
+  if(!(choice_pic %in% c("pic2016", "pic2017", "pic2022"))) {
+    stop("An invalid pic has been set.")
+  }
   term1 <- calculate_PIC_term1(e2, robust)
 
   if (vars_est > 0) {

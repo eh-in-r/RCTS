@@ -287,8 +287,8 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
           df_pic <- list()
           for( i in 1:length(choice_pic) ) {
             #remaining issue here:
-            print(x %>% purrr::map(4))
-            df_pic[[i]] <- t(matrix(unlist(x %>% purrr::map(4) %>% purrr::map(i)), nrow = length(C_candidates)))
+            print(output %>% purrr::map(4))
+            df_pic[[i]] <- t(matrix(unlist(output %>% purrr::map(4) %>% purrr::map(i)), nrow = length(C_candidates)))
 
             df_pic[[i]] <- adapt_pic_with_sigma2maxmodel(df_pic[[i]], df_results, pic_sigma2)
 
