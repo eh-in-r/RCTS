@@ -165,7 +165,11 @@ make_df_pic_parallel <- function(x, C_candidates) {
 #' @inheritParams calculate_VCsquared
 #' @inheritParams initialise_beta
 #' @inheritParams define_configurations
-#' @inheritParams calculate_PIC
+#' @param choice_pic indicates which PIC to use to estimate the number of groups and factors.
+#' Options are "pic2017" (PIC of \insertCite{Ando2017;textual}{RCTS}; works better for large N),
+#' "pic2016" (\insertCite{Ando2016;textual}{RCTS}; works better for large T) weighs the fourth term with an extra factor relative to the size of the groups,
+#' and "pic2022" which shrinks the NT-space where the number of groups and factors would be over- or underestimated compared to pic2016 and pic2017. This is the default.
+#' This parameter can also be a vector with multiple pic's.
 #' @param maxit maximum limit for the number of iterations for each configuration; defaults to 30
 #' @param USE_DO (for testing purposes) if TRUE, then a serialized version is performed ("do" instead of "dopar")
 #' @return Returns a list with three elements.
@@ -282,7 +286,6 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
       if (!is.null(has_error_new)) {
         df_results <- make_df_results_parallel(output)
         if(length(choice_pic) > 1) {
-          message("not tested yet: the 4th returnelement of run_config (and thus in all elements of 'output') is now a list; needs to be handled in make_df_pic_parallel()")
           pic_sigma2 <- df_results$sigma2[nrow(df_results)]
           df_pic <- list()
           for( i in 1:length(choice_pic) ) {
