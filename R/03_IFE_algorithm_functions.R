@@ -1948,8 +1948,9 @@ robustpca <- function(object, number_eigenvectors, KMAX = 20, verbose_robustpca 
   if (!error_macropca & !is.null(factors_macropca)) {
     # rare issue with macropca
     if (nrow(factors_macropca) != ncol(object)) {
+      print("Rare issue with macropca.")
       print(dim(object))
-      print(dim(factors_macropca))
+      print(dim(factors_macropca)) #-> this sometimes contains less than expected elements
       warning("--MacroPCA has dropped a column for unknown reasons---") # This leads to wrong dimensions in the factors, and gives error in rstudio.
     }
   }
