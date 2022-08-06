@@ -28,9 +28,9 @@ run_config <- function(robust, config, C_candidates, Y, X, choice_pic, maxit = 3
   kg <- unlist(config %>% dplyr::select(.data$k1:.data$k20)) # must be a vector (class "integer")
 
 
+  iteration <- 0 # number of the iteration; 0 indicates being in the initialisation phase
   #print("initialise:")
   ########## initialisation
-  iteration <- 0 # number of the iteration; 0 indicates being in the initialisation phase
   beta_est <- initialise_beta(robust, Y, X, S)
   # initial grouping
   g <- initialise_clustering(robust, Y, S, k, kg, NA, max_percent_outliers_tkmeans = 0, verbose = FALSE)

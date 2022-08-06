@@ -4553,3 +4553,60 @@ define_configurations <- function(S_cand, k_cand, kg_cand) {
 
   return(config_cand %>% dplyr::select(.data$S, .data$k, dplyr::everything()))
 }
+
+#' This function is a wrapper around the initialization and the estimation part of the algorithm. It is only used for the serialized algorithm.
+#'
+#' @inheritParams estimate_beta
+#' @param maxit maximum limit for the number of iterations
+#' @return list with
+#' 1. estimated beta
+#' 2. vector with group membership
+#' 3. matrix with the common factor(s) (contains zero's if there are none estimated)
+#' 4. loadings to the common factor(s)
+#' 5. list with the group specific factors for each of the groups
+#' 6. data.frame with loadings to the group specific factors augmented with group membership and id (to have the order of the time series)
+#' @examples
+#' original_data <- create_data_dgp2(30, 20)
+#' Y <- original_data[[1]]
+#' X <- original_data[[2]]
+#' estimate_algorithm(robust, Y, X, 2:3, 0:0, 3:3, maxit = 4)
+#' @export
+estimate_algorithm <- function(robust, Y, X, S, k, kg, maxit = 30) {
+  iteration <- 0 # number of the iteration; 0 indicates being in the initialisation phase
+  ########## initialisation
+  beta_est <- initialise_beta(robust, Y, X, S)
+  # initial grouping
+  g <- initialise_clustering(robust, Y, S, k, kg, NA, max_percent_outliers_tkmeans = 0, verbose = FALSE)
+  # initial common factorstructure
+  temp <- initialise_commonfactorstructure_macropca(robust, Y, X, beta_est, g, NA, k, kg)
+  comfactor <- temp[[1]]
+  lambda <- temp[[2]]
+  # initial group specific factorstructure
+  factor_group <- estimate_factor_group(robust, Y, X, beta_est, g, NA, NA, NA, S, k, kg, initialise = TRUE)
+  lambda_group <- calculate_lambda_group(robust, Y, X, beta_est, factor_group, g, NA, NA, S, k, kg, initialise = TRUE)
+
+
+  ######### estimations
+  obj_funct_values <- c()
+  speed <- 999999 # convergence speed: set to initial high value
+  while (iteration < maxit & !check_stopping_rules(iteration, speed, obj_funct_values, verbose = FALSE)) {
+
+    temp <- iterate(robust, Y, X, beta_est, g, lambda_group, factor_group, lambda, comfactor, S, k, kg, verbose = FALSE)
+    beta_est <- temp[[1]]
+    g <- temp[[2]]
+    comfactor <- temp[[3]]
+    lambda <- temp[[4]]
+    factor_group <- temp[[5]]
+    lambda_group <- temp[[6]]
+    value <- temp[[7]]
+    print(iteration)
+    if(iteration == 0) print(paste(S, "-", k, "-", kg[1:S]),collapse = " ")
+    #print(paste(c("   subset:", subset, "/", max(indices_subset), "config:", i, "/", "...", "(", S, "-", k, "-", kg[1:S], ")", "iteration", iteration, ":", round(value)), collapse = " "))
+    obj_funct_values <- c(obj_funct_values, value)
+    iteration <- iteration + 1
+    speed <- get_convergence_speed(iteration, obj_funct_values / nrow(Y) / ncol(Y))
+    print("--")
+  }
+  #print("estimation is done")
+  return(list(beta_est, g, comfactor, lambda, factor_group, lambda_group))
+}
