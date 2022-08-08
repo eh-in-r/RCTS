@@ -4554,7 +4554,7 @@ define_configurations <- function(S_cand, k_cand, kg_cand) {
   return(config_cand %>% dplyr::select(.data$S, .data$k, dplyr::everything()))
 }
 
-#' This function is a wrapper around the initialization and the estimation part of the algorithm. It is only used for the serialized algorithm.
+#' This function is a wrapper around the initialization and the estimation part of the algorithm, for one configuration. It is only used for the serialized algorithm.
 #'
 #' @inheritParams estimate_beta
 #' @param maxit maximum limit for the number of iterations
@@ -4566,10 +4566,13 @@ define_configurations <- function(S_cand, k_cand, kg_cand) {
 #' 5. list with the group specific factors for each of the groups
 #' 6. data.frame with loadings to the group specific factors augmented with group membership and id (to have the order of the time series)
 #' @examples
-#' original_data <- create_data_dgp2(30, 20)
+#' \donttest{
+#' set.seed(1)
+#' original_data <- create_data_dgp2(60, 30)
 #' Y <- original_data[[1]]
 #' X <- original_data[[2]]
-#' estimate_algorithm(robust, Y, X, 2:3, 0:0, 3:3, maxit = 4)
+#' estimate_algorithm(robust = TRUE, Y, X, 3, 0, c(3,3,3), maxit = 2)
+#' }
 #' @export
 estimate_algorithm <- function(robust, Y, X, S, k, kg, maxit = 30) {
   iteration <- 0 # number of the iteration; 0 indicates being in the initialisation phase
@@ -4605,7 +4608,7 @@ estimate_algorithm <- function(robust, Y, X, S, k, kg, maxit = 30) {
     obj_funct_values <- c(obj_funct_values, value)
     iteration <- iteration + 1
     speed <- get_convergence_speed(iteration, obj_funct_values / nrow(Y) / ncol(Y))
-    print("--")
+    #print("--")
   }
   #print("estimation is done")
   return(list(beta_est, g, comfactor, lambda, factor_group, lambda_group))

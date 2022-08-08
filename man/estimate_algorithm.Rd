@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_IFE_algorithm_functions.R
 \name{estimate_algorithm}
 \alias{estimate_algorithm}
-\title{This function is a wrapper around the initialization and the estimation part of the algorithm. It is only used for the serialized algorithm.}
+\title{This function is a wrapper around the initialization and the estimation part of the algorithm, for one configuration. It is only used for the serialized algorithm.}
 \usage{
 estimate_algorithm(robust, Y, X, S, k, kg, maxit = 30)
 }
@@ -33,11 +33,12 @@ list with
 }
 }
 \description{
-This function is a wrapper around the initialization and the estimation part of the algorithm. It is only used for the serialized algorithm.
+This function is a wrapper around the initialization and the estimation part of the algorithm, for one configuration. It is only used for the serialized algorithm.
 }
 \examples{
-original_data <- create_data_dgp2(30, 20)
+set.seed(1)
+original_data <- create_data_dgp2(60, 30)
 Y <- original_data[[1]]
 X <- original_data[[2]]
-estimate_algorithm(robust, Y, X, 2:3, 0:0, 3:3, maxit = 4)
+estimate_algorithm(robust = TRUE, Y, X, 3, 0, c(3,3,3), maxit = 2)
 }
