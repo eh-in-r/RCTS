@@ -36,9 +36,11 @@ list with
 This function is a wrapper around the initialization and the estimation part of the algorithm, for one configuration. It is only used for the serialized algorithm.
 }
 \examples{
+\donttest{
 set.seed(1)
 original_data <- create_data_dgp2(60, 30)
 Y <- original_data[[1]]
 X <- original_data[[2]]
 estimate_algorithm(robust = TRUE, Y, X, 3, 0, c(3,3,3), maxit = 2)
+}
 }
