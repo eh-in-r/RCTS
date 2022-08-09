@@ -4027,7 +4027,7 @@ add_configuration <- function(df_results, S, k, kg) {
 #'
 #' @param df input data frame
 #' @param index_configuration index of the configuration of groups and factors
-#' @param pic_e2 NxT matrix with the error terms
+#' @param est_errors NxT matrix with the error terms
 #' @inheritParams initialise_beta
 #' @inheritParams estimate_beta
 #' @param S number of estimated groups
@@ -4053,7 +4053,7 @@ add_configuration <- function(df_results, S, k, kg) {
 #' add_pic(df_pic, 1, TRUE, Y, beta_est, g, 3, 0, c(3, 3, 3), e, 1:5)
 #' @export
 add_pic <- function(df, index_configuration, robust, Y, beta_est, g, S, k, kg,
-                    pic_e2, C_candidates,
+                    est_errors, C_candidates,
                     method_estimate_beta = "individual",
                     choice_pic = "pic2022") {
   if(!is.na(beta_est[1])) {
@@ -4061,10 +4061,10 @@ add_pic <- function(df, index_configuration, robust, Y, beta_est, g, S, k, kg,
   } else {
     vars_est <- 0
   }
-  pic_sigma2 <- calculate_sigma2(pic_e2)
+  pic_sigma2 <- calculate_sigma2(est_errors)
 
   df[index_configuration, ] <- sapply(C_candidates, function(x) {
-    calculate_PIC(x, robust, S, k, kg, pic_e2, pic_sigma2,
+    calculate_PIC(x, robust, S, k, kg, est_errors, pic_sigma2,
       NN = nrow(Y), TT = ncol(Y),
       method_estimate_beta, beta_est, g,
       vars_est,
@@ -4611,5 +4611,7 @@ estimate_algorithm <- function(robust, Y, X, S, k, kg, maxit = 30) {
     #print("--")
   }
   #print("estimation is done")
-  return(list(beta_est, g, comfactor, lambda, factor_group, lambda_group))
+
+
+  return(list(beta_est, g, comfactor, lambda, factor_group, lambda_group, iteration))
 }
