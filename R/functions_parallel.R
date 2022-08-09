@@ -70,7 +70,7 @@ run_config <- function(robust, config, C_candidates, Y, X, choice_pic, maxit = 3
   #print("estimation is done")
 
   # calculate the estimation errors
-  pic_e2 <- calculate_error_term(
+  est_errors <- calculate_error_term(
     Y, X, beta_est, g,
     factor_group, lambda_group,
     comfactor, lambda,
@@ -80,7 +80,7 @@ run_config <- function(robust, config, C_candidates, Y, X, choice_pic, maxit = 3
   if(length(choice_pic) == 1) {
     pic <- add_pic_parallel(
       robust, Y, beta_est, g, S, k, kg,
-      pic_e2, C_candidates, choice_pic
+      est_errors, C_candidates, choice_pic
     )
   }
   if(length(choice_pic) > 1) {
@@ -88,12 +88,12 @@ run_config <- function(robust, config, C_candidates, Y, X, choice_pic, maxit = 3
     for( i in 1:length(choice_pic)) {
       pic[[i]] <- add_pic_parallel(
         robust, Y, beta_est, g, S, k, kg,
-        pic_e2, C_candidates, choice_pic[i]
+        est_errors, C_candidates, choice_pic[i]
       )
     }
   }
 
-  pic_sigma2 <- calculate_sigma2(pic_e2, nrow(Y), ncol(Y))
+  pic_sigma2 <- calculate_sigma2(est_errors, nrow(Y), ncol(Y))
   #print("run_config is done")
   return(list(S, k, kg, pic, pic_sigma2, g, iteration, data.frame(beta_est), data.frame(comfactor), data.frame(lambda), factor_group, lambda_group))
 }
@@ -103,17 +103,17 @@ run_config <- function(robust, config, C_candidates, Y, X, choice_pic, maxit = 3
 #' @inheritParams add_pic
 #' @return numeric vector with a value for each candidate C
 add_pic_parallel <- function(robust, Y, beta_est, g,
-                             S, k, kg, pic_e2, C_candidates, choice_pic,
+                             S, k, kg, est_errors, C_candidates, choice_pic,
                              method_estimate_beta = "individual") {
   if(!is.na(beta_est[1])) {
     vars_est <- ncol(beta_est)
   } else {
     vars_est <- 0
   }
-  pic_sigma2 <- calculate_sigma2(pic_e2)
+  pic_sigma2 <- calculate_sigma2(est_errors)
 
   pic <- sapply(C_candidates, function(x) {
-    calculate_PIC(x, robust, S, k, kg, pic_e2, pic_sigma2,
+    calculate_PIC(x, robust, S, k, kg, est_errors, pic_sigma2,
       NN = nrow(Y), TT = ncol(Y), method_estimate_beta,
       beta_est, g, vars_est, choice_pic
     )

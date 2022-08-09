@@ -14,7 +14,7 @@ add_pic(
   S,
   k,
   kg,
-  pic_e2,
+  est_errors,
   C_candidates,
   method_estimate_beta = "individual",
   choice_pic = "pic2022"
@@ -39,7 +39,7 @@ add_pic(
 
 \item{kg}{vector with the estimated number of group specific factors for each group}
 
-\item{pic_e2}{NxT matrix with the error terms}
+\item{est_errors}{NxT matrix with the error terms}
 
 \item{C_candidates}{candidates for C (parameter in PIC)}
 
