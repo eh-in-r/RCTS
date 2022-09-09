@@ -5,7 +5,6 @@
 \title{Initialises the estimation of the common factors and their loadings.}
 \usage{
 initialise_commonfactorstructure_macropca(
-  robust,
   Y,
   X,
   beta_est,
@@ -13,14 +12,13 @@ initialise_commonfactorstructure_macropca(
   factor_group,
   k,
   kg,
+  robust,
   method_estimate_beta = "individual",
   method_estimate_factors = "macro",
   verbose = FALSE
 )
 }
 \arguments{
-\item{robust}{TRUE or FALSE: defines using the classical or robust algorithm to estimate beta}
-
 \item{Y}{Y: NxT dataframe with the panel data of interest}
 
 \item{X}{dataframe with the observed variables}
@@ -34,6 +32,8 @@ initialise_commonfactorstructure_macropca(
 \item{k}{number of estimated common factors}
 
 \item{kg}{vector with the number of estimated group specific factors}
+
+\item{robust}{TRUE or FALSE: defines using the classical or robust algorithm to estimate beta}
 
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 
@@ -54,5 +54,5 @@ Y <- original_data[[1]]
 X <- original_data[[2]]
 g <- original_data[[3]]
 beta_est <- matrix(rnorm(4 * ncol(Y)), nrow = 4)
-initialise_commonfactorstructure_macropca(TRUE, Y, X, beta_est, g, NA, 0, c(3, 3, 3))
+initialise_commonfactorstructure_macropca(Y, X, beta_est, g, NA, 0, c(3, 3, 3), TRUE)
 }

@@ -5,19 +5,17 @@
 \title{Defines the object that will be used to define a initial clustering.}
 \usage{
 define_object_for_initial_clustering_macropca(
-  robust,
   Y,
   k,
   kg,
   comfactor,
+  robust,
   method_estimate_beta = "individual",
   method_estimate_factors = "macro",
   verbose = FALSE
 )
 }
 \arguments{
-\item{robust}{TRUE or FALSE: defines using the classical or robust algorithm to estimate beta}
-
 \item{Y}{Y: NxT dataframe with the panel data of interest}
 
 \item{k}{number of common factors to be estimated}
@@ -25,6 +23,8 @@ define_object_for_initial_clustering_macropca(
 \item{kg}{number of group specific factors to be estimated}
 
 \item{comfactor}{estimated common factors}
+
+\item{robust}{TRUE or FALSE: defines using the classical or robust algorithm to estimate beta}
 
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 

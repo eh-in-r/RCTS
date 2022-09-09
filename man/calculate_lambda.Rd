@@ -5,7 +5,6 @@
 \title{calculates factor loadings of common factors}
 \usage{
 calculate_lambda(
-  robust,
   Y,
   X,
   beta_est,
@@ -15,6 +14,7 @@ calculate_lambda(
   lgfg_list,
   k,
   kg,
+  robust,
   method_estimate_beta,
   method_estimate_factors,
   verbose = FALSE,
@@ -22,8 +22,6 @@ calculate_lambda(
 )
 }
 \arguments{
-\item{robust}{TRUE or FALSE: defines using the classical or robust algorithm to estimate beta}
-
 \item{Y}{Y: NxT dataframe with the panel data of interest}
 
 \item{X}{X: NxTxp array containing the observable variables}
@@ -41,6 +39,8 @@ calculate_lambda(
 \item{k}{number of common factors to be estimated}
 
 \item{kg}{number of group specific factors to be estimated}
+
+\item{robust}{TRUE or FALSE: defines using the classical or robust algorithm to estimate beta}
 
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 

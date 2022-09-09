@@ -5,19 +5,17 @@
 \title{Function that clusters time series in a dataframe with kmeans.}
 \usage{
 initialise_clustering(
-  robust,
   Y,
   S,
   k,
   kg,
   comfactor,
+  robust,
   max_percent_outliers_tkmeans = 0,
   verbose = FALSE
 )
 }
 \arguments{
-\item{robust}{TRUE or FALSE: defines using the classical or robust algorithm to estimate beta}
-
 \item{Y}{Y: NxT dataframe with the panel data of interest}
 
 \item{S}{the desired number of groups}
@@ -27,6 +25,8 @@ initialise_clustering(
 \item{kg}{number of group specific factors to be estimated}
 
 \item{comfactor}{estimated common factors}
+
+\item{robust}{TRUE or FALSE: defines using the classical or robust algorithm to estimate beta}
 
 \item{max_percent_outliers_tkmeans}{the proportion of observations to be trimmed}
 
@@ -41,5 +41,5 @@ If a time series contains NA's a random cluster will be assigned to that time se
 \examples{
 Y <- Y_dgp3
 comfactor <- matrix(0, nrow = ncol(Y))
-initialise_clustering(TRUE, Y, 3, 0, c(3, 3, 3), comfactor)
+initialise_clustering(Y, 3, 0, c(3, 3, 3), comfactor, TRUE)
 }

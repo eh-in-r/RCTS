@@ -5,13 +5,13 @@
 \title{Calculates the PIC for the current configuration.}
 \usage{
 add_pic_parallel(
-  robust,
   Y,
   beta_est,
   g,
   S,
   k,
   kg,
+  robust,
   est_errors,
   C_candidates,
   choice_pic,
@@ -19,19 +19,19 @@ add_pic_parallel(
 )
 }
 \arguments{
-\item{robust}{robust or classical estimation}
-
 \item{Y}{Y: NxT dataframe with the panel data of interest}
 
 \item{beta_est}{estimated values of beta}
 
-\item{g}{vector with estimated group membership for all individuals}
+\item{g}{Vector with estimated group membership for all individuals}
 
 \item{S}{number of estimated groups}
 
 \item{k}{estimated number of common factors}
 
 \item{kg}{vector with the estimated number of group specific factors for each group}
+
+\item{robust}{robust or classical estimation}
 
 \item{est_errors}{NxT matrix with the error terms}
 

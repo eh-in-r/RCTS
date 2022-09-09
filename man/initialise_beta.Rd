@@ -5,26 +5,23 @@
 \title{Initialisation of estimation of beta (the coefficients with the observable variables)}
 \usage{
 initialise_beta(
-  robust,
   Y,
   X,
   S,
-  g,
+  robust,
   method_estimate_beta = "individual",
   nosetting_lmrob = FALSE,
   special_case_dgp1 = FALSE
 )
 }
 \arguments{
-\item{robust}{robust or classical estimation}
-
 \item{Y}{Y: NxT dataframe with the panel data of interest}
 
 \item{X}{dataframe with the observed variables}
 
 \item{S}{estimated number of groups}
 
-\item{g}{vector with estimated group membership for all individuals}
+\item{robust}{robust or classical estimation}
 
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 
@@ -48,9 +45,8 @@ Y <- Y_dgp3
 #  to the true value for this example.
 lambda_group <- lambda_group_true_dgp3
 factor_group <- factor_group_true_dgp3
-g <- g_true_dgp3
-beta_init <- initialise_beta(TRUE, Y, X,
-  S = 3, g
+beta_init <- initialise_beta(Y, X,
+  S = 3, TRUE
 )
 }
 }

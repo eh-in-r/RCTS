@@ -5,7 +5,6 @@
 \title{Estimates group factors Fg.}
 \usage{
 estimate_factor_group(
-  robust,
   Y,
   X,
   beta_est,
@@ -16,6 +15,7 @@ estimate_factor_group(
   S,
   k,
   kg,
+  robust,
   method_estimate_beta = "individual",
   method_estimate_factors = "macro",
   initialise = FALSE,
@@ -23,8 +23,6 @@ estimate_factor_group(
 )
 }
 \arguments{
-\item{robust}{TRUE or FALSE: defines using the classical or robust algorithm to estimate beta}
-
 \item{Y}{Y: NxT dataframe with the panel data of interest}
 
 \item{X}{X: NxTxp array containing the observable variables}
@@ -44,6 +42,8 @@ estimate_factor_group(
 \item{k}{number of common factors to be estimated}
 
 \item{kg}{number of group specific factors to be estimated}
+
+\item{robust}{TRUE or FALSE: defines using the classical or robust algorithm to estimate beta}
 
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 
@@ -70,6 +70,6 @@ beta_est <- matrix(rnorm(4 * nrow(Y)), nrow = 4)
 factor_group <- data[[5]] #true values of group specific factors
 comfactor <- matrix(0, nrow = 1, ncol = ncol(Y))
 lambda <- matrix(0, nrow = 1, ncol = nrow(Y))
-estimate_factor_group(TRUE, Y, X, beta_est, g, lambda, comfactor, factor_group,
-3, 0, c(3, 3, 3))
+estimate_factor_group(Y, X, beta_est, g, lambda, comfactor, factor_group,
+3, 0, c(3, 3, 3), TRUE)
 }

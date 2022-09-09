@@ -4,11 +4,9 @@
 \alias{estimate_algorithm}
 \title{This function is a wrapper around the initialization and the estimation part of the algorithm, for one configuration. It is only used for the serialized algorithm.}
 \usage{
-estimate_algorithm(robust, Y, X, S, k, kg, maxit = 30)
+estimate_algorithm(Y, X, S, k, kg, maxit = 30, robust = TRUE)
 }
 \arguments{
-\item{robust}{TRUE or FALSE: defines using the classical or robust algorithm to estimate beta}
-
 \item{Y}{Y: NxT dataframe with the panel data of interest}
 
 \item{X}{X: NxTxp array containing the observable variables}
@@ -20,6 +18,8 @@ estimate_algorithm(robust, Y, X, S, k, kg, maxit = 30)
 \item{kg}{number of group specific factors to be estimated}
 
 \item{maxit}{maximum limit for the number of iterations}
+
+\item{robust}{TRUE or FALSE: defines using the classical or robust algorithm to estimate beta}
 }
 \value{
 list with
@@ -41,6 +41,6 @@ set.seed(1)
 original_data <- create_data_dgp2(60, 30)
 Y <- original_data[[1]]
 X <- original_data[[2]]
-estimate_algorithm(robust = TRUE, Y, X, 3, 0, c(3,3,3), maxit = 2)
+estimate_algorithm(Y, X, 3, 0, c(3,3,3), maxit = 2, robust = TRUE)
 }
 }

@@ -5,7 +5,6 @@
 \title{Estimates common factor(s) F.}
 \usage{
 estimate_factor(
-  robust,
   Y,
   X,
   beta_est,
@@ -13,6 +12,7 @@ estimate_factor(
   lgfg_list,
   k,
   kg,
+  robust,
   method_estimate_beta,
   method_estimate_factors,
   initialise = FALSE,
@@ -20,8 +20,6 @@ estimate_factor(
 )
 }
 \arguments{
-\item{robust}{TRUE or FALSE: defines using the classical or robust algorithm to estimate beta}
-
 \item{Y}{Y: NxT dataframe with the panel data of interest}
 
 \item{X}{X: NxTxp array containing the observable variables}
@@ -35,6 +33,8 @@ estimate_factor(
 \item{k}{number of common factors to be estimated}
 
 \item{kg}{number of group specific factors to be estimated}
+
+\item{robust}{TRUE or FALSE: defines using the classical or robust algorithm to estimate beta}
 
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 

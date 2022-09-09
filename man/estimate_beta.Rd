@@ -5,7 +5,6 @@
 \title{Estimates beta.}
 \usage{
 estimate_beta(
-  robust,
   Y,
   X,
   beta_est,
@@ -19,6 +18,7 @@ estimate_beta(
   k,
   kg,
   vars_est,
+  robust,
   num_factors_may_vary = TRUE,
   optimize_kappa = FALSE,
   nosetting = FALSE,
@@ -26,8 +26,6 @@ estimate_beta(
 )
 }
 \arguments{
-\item{robust}{TRUE or FALSE: defines using the classical or robust algorithm to estimate beta}
-
 \item{Y}{Y: NxT dataframe with the panel data of interest}
 
 \item{X}{X: NxTxp array containing the observable variables}
@@ -53,6 +51,8 @@ estimate_beta(
 \item{kg}{number of group specific factors to be estimated}
 
 \item{vars_est}{number of variables that will be included in the algorithm and have their coefficient estimated. This is usually equal to the number of observable variables.}
+
+\item{robust}{TRUE or FALSE: defines using the classical or robust algorithm to estimate beta}
 
 \item{num_factors_may_vary}{whether or not the number of groupfactors is constant over all groups or not}
 
@@ -84,10 +84,11 @@ comfactor <- matrix(0, nrow = 1, ncol = 30)
 method_estimate_beta <- "individual"
 method_estimate_factors <- "macro"
 beta_est <- estimate_beta(
-  robust = TRUE, Y, X, NA, g, lambda_group, factor_group,
+  Y, X, NA, g, lambda_group, factor_group,
   lambda, comfactor,
   S = 3, k = 0, kg = c(3, 3, 3),
-  vars_est = 3
+  vars_est = 3,
+  robust = TRUE
 )[[1]]
 }
 }

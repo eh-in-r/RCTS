@@ -5,7 +5,6 @@
 \title{Wrapper around estimate_beta(), update_g(), and estimating the factorstructures.}
 \usage{
 iterate(
-  robust,
   Y,
   X,
   beta_est,
@@ -17,6 +16,7 @@ iterate(
   S,
   k,
   kg,
+  robust,
   method_estimate_beta = "individual",
   method_estimate_factors = "macro",
   special_case_dgp1 = FALSE,
@@ -24,8 +24,6 @@ iterate(
 )
 }
 \arguments{
-\item{robust}{TRUE or FALSE: defines using the classical or robust algorithm to estimate beta}
-
 \item{Y}{Y: NxT dataframe with the panel data of interest}
 
 \item{X}{X: NxTxp array containing the observable variables}
@@ -47,6 +45,8 @@ iterate(
 \item{k}{number of common factors to estimate}
 
 \item{kg}{vector with length S. Each element contains the number of group specific factors to estimate.}
+
+\item{robust}{TRUE or FALSE: defines using the classical or robust algorithm to estimate beta}
 
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 
@@ -82,6 +82,6 @@ factor_group <- original_data[[5]]
 lambda_group <- original_data[[6]]
 comfactor <- matrix(0, nrow = 1, ncol = ncol(Y))
 lambda <- matrix(0, nrow = 1, ncol = nrow(Y))
-iterate(TRUE, Y, X, beta_est, g, lambda_group, factor_group, lambda, comfactor, 3, 0, c(3, 3, 3),
+iterate(Y, X, beta_est, g, lambda_group, factor_group, lambda, comfactor, 3, 0, c(3, 3, 3), TRUE,
   verbose = FALSE)
 }

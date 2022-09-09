@@ -31,7 +31,7 @@ add_pic(
 
 \item{beta_est}{estimated values of beta}
 
-\item{g}{vector with estimated group membership for all individuals}
+\item{g}{Vector with estimated group membership for all individuals}
 
 \item{S}{number of estimated groups}
 

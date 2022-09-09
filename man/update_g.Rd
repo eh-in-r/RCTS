@@ -5,7 +5,6 @@
 \title{Function that estimates group membership.}
 \usage{
 update_g(
-  robust,
   Y,
   X,
   beta_est,
@@ -17,14 +16,13 @@ update_g(
   k,
   kg,
   vars_est,
+  robust,
   method_estimate_factors,
   method_estimate_beta,
   verbose = FALSE
 )
 }
 \arguments{
-\item{robust}{robust or classical estimation of group membership}
-
 \item{Y}{Y: NxT dataframe with the panel data of interest}
 
 \item{X}{X: NxTxp array containing the observable variables}
@@ -46,6 +44,8 @@ update_g(
 \item{kg}{number of group specific factors to be estimated}
 
 \item{vars_est}{number of variables that will be included in the algorithm and have their coefficient estimated. This is usually equal to the number of observable variables.}
+
+\item{robust}{robust or classical estimation of group membership}
 
 \item{method_estimate_factors}{defines method of robust estimaton of the factors: "macro", "pertmm" or "cz"}
 
@@ -75,18 +75,19 @@ lambda <- matrix(0, nrow = 1, ncol = 300)
 comfactor <- matrix(0, nrow = 1, ncol = 30)
 # Choose how coefficients of the observable are estimated
 beta_est <- estimate_beta(
-  robust = TRUE, Y, X, NA, g, lambda_group, factor_group,
+  Y, X, NA, g, lambda_group, factor_group,
   lambda, comfactor,
   S = 3, k = 0, kg = c(3, 3, 3),
-  vars_est = 3
+  vars_est = 3, robust = TRUE
 )[[1]]
 g_new <- update_g(
-  robust = TRUE, Y, X, beta_est, g,
+  Y, X, beta_est, g,
   factor_group, lambda, comfactor,
   S = 3,
   k = 0,
   kg = c(3, 3, 3),
   vars_est = 3,
+  robust = TRUE,
   "macro", "individual"
 )[[1]]
 }

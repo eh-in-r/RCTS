@@ -31,16 +31,16 @@ run_config <- function(robust, config, C_candidates, Y, X, choice_pic, maxit = 3
   iteration <- 0 # number of the iteration; 0 indicates being in the initialisation phase
   #print("initialise:")
   ########## initialisation
-  beta_est <- initialise_beta(robust, Y, X, S)
+  beta_est <- initialise_beta(Y, X, S, robust)
   # initial grouping
-  g <- initialise_clustering(robust, Y, S, k, kg, NA, max_percent_outliers_tkmeans = 0, verbose = FALSE)
+  g <- initialise_clustering(Y, S, k, kg, NA, robust, max_percent_outliers_tkmeans = 0, verbose = FALSE)
   # initial common factorstructure
-  temp <- initialise_commonfactorstructure_macropca(robust, Y, X, beta_est, g, NA, k, kg)
+  temp <- initialise_commonfactorstructure_macropca(Y, X, beta_est, g, NA, k, kg, robust)
   comfactor <- temp[[1]]
   lambda <- temp[[2]]
   # initial group specific factorstructure
-  factor_group <- estimate_factor_group(robust, Y, X, beta_est, g, NA, NA, NA, S, k, kg, initialise = TRUE)
-  lambda_group <- calculate_lambda_group(robust, Y, X, beta_est, factor_group, g, NA, NA, S, k, kg, initialise = TRUE)
+  factor_group <- estimate_factor_group(Y, X, beta_est, g, NA, NA, NA, S, k, kg, robust, initialise = TRUE)
+  lambda_group <- calculate_lambda_group(Y, X, beta_est, factor_group, g, NA, NA, S, k, kg, robust, initialise = TRUE)
 
 
   #print("estimate:")
@@ -49,7 +49,7 @@ run_config <- function(robust, config, C_candidates, Y, X, choice_pic, maxit = 3
   speed <- 999999 # convergence speed: set to initial high value
   while (iteration < maxit & !check_stopping_rules(iteration, speed, obj_funct_values, verbose = FALSE)) {
 
-    temp <- iterate(robust, Y, X, beta_est, g, lambda_group, factor_group, lambda, comfactor, S, k, kg, verbose = FALSE)
+    temp <- iterate(Y, X, beta_est, g, lambda_group, factor_group, lambda, comfactor, S, k, kg, robust, verbose = FALSE)
     #print("********************************************************(end of iterate()")
     #print(class(temp))
     beta_est <- temp[[1]]
@@ -79,7 +79,7 @@ run_config <- function(robust, config, C_candidates, Y, X, choice_pic, maxit = 3
 
   if(length(choice_pic) == 1) {
     pic <- add_pic_parallel(
-      robust, Y, beta_est, g, S, k, kg,
+      Y, beta_est, g, S, k, kg, robust,
       est_errors, C_candidates, choice_pic
     )
   }
@@ -87,7 +87,7 @@ run_config <- function(robust, config, C_candidates, Y, X, choice_pic, maxit = 3
     pic = list()
     for( i in 1:length(choice_pic)) {
       pic[[i]] <- add_pic_parallel(
-        robust, Y, beta_est, g, S, k, kg,
+        Y, beta_est, g, S, k, kg, robust,
         est_errors, C_candidates, choice_pic[i]
       )
     }
@@ -102,8 +102,8 @@ run_config <- function(robust, config, C_candidates, Y, X, choice_pic, maxit = 3
 #'
 #' @inheritParams add_pic
 #' @return numeric vector with a value for each candidate C
-add_pic_parallel <- function(robust, Y, beta_est, g,
-                             S, k, kg, est_errors, C_candidates, choice_pic,
+add_pic_parallel <- function(Y, beta_est, g,
+                             S, k, kg, robust, est_errors, C_candidates, choice_pic,
                              method_estimate_beta = "individual") {
   if(!is.na(beta_est[1])) {
     vars_est <- ncol(beta_est)
@@ -222,9 +222,9 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
   for (subset in indices_subset) {
     print(paste("subset:", subset, "/", max(indices_subset)))
     temp <- make_subsamples(original_data, subset)
-    Y <- temp[[1]]
-    X <- temp[[2]]
-    g_true <- temp[[3]]
+    Y <- temp$Y
+    X <- temp$X
+    g_true <- temp$g_true
 
     # define set of possible combinations of number of group factors
     configs <- define_configurations(S_cand, k_cand, kg_cand)
@@ -328,5 +328,5 @@ parallel_algorithm <- function(original_data, indices_subset, S_cand, k_cand, kg
     # keep df_results of the full sample (this will contain the final clustering):
     if (subset == 0) df_results_full <- df_results
   } # closes loop over subsets
-  return(list(rc, rcj, df_results_full))
+  return(list(rc = rc, rcj = rcj, df_results_full = df_results_full))
 }
