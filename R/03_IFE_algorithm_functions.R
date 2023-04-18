@@ -431,7 +431,6 @@ generate_Y <- function(NN, TT, k_true, kg_true,
 #' @param S estimated number of groups
 #' @inheritParams define_object_for_initial_clustering_macropca
 #' @param nosetting_lmrob option to remove the recommended setting in lmrob(). It is much faster. Defaults to FALSE.
-#' @param special_case_dgp1 special case for data generated according to dgp 1: it changes the 1st variable in X to 1 (-> intercept). Consequently the estimation of beta needs to be restructured slightly.
 #' @return Matrix with number of rows equal to the number of estimated variables plus one. If method_estimate_beta is set to the default ("individual"),
 #' the number of columns is equal to the number of time series in Y. If method_estimate_beta is set to "group" or to "homogeneous" the number of columns
 #' is equal to the number of groups.
@@ -452,8 +451,11 @@ generate_Y <- function(NN, TT, k_true, kg_true,
 initialise_beta <- function(Y, X,
                             S, robust,
                             method_estimate_beta = "individual",
-                            nosetting_lmrob = FALSE,
-                            special_case_dgp1 = FALSE) {
+                            nosetting_lmrob = FALSE) {
+  #characteristic of dgp 1
+  if(min(X[,,1]) == 1 & max(X[,,1]) == 1) {
+    special_case_dgp1 = TRUE
+  }
   if(!is.na(X[1]) & !is.null(X[1])) {
     vars_est <- dim(X)[3]
   } else {
@@ -1180,9 +1182,13 @@ determine_beta <- function(string, X_special, Y_special, robust,
                            method_estimate_beta,
                            initialisation = FALSE, indices = NA,
                            vars_est, sigma2,
-                           nosetting_local = FALSE, kappa_candidates = c(2^(-0:-20), 0),
-                           special_case_dgp1 = FALSE) {
+                           nosetting_local = FALSE, kappa_candidates = c(2^(-0:-20), 0)) {
   stopifnot(string == "homogeneous" | string == "heterogeneous") # these are the two only options
+
+  #characteristic of dgp 1
+  if(min(X[,,1]) == 1 & max(X[,,1]) == 1) {
+    special_case_dgp1 = TRUE
+  }
 
   optimize_kappa <- FALSE
   stopifnot(optimize_kappa == FALSE) # not implemented in RCTS (1. Needs loop over C_Candidates; 2. Hard to create a robust equivalent.)
@@ -1322,8 +1328,13 @@ estimate_beta <- function(Y, X, beta_est, g, lambda_group, factor_group, lambda,
                           vars_est,
                           robust,
                           num_factors_may_vary = TRUE,
-                          optimize_kappa = FALSE, nosetting = FALSE,
-                          special_case_dgp1 = FALSE) {
+                          optimize_kappa = FALSE, nosetting = FALSE) {
+
+  #characteristic of dgp 1
+  if(min(X[,,1]) == 1 & max(X[,,1]) == 1) {
+    special_case_dgp1 = TRUE
+  }
+
   #need sigma2 for classical case, for optimizing kappa
   #(note: original implementation of Ando/Bai calculates this only once: after the initialization)
   #here, this is calculated before each iteration
@@ -2096,7 +2107,7 @@ prepare_for_robpca <- function(object, NN, TT, option = 3) {
 #' @inheritParams calculate_virtual_factor_and_lambda_group
 #' @inheritParams estimate_factor
 #' @inheritParams update_g
-#' @return Return a list with an element for each estimated group. Each element of the list is a matrix with the group specific factors as rows.
+#' @return Returns a list with an element for each estimated group. Each element of the list is a matrix with the group specific factors as rows.
 #' @export
 #' @examples
 #' #example with data generated with DGP 2
@@ -2401,7 +2412,7 @@ calculate_lambda_group <- function(Y, X, beta_est, factor_group, g, lambda, comf
 
   # change list to dataframe:
   lambda_local2 <- data.frame(lambda_local[[1]])
-  names(lambda_local2) <- paste0("X", 1:ncol(lambda_local2))  #str_c("X", 1:ncol(lambda_local2))
+  names(lambda_local2) <- paste0("X", 1:ncol(lambda_local2))
   rows_without_NA <- which(!apply(Y, 1, anyNA))
   lambda_local2 <- lambda_local2 %>% mutate(group = 1, id = rows_without_NA[(rows_without_NA %in% which(g == 1))])
 
@@ -3036,8 +3047,12 @@ calculate_FL_group_estimated <- function(lg, fg, g,
 #' @export
 calculate_mse_beta <- function(beta_est, beta_true, NN, TT, g_true, method_estimate_beta,
                                # number_of_variables,
-                               without_intercept = FALSE,
-                               special_case_dgp1 = FALSE) {
+                               without_intercept = FALSE) {
+  #characteristic of dgp 1
+  if(min(X[,,1]) == 1 & max(X[,,1]) == 1) {
+    special_case_dgp1 = TRUE
+  }
+
   if (method_estimate_beta == "homogeneous") { # relevant for DGP05 (Bramati-Croux)
     mse <- mean((beta_est - beta_true)^2)
     if (without_intercept) mse <- mean((beta_est[-1, ] - beta_true[-1, ])^2)
@@ -3400,7 +3415,8 @@ create_data_dgp2 <- function(N, TT, S_true = 3, vars = 3, k_true = 0, kg_true = 
     g_true, beta_true, lambda_group_true, factor_group_true,
     lambda_true, comfactor_true, eps, X
   )
-  return(list(Y, X, g_true, beta_true, factor_group_true, lambda_group_true, comfactor_true, lambda_true))
+  return(list(Y = Y, X = X, g_true = g_true, beta_true = beta_true, factor_group_true = factor_group_true,
+              lambda_group_true = lambda_group_true, comfactor_true = comfactor_true, lambda_true = lambda_true))
 }
 
 #' Selects a subsample of the time series, and of the length of the time series.
@@ -3681,7 +3697,6 @@ initialise_commonfactorstructure_macropca <- function(Y, X, beta_est, g, factor_
 #' @param k number of common factors to estimate
 #' @param kg vector with length S. Each element contains the number of group specific factors to estimate.
 #' @inheritParams define_object_for_initial_clustering_macropca
-#' @param special_case_dgp1 TRUE or FALSE: whether data is generated from dgp1 and has the extra spread in group centers. Default is FALSE.
 # @param vars_est number of variables for which a beta is estimated. Usually equal to the number of variables available in X.
 #' @inheritParams update_g
 #' @return list with
@@ -3708,7 +3723,13 @@ initialise_commonfactorstructure_macropca <- function(Y, X, beta_est, g, factor_
 #' @export
 iterate <- function(Y, X, beta_est, g, lambda_group, factor_group, lambda, comfactor, S, k, kg, robust,
                     method_estimate_beta = "individual", method_estimate_factors = "macro",
-                    special_case_dgp1 = FALSE, verbose = FALSE) {
+                    verbose = FALSE) {
+
+  #special_case_dgp1: TRUE or FALSE: whether data is generated from dgp1 (Ando, Bai 2017) and has the extra spread in group centers. Default is FALSE.
+  #it changes the 1st variable in X to 1 (-> intercept). Consequently the estimation of beta needs to be restructured slightly.
+  if(min(X[,,1]) == 1 & max(X[,,1]) == 1) {
+    special_case_dgp1 = TRUE
+  }
   if(!is.na(X[1]) & !is.null(X[1])) {
     vars_est <- dim(X)[3]
   } else {
@@ -3719,7 +3740,7 @@ iterate <- function(Y, X, beta_est, g, lambda_group, factor_group, lambda, comfa
     method_estimate_beta,
     S, k, kg,
     vars_est, robust,
-    num_factors_may_vary = TRUE, special_case_dgp1 = special_case_dgp1
+    num_factors_may_vary = TRUE
   )[[1]]
   if (verbose) message("update group membership")
   g <- update_g(
