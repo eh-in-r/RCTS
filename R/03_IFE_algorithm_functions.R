@@ -2789,7 +2789,7 @@ calculate_PIC <- function(C, robust, S, k, kg, e2, sigma2,
                           method_estimate_beta,
                           beta_est, g,
                           vars_est,
-                          choice_pic = "pic2022") {
+                          choice_pic = "pic2017") {
   if(!(choice_pic %in% c("pic2016", "pic2017", "pic2022"))) {
     stop("An invalid pic has been set.")
   }
@@ -3494,7 +3494,11 @@ make_subsamples <- function(original_data,
     g_true <- g_true[sampleN]
 
     S <- length(factor_group_true)
-    k <- nrow(comfactor_true)
+    if(is.na(comfactor_true)) {
+      k <- 0
+    } else {
+      k <- nrow(comfactor_true)
+    }
     kg <- unlist(lapply(factor_group_true, nrow))
 
     # subsample of the factors and their loadings
@@ -3824,7 +3828,8 @@ iterate <- function(Y, X, beta_est, g, lambda_group, factor_group, lambda, comfa
     )
   }
   if (verbose) print(value)
-  return(list(beta_est, g, comfactor, lambda, factor_group, lambda_group, value))
+  return(list(beta_est = beta_est, g = g, comfactor = comfactor, lambda = lambda,
+              factor_group = factor_group, lambda_group = lambda_group, value = value))
 }
 
 

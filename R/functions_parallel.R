@@ -60,7 +60,7 @@ run_config <- function(robust, config, C_candidates, Y, X, choice_pic, maxit = 3
     lambda_group <- temp[[6]]
     value <- temp[[7]]
     print(iteration)
-    if(iteration == 0) print(paste(S, "-", k, "-", kg[1:S]),collapse = " ")
+    if(iteration == 0) print(paste(S, "-", k, "-", kg[1:S]), collapse = " ")
     #print(paste(c("   subset:", subset, "/", max(indices_subset), "config:", i, "/", "...", "(", S, "-", k, "-", kg[1:S], ")", "iteration", iteration, ":", round(value)), collapse = " "))
     obj_funct_values <- c(obj_funct_values, value)
     iteration <- iteration + 1
