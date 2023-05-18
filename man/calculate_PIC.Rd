@@ -18,7 +18,7 @@ calculate_PIC(
   beta_est,
   g,
   vars_est,
-  choice_pic = "pic2022"
+  choice_pic = "pic2017"
 )
 }
 \arguments{

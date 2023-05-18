@@ -21,8 +21,7 @@ estimate_beta(
   robust,
   num_factors_may_vary = TRUE,
   optimize_kappa = FALSE,
-  nosetting = FALSE,
-  special_case_dgp1 = FALSE
+  nosetting = FALSE
 )
 }
 \arguments{
@@ -59,8 +58,6 @@ estimate_beta(
 \item{optimize_kappa}{indicates if kappa has to be optimized or not (only relevant for the classical algorithm)}
 
 \item{nosetting}{option to remove the recommended setting in lmrob(). It is much faster. Defaults to FALSE.}
-
-\item{special_case_dgp1}{special case for data generated according to dgp 1: it changes the 1st variable in X to 1 (-> intercept). Consequently the estimation of beta needs to be restructured slightly.}
 }
 \value{
 list: 1st element contains matrix (N columns: 1 for each time series of the panel data) with estimated beta_est's. If vars_est is set to 0, the list contains NA.
