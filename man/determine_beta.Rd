@@ -18,8 +18,7 @@ determine_beta(
   vars_est,
   sigma2,
   nosetting_local = FALSE,
-  kappa_candidates = c(2^(-0:-20), 0),
-  special_case_dgp1 = FALSE
+  kappa_candidates = c(2^(-0:-20), 0)
 )
 }
 \arguments{
@@ -50,8 +49,6 @@ determine_beta(
 \item{nosetting_local}{option to remove the recommended setting in lmrob(). It is much faster. Defaults to FALSE.}
 
 \item{kappa_candidates}{Defines the size of the SCAD-penalty used in the classical algorithm. This vector should contain more than 1 element.}
-
-\item{special_case_dgp1}{special case for data generated according to dgp 1: it changes the 1st variable in X to 1 (-> intercept). Consequently the estimation of beta needs to be restructured slightly.}
 }
 \value{
 The function returns a numeric vector (for the default setting: string == "heterogeneous") or a matrix with the estimated beta (if string == "homogeneous").

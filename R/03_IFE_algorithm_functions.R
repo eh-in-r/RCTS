@@ -1185,8 +1185,9 @@ determine_beta <- function(string, X_special, Y_special, robust,
                            nosetting_local = FALSE, kappa_candidates = c(2^(-0:-20), 0)) {
   stopifnot(string == "homogeneous" | string == "heterogeneous") # these are the two only options
 
+  print(X_special)
   #characteristic of dgp 1
-  if(min(X_special[,,1]) == 1 & max(X_special[,,1]) == 1) {
+  if(min(X_special[,1]) == 1 & max(X_special[,1]) == 1) {
     special_case_dgp1 = TRUE
   }
 

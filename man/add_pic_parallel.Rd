@@ -42,7 +42,7 @@ Options are "pic2017" (uses the PIC of \insertCite{Ando2017;textual}{RCTS}),
 "pic2016" (\insertCite{Ando2016;textual}{RCTS}) weighs the fourth term with an extra factor relative to the size of the groups, and "pic2022".
 They differ in the penalty they perform on the number of group specific factors (and implicitly on the number of groups). They also differ in the sense that they have
 different NT-regions (where N is the number of time series and T is the length of the time series) where the estimated number of groups, and thus group specific factors will be wrong.
-Pic2022 is the default (this PIC shrinks the problematic NT-region to very large N / very small T).}
+Pic2022 is designed to shrink the problematic NT-region to very large N / very small T).}
 
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 }

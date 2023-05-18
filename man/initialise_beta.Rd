@@ -10,8 +10,7 @@ initialise_beta(
   S,
   robust,
   method_estimate_beta = "individual",
-  nosetting_lmrob = FALSE,
-  special_case_dgp1 = FALSE
+  nosetting_lmrob = FALSE
 )
 }
 \arguments{
@@ -26,8 +25,6 @@ initialise_beta(
 \item{method_estimate_beta}{defines how beta is estimated. Default case is an estimated beta for each individual. Default value is "individual." Possible values are "homogeneous", "group" or "individual".}
 
 \item{nosetting_lmrob}{option to remove the recommended setting in lmrob(). It is much faster. Defaults to FALSE.}
-
-\item{special_case_dgp1}{special case for data generated according to dgp 1: it changes the 1st variable in X to 1 (-> intercept). Consequently the estimation of beta needs to be restructured slightly.}
 }
 \value{
 Matrix with number of rows equal to the number of estimated variables plus one. If method_estimate_beta is set to the default ("individual"),
