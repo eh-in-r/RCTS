@@ -1186,7 +1186,7 @@ determine_beta <- function(string, X_special, Y_special, robust,
   stopifnot(string == "homogeneous" | string == "heterogeneous") # these are the two only options
 
   #characteristic of dgp 1
-  if(min(X[,,1]) == 1 & max(X[,,1]) == 1) {
+  if(min(X_special[,,1]) == 1 & max(X_special[,,1]) == 1) {
     special_case_dgp1 = TRUE
   }
 
@@ -3029,100 +3029,6 @@ calculate_FL_group_estimated <- function(lg, fg, g,
   return(FL_group_est)
 }
 
-#' Function to calculate the mean squared error of beta_est.
-#'
-#' For DGP 1 & 2: When the true number of variables in X is not equal to the standard of 3 it currently returns NA.
-#' @param beta_est estimated values of beta
-#' @inheritParams generate_Y
-#' @param without_intercept TRUE of FALSE: to remove the intercept in the calculation of the MSE
-#' @inheritParams estimate_beta
-#' @inheritParams calculate_FL_group_true
-#' @return numeric, or NA if the true number of variables is not equal to the standard of 3
-#' @examples
-#' set.seed(1)
-#' beta_est <- matrix(rnorm(30 * 4), ncol = 30) #random values for beta
-#' beta_true <- matrix(rnorm(4 * 3), nrow = 4)
-#' g_true <- round(runif(30, 1,3)) #random values for true group membership
-#' calculate_mse_beta(beta_est, beta_true, 30, 10, g_true, "individual")
-#' @export
-calculate_mse_beta <- function(beta_est, beta_true, NN, TT, g_true, method_estimate_beta,
-                               # number_of_variables,
-                               without_intercept = FALSE) {
-  #characteristic of dgp 1
-  if(min(X[,,1]) == 1 & max(X[,,1]) == 1) {
-    special_case_dgp1 = TRUE
-  }
-
-  if (method_estimate_beta == "homogeneous") { # relevant for DGP05 (Bramati-Croux)
-    mse <- mean((beta_est - beta_true)^2)
-    if (without_intercept) mse <- mean((beta_est[-1, ] - beta_true[-1, ])^2)
-    return(mse)
-  }
-
-  if (method_estimate_beta == "group") {
-    pre_mse <- mse_heterogeneous_groups(without_intercept, special_case_dgp1, TT)
-  }
-
-  if (method_estimate_beta == "individual") { # Default case; In case of DGP 1 & 2 it returns NA when number of variables is not equal to 3.
-    if (without_intercept) {
-      if (special_case_dgp1) { # calculate MSE without the normal, and without the de facto intercept
-        beta_est <- matrix(beta_est[c(-1, -2), ], ncol = NN)
-        beta_true <- beta_true[c(-1, -2), ]
-      } else { # calculate MSE without the normal intercept
-        beta_est <- beta_est[-1, ]
-        beta_true <- beta_true[-1, ]
-      }
-    }
-
-
-    pre_mse <- rep(NA, NN)
-    for (i in 1:NN) {
-      # (note: length of this vector depends on without_intercept and special_case_dgp1)
-      afw <- beta_est[, i] - beta_true[, g_true[i]]
-
-      pre_mse[i] <- mean(afw^2) # this is (beta_est - beta_true)^2 (mean() goes over the number of variables)
-    }
-  }
-
-  return(mean(pre_mse)) # this is E[(beta_est - beta_true)^2]
-}
-
-#' Helpfunction in calculate_mse_beta(), when method_estimate_beta == "group" (beta is then estimated for each group separately).
-#'
-#' @param without_intercept boolean to remove the intercept in the calculation
-#' @inheritParams calculate_mse_beta
-#' @inheritParams initialise_beta
-#' @param TT length of time series
-#' @param g vector with estimated group membership for all individuals
-#' @return numeric vector
-mse_heterogeneous_groups <- function(beta_est, beta_true, TT, g, g_true, without_intercept, special_case_dgp1) {
-
-  # 1. The order of the estimated groups is not necessarily the same as the order of the true groups. -> possible necessary to permutate g to get the MSE?
-  #-> this is countered by the order in the object beta_est
-  #-> we do not need permutation here
-
-  # if(sd(v1) != 0) { #when extra noise is added to the DGP (this is a non-standard case)
-  #   message("mse_heterogeneous_groups(): not implemented when v1 contains values (=extra noise in dgp)")
-  #   return(NA)
-  # }
-
-  if (without_intercept) {
-    if (special_case_dgp1) { #->calculate MSE without true and without de facto intercept of DGP1
-      beta_est <- beta_est[c(-1, -2), ]
-      beta_true <- beta_true[c(-1, -2), ]
-    } else { # calculate MSE without true intercept
-      beta_est <- beta_est[-1, ]
-      beta_true <- beta_true[-1, ]
-    }
-  }
-
-  pre_mse <- rep(NA, TT)
-  for (i in 1:TT) {
-    afw <- beta_est[, g[i]] - (beta_true[, g_true[i]])
-    pre_mse[i] <- mean(afw^2)
-  }
-  return(pre_mse)
-}
 
 
 
@@ -4080,7 +3986,7 @@ add_configuration <- function(df_results, S, k, kg) {
 #' "pic2016" (\insertCite{Ando2016;textual}{RCTS}) weighs the fourth term with an extra factor relative to the size of the groups, and "pic2022".
 #' They differ in the penalty they perform on the number of group specific factors (and implicitly on the number of groups). They also differ in the sense that they have
 #' different NT-regions (where N is the number of time series and T is the length of the time series) where the estimated number of groups, and thus group specific factors will be wrong.
-#' Pic2022 is the default (this PIC shrinks the problematic NT-region to very large N / very small T).
+#' Pic2022 is designed to shrink the problematic NT-region to very large N / very small T).
 #' @return data.frame
 #' @examples
 #' set.seed(1)
@@ -4095,7 +4001,7 @@ add_configuration <- function(df_results, S, k, kg) {
 add_pic <- function(df, index_configuration, robust, Y, beta_est, g, S, k, kg,
                     est_errors, C_candidates,
                     method_estimate_beta = "individual",
-                    choice_pic = "pic2022") {
+                    choice_pic = "pic2017") {
   if(!is.na(beta_est[1])) {
     vars_est <- ncol(beta_est)
   } else {
