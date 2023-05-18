@@ -455,7 +455,10 @@ initialise_beta <- function(Y, X,
   #characteristic of dgp 1
   if(min(X[,,1]) == 1 & max(X[,,1]) == 1) {
     special_case_dgp1 = TRUE
+  } else {
+    special_case_dgp1 = FALSE
   }
+
   if(!is.na(X[1]) & !is.null(X[1])) {
     vars_est <- dim(X)[3]
   } else {
@@ -1185,10 +1188,12 @@ determine_beta <- function(string, X_special, Y_special, robust,
                            nosetting_local = FALSE, kappa_candidates = c(2^(-0:-20), 0)) {
   stopifnot(string == "homogeneous" | string == "heterogeneous") # these are the two only options
 
-  print(X_special)
+
   #characteristic of dgp 1
   if(min(X_special[,1]) == 1 & max(X_special[,1]) == 1) {
     special_case_dgp1 = TRUE
+  } else {
+    special_case_dgp1 = FALSE
   }
 
   optimize_kappa <- FALSE
@@ -1334,6 +1339,8 @@ estimate_beta <- function(Y, X, beta_est, g, lambda_group, factor_group, lambda,
   #characteristic of dgp 1
   if(min(X[,,1]) == 1 & max(X[,,1]) == 1) {
     special_case_dgp1 = TRUE
+  } else {
+    special_case_dgp1 = FALSE
   }
 
   #need sigma2 for classical case, for optimizing kappa
@@ -3353,9 +3360,20 @@ make_subsamples <- function(original_data,
   #determine whether input data is simulated or real world data, based on size of input
   if(length(original_data) == 2) {
     use_real_world_data = TRUE
+    g_true <- NA
+    factor_group_true <- NA
+    lambda_group_true <- NA
+    comfactor_true <- NA
+    lambda_true <- NA
   } else {
     use_real_world_data = FALSE
+    g_true <- original_data[[3]]
+    factor_group_true <- original_data[[5]]
+    lambda_group_true <- original_data[[6]]
+    comfactor_true <- original_data[[7]]
+    lambda_true <- original_data[[8]]
   }
+
   Y <- original_data[[1]]
   N_fulldata <- nrow(Y)
   T_fulldata <- ncol(Y)
@@ -3363,13 +3381,6 @@ make_subsamples <- function(original_data,
   stepsize_T <- round(T_fulldata / 30)
 
   X <- original_data[[2]]
-  if(!use_real_world_data) {
-    g_true <- original_data[[3]]
-    factor_group_true <- original_data[[5]]
-    lambda_group_true <- original_data[[6]]
-    comfactor_true <- original_data[[7]]
-    lambda_true <- original_data[[8]]
-  }
 
 
   # define size of the subsample
@@ -3401,10 +3412,12 @@ make_subsamples <- function(original_data,
     g_true <- g_true[sampleN]
 
     S <- length(factor_group_true)
-    if(is.na(comfactor_true)) {
-      k <- 0
-    } else {
+    if("matrix" %in% comfactor_true) {
       k <- nrow(comfactor_true)
+    } else {
+
+        k <- 0
+
     }
     kg <- unlist(lapply(factor_group_true, nrow))
 
@@ -3419,12 +3432,6 @@ make_subsamples <- function(original_data,
         lambda_group_true <- lambda_group_true %>% dplyr::filter(.data$id %in% sampleN)
       }
     }
-  } else {
-    g_true <- NA
-    comfactor_true <- NA
-    lambda_true <- NA
-    factor_group_true <- NA
-    lambda_group_true <- NA
   }
   return(list(Y = Y, X = X, g_true = g_true, comfactor_true = comfactor_true,
               lambda_true = lambda_true, factor_group_true = factor_group_true,
@@ -3640,12 +3647,16 @@ iterate <- function(Y, X, beta_est, g, lambda_group, factor_group, lambda, comfa
   #it changes the 1st variable in X to 1 (-> intercept). Consequently the estimation of beta needs to be restructured slightly.
   if(min(X[,,1]) == 1 & max(X[,,1]) == 1) {
     special_case_dgp1 = TRUE
+  } else {
+    special_case_dgp1 = FALSE
   }
+
   if(!is.na(X[1]) & !is.null(X[1])) {
     vars_est <- dim(X)[3]
   } else {
     vars_est <- 0
   }
+
   if (verbose) message("update beta")
   beta_est <- estimate_beta(Y, X, beta_est, g, lambda_group, factor_group, lambda, comfactor,
     method_estimate_beta,
